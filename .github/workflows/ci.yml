@@ -36,7 +36,6 @@ jobs:
       - name: Unit tests
         run: pnpm test
         env:
-          SKIP_ENV_VALIDATION: 1
           NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
           SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
