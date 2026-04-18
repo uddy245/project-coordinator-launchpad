@@ -18,7 +18,7 @@ const LoginSchema = z.object({
 
 type LoginValues = z.infer<typeof LoginSchema>;
 
-export function LoginForm() {
+export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
@@ -41,7 +41,7 @@ export function LoginForm() {
         toast.error(result.error);
         return;
       }
-      router.push("/dashboard");
+      router.push(redirectTo);
       router.refresh();
     });
   }

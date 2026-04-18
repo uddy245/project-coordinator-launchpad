@@ -19,7 +19,7 @@ const SignupSchema = z.object({
 
 type SignupValues = z.infer<typeof SignupSchema>;
 
-export function SignupForm() {
+export function SignupForm({ redirectTo = "/dashboard" }: { redirectTo?: string }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
@@ -43,7 +43,7 @@ export function SignupForm() {
         return;
       }
       toast.success("Account created — signing you in...");
-      router.push("/dashboard");
+      router.push(redirectTo);
       router.refresh();
     });
   }
