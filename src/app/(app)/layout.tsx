@@ -12,7 +12,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <Link href="/dashboard" className="font-semibold">
             Launchpad
           </Link>
-          <SignOutButton />
+          <nav className="flex items-center gap-2">
+            <Link href="/profile" className="text-sm text-muted-foreground hover:text-foreground">
+              Profile
+            </Link>
+            <SignOutButton />
+          </nav>
         </div>
       </header>
       <main className="mx-auto w-full max-w-5xl flex-1 p-4">{children}</main>
