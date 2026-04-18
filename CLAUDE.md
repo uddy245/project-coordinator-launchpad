@@ -5,7 +5,7 @@ app that takes users from zero to hire-ready as a Project Coordinator via
 video lessons, graded artifacts, and a calibrated AI grading pipeline.
 
 ## Stack
-- Next.js 15 (App Router) with TypeScript
+- Next.js 16 (App Router) with TypeScript
 - Supabase (Postgres + Auth + Storage + Edge Functions) via `@supabase/ssr`
 - Tailwind + shadcn/ui
 - Anthropic Claude API (Sonnet 4.5 for grading, pinned model version)
@@ -45,6 +45,7 @@ video lessons, graded artifacts, and a calibrated AI grading pipeline.
 8. Never commit secrets. `.env.local` is gitignored. Check before every commit.
 9. Commit after every passing test or logical step. Don't batch a session into one commit.
 10. If a ticket is ambiguous, stop and ask in the PR description under `## Blocking question`. Don't guess.
+11. All env access goes through `import { env } from "@/env"`. Never use `process.env` directly.
 
 ## Testing
 - Unit tests live in `tests/unit/` and target `src/lib/`.
