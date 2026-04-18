@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { env } from "@/env";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/types";
 
@@ -84,6 +85,38 @@ export async function signIn(input: SignInInput): Promise<ActionResult> {
         code: "INVALID_CREDENTIALS",
       };
     }
+    return { ok: false, error: error.message, code: "UNKNOWN" };
+  }
+
+  return { ok: true, data: undefined };
+}
+
+const MagicLinkSchema = z.object({
+  email: z
+    .string()
+    .email("Enter a valid email address")
+    .transform((v) => v.toLowerCase().trim()),
+  redirectTo: z.string().optional(),
+});
+
+export type MagicLinkInput = z.input<typeof MagicLinkSchema>;
+
+export async function sendMagicLink(input: MagicLinkInput): Promise<ActionResult> {
+  const parsed = MagicLinkSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
+  }
+
+  const target = parsed.data.redirectTo ?? "/dashboard";
+  const emailRedirectTo = `${env.NEXT_PUBLIC_APP_URL}/auth/callback?redirect=${encodeURIComponent(target)}`;
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithOtp({
+    email: parsed.data.email,
+    options: { emailRedirectTo },
+  });
+
+  if (error) {
     return { ok: false, error: error.message, code: "UNKNOWN" };
   }
 
