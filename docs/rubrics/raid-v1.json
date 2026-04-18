@@ -1,0 +1,61 @@
+{
+  "rubric_id": "raid-v1",
+  "rubric_version": "1.0.0",
+  "competency": "risk_identification",
+  "competency_label": "RAID Log Discipline",
+  "lesson_ref": "raid-logs",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "risk_completeness",
+      "description": "Does each risk have trigger, impact, likelihood, owner, and mitigation?",
+      "anchors": {
+        "1": "Risks listed as vague bullets, no structure, no owner.",
+        "3": "Most risks have owner + impact + likelihood; triggers and mitigations inconsistent.",
+        "5": "Every risk has all five fields filled clearly; mitigations are specific and actionable."
+      },
+      "weight": 0.30
+    },
+    {
+      "name": "risk_differentiation",
+      "description": "Does the learner correctly distinguish Risk from Issue from Assumption from Dependency?",
+      "anchors": {
+        "1": "RAID items mislabeled; issues tagged as risks, dependencies as assumptions.",
+        "3": "Most categories correct; occasional slippage between Risk/Issue or Assumption/Dependency.",
+        "5": "Crisp differentiation; no miscategorization across the log."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "mitigation_realism",
+      "description": "Are mitigations specific, actionable, and proportional to impact?",
+      "anchors": {
+        "1": "Generic mitigations ('monitor closely', 'keep eye on').",
+        "3": "Some specific mitigations, some vague.",
+        "5": "All mitigations are specific, assigned to a role, proportional to the risk's impact and likelihood."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "ownership_and_accountability",
+      "description": "Is every RAID item owned by a named role with a follow-up date?",
+      "anchors": {
+        "1": "No owners named.",
+        "3": "Most items have owners; some orphans; follow-up dates inconsistent.",
+        "5": "Every item has named owner (or role) and explicit follow-up date."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "living_artifact_evidence",
+      "description": "Does the submission show the RAID log evolved week-over-week (updated status, closed items, new entries)?",
+      "anchors": {
+        "1": "Single snapshot, no evidence of updates.",
+        "3": "Some evidence of weekly updates or status changes.",
+        "5": "Clear week-over-week evolution with status changes, closed items, and new entries."
+      },
+      "weight": 0.15
+    }
+  ]
+}
