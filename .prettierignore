@@ -4,3 +4,5 @@ docs/
 BUILD_PLAN.md
 CLAUDE.md
 SETUP.md
+test-results/
+playwright-report/

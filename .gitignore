@@ -23,5 +23,9 @@ next-env.d.ts
 supabase/.branches
 supabase/.temp
 
+# playwright
+test-results/
+playwright-report/
+
 # os
 .DS_Store
