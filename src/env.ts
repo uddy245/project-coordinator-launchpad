@@ -15,9 +15,9 @@ export const env = createEnv({
     ANTHROPIC_SPEND_CAP_USD: z.coerce.number().default(100),
 
     // Stripe
-    STRIPE_SECRET_KEY: z.string().optional(),
+    STRIPE_SECRET_KEY: z.string().min(1),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
-    STRIPE_PRICE_ID: z.string().optional(),
+    STRIPE_PRICE_ID: z.string().min(1),
 
     // Bunny Stream
     BUNNY_STREAM_LIBRARY_ID: z.string().optional(),

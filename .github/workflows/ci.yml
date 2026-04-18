@@ -40,6 +40,8 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
           SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
           ANTHROPIC_API_KEY: sk-ant-placeholder
+          STRIPE_SECRET_KEY: sk_test_placeholder
+          STRIPE_PRICE_ID: price_placeholder
 
       - name: Build
         run: pnpm build
@@ -49,3 +51,5 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
           SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
           ANTHROPIC_API_KEY: sk-ant-placeholder
+          STRIPE_SECRET_KEY: sk_test_placeholder
+          STRIPE_PRICE_ID: price_placeholder
