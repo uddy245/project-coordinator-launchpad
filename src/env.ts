@@ -2,6 +2,9 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 export const env = createEnv({
+  onValidationError: (error) => {
+    throw new Error(`Invalid environment variables: ${error.message}`);
+  },
   server: {
     // Supabase
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
