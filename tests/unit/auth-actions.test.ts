@@ -96,6 +96,18 @@ describe("signIn action", () => {
     });
   });
 
+  it("maps 'email not confirmed' to EMAIL_NOT_CONFIRMED", async () => {
+    signInMock.mockResolvedValue({
+      error: { message: "Email not confirmed" },
+    });
+    const result = await signIn({ email: "u@x.com", password: "password1" });
+    expect(result).toEqual({
+      ok: false,
+      error: expect.stringContaining("confirm your email"),
+      code: "EMAIL_NOT_CONFIRMED",
+    });
+  });
+
   it("returns ok on success", async () => {
     signInMock.mockResolvedValue({ error: null });
     const result = await signIn({ email: "u@x.com", password: "password1" });

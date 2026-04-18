@@ -70,6 +70,13 @@ export async function signIn(input: SignInInput): Promise<ActionResult> {
 
   if (error) {
     const msg = error.message.toLowerCase();
+    if (msg.includes("email not confirmed") || msg.includes("not confirmed")) {
+      return {
+        ok: false,
+        error: "Please confirm your email — check your inbox for the confirmation link.",
+        code: "EMAIL_NOT_CONFIRMED",
+      };
+    }
     if (msg.includes("invalid login credentials") || msg.includes("invalid")) {
       return {
         ok: false,
