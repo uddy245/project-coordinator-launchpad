@@ -94,7 +94,7 @@ $$ language plpgsql security definer stable;
 -- lessons
 -- ==========================================================================
 create table public.lessons (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   slug text not null unique,
   number integer not null,
   title text not null,
@@ -134,7 +134,7 @@ create trigger lessons_set_updated_at
 -- rubrics (versioned)
 -- ==========================================================================
 create table public.rubrics (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   competency text not null,
   version integer not null,
   schema_json jsonb not null,
@@ -167,7 +167,7 @@ create policy "admins manage rubrics"
 -- prompts (versioned)
 -- ==========================================================================
 create table public.prompts (
-  id uuid primary key default uuid_generate_v4(),
+  id uuid primary key default gen_random_uuid(),
   name text not null,
   version integer not null,
   body text not null,
