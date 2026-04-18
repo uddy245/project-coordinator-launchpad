@@ -48,7 +48,7 @@ describe("signUp action", () => {
   });
 
   it("lowercases email before calling Supabase", async () => {
-    signUpMock.mockResolvedValue({ error: null });
+    signUpMock.mockResolvedValue({ data: { session: { access_token: "t" } }, error: null });
     const result = await signUp({ email: "UseR@Example.COM", password: "password1" });
     expect(result.ok).toBe(true);
     expect(signUpMock).toHaveBeenCalledWith(expect.objectContaining({ email: "user@example.com" }));
@@ -67,13 +67,25 @@ describe("signUp action", () => {
   });
 
   it("passes fullName through user metadata", async () => {
-    signUpMock.mockResolvedValue({ error: null });
+    signUpMock.mockResolvedValue({ data: { session: { access_token: "t" } }, error: null });
     await signUp({ email: "u@x.com", password: "password1", fullName: "Jane Doe" });
     expect(signUpMock).toHaveBeenCalledWith(
       expect.objectContaining({
         options: { data: { full_name: "Jane Doe" } },
       })
     );
+  });
+
+  it("flags needsEmailConfirmation=true when Supabase returns no session", async () => {
+    signUpMock.mockResolvedValue({ data: { session: null }, error: null });
+    const result = await signUp({ email: "u@x.com", password: "password1" });
+    expect(result).toEqual({ ok: true, data: { needsEmailConfirmation: true } });
+  });
+
+  it("flags needsEmailConfirmation=false when Supabase returns a session", async () => {
+    signUpMock.mockResolvedValue({ data: { session: { access_token: "t" } }, error: null });
+    const result = await signUp({ email: "u@x.com", password: "password1" });
+    expect(result).toEqual({ ok: true, data: { needsEmailConfirmation: false } });
   });
 });
 
