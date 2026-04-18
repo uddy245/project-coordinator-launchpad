@@ -30,14 +30,16 @@ function firstZodIssue(err: z.ZodError): string {
   return err.issues[0]?.message ?? "Invalid input";
 }
 
-export async function signUp(input: SignUpInput): Promise<ActionResult> {
+export type SignUpResult = { needsEmailConfirmation: boolean };
+
+export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpResult>> {
   const parsed = SignUpSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: parsed.data.fullName ? { data: { full_name: parsed.data.fullName } } : undefined,
@@ -54,7 +56,10 @@ export async function signUp(input: SignUpInput): Promise<ActionResult> {
     return { ok: false, error: error.message, code: "UNKNOWN" };
   }
 
-  return { ok: true, data: undefined };
+  // If Supabase has email confirmation enabled, no session is returned.
+  // The form branches on this to show a "check your email" state instead
+  // of trying to redirect into an authed area.
+  return { ok: true, data: { needsEmailConfirmation: !data.session } };
 }
 
 export async function signIn(input: SignInInput): Promise<ActionResult> {
