@@ -3,6 +3,7 @@ pnpm-lock.yaml
 docs/
 BUILD_PLAN.md
 CLAUDE.md
+README.md
 SETUP.md
 test-results/
 playwright-report/
