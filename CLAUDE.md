@@ -5,7 +5,7 @@ app that takes users from zero to hire-ready as a Project Coordinator via
 video lessons, graded artifacts, and a calibrated AI grading pipeline.
 
 ## Stack
-- Next.js 16 (App Router) with TypeScript
+- Next.js 16 (App Router) with TypeScript — note: Next.js 16 renamed `middleware.ts` → `src/proxy.ts` with a named export `proxy` (not `middleware`)
 - Supabase (Postgres + Auth + Storage + Edge Functions) via `@supabase/ssr`
 - Tailwind + shadcn/ui
 - Anthropic Claude API (Sonnet 4.5 for grading, pinned model version)
