@@ -1,17 +1,9 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { requireUser } from "@/lib/auth/require-user";
 
 export const metadata = { title: "Dashboard — Launchpad" };
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+  const user = await requireUser();
 
   return (
     <div className="space-y-2">

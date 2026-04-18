@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
-import { requireUser } from "@/lib/auth/require-user";
+import { requireAdmin } from "@/lib/auth/require-user";
 
-export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  await requireUser();
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  await requireAdmin();
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="border-b">
         <div className="mx-auto flex max-w-5xl items-center justify-between p-4">
-          <Link href="/dashboard" className="font-semibold">
-            Launchpad
+          <Link href="/audit" className="font-semibold">
+            Launchpad — Admin
           </Link>
           <SignOutButton />
         </div>

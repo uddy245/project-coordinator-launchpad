@@ -2,6 +2,10 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
+  // Expose the current pathname to server components via a request header.
+  // Next.js does not give server components direct access to the URL.
+  request.headers.set("x-pathname", request.nextUrl.pathname);
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
