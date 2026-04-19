@@ -6,6 +6,7 @@ import { parseRubric } from "@/lib/grading/rubric";
 import { applyOverrides, type OverrideEntry } from "@/lib/grading/apply-overrides";
 import { RubricScoreCard, type RubricScoreRow } from "@/components/grading/rubric-score-card";
 import { GradingInProgress } from "@/components/grading/grading-in-progress";
+import { RequestReviewButton } from "@/components/grading/request-review-button";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Submission — Launchpad" };
@@ -160,19 +161,27 @@ async function GradedView({ submissionId }: { submissionId: string }) {
 
   const overrides = (latestRecord?.overrides as OverrideEntry[] | null) ?? null;
   const reviewedByHuman = latestRecord !== null && latestRecord !== undefined;
+  const alreadyQueued = queueIds.length > 0 && !reviewedByHuman;
   const applied = applyOverrides(scores, overrides, rubric);
 
   return (
-    <RubricScoreCard
-      rubric={rubric}
-      scores={applied.scores}
-      overallScore={
-        applied.hasOverrides ? applied.overallScore : (submission?.overall_score ?? null)
-      }
-      pass={applied.hasOverrides ? applied.pass : (submission?.pass ?? null)}
-      hireReady={applied.hasOverrides ? applied.hireReady : (submission?.hire_ready ?? null)}
-      overriddenDimensions={applied.overriddenDimensions}
-      reviewedByHuman={reviewedByHuman}
-    />
+    <div className="space-y-6">
+      <RubricScoreCard
+        rubric={rubric}
+        scores={applied.scores}
+        overallScore={
+          applied.hasOverrides ? applied.overallScore : (submission?.overall_score ?? null)
+        }
+        pass={applied.hasOverrides ? applied.pass : (submission?.pass ?? null)}
+        hireReady={applied.hasOverrides ? applied.hireReady : (submission?.hire_ready ?? null)}
+        overriddenDimensions={applied.overriddenDimensions}
+        reviewedByHuman={reviewedByHuman}
+      />
+      <RequestReviewButton
+        submissionId={submissionId}
+        alreadyReviewed={reviewedByHuman}
+        alreadyQueued={alreadyQueued}
+      />
+    </div>
   );
 }
