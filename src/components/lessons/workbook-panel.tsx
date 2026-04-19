@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArtifactUploader } from "@/components/grading/artifact-uploader";
+import { SubmissionHistory } from "@/components/grading/submission-history";
+import { createClient } from "@/lib/supabase/server";
 
 type Template = {
   file: string;
@@ -39,9 +41,16 @@ const RAID_TEMPLATES: Template[] = [
   },
 ];
 
-export function WorkbookPanel({ lessonSlug }: { lessonSlug: string }) {
+export async function WorkbookPanel({ lessonSlug }: { lessonSlug: string }) {
   const starter = RAID_TEMPLATES.find((t) => t.kind === "starter");
   const examples = RAID_TEMPLATES.filter((t) => t.kind === "example");
+
+  const supabase = await createClient();
+  const { data: lesson } = await supabase
+    .from("lessons")
+    .select("id")
+    .eq("slug", lessonSlug)
+    .maybeSingle();
 
   return (
     <div className="space-y-6">
@@ -58,6 +67,15 @@ export function WorkbookPanel({ lessonSlug }: { lessonSlug: string }) {
         </h2>
         <ArtifactUploader lessonSlug={lessonSlug} />
       </section>
+
+      {lesson && (
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Your submissions
+          </h2>
+          <SubmissionHistory lessonId={lesson.id} />
+        </section>
+      )}
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
