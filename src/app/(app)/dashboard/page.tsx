@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { PurchaseCTA } from "@/components/marketing/purchase-cta";
 import { LessonCard } from "@/components/dashboard/lesson-card";
 import { GateStatusBadge } from "@/components/dashboard/gate-status-badge";
+import { computeLessonStatus } from "@/lib/lessons/progress";
 
 export const metadata = { title: "Dashboard — Launchpad" };
 
@@ -40,15 +41,24 @@ export default async function DashboardPage() {
   // published lessons visible to this user come back.
   const { data: lesson } = await supabase
     .from("lessons")
-    .select("slug, number, title, summary, estimated_minutes")
+    .select("id, slug, number, title, summary, estimated_minutes")
     .eq("is_published", true)
     .order("number", { ascending: true })
     .limit(1)
     .maybeSingle();
 
-  // Lesson progress arrives in LES-004/LES-009. For now, always show
-  // "not_started" — the LessonCard shape is already status-aware so this
-  // is a one-line update when lesson_progress lands.
+  // Progress row for this lesson (may not exist yet — that's "not_started").
+  const { data: progress } = lesson
+    ? await supabase
+        .from("lesson_progress")
+        .select("video_watched, quiz_passed, artifact_submitted")
+        .eq("user_id", user.id)
+        .eq("lesson_id", lesson.id)
+        .maybeSingle()
+    : { data: null };
+
+  const lessonStatus = computeLessonStatus(progress);
+
   return (
     <div className="space-y-6">
       <div>
@@ -63,7 +73,7 @@ export default async function DashboardPage() {
           summary={lesson.summary}
           slug={lesson.slug}
           estimatedMinutes={lesson.estimated_minutes}
-          status="not_started"
+          status={lessonStatus}
         />
       ) : (
         <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
