@@ -4,6 +4,7 @@ import { PurchaseCTA } from "@/components/marketing/purchase-cta";
 import { LessonCard } from "@/components/dashboard/lesson-card";
 import { GateStatusBadge } from "@/components/dashboard/gate-status-badge";
 import { computeLessonStatus } from "@/lib/lessons/progress";
+import { computeGateSummary } from "@/lib/gates/compute";
 
 export const metadata = { title: "Dashboard — Launchpad" };
 
@@ -59,6 +60,15 @@ export default async function DashboardPage() {
 
   const lessonStatus = computeLessonStatus(progress);
 
+  const { data: gateRow } = await supabase
+    .from("gate_status")
+    .select(
+      "foundation_complete, portfolio_complete, portfolio_artifacts_count, portfolio_artifacts_target, interview_complete, industry_complete"
+    )
+    .eq("user_id", user.id)
+    .maybeSingle();
+  const gates = computeGateSummary(gateRow);
+
   return (
     <div className="space-y-6">
       <div>
@@ -88,16 +98,16 @@ export default async function DashboardPage() {
         <div className="grid gap-3 sm:grid-cols-2">
           <GateStatusBadge
             name="Gate 1 — Foundations"
-            status="coming_soon"
+            status={gates.foundation}
             detail="Unlocked once the full M1–M4 track ships."
           />
           <GateStatusBadge
             name="Gate 2 — Portfolio"
-            status="pending"
-            detail="0 of 7 graded artifacts submitted."
+            status={gates.portfolio.status}
+            detail={gates.portfolio.detail}
           />
-          <GateStatusBadge name="Gate 3 — Mock interviews" status="coming_soon" />
-          <GateStatusBadge name="Gate 4 — Industry capstone" status="coming_soon" />
+          <GateStatusBadge name="Gate 3 — Mock interviews" status={gates.interview} />
+          <GateStatusBadge name="Gate 4 — Industry capstone" status={gates.industry} />
         </div>
       </section>
     </div>
