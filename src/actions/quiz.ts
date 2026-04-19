@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -117,6 +118,12 @@ export async function submitQuizAttempt(
       },
       { onConflict: "user_id,lesson_id" }
     );
+
+    // Invalidate the Next.js router cache for pages that read from
+    // lesson_progress so the learner sees "In progress" immediately
+    // instead of having to hard-refresh.
+    revalidatePath("/dashboard");
+    revalidatePath(`/lessons/${parsed.data.lessonSlug}`);
   }
 
   return { ok: true, data: result };

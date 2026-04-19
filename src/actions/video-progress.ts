@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/types";
@@ -63,5 +64,13 @@ export async function updateVideoProgress(
   if (error) {
     return { ok: false, error: error.message, code: "DB_ERROR" };
   }
+
+  // Only bust the dashboard cache on the transition that actually
+  // changes what the learner sees there — no point revalidating on
+  // every 10-second interval.
+  if (video_watched) {
+    revalidatePath("/dashboard");
+  }
+
   return { ok: true, data: { video_watched } };
 }
