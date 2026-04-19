@@ -1,0 +1,40 @@
+name: Calibration corpus
+
+# Manual-trigger only. Runs the grading pipeline against the fixture
+# corpus with the real Anthropic API. Costs ~$0.60 per run.
+on:
+  workflow_dispatch:
+
+jobs:
+  calibration:
+    name: Run calibration corpus
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run calibration
+        run: pnpm vitest run tests/integration/calibration.test.ts --reporter verbose
+        env:
+          RUN_CALIBRATION: "1"
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_MODEL: claude-sonnet-4-5
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+          STRIPE_SECRET_KEY: sk_test_placeholder
+          STRIPE_PRICE_ID: price_placeholder
+          GRADE_WORKER_SECRET: placeholder-grade-worker-secret-32-chars

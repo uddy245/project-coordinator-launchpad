@@ -1,0 +1,15 @@
+RAID LOG — Healthcare Integration (Pilot)
+Prepared by: J. Rivera
+
+ID | Category | Description | Owner | Impact | Likelihood | Mitigation
+R1 | Risk | Lead engineer on paternity leave, may delay bug fixes | — | High | — | TBD
+R2 | Risk | Vendor API v2 deprecation in 90 days | PM | — | Medium | Plan migration
+R3 | Risk | Steering committee in 4 days | — | — | — | Prepare deck
+I1 | Issue | Scope creep — 3 new endpoints added | PM | — | — | Discuss in steering
+I2 | Risk | Product owner wants to expand to 2 more clinics | — | High | — | Push back
+A1 | Assumption | Clinic IT will be available for cutover | — | — | — | —
+A2 | Issue | Training materials not ready for nurse staff | J. Rivera | Medium | — | Draft next week
+D1 | Dependency | Vendor support during go-live | Vendor | — | — | —
+D2 | Risk | Interface HL7 feed from lab system | IT | — | — | —
+
+Notes: Will update before the next steering meeting.

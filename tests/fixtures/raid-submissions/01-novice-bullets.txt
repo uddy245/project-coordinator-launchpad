@@ -1,0 +1,23 @@
+RAID LOG — Healthcare Pilot Project
+
+Risks:
+- Engineer out on leave
+- API deprecation
+- Scope creep bad
+- Might fail audit
+- Clinic expansion too fast
+
+Issues:
+- Bugs in production
+- Slow response times sometimes
+- Training behind
+
+Assumptions:
+- Vendor will help us
+- Budget is enough
+
+Dependencies:
+- Vendor API
+- Clinic IT team
+
+Need to monitor closely. Keep an eye on things and escalate if it gets worse.
