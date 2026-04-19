@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { ArtifactUploader } from "@/components/grading/artifact-uploader";
 
 type Template = {
   file: string;
@@ -38,7 +39,7 @@ const RAID_TEMPLATES: Template[] = [
   },
 ];
 
-export function WorkbookPanel() {
+export function WorkbookPanel({ lessonSlug }: { lessonSlug: string }) {
   const starter = RAID_TEMPLATES.find((t) => t.kind === "starter");
   const examples = RAID_TEMPLATES.filter((t) => t.kind === "example");
 
@@ -49,6 +50,13 @@ export function WorkbookPanel() {
           Your template
         </h2>
         {starter && <TemplateRow t={starter} />}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Submit your RAID log
+        </h2>
+        <ArtifactUploader lessonSlug={lessonSlug} />
       </section>
 
       <section className="space-y-3">
