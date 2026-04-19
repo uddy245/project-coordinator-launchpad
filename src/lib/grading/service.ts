@@ -20,74 +20,44 @@ export type GradeSubmissionDeps = {
   ) => Promise<Anthropic.Messages.Message>;
 };
 
-type LoadedContext = {
-  submissionId: string;
-  userId: string;
-  lessonId: string;
-  scenario: string;
-  extracted: string;
-  rubricRow: { id: string; schema_json: unknown };
-  promptRow: { version: number; body: string };
+export type GradeWithContextInput = {
   rubric: RubricJSON;
+  promptBody: string;
+  scenarioText: string;
+  submissionText: string;
+};
+
+export type GradeWithContextResult = {
+  score: ScoreOutput;
+  inputTokens: number;
+  outputTokens: number;
 };
 
 /**
- * gradeSubmission is the beating heart of the product. Flow:
- *
- *   1. Load submission, lesson scenario, current rubric, current prompt.
- *   2. If submission is not pending, return idempotent success.
- *   3. Flip status → 'grading'.
- *   4. Build tool schema + user prompt; call Claude with tool_choice
- *      forcing record_rubric_scores.
- *   5. Validate the tool input with a rubric-derived Zod schema.
- *   6. On validation failure: retry once with the error appended to
- *      the user message.
- *   7. On two consecutive failures: flip status → 'grading_failed'.
- *   8. On success: insert one rubric_scores row per dimension, write
- *      overall_score / pass / hire_ready / graded_at on the submission.
- *
- * Dependencies are injectable (supabase + Claude call) so the integration
- * test can assert the retry path without hitting the real API.
+ * DB-free grading primitive: given a rubric + prompt + scenario +
+ * submission text, call Claude with tool-use forced and validate the
+ * output against the rubric-derived Zod schema. Retries once on
+ * validation failure. Used directly by the calibration corpus test
+ * (no DB, no side effects) and by gradeSubmission (which wraps it
+ * with DB I/O).
  */
-export async function gradeSubmission(
-  submissionId: string,
-  deps: GradeSubmissionDeps = {}
-): Promise<ActionResult<{ status: "graded" | "grading_failed" | "already_graded" }>> {
-  const supabase = deps.supabase ?? createAdminClient();
+export async function gradeWithContext(
+  input: GradeWithContextInput,
+  deps: Pick<GradeSubmissionDeps, "callClaude"> = {}
+): Promise<ActionResult<GradeWithContextResult>> {
   const callClaude = deps.callClaude ?? ((args) => anthropic.messages.create(args));
 
-  const loaded = await loadContext(supabase, submissionId);
-  if (!loaded.ok) return loaded;
-  const ctx = loaded.data;
+  const tool = buildGradeTool(input.rubric);
+  const validator = buildScoreValidator(input.rubric);
 
-  // Idempotency: another run already claimed this one.
-  const { data: currentStatus } = await supabase
-    .from("submissions")
-    .select("status")
-    .eq("id", submissionId)
-    .single();
-  if (currentStatus?.status === "graded") {
-    return { ok: true, data: { status: "already_graded" } };
-  }
-  if (currentStatus?.status === "grading_failed") {
-    return { ok: true, data: { status: "grading_failed" } };
-  }
-
-  await supabase.from("submissions").update({ status: "grading" }).eq("id", submissionId);
-
-  const tool = buildGradeTool(ctx.rubric);
-  const validator = buildScoreValidator(ctx.rubric);
-
-  const baseUserPrompt = renderPrompt(ctx.promptRow.body, {
-    rubric_json: JSON.stringify(ctx.rubric),
-    scenario_text: ctx.scenario,
-    submission_text: ctx.extracted,
+  const baseUserPrompt = renderPrompt(input.promptBody, {
+    rubric_json: JSON.stringify(input.rubric),
+    scenario_text: input.scenarioText,
+    submission_text: input.submissionText,
   });
 
   const messages: Anthropic.Messages.MessageParam[] = [{ role: "user", content: baseUserPrompt }];
 
-  // Attempt 1. If validation fails, append the error + a correction nudge
-  // and retry once. Two consecutive failures → grading_failed.
   let score: ScoreOutput | null = null;
   let inputTokens = 0;
   let outputTokens = 0;
@@ -124,7 +94,6 @@ export async function gradeSubmission(
         .join("; ");
     }
 
-    // Retry: resend with the error context so Claude knows what to fix.
     messages.push({
       role: "user",
       content: `Your previous response failed validation: ${lastValidationError}. Re-emit the tool call with all required fields.`,
@@ -132,6 +101,81 @@ export async function gradeSubmission(
   }
 
   if (!score) {
+    return {
+      ok: false,
+      error: lastValidationError ?? "Grading failed after retries",
+      code: "GRADING_FAILED",
+    };
+  }
+
+  return { ok: true, data: { score, inputTokens, outputTokens } };
+}
+
+type LoadedContext = {
+  submissionId: string;
+  userId: string;
+  lessonId: string;
+  scenario: string;
+  extracted: string;
+  rubricRow: { id: string; schema_json: unknown };
+  promptRow: { version: number; body: string };
+  rubric: RubricJSON;
+};
+
+/**
+ * gradeSubmission is the beating heart of the product. Flow:
+ *
+ *   1. Load submission, lesson scenario, current rubric, current prompt.
+ *   2. If submission is not pending, return idempotent success.
+ *   3. Flip status → 'grading'.
+ *   4. Build tool schema + user prompt; call Claude with tool_choice
+ *      forcing record_rubric_scores.
+ *   5. Validate the tool input with a rubric-derived Zod schema.
+ *   6. On validation failure: retry once with the error appended to
+ *      the user message.
+ *   7. On two consecutive failures: flip status → 'grading_failed'.
+ *   8. On success: insert one rubric_scores row per dimension, write
+ *      overall_score / pass / hire_ready / graded_at on the submission.
+ *
+ * Dependencies are injectable (supabase + Claude call) so the integration
+ * test can assert the retry path without hitting the real API.
+ */
+export async function gradeSubmission(
+  submissionId: string,
+  deps: GradeSubmissionDeps = {}
+): Promise<ActionResult<{ status: "graded" | "grading_failed" | "already_graded" }>> {
+  const supabase = deps.supabase ?? createAdminClient();
+
+  const loaded = await loadContext(supabase, submissionId);
+  if (!loaded.ok) return loaded;
+  const ctx = loaded.data;
+
+  // Idempotency: another run already claimed this one.
+  const { data: currentStatus } = await supabase
+    .from("submissions")
+    .select("status")
+    .eq("id", submissionId)
+    .single();
+  if (currentStatus?.status === "graded") {
+    return { ok: true, data: { status: "already_graded" } };
+  }
+  if (currentStatus?.status === "grading_failed") {
+    return { ok: true, data: { status: "grading_failed" } };
+  }
+
+  await supabase.from("submissions").update({ status: "grading" }).eq("id", submissionId);
+
+  const graded = await gradeWithContext(
+    {
+      rubric: ctx.rubric,
+      promptBody: ctx.promptRow.body,
+      scenarioText: ctx.scenario,
+      submissionText: ctx.extracted,
+    },
+    { callClaude: deps.callClaude }
+  );
+
+  if (!graded.ok) {
     await supabase
       .from("submissions")
       .update({
@@ -139,12 +183,10 @@ export async function gradeSubmission(
         graded_at: new Date().toISOString(),
       })
       .eq("id", submissionId);
-    return {
-      ok: false,
-      error: lastValidationError ?? "Grading failed after retries",
-      code: "GRADING_FAILED",
-    };
+    return graded;
   }
+
+  const { score, inputTokens, outputTokens } = graded.data;
 
   // Persist per-dimension scores. Tokens are split evenly across the
   // rows for MVP — aggregate cost is what we care about; per-dimension

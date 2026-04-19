@@ -1,0 +1,68 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Owner: L. Jansen, PC | Document version: v3 | Current as of: 2026-04-15
+Change log at bottom. Previous steering pre-reads: v1 (2026-04-01), v2 (2026-04-08).
+
+===== RISKS =====
+R1 [OPEN, unchanged since v1]
+  Description: Vendor API v2 deprecation in 90 days (2026-07-10)
+  Trigger: Vendor EOL notice 2026-03-28
+  Impact: High — patient lookup + insurance eligibility endpoints break
+  Likelihood: High (vendor-confirmed in 2026-04-03 call)
+  Owner: J. Patel (Lead Eng; on leave through 2026-05-13) | Follow-up 2026-04-26
+  Mitigation: (v1) investigate. (v2) Approved migration spike post-leave; budget $18k vendor PS. (v3) PS SOW signed 2026-04-14; kickoff scheduled 2026-05-14.
+
+R2 [OPEN, downgraded v2→v3]
+  Description: Premature scope expansion to Clinic B+C
+  Trigger: PO ask 2026-04-12
+  Impact: High → Medium (PO agreed to 60-day stabilization in 2026-04-15 sync)
+  Likelihood: Medium → Low
+  Owner: K. Bell (PO) | Follow-up 2026-05-01
+  Mitigation: Staged rollout plan dated 2026-07-01 accepted by steering (v2). Now monitoring pilot KPIs against exit criteria.
+
+R3 [CLOSED in v3]
+  Description: Coverage gap during lead engineer paternity leave
+  Resolution (v3): D. Huang cross-trained + on-call rotation active since 2026-04-15. No P1 incidents week 1. Closing.
+
+R4 [OPEN, escalated v2→v3]
+  Description: HL7 lab feed drops 2–3x/week
+  Trigger: recurring since 2026-04-02
+  Impact: Medium → High (clinical team flagged missed result 2026-04-13)
+  Likelihood: High
+  Owner: R. Silva (IT Ops) | Follow-up 2026-04-17
+  Mitigation: (v1) log for trend. (v2) auto-retry deployed 2026-04-09; reduced drops by ~40%. (v3) vendor root-cause call 2026-04-17; interim paging to on-call clinician added for any >15min gap.
+
+R5 [NEW in v3]
+  Description: Steering-committee-driven metric shift (pilot exit criteria)
+  Trigger: 2026-04-15 discussion raised new KPI (TTR < 4 hrs)
+  Impact: Medium — may delay expansion sign-off
+  Likelihood: Medium
+  Owner: L. Jansen | Follow-up 2026-04-22
+  Mitigation: Draft KPI dashboard by 2026-04-22; confirm baseline with ops.
+
+===== ISSUES =====
+I1 [CLOSED v3]
+  3 unplanned integration endpoints — QA plan accepted 2026-04-12; test pass 2026-04-14.
+
+I2 [NEW v3]
+  Nurse workflow training attendance at 68% for Clinic A (target 95% by go-live expansion).
+  Owner: T. Njoku | Follow-up 2026-04-22
+  Action: Add two make-up sessions 2026-04-20 + 2026-04-24.
+
+===== ASSUMPTIONS =====
+A1 [OPEN, restated v3]
+  Clinic A nursing staff will complete Epic workflow training before go-live expansion.
+  Now tracked via I2 above; revisit if I2 slips.
+
+===== DEPENDENCIES =====
+D1 [OPEN]
+  Vendor SM on-call during 2026-05-24 cutover weekend
+  Owner: C. Morales (Vendor SM) | Confirm by 2026-05-10 | Runbook review 2026-05-17
+
+D2 [OPEN]
+  Internal IT firewall + VPN cutover night-of
+  Owner: R. Silva | Runbook review 2026-05-17
+
+===== CHANGE LOG =====
+v1 (2026-04-01): Initial log at kickoff. 4 risks, 1 issue, 1 assumption, 2 dependencies.
+v2 (2026-04-08): Added mitigation for R4; clarified R1 mitigation; added PO sync note on R2.
+v3 (2026-04-15): R3 closed; R2 downgraded; R4 escalated; R5 added; I1 closed; I2 added.

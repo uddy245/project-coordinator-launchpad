@@ -1,0 +1,11 @@
+{
+  "label": "intermediate",
+  "notes": "Every risk has all 5 fields; named owners + follow-up dates; mitigations specific and actionable; clean RAID categorization. The one gap: it's a single snapshot — no prior-week column, no closed/reopened items, no status change history. Lives or dies on the 'living artifact' dimension.",
+  "expected_scores": {
+    "risk_completeness": 5,
+    "risk_differentiation": 5,
+    "mitigation_realism": 4,
+    "ownership_and_accountability": 5,
+    "living_artifact_evidence": 1
+  }
+}

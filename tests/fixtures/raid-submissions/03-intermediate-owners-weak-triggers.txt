@@ -1,0 +1,47 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Prepared by: M. Okafor, PC. Week-of 2026-04-15.
+
+RISKS
+R1 | Vendor v2 API deprecation (90 days)
+    Trigger: vendor released EOL notice 2026-04-10.
+    Impact: High — core patient-lookup endpoint stops working.
+    Likelihood: High (vendor confirmed).
+    Owner: M. Okafor
+    Mitigation: Schedule migration spike with lead engineer on return.
+
+R2 | Scope expansion to clinics B + C before stabilization
+    Trigger: PO ask in 2026-04-12 sync.
+    Impact: High — destabilizes pilot metrics.
+    Likelihood: Medium.
+    Owner: Product Owner (K. Bell)
+    Mitigation: Bring data-backed stabilization case to steering.
+
+R3 | Lead engineer on paternity leave 4 weeks
+    Impact: Medium.
+    Likelihood: Certain.
+    Owner: Eng Manager
+    Mitigation: Cross-train backup engineer. (Trigger not logged.)
+
+R4 | HL7 lab feed intermittent
+    Impact: Medium.
+    Likelihood: —
+    Owner: IT Ops
+    Mitigation: Investigate with vendor. (Details pending.)
+
+ISSUES
+I1 | Three new integration endpoints added mid-build; no testing plan for them yet.
+    Owner: M. Okafor
+    Next step: QA to scope by 2026-04-19.
+
+ASSUMPTIONS
+A1 | Clinic A staff will complete training before go-live expansion.
+    Owner: Training Lead.
+
+DEPENDENCIES
+D1 | Vendor support window during cutover weekend.
+    Owner: Vendor SM.
+
+D2 | Internal IT for network cutover.
+    Owner: IT Ops.
+
+(Updated for 2026-04-15 steering.)

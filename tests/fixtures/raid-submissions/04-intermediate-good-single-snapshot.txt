@@ -1,0 +1,50 @@
+RAID LOG — Healthcare Integration, Steering Pre-Read
+Prepared by: S. Ahuja, Project Coordinator | Week-of 2026-04-15
+
+===== RISKS =====
+R1  Vendor API v2 deprecation in 90 days
+    Trigger: EOL announcement 2026-04-10
+    Impact: High — patient lookup breaks
+    Likelihood: High (vendor-confirmed)
+    Owner: J. Patel (Lead Eng, on return 2026-05-13) | Follow-up 2026-04-26
+    Mitigation: Spike migration design in week 1 post-return; target full cutover by week 8. Budget $18k for vendor pro-services.
+
+R2  Premature scope expansion to Clinic B+C
+    Trigger: PO ask 2026-04-12
+    Impact: High — delays stabilization metrics
+    Likelihood: Medium
+    Owner: K. Bell (PO) | Follow-up 2026-04-18 in steering
+    Mitigation: Present 60-day stabilization SLA data; propose staged rollout beginning 2026-07-01.
+
+R3  Coverage gap during lead engineer paternity leave
+    Trigger: Leave begins 2026-04-15
+    Impact: Medium — P2/P3 bug latency increases
+    Likelihood: Certain
+    Owner: E. Ko (Eng Mgr) | Follow-up weekly
+    Mitigation: Cross-train D. Huang as interface-on-call; freeze non-critical deploys during leave.
+
+R4  HL7 lab feed drops 2–3x per week
+    Trigger: Logged since 2026-04-02
+    Impact: Medium — delayed results in chart
+    Likelihood: High
+    Owner: IT Ops (R. Silva) | Follow-up 2026-04-22
+    Mitigation: Add auto-retry + alerting; pair with vendor on root cause.
+
+===== ISSUES =====
+I1  3 unplanned integration endpoints added post-kickoff, no QA plan.
+    Owner: S. Ahuja | Follow-up 2026-04-19
+    Action: QA to scope by Friday; carve test window 2026-04-22.
+
+===== ASSUMPTIONS =====
+A1  Clinic A nursing staff will complete Epic workflow training before go-live expansion.
+    Owner: T. Njoku (Training Lead) | Follow-up 2026-04-20
+    Action: Validate attendance report 2026-04-26.
+
+===== DEPENDENCIES =====
+D1  Vendor SM on-call during cutover weekend (2026-05-24).
+    Owner: Vendor SM (C. Morales) | Confirm by 2026-05-10.
+
+D2  Internal IT for firewall + VPN cutover night-of.
+    Owner: R. Silva (IT Ops) | Confirm runbook 2026-05-17.
+
+Status: prepared for 2026-04-18 steering committee.
