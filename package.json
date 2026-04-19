@@ -53,6 +53,7 @@
     "autoprefixer": "^10.4.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "16.2.4",
+    "exceljs": "^4.4.0",
     "prettier": "^3.3.0",
     "prettier-plugin-tailwindcss": "^0.6.0",
     "supabase": "^1.200.0",
