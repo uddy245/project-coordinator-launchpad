@@ -23,6 +23,18 @@ export type CreateSubmissionInput = z.input<typeof CreateSchema>;
 export async function createSubmission(
   input: CreateSubmissionInput
 ): Promise<ActionResult<{ submissionId: string }>> {
+  try {
+    return await createSubmissionImpl(input);
+  } catch (err) {
+    console.error("[createSubmission] unhandled error", err);
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return { ok: false, error: message, code: "UNEXPECTED_ERROR" };
+  }
+}
+
+async function createSubmissionImpl(
+  input: CreateSubmissionInput
+): Promise<ActionResult<{ submissionId: string }>> {
   const parsed = CreateSchema.safeParse(input);
   if (!parsed.success) {
     return {
