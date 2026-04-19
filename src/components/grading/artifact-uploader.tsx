@@ -3,11 +3,8 @@
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-  createSubmission,
-  MAX_UPLOAD_BYTES,
-  type CreateSubmissionInput,
-} from "@/actions/submission";
+import { createSubmission, type CreateSubmissionInput } from "@/actions/submission";
+import { MAX_UPLOAD_BYTES } from "@/lib/submission/constants";
 import { Button } from "@/components/ui/button";
 
 const ALLOWED_MIMES: Record<string, string> = {
