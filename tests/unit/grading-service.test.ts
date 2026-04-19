@@ -2,6 +2,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type Anthropic from "@anthropic-ai/sdk";
+
+const { checkSpendCapMock } = vi.hoisted(() => ({ checkSpendCapMock: vi.fn() }));
+vi.mock("@/lib/grading/spend-guard", () => ({ checkSpendCap: checkSpendCapMock }));
+
 import { gradeSubmission } from "@/lib/grading/service";
 
 const RUBRIC = JSON.parse(
@@ -143,6 +147,10 @@ function makeFakeSupabase() {
       state.rubricScores.push(...rows);
       return { error: null };
     },
+    // Used by the spend guard — return today's already-graded rows.
+    select: (_cols?: string) => ({
+      gte: async (_col: string, _val: string) => ({ data: state.rubricScores, error: null }),
+    }),
   };
 
   const auditQueueTable = {
@@ -165,6 +173,13 @@ function makeFakeSupabase() {
 describe("gradeSubmission", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    checkSpendCapMock.mockReset();
+    checkSpendCapMock.mockResolvedValue({
+      ok: true,
+      spendTodayUsd: 0,
+      capUsd: 100,
+      projectedUsd: 0.05,
+    });
   });
 
   it("happy path: writes 5 rubric_scores rows and flips submission to graded", async () => {
@@ -240,6 +255,30 @@ describe("gradeSubmission", () => {
 
     expect(result).toEqual({ ok: true, data: { status: "already_graded" } });
     expect(callClaude).not.toHaveBeenCalled();
+  });
+
+  it("refuses to grade and flips status to grading_failed when the spend guard rejects", async () => {
+    checkSpendCapMock.mockResolvedValueOnce({
+      ok: false,
+      spendTodayUsd: 99,
+      capUsd: 100,
+      projectedUsd: 101,
+      code: "COST_CAP_EXCEEDED",
+    });
+    const supabase = makeFakeSupabase();
+    const callClaude = vi.fn<() => Promise<Anthropic.Messages.Message>>();
+
+    const result = await gradeSubmission("sub-1", {
+      supabase: supabase as unknown as ReturnType<
+        typeof import("@/lib/supabase/admin").createAdminClient
+      >,
+      callClaude,
+    });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.code).toBe("COST_CAP_EXCEEDED");
+    expect(callClaude).not.toHaveBeenCalled();
+    expect(supabase._state.submission.status).toBe("grading_failed");
   });
 
   it("returns NO_EXTRACTED_TEXT when the submission has no extracted text", async () => {
