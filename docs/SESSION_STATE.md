@@ -1,19 +1,22 @@
 # SESSION_STATE.md
 
 Snapshot for a fresh Claude Code session to pick up where we left off.
-Written **2026-04-19**. Update any time the state shifts.
+Last updated **2026-04-19** (afternoon session — COST-001 just merged).
 
 ---
 
 ## TL;DR
 
-MVP is **complete and live on production**. All 38 BUILD_PLAN tickets
-(M1–M4 + PORT-001) shipped. Real end-to-end flow works: signup →
-Stripe-paid access → lesson → video → workbook template download →
-artifact upload → Claude-graded rubric score card → audit queue.
+MVP is **complete and live on production** plus a round of post-MVP
+hardening shipped today (GRADE-012/013, CAL-001, TEST-001, COST-001).
+All 38 BUILD_PLAN tickets plus 5 follow-ups. End-to-end flow works:
+signup → Stripe-paid access → lesson → video → workbook template
+download → artifact upload → Claude-graded rubric score card →
+audit queue → admin override surfaces back to learner.
 
 **Production:** https://project-coordinator-launchpad.vercel.app
-**Main branch:** clean, 119 tests (99 unit + 20 integration skipped) green in CI.
+**Main branch:** clean, **132 tests** passing + 26 skipped (integration
+tests that need a local Supabase or `RUN_CALIBRATION=1`).
 
 ---
 
@@ -69,6 +72,39 @@ artifact upload → Claude-graded rubric score card → audit queue.
   per-item review at `/audit/[id]` with approve/override
 - `requestReview` action for learner-initiated review
 
+### Post-MVP follow-ups shipped 2026-04-19
+- **GRADE-012** (PR #46, merged) — `src/lib/grading/apply-overrides.ts`
+  pure function + integration into `/submissions/[id]` and
+  `/audit/[id]`. Admin overrides now surface on the learner's view:
+  "Adjusted by reviewer" tag per overridden dim, "Reviewed by human"
+  badge, recomputed overall/pass/hire-ready. Display-only merge;
+  `rubric_scores` stays append-only.
+- **CAL-001** (PR #47, merged) — first calibration corpus. Extracted
+  DB-free `gradeWithContext()` from `gradeSubmission`, added 5
+  hand-rated RAID fixtures in `tests/fixtures/raid-submissions/`,
+  asserts every dim score is within ±1 of expected + ≥80% aggregate.
+  Manual-trigger workflow `.github/workflows/calibration.yml` runs
+  on `workflow_dispatch`. Local + CI: 25/25 cells within ±1 (100%).
+  BUILD_PLAN §11.4 targets 20 fixtures — this ships 5 as v0.
+- **GRADE-013** (PR #48, merged) — wired `requestReview()` to a
+  button at the bottom of `/submissions/[id]`. Three states:
+  hidden (already reviewed), pending notice (already queued),
+  visible (not yet queued). Uses the queue lookup GRADE-012 already
+  added — no extra queries.
+- **TEST-001** (PR #49, merged) — added `jsdom` +
+  `@testing-library/user-event` devDeps and first `.tsx` tests in
+  the repo via `// @vitest-environment jsdom` pragma. Covers the
+  three RequestReviewButton states and the RubricScoreCard override
+  badges (previously verified only via prod walkthrough).
+- **COST-001** (PR #50, merged) — real enforcement of
+  `ANTHROPIC_SPEND_CAP_USD`. `src/lib/anthropic/pricing.ts` has a
+  per-model price table; `src/lib/grading/spend-guard.ts` sums
+  today's UTC `rubric_scores` token usage and adds a conservative
+  per-grade estimate. If that would exceed the cap, `gradeSubmission`
+  flips the submission to `grading_failed` with code
+  `COST_CAP_EXCEEDED` and skips the Claude call. Bumping the pinned
+  model requires updating the pricing table.
+
 ---
 
 ## Your account
@@ -99,6 +135,10 @@ So you can log in on production and hit `/audit` as admin.
 - `NEXT_PUBLIC_APP_URL=https://project-coordinator-launchpad.vercel.app`
 - `NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com`
 - `GRADE_WORKER_SECRET` (32-byte hex, generated randomly)
+
+### GitHub repo secrets (for workflows)
+- `ANTHROPIC_API_KEY` — added 2026-04-19, used by the manual-trigger
+  Calibration corpus workflow only. Mirrors the Vercel env value.
 
 ### Migrations applied to prod Supabase (in order)
 ```
@@ -163,67 +203,80 @@ gh pr merge <#> --squash --delete-branch
 
 ## Known loose ends / follow-ups
 
-1. **Calibration corpus** — grade 5–10 hand-varied RAID logs and sanity
-   check the rubric output against human judgement. The calibration
-   pattern lives in BUILD_PLAN section 8.6. Not done.
+### Closed today (2026-04-19)
+- ~~Learner "Request human review" button~~ — GRADE-013 (PR #48).
+- ~~Admin override display on learner's page~~ — GRADE-012 (PR #46).
+- ~~Daily cost cap enforcement~~ — COST-001 (PR #50).
+- ~~Calibration corpus (stub)~~ — CAL-001 (PR #47). **Partially
+  closed**: v0 ships 5 fixtures, BUILD_PLAN §11.4 targets 20.
 
-2. **Learner "Request human review" button** — the `requestReview`
-   action exists in `src/actions/audit.ts` but no UI wires into it yet.
-   A button on the submission detail page below the score card would
-   close this out.
+### Still open
+1. **Calibration corpus v1** — expand from 5 → 20 fixtures per
+   BUILD_PLAN §11.4. Add a "good structure, empty content" failure
+   mode and at least two more intermediate variants. Revisit dropped
+   fixture 06 (inline `[w1]/[w2]` tags) — it triggered a ~27-minute
+   Claude response cycle on first attempt; may be a Claude quirk or
+   a layout that tickles a rate-limit backoff loop. Possibly tighten
+   per-call timeout in `gradeWithContext` to fail fast.
 
-3. **Admin override display on learner's submission page** — when an
-   admin overrides scores via `/audit/[id]`, the `audit_records` row is
-   written but the learner's view still shows the original AI scores.
-   Needs an `applyOverrides()` layer at display time. BUILD_PLAN
-   GRADE-011 mentions this as the `apply-overrides` pure function.
-
-4. **Bunny Stream real video** — `lesson.video_url` points at a public
-   Big Buck Bunny sample for testing. Replace with the real RAID-logs
+2. **Bunny Stream real video** — `lesson.video_url` still points at
+   the public Big Buck Bunny sample. Replace with the real RAID-logs
    lesson video when content is produced. One service-role UPDATE.
 
-5. **Full cost-cap enforcement** — `ANTHROPIC_SPEND_CAP_USD` is defined
-   and imported but never compared against a daily spend aggregate.
-   `src/actions/submission.ts` contains a `void env.ANTHROPIC_SPEND_CAP_USD`
-   stub comment. Would need a small cost-tracking table or Supabase
-   aggregate query.
+3. **Net-new lesson (Lesson 1)** — prove the template generalizes to
+   a second competency. Requires new scenario text, new rubric file
+   in `docs/rubrics/`, new prompt version in `docs/prompts/`, a
+   migration to seed them, and new calibration fixtures specific to
+   that competency. Deliberate multi-step work — not a "continue"
+   task; spin up its own session.
 
-6. **Async grading smoke-test on production** — restored via
-   `/api/grade/[id]` route + fire-and-forget fetch; verified locally
-   with `scripts/repro-upload.mjs`. Want the founder to upload one
-   more time on prod to confirm the "upload returns in ~1s, detail page
-   polls, flips to graded" UX before calling it fully shipped.
+4. **Async grading smoke-test on production** — the 12:36 PM
+   walkthrough today implicitly covered this (upload landed in
+   graded state; Request Review button worked on it). Can strike
+   from this list unless another regression surfaces.
 
-7. **No calibration + rubric version bumping process documented** —
-   BUILD_PLAN section 8.6 describes it; when content changes require a
-   rubric bump, create `docs/rubrics/raid-v2.json` + a migration that
-   inserts the new row and flips `is_current`.
+5. **No calibration + rubric version bumping process documented** —
+   BUILD_PLAN §8.6 describes it; when content changes require a
+   rubric bump, create `docs/rubrics/raid-v2.json` + a migration
+   that inserts the new row and flips `is_current`. Worth writing
+   up as an ADR once we actually bump.
+
+6. **Calibration CI promotion** — currently `workflow_dispatch` only.
+   Promote to required-on-PR (gated to PRs that touch
+   `src/lib/grading/`, `docs/prompts/`, `docs/rubrics/`) after a few
+   manual runs demonstrate stability and cost is acceptable.
+
+7. **Cost-cap smoke test on prod** — COST-001 is unit-tested but not
+   yet verified in real life. Temporarily set
+   `ANTHROPIC_SPEND_CAP_USD=0.001` in Vercel preview, upload, confirm
+   grading_failed with no Claude call in logs. Then revert.
 
 ---
 
 ## Kickoff prompt for the next session
 
 ```
-Read @CLAUDE.md and @docs/SESSION_STATE.md. The MVP is done — all 38
-BUILD_PLAN tickets shipped to production. Before picking up any new
-work, sanity-check:
+Read @CLAUDE.md and @docs/SESSION_STATE.md. MVP + five post-MVP
+hardening PRs (GRADE-012/013, CAL-001, TEST-001, COST-001) shipped.
+Before picking up new work, sanity-check:
 
   - git status clean, on main, up to date
   - pnpm typecheck && pnpm lint pass
   - production at https://project-coordinator-launchpad.vercel.app
     still responds 200 at /
 
-Then ask me what to focus on next. Likely candidates from the
-"loose ends" section:
+Then ask me what to focus on next. Likely candidates:
 
-  (a) calibration corpus run
-  (b) wire the Request Review button on submission detail
-  (c) apply-overrides layer so admin overrides show up on the
-      learner's submission page
-  (d) real video swap once Bunny content is produced
-  (e) daily cost cap enforcement
-  (f) or a net-new lesson (Lesson 1 "What a PC does all day") to
-      prove the template generalizes
+  (a) expand calibration corpus v0 → v1 (5 fixtures → 20 per
+      BUILD_PLAN §11.4), add the "good structure, empty content"
+      failure mode
+  (b) net-new lesson to prove the template generalizes (multi-step
+      — scenario + rubric + prompt + migration + calibration
+      fixtures for a new competency)
+  (c) real Bunny Stream video swap (content-dependent, one UPDATE)
+  (d) promote calibration CI to required-on-PR
+  (e) cost-cap smoke test on prod (ANTHROPIC_SPEND_CAP_USD=0.001
+      in preview env, upload, confirm refusal)
 ```
 
 ---
