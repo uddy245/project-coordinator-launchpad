@@ -145,12 +145,17 @@ function makeFakeSupabase() {
     },
   };
 
+  const auditQueueTable = {
+    insert: async (_row: Row) => ({ error: null }),
+  };
+
   const from = (table: string) => {
     if (table === "submissions") return submissionsTable;
     if (table === "lessons") return lessonsTable;
     if (table === "rubrics") return rubricsTable;
     if (table === "prompts") return promptsTable;
     if (table === "rubric_scores") return rubricScoresTable;
+    if (table === "audit_queue") return auditQueueTable;
     throw new Error("unexpected table: " + table);
   };
 

@@ -11,6 +11,7 @@ import { parseRubric, type RubricJSON } from "./rubric";
 import { renderPrompt } from "./prompt";
 import { buildGradeTool, GRADE_TOOL_NAME } from "./tool-schema";
 import { buildScoreValidator, type ScoreOutput } from "./validator";
+import { shouldSample } from "./audit-sampler";
 
 export type GradeSubmissionDeps = {
   supabase?: ReturnType<typeof createAdminClient>;
@@ -192,6 +193,13 @@ export async function gradeSubmission(
       error: `Submission update failed: ${updateErr.message}`,
       code: "DB_ERROR",
     };
+  }
+
+  // 10% deterministic sampling into the audit queue. Unique constraint
+  // on audit_queue.submission_id makes this idempotent — if we sampled
+  // on a prior run and the row exists, this no-ops silently.
+  if (shouldSample(submissionId)) {
+    await supabase.from("audit_queue").insert({ submission_id: submissionId, reason: "sampled" });
   }
 
   return { ok: true, data: { status: "graded" } };
