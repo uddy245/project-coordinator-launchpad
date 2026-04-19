@@ -3,6 +3,7 @@ import { requireUser } from "@/lib/auth/require-user";
 import { createClient } from "@/lib/supabase/server";
 import { LessonHeader } from "@/components/lessons/lesson-header";
 import { LessonTabs, type LessonTabKey } from "@/components/lessons/tabs";
+import { WorkbookPanel } from "@/components/lessons/workbook-panel";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -51,13 +52,18 @@ export default async function LessonPage({
 
       <LessonTabs active={active} />
 
-      <section
-        className="rounded-lg border bg-card p-6 text-sm text-muted-foreground"
-        aria-label={`${active} content`}
-      >
-        {active === "video" && <p>Video player lands in LES-004. {lesson.summary}</p>}
-        {active === "workbook" && <p>Workbook templates land in LES-005.</p>}
-        {active === "quiz" && <p>Quiz player lands in LES-007.</p>}
+      <section aria-label={`${active} content`}>
+        {active === "video" && (
+          <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
+            Video player lands in LES-004. {lesson.summary}
+          </div>
+        )}
+        {active === "workbook" && <WorkbookPanel />}
+        {active === "quiz" && (
+          <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
+            Quiz player lands in LES-007.
+          </div>
+        )}
       </section>
     </div>
   );
