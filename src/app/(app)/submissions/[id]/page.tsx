@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/require-user";
 import { createClient } from "@/lib/supabase/server";
 import { parseRubric } from "@/lib/grading/rubric";
+import { applyOverrides, type OverrideEntry } from "@/lib/grading/apply-overrides";
 import { RubricScoreCard, type RubricScoreRow } from "@/components/grading/rubric-score-card";
 import { GradingInProgress } from "@/components/grading/grading-in-progress";
 import { Button } from "@/components/ui/button";
@@ -139,13 +140,39 @@ async function GradedView({ submissionId }: { submissionId: string }) {
     suggestion: r.suggestion,
   }));
 
+  // Pull the latest human decision across any audit_queue row for this
+  // submission. Overrides merge into the display; a bare approval still
+  // earns the "Reviewed by human" badge.
+  const { data: queueRows } = await supabase
+    .from("audit_queue")
+    .select("id")
+    .eq("submission_id", submissionId);
+  const queueIds = (queueRows ?? []).map((r) => r.id);
+  const { data: latestRecord } = queueIds.length
+    ? await supabase
+        .from("audit_records")
+        .select("decision, overrides")
+        .in("audit_queue_id", queueIds)
+        .order("decided_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+    : { data: null };
+
+  const overrides = (latestRecord?.overrides as OverrideEntry[] | null) ?? null;
+  const reviewedByHuman = latestRecord !== null && latestRecord !== undefined;
+  const applied = applyOverrides(scores, overrides, rubric);
+
   return (
     <RubricScoreCard
       rubric={rubric}
-      scores={scores}
-      overallScore={submission?.overall_score ?? null}
-      pass={submission?.pass ?? null}
-      hireReady={submission?.hire_ready ?? null}
+      scores={applied.scores}
+      overallScore={
+        applied.hasOverrides ? applied.overallScore : (submission?.overall_score ?? null)
+      }
+      pass={applied.hasOverrides ? applied.pass : (submission?.pass ?? null)}
+      hireReady={applied.hasOverrides ? applied.hireReady : (submission?.hire_ready ?? null)}
+      overriddenDimensions={applied.overriddenDimensions}
+      reviewedByHuman={reviewedByHuman}
     />
   );
 }

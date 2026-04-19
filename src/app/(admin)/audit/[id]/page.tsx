@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { parseRubric } from "@/lib/grading/rubric";
+import { applyOverrides, type OverrideEntry } from "@/lib/grading/apply-overrides";
 import { RubricScoreCard, type RubricScoreRow } from "@/components/grading/rubric-score-card";
 import { AuditReviewPanel } from "@/components/admin/audit-review-panel";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,18 @@ export default async function AuditDetailPage({ params }: { params: Promise<{ id
 
   const rubric = rubricRow ? parseRubric(rubricRow.schema_json) : null;
 
+  // Latest decision on this queue row (for admins returning to a reviewed item).
+  const { data: latestRecord } = await supabase
+    .from("audit_records")
+    .select("decision, overrides")
+    .eq("audit_queue_id", queueRow.id)
+    .order("decided_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  const overrides = (latestRecord?.overrides as OverrideEntry[] | null) ?? null;
+  const reviewedByHuman = latestRecord !== null && latestRecord !== undefined;
+  const applied = rubric ? applyOverrides(scores, overrides, rubric) : null;
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header className="space-y-2">
@@ -67,13 +80,17 @@ export default async function AuditDetailPage({ params }: { params: Promise<{ id
         </p>
       </header>
 
-      {rubric && (
+      {rubric && applied && (
         <RubricScoreCard
           rubric={rubric}
-          scores={scores}
-          overallScore={submission?.overall_score ?? null}
-          pass={submission?.pass ?? null}
-          hireReady={submission?.hire_ready ?? null}
+          scores={applied.scores}
+          overallScore={
+            applied.hasOverrides ? applied.overallScore : (submission?.overall_score ?? null)
+          }
+          pass={applied.hasOverrides ? applied.pass : (submission?.pass ?? null)}
+          hireReady={applied.hasOverrides ? applied.hireReady : (submission?.hire_ready ?? null)}
+          overriddenDimensions={applied.overriddenDimensions}
+          reviewedByHuman={reviewedByHuman}
         />
       )}
 
