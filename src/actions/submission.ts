@@ -6,9 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { extractText, SUPPORTED_MIME_TYPES } from "@/lib/grading/parsers";
 import { gradeSubmission } from "@/lib/grading/service";
+import { MAX_UPLOAD_BYTES } from "@/lib/submission/constants";
 import type { ActionResult } from "@/lib/types";
-
-export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024; // 10 MB
 
 const CreateSchema = z.object({
   lessonSlug: z.string().min(1),
