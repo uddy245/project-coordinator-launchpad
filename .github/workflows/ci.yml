@@ -42,6 +42,7 @@ jobs:
           ANTHROPIC_API_KEY: sk-ant-placeholder
           STRIPE_SECRET_KEY: sk_test_placeholder
           STRIPE_PRICE_ID: price_placeholder
+          GRADE_WORKER_SECRET: placeholder-grade-worker-secret-32-chars
 
       - name: Build
         run: pnpm build
@@ -53,3 +54,4 @@ jobs:
           ANTHROPIC_API_KEY: sk-ant-placeholder
           STRIPE_SECRET_KEY: sk_test_placeholder
           STRIPE_PRICE_ID: price_placeholder
+          GRADE_WORKER_SECRET: placeholder-grade-worker-secret-32-chars

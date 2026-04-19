@@ -131,19 +131,29 @@ async function createSubmissionImpl(
     })
     .eq("id", sub.id);
 
-  // Grade synchronously for MVP. The call takes ~10–15s but keeps the
-  // execution model dead simple (and sidesteps any background-execution
-  // caveats on Vercel's Hobby tier). The client shows an "Uploading..."
-  // state during this time. If grading throws here, the outer try/catch
-  // in createSubmission turns it into an actionable error message.
+  // Fire-and-forget the grading worker. We call our own /api/grade/[id]
+  // route over HTTP with a shared secret; that route runs gradeSubmission
+  // asynchronously so this action can return immediately and the client
+  // can redirect to /submissions/[id] where the poller waits for the
+  // graded state. If the fetch itself throws (network hiccup), we fall
+  // back to inline grading so the submission doesn't rot in pending.
+  const workerUrl = `${env.NEXT_PUBLIC_APP_URL}/api/grade/${sub.id}`;
   try {
-    await gradeSubmission(sub.id);
+    // No await — fire the request and let Next.js serverless pick it up.
+    // Include a catch handler so an unhandled rejection doesn't crash.
+    void fetch(workerUrl, {
+      method: "POST",
+      headers: { "x-grade-worker-secret": env.GRADE_WORKER_SECRET },
+      cache: "no-store",
+    }).catch((err) => {
+      console.error("[createSubmission] worker fetch failed", err);
+    });
   } catch (err) {
-    console.error("[createSubmission] grading failed", err);
-    await admin
-      .from("submissions")
-      .update({ status: "grading_failed", graded_at: new Date().toISOString() })
-      .eq("id", sub.id);
+    console.error("[createSubmission] worker dispatch failed", err);
+    // Inline fallback so the submission still gets graded.
+    gradeSubmission(sub.id).catch((e) =>
+      console.error("[createSubmission] inline fallback failed", e)
+    );
   }
 
   // Best-effort daily cost cap guard — stub; full enforcement is TBD.
