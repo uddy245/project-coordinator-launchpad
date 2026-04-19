@@ -105,5 +105,19 @@ export async function submitQuizAttempt(
     };
   }
 
+  // Flip quiz_passed on the progress row when the learner passes.
+  // Idempotent on the composite PK; a later lower-scoring attempt
+  // does not clear the flag (pass once = passed).
+  if (result.passed) {
+    await admin.from("lesson_progress").upsert(
+      {
+        user_id: user.id,
+        lesson_id: lesson.id,
+        quiz_passed: true,
+      },
+      { onConflict: "user_id,lesson_id" }
+    );
+  }
+
   return { ok: true, data: result };
 }
