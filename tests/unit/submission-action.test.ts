@@ -8,7 +8,6 @@ const {
   uploadMock,
   gradeSubmissionMock,
   extractTextMock,
-  afterMock,
   deleteEqMock,
 } = vi.hoisted(() => ({
   getUserMock: vi.fn(),
@@ -18,7 +17,6 @@ const {
   uploadMock: vi.fn(),
   gradeSubmissionMock: vi.fn(),
   extractTextMock: vi.fn(),
-  afterMock: vi.fn(),
   deleteEqMock: vi.fn(),
 }));
 
@@ -74,10 +72,6 @@ vi.mock("@/lib/grading/parsers", async () => {
   };
 });
 
-vi.mock("next/server", () => ({
-  after: afterMock,
-}));
-
 import { createSubmission } from "@/actions/submission";
 
 const XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -91,17 +85,10 @@ beforeEach(() => {
   uploadMock.mockReset();
   gradeSubmissionMock.mockReset();
   extractTextMock.mockReset();
-  afterMock.mockReset();
   deleteEqMock.mockReset();
 
   updateEqMock.mockResolvedValue({ error: null });
   deleteEqMock.mockResolvedValue({ error: null });
-
-  // after() simply invokes its callback synchronously in tests so we can
-  // inspect the grading side effects.
-  afterMock.mockImplementation(async (cb: () => Promise<void>) => {
-    await cb();
-  });
 });
 
 describe("createSubmission", () => {
@@ -178,7 +165,6 @@ describe("createSubmission", () => {
     expect(uploadMock).toHaveBeenCalled();
     const [path] = uploadMock.mock.calls[0] ?? [];
     expect(path).toBe("user-42/sub-99.xlsx");
-    expect(afterMock).toHaveBeenCalledTimes(1);
     expect(gradeSubmissionMock).toHaveBeenCalledWith("sub-99");
   });
 

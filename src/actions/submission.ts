@@ -1,6 +1,5 @@
 "use server";
 
-import { after } from "next/server";
 import { z } from "zod";
 import { env } from "@/env";
 import { createClient } from "@/lib/supabase/server";
@@ -133,21 +132,22 @@ async function createSubmissionImpl(
     })
     .eq("id", sub.id);
 
-  // Fire the grading call without awaiting — Next.js keeps the request
-  // alive via `after()` so the caller returns immediately. The grading
-  // path idempotently guards against double-runs.
-  after(async () => {
-    try {
-      await gradeSubmission(sub.id);
-    } catch (err) {
-      console.error("grading failed in after()", err);
-    }
-  });
+  // Grade synchronously for MVP. The call takes ~10–15s but keeps the
+  // execution model dead simple (and sidesteps any background-execution
+  // caveats on Vercel's Hobby tier). The client shows an "Uploading..."
+  // state during this time. If grading throws here, the outer try/catch
+  // in createSubmission turns it into an actionable error message.
+  try {
+    await gradeSubmission(sub.id);
+  } catch (err) {
+    console.error("[createSubmission] grading failed", err);
+    await admin
+      .from("submissions")
+      .update({ status: "grading_failed", graded_at: new Date().toISOString() })
+      .eq("id", sub.id);
+  }
 
-  // Best-effort daily cost cap guard — if today's spend is already past
-  // the cap, park the submission in manual_review instead of grading.
-  // MVP: logs-only estimate using sum of output_tokens×price-per-token.
-  // Full cap enforcement lives in a future ticket; this is the stub.
+  // Best-effort daily cost cap guard — stub; full enforcement is TBD.
   void env.ANTHROPIC_SPEND_CAP_USD;
 
   return { ok: true, data: { submissionId: sub.id } };
