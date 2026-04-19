@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { LessonHeader } from "@/components/lessons/lesson-header";
 import { LessonTabs, type LessonTabKey } from "@/components/lessons/tabs";
 import { WorkbookPanel } from "@/components/lessons/workbook-panel";
+import { QuizPanel } from "@/components/lessons/quiz-panel";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -59,11 +60,7 @@ export default async function LessonPage({
           </div>
         )}
         {active === "workbook" && <WorkbookPanel />}
-        {active === "quiz" && (
-          <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
-            Quiz player lands in LES-007.
-          </div>
-        )}
+        {active === "quiz" && <QuizPanel lessonSlug={slug} />}
       </section>
     </div>
   );
