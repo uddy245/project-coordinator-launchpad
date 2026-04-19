@@ -156,9 +156,6 @@ async function createSubmissionImpl(
     );
   }
 
-  // Best-effort daily cost cap guard — stub; full enforcement is TBD.
-  void env.ANTHROPIC_SPEND_CAP_USD;
-
   return { ok: true, data: { submissionId: sub.id } };
 }
 

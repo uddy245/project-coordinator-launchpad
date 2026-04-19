@@ -12,6 +12,7 @@ import { renderPrompt } from "./prompt";
 import { buildGradeTool, GRADE_TOOL_NAME } from "./tool-schema";
 import { buildScoreValidator, type ScoreOutput } from "./validator";
 import { shouldSample } from "./audit-sampler";
+import { checkSpendCap } from "./spend-guard";
 
 export type GradeSubmissionDeps = {
   supabase?: ReturnType<typeof createAdminClient>;
@@ -161,6 +162,24 @@ export async function gradeSubmission(
   }
   if (currentStatus?.status === "grading_failed") {
     return { ok: true, data: { status: "grading_failed" } };
+  }
+
+  // Daily spend guard: refuse to grade if today's projected spend
+  // would exceed ANTHROPIC_SPEND_CAP_USD. Flips the submission to
+  // grading_failed so the user sees a clear state, and returns a
+  // distinct error code so callers can distinguish cost-cap rejection
+  // from a Claude failure.
+  const spend = await checkSpendCap(supabase);
+  if (!spend.ok) {
+    await supabase
+      .from("submissions")
+      .update({ status: "grading_failed", graded_at: new Date().toISOString() })
+      .eq("id", submissionId);
+    return {
+      ok: false,
+      error: `Daily Anthropic spend cap would be exceeded ($${spend.spendTodayUsd.toFixed(2)} spent, $${spend.capUsd.toFixed(2)} cap).`,
+      code: "COST_CAP_EXCEEDED",
+    };
   }
 
   await supabase.from("submissions").update({ status: "grading" }).eq("id", submissionId);
