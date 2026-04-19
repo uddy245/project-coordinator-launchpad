@@ -56,7 +56,7 @@ export default async function LessonPage({
 
       <section aria-label={`${active} content`}>
         {active === "video" && <VideoPanel lessonSlug={slug} />}
-        {active === "workbook" && <WorkbookPanel />}
+        {active === "workbook" && <WorkbookPanel lessonSlug={slug} />}
         {active === "quiz" && <QuizPanel lessonSlug={slug} />}
       </section>
     </div>
