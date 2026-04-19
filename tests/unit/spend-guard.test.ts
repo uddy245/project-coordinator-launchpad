@@ -14,7 +14,7 @@ import { checkSpendCap } from "@/lib/grading/spend-guard";
 type Row = { model: string; input_tokens: number; output_tokens: number };
 
 function fakeSupabase(rows: Row[]) {
-  const gteMock = vi.fn(async () => ({ data: rows, error: null }));
+  const gteMock = vi.fn(async (_col: string, _val: string) => ({ data: rows, error: null }));
   return {
     from: (_table: string) => ({
       select: (_cols: string) => ({ gte: gteMock }),
@@ -59,10 +59,7 @@ describe("checkSpendCap", () => {
     const supa = fakeSupabase([]);
     const now = new Date("2026-04-19T08:30:00Z");
     await checkSpendCap(supa, now);
-    // Grab the arg the mock was called with.
-    const [col, value] = supa._gteMock.mock.calls[0]!;
-    expect(col).toBe("created_at");
-    expect(value).toBe("2026-04-19T00:00:00.000Z");
+    expect(supa._gteMock).toHaveBeenCalledWith("created_at", "2026-04-19T00:00:00.000Z");
   });
 
   it("treats an empty day as 0 spend", async () => {
