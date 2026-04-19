@@ -1,9 +1,24 @@
 name: Calibration corpus
 
-# Manual-trigger only. Runs the grading pipeline against the fixture
-# corpus with the real Anthropic API. Costs ~$0.60 per run.
+# Runs the grading pipeline against the fixture corpus with the real
+# Anthropic API. Costs ~$0.60 per run (5 Sonnet-4.5 grading calls).
+#
+# Triggers:
+#   - workflow_dispatch: manual runs (any branch)
+#   - pull_request: only when files that can affect grading change,
+#     so PRs touching UI/content/infra don't burn API spend
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/lib/grading/**"
+      - "src/lib/anthropic/**"
+      - "docs/prompts/**"
+      - "docs/rubrics/**"
+      - "tests/fixtures/raid-submissions/**"
+      - "tests/integration/calibration.test.ts"
+      - ".github/workflows/calibration.yml"
 
 jobs:
   calibration:
