@@ -5,6 +5,7 @@ import { LessonHeader } from "@/components/lessons/lesson-header";
 import { LessonTabs, type LessonTabKey } from "@/components/lessons/tabs";
 import { WorkbookPanel } from "@/components/lessons/workbook-panel";
 import { QuizPanel } from "@/components/lessons/quiz-panel";
+import { VideoPanel } from "@/components/lessons/video-panel";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -54,11 +55,7 @@ export default async function LessonPage({
       <LessonTabs active={active} />
 
       <section aria-label={`${active} content`}>
-        {active === "video" && (
-          <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
-            Video player lands in LES-004. {lesson.summary}
-          </div>
-        )}
+        {active === "video" && <VideoPanel lessonSlug={slug} />}
         {active === "workbook" && <WorkbookPanel />}
         {active === "quiz" && <QuizPanel lessonSlug={slug} />}
       </section>
