@@ -25,6 +25,10 @@ export const env = createEnv({
 
     // Email
     RESEND_API_KEY: z.string().optional(),
+
+    // Internal: shared secret the server action uses to trigger the
+    // grading worker route without being impersonable by third parties.
+    GRADE_WORKER_SECRET: z.string().min(32),
   },
 
   client: {
@@ -55,6 +59,7 @@ export const env = createEnv({
     BUNNY_STREAM_LIBRARY_ID: process.env.BUNNY_STREAM_LIBRARY_ID,
     BUNNY_STREAM_API_KEY: process.env.BUNNY_STREAM_API_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    GRADE_WORKER_SECRET: process.env.GRADE_WORKER_SECRET,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,

@@ -89,6 +89,13 @@ beforeEach(() => {
 
   updateEqMock.mockResolvedValue({ error: null });
   deleteEqMock.mockResolvedValue({ error: null });
+
+  // Replace global fetch so the fire-and-forget grading dispatch is
+  // captured but doesn't actually run (and doesn't need a network).
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(() => Promise.resolve(new Response(null, { status: 202 })))
+  );
 });
 
 describe("createSubmission", () => {
@@ -165,7 +172,16 @@ describe("createSubmission", () => {
     expect(uploadMock).toHaveBeenCalled();
     const [path] = uploadMock.mock.calls[0] ?? [];
     expect(path).toBe("user-42/sub-99.xlsx");
-    expect(gradeSubmissionMock).toHaveBeenCalledWith("sub-99");
+
+    // Grading is dispatched via fetch to /api/grade/[id] — verify the
+    // fire-and-forget URL + shared secret header, not a direct call.
+    const fetchMock = globalThis.fetch as unknown as ReturnType<typeof vi.fn>;
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(url).toMatch(/\/api\/grade\/sub-99$/);
+    expect(init.method).toBe("POST");
+    expect((init.headers as Record<string, string>)["x-grade-worker-secret"]).toBeTruthy();
+    expect(gradeSubmissionMock).not.toHaveBeenCalled();
   });
 
   it("rolls back the row when storage upload fails", async () => {
