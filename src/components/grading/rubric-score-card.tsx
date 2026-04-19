@@ -15,9 +15,19 @@ type Props = {
   overallScore: number | null;
   pass: boolean | null;
   hireReady: boolean | null;
+  overriddenDimensions?: Set<string>;
+  reviewedByHuman?: boolean;
 };
 
-export function RubricScoreCard({ rubric, scores, overallScore, pass, hireReady }: Props) {
+export function RubricScoreCard({
+  rubric,
+  scores,
+  overallScore,
+  pass,
+  hireReady,
+  overriddenDimensions,
+  reviewedByHuman = false,
+}: Props) {
   // Render dimensions in the rubric's defined order (not the order the
   // scores were inserted). Missing score for a dimension = something
   // went wrong upstream; don't render that row rather than crash.
@@ -41,11 +51,12 @@ export function RubricScoreCard({ rubric, scores, overallScore, pass, hireReady 
               <span className="ml-1 text-base font-normal text-muted-foreground">/ 5</span>
             </h2>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {pass !== null && (
               <Badge tone={pass ? "good" : "warn"}>{pass ? "Passed" : "Below pass"}</Badge>
             )}
             {hireReady && <Badge tone="great">Hire-ready</Badge>}
+            {reviewedByHuman && <Badge tone="review">Reviewed by human</Badge>}
           </div>
         </div>
       </header>
@@ -62,6 +73,7 @@ export function RubricScoreCard({ rubric, scores, overallScore, pass, hireReady 
               justification={s.justification}
               quote={s.quote}
               suggestion={s.suggestion}
+              overridden={overriddenDimensions?.has(d.name) ?? false}
             />
           );
         })}
@@ -70,11 +82,18 @@ export function RubricScoreCard({ rubric, scores, overallScore, pass, hireReady 
   );
 }
 
-function Badge({ tone, children }: { tone: "great" | "good" | "warn"; children: React.ReactNode }) {
+function Badge({
+  tone,
+  children,
+}: {
+  tone: "great" | "good" | "warn" | "review";
+  children: React.ReactNode;
+}) {
   const cls = {
     great: "bg-green-600 text-white",
     good: "bg-blue-100 text-blue-900",
     warn: "bg-amber-100 text-amber-900",
+    review: "bg-indigo-100 text-indigo-900",
   }[tone];
   return <span className={`rounded-full px-3 py-1 text-xs font-semibold ${cls}`}>{children}</span>;
 }
