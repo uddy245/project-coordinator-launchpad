@@ -14,6 +14,8 @@ vi.mock("@/lib/supabase/server", () => ({
   }),
 }));
 
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
+
 import { updateVideoProgress } from "@/actions/video-progress";
 
 beforeEach(() => {
