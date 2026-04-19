@@ -226,6 +226,7 @@ gh pr merge <#> --squash --delete-branch
 - ~~Calibration CI promotion~~ — CAL-002 (PR #52). PR-gated on
   grading-path changes; caught two real issues on first use.
 - ~~Rubric/prompt versioning process doc~~ — ADR-0002 (PR #53).
+- ~~ADR-0001 (stack choice) backfill~~ — PR #55.
 - ~~Calibration corpus (stub)~~ — CAL-001 (PR #47). **Partially
   closed**: v0 ships 5 fixtures, BUILD_PLAN §11.4 targets 20.
 - ~~Async grading smoke-test on production~~ — implicitly covered
@@ -255,10 +256,6 @@ gh pr merge <#> --squash --delete-branch
    confirm `grading_failed` with no Claude call in logs. Then
    revert.
 
-5. **ADR-0001 (stack choice) is missing** — CLAUDE.md references
-   `docs/adrs/0001-stack-choice.md` but the file never existed.
-   Worth backfilling now that `docs/adrs/` exists (ADR-0002 just
-   created it).
 
 ---
 
