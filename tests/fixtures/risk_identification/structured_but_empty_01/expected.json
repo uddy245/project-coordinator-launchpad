@@ -1,0 +1,15 @@
+{
+  "fixture_id": "structured_but_empty_01",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 2, "tolerance": 1 },
+    "risk_differentiation": { "score": 3, "tolerance": 1 },
+    "mitigation_realism": { "score": 1, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 1, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.75,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "FAILURE MODE: good structure, empty content. The submission has all the right sections and columns — RAID separated, impact/likelihood/owner/mitigation fields populated — but every cell contains a generic platitude. Every risk is 'Vendor risk' or 'Resource risk' (no scenario-specific detail, no triggers). Every mitigation is 'Monitor closely' or 'Escalate' (no specific action, no date, no named owner). Every owner is 'Project team' (no named person or role). No version history. This is the 'looks like a RAID log but does nothing' pattern — the opposite of the novice_01 'vague bullets' pattern. Critical test: does the AI reward structure over substance? It should not. Mitigation and ownership should floor. Differentiation is at 3 because categories are separated, not at higher because the entries are so generic that category judgment is untestable (could scenario-relevant Dependencies be Risks? can't tell from 'Vendor delivery'). Completeness at 2 because fields are filled but without signal."
+}

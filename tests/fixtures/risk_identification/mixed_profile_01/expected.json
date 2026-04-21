@@ -1,0 +1,15 @@
+{
+  "fixture_id": "mixed_profile_01",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 2, "tolerance": 1 },
+    "risk_differentiation": { "score": 4, "tolerance": 1 },
+    "mitigation_realism": { "score": 1, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 2, "tolerance": 2 },
+    "living_artifact_evidence": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 2.65,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "DELIBERATELY MIXED PROFILE — adapted from launchpad_content_package's Meridian version to the repo's healthcare scenario. Strong on differentiation (R/I/A/D categories used well, entries generally in the right bucket) and living-artifact (explicit v1.0/v1.1/v1.2/v1.3 history with dated status changes, closed items, additions). Weak on mitigation_realism (every mitigation is a platitude: 'Monitor closely', 'Follow up', 'Keep an eye on it', 'Prep dashboard', 'Coordinate', 'Plan ahead' — no specificity, no dates, no named actions). Weak on ownership (owners are generic roles: 'PM', 'Eng team', 'Project team', 'IT', 'Training lead' — no named people). Completeness is low-medium: triggers mostly missing, review dates absent, impact/likelihood present. The critical test: does the AI score each dimension on its own merits, or does it halo-average a mediocre overall? Tight tolerance is avoided on ownership because 'PM' vs 'named person' is a 2-or-3 judgment cell."
+}

@@ -1,0 +1,78 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Document owner: Project team. Current as of 2026-04-15.
+
+Version history:
+- v1.0 (2026-03-28): initial log at kickoff. 6 entries.
+- v1.1 (2026-04-04): added R-02 (engineer leave). Converted A-01 to risk after vendor call.
+- v1.2 (2026-04-11): closed I-01. Added I-02 (HL7 drops).
+- v1.3 (2026-04-15): R-03 downgraded after PO sync. Added R-05.
+
+===== RISKS =====
+
+R-01 [OPEN since v1.0]
+  Vendor API v2 deprecation.
+  Impact: High.
+  Likelihood: High.
+  Owner: PM.
+  Mitigation: Monitor closely. Escalate if needed.
+
+R-02 [OPEN, added v1.1]
+  Lead engineer unavailable.
+  Impact: Medium.
+  Likelihood: Certain.
+  Owner: Eng team.
+  Mitigation: Follow up.
+
+R-03 [OPEN, downgraded v1.3]
+  Premature expansion to clinics B+C.
+  Impact: High → Medium.
+  Likelihood: Medium → Low.
+  Owner: PM.
+  Mitigation: Discuss with PO.
+
+R-04 [OPEN since v1.0]
+  Scope creep.
+  Impact: Medium.
+  Likelihood: Medium.
+  Owner: PM.
+  Mitigation: Keep an eye on it.
+
+R-05 [NEW in v1.3]
+  Steering committee KPI change.
+  Impact: Medium.
+  Likelihood: Medium.
+  Owner: Project team.
+  Mitigation: Prep dashboard.
+
+===== ISSUES =====
+
+I-01 [CLOSED v1.2]
+  Three unplanned integration endpoints.
+  Resolution: QA plan accepted 2026-04-11.
+
+I-02 [OPEN, added v1.2]
+  HL7 lab feed intermittent drops.
+  Owner: IT.
+  Mitigation: Submit early. Review with vendor.
+
+===== ASSUMPTIONS =====
+
+A-01 [CLOSED v1.1]
+  Vendor SM availability was not confirmed in writing; converted to R-01 after vendor call.
+
+A-02 [OPEN]
+  Clinic A staff will complete training before expansion.
+  Owner: Training lead.
+  Mitigation: Send reminders.
+
+===== DEPENDENCIES =====
+
+D-01 [OPEN since v1.0]
+  Vendor support during cutover weekend.
+  Owner: Vendor.
+  Mitigation: Coordinate.
+
+D-02 [OPEN since v1.0]
+  Internal IT for network cutover.
+  Owner: IT.
+  Mitigation: Plan ahead.

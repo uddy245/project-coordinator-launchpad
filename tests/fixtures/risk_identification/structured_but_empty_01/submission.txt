@@ -1,0 +1,35 @@
+RAID LOG — Healthcare Integration Pilot
+Prepared by: Project team
+
+RISKS
+
+ID | Description         | Impact | Likelihood | Owner        | Mitigation
+R1 | Vendor risk         | High   | Medium     | Project team | Monitor closely
+R2 | Resource risk       | Medium | Medium     | Project team | Escalate as needed
+R3 | Timeline risk       | High   | Low        | Project team | Monitor closely
+R4 | Quality risk        | Medium | Medium     | Project team | Review regularly
+R5 | Budget risk         | Medium | Low        | Project team | Monitor closely
+R6 | Communication risk  | Low    | Medium     | Project team | Communicate clearly
+R7 | Change risk         | Medium | Medium     | Project team | Manage change
+
+ISSUES
+
+ID | Description         | Impact | Owner        | Action
+I1 | Testing delay       | Medium | Project team | Monitor closely
+I2 | Doc approval delay  | Low    | Project team | Follow up
+
+ASSUMPTIONS
+
+ID | Description                      | Owner
+A1 | Resources will be available      | Project team
+A2 | Vendor will deliver on time      | Project team
+A3 | Requirements will not change     | Project team
+
+DEPENDENCIES
+
+ID | Description       | Owner        | Mitigation
+D1 | Vendor delivery   | Project team | Monitor closely
+D2 | Internal IT       | Project team | Coordinate
+D3 | Stakeholder input | Project team | Keep in touch
+
+This RAID log will be reviewed regularly.
