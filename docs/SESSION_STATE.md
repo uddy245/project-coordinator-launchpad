@@ -296,28 +296,42 @@ gh pr merge <#> --squash --delete-branch
   healthcare scenario in CAL-003.
 
 ### Still open
-1. **Calibration corpus v1** — expand 5 → 20 fixtures per
-   BUILD_PLAN §11.4. Add a "good structure, empty content" failure
-   mode and more intermediate variants. Revisit dropped fixture 06
-   (inline `[w1]/[w2]` tags triggered a ~27-min Claude response
-   cycle); consider tightening the per-call timeout inside
-   `gradeWithContext` to fail fast next time.
+1. **Calibration corpus v2** — 9 → 20 fixtures per BUILD_PLAN §11.4.
+   Still needed: ~3 more novice variants, ~4 more intermediates, ~2
+   more hire-ready, ~1 more edge case. Dropped fixture 06 from CAL-001
+   (inline `[w1]/[w2]` tags → 27-min Claude response) still unresolved;
+   consider tightening the per-call timeout inside `gradeWithContext`
+   to fail fast.
 
-2. **Bunny Stream real video** — `lesson.video_url` still points
-   at the public Big Buck Bunny sample. Replace with the real
-   RAID-logs lesson video when content is produced. One
-   service-role UPDATE.
+2. **Bunny Stream real video** — `lesson.video_url` is NULL on Lesson
+   20 (SESSION_STATE earlier claimed a Big Buck Bunny placeholder but
+   the seed never set one — see CONTENT-001 review). Populate with the
+   real RAID-logs video when produced. One service-role UPDATE.
 
-3. **Net-new lesson (Lesson 1)** — prove the template generalizes
-   to a second competency. Scenario + rubric + prompt + migration
-   + calibration fixtures for the new competency. Deliberate
-   multi-step work — spin up its own session.
+3. **Lesson 1 content package from the other Claude** — the remaining
+   blocker for Lesson 1. Input: `project_coordinator_handbook.md` Ch 1
+   + the Chapter 1 .docx already shared. Output: a
+   `launchpad_content_package_project_intake/` folder matching the
+   7-file shape of the existing Lesson 20 package (rubric + prompt +
+   scenario + video script + workbook spec + quiz + reading + 8
+   fixtures). Once delivered: PR C1 integrates mechanically.
 
-4. **Cost-cap smoke test on prod** — COST-001 is unit-tested but
-   not yet verified in real life. Temporarily set
-   `ANTHROPIC_SPEND_CAP_USD=0.001` in Vercel preview, upload,
-   confirm `grading_failed` with no Claude call in logs. Then
-   revert.
+4. **Cost-cap smoke test on prod** — COST-001 is unit-tested but not
+   yet verified in real life. Temporarily set
+   `ANTHROPIC_SPEND_CAP_USD=0.001` in Vercel preview, upload, confirm
+   `grading_failed` with no Claude call in logs. Then revert.
+
+5. **Lesson 20 video script review** — now at
+   `docs/scripts/lesson-20-raid-logs.md`. Two items still need human
+   verification: (a) Jennifer Chen story uniqueness across the handbook
+   and any future lesson scripts (grep check); (b) real-time runtime
+   (read aloud with stopwatch — 14-min page target ≈ 16–18 min spoken).
+   If runtime is tight, §"The pre-mortem" (10:00–11:15) is the most
+   detachable section.
+
+6. **Publish Lesson 1 after video recorded** — when the video lands
+   in Bunny Stream, flip `is_published=true` on the lesson row and
+   populate `video_url`. One-line migration per the pattern.
 
 
 ---
