@@ -2,48 +2,18 @@ import { Button } from "@/components/ui/button";
 import { ArtifactUploader } from "@/components/grading/artifact-uploader";
 import { SubmissionHistory } from "@/components/grading/submission-history";
 import { createClient } from "@/lib/supabase/server";
+import { templatesFor, type Template } from "@/lib/lessons/templates";
 
-type Template = {
-  file: string;
-  title: string;
-  kind: "starter" | "example";
-  description: string;
-};
-
-const RAID_TEMPLATES: Template[] = [
-  {
-    file: "/templates/raid_log_starter.xlsx",
-    title: "Starter RAID log",
-    kind: "starter",
-    description:
-      "Empty template with the standard columns (ID, Type, Description, Trigger, Impact, Likelihood, Mitigation, Owner, Follow-up date, Status). Start here.",
-  },
-  {
-    file: "/templates/raid_log_novice_example.xlsx",
-    title: "Novice example",
-    kind: "example",
-    description:
-      "Common early-career mistakes: vague mitigations, missing owners, no follow-up dates. Study the gaps.",
-  },
-  {
-    file: "/templates/raid_log_intermediate_example.xlsx",
-    title: "Intermediate example",
-    kind: "example",
-    description:
-      "Most fields filled, owners named. Mitigations trend toward specific but some are still soft.",
-  },
-  {
-    file: "/templates/raid_log_hire_ready_example.xlsx",
-    title: "Hire-ready example",
-    kind: "example",
-    description:
-      "What a steering-committee-grade RAID looks like. Specific, owned, dated, proportional mitigations.",
-  },
-];
-
-export async function WorkbookPanel({ lessonSlug }: { lessonSlug: string }) {
-  const starter = RAID_TEMPLATES.find((t) => t.kind === "starter");
-  const examples = RAID_TEMPLATES.filter((t) => t.kind === "example");
+export async function WorkbookPanel({
+  lessonSlug,
+  lessonTitle,
+}: {
+  lessonSlug: string;
+  lessonTitle: string;
+}) {
+  const templates = templatesFor(lessonSlug);
+  const starter = templates.find((t) => t.kind === "starter");
+  const examples = templates.filter((t) => t.kind === "example");
 
   const supabase = await createClient();
   const { data: lesson } = await supabase
@@ -58,14 +28,20 @@ export async function WorkbookPanel({ lessonSlug }: { lessonSlug: string }) {
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           Your template
         </h2>
-        {starter && <TemplateRow t={starter} />}
+        {starter ? (
+          <TemplateRow t={starter} />
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Templates for this lesson aren&apos;t ready yet.
+          </p>
+        )}
       </section>
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Submit your RAID log
+          Submit your artifact
         </h2>
-        <ArtifactUploader lessonSlug={lessonSlug} />
+        <ArtifactUploader lessonSlug={lessonSlug} lessonTitle={lessonTitle} />
       </section>
 
       {lesson && (
@@ -77,16 +53,18 @@ export async function WorkbookPanel({ lessonSlug }: { lessonSlug: string }) {
         </section>
       )}
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Reference examples
-        </h2>
-        <div className="space-y-3">
-          {examples.map((t) => (
-            <TemplateRow key={t.file} t={t} />
-          ))}
-        </div>
-      </section>
+      {examples.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Reference examples
+          </h2>
+          <div className="space-y-3">
+            {examples.map((t) => (
+              <TemplateRow key={t.file} t={t} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

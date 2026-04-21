@@ -24,6 +24,24 @@ export default async function PortfolioPage() {
 
   const lessonTitle = new Map((lessons ?? []).map((l) => [l.id, l.title]));
 
+  // CTA for the empty state — first published lesson the learner
+  // hasn't graded yet, ordered by number. Falls back to the lowest
+  // published lesson if everything's graded (or nothing is).
+  const { data: nextLesson } = await supabase
+    .from("lessons")
+    .select("slug, number, title")
+    .eq("is_published", true)
+    .not("id", "in", `(${lessonIds.length ? lessonIds.map((id) => `"${id}"`).join(",") : '""'})`)
+    .order("number", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  const fallbackCta = nextLesson
+    ? {
+        href: `/lessons/${nextLesson.slug}?tab=workbook`,
+        label: `Start with Lesson ${nextLesson.number}`,
+      }
+    : null;
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <header>
@@ -52,9 +70,11 @@ export default async function PortfolioPage() {
       ) : (
         <div className="rounded-lg border bg-card p-8 text-center">
           <p className="text-muted-foreground">You haven&apos;t submitted any artifacts yet.</p>
-          <Button asChild className="mt-4">
-            <Link href="/lessons/raid-logs?tab=workbook">Start with Lesson 20</Link>
-          </Button>
+          {fallbackCta && (
+            <Button asChild className="mt-4">
+              <Link href={fallbackCta.href}>{fallbackCta.label}</Link>
+            </Button>
+          )}
         </div>
       )}
     </div>

@@ -26,7 +26,13 @@ async function fileToBase64(file: File): Promise<string> {
   return btoa(binary);
 }
 
-export function ArtifactUploader({ lessonSlug }: { lessonSlug: string }) {
+export function ArtifactUploader({
+  lessonSlug,
+  lessonTitle,
+}: {
+  lessonSlug: string;
+  lessonTitle: string;
+}) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -91,7 +97,7 @@ export function ArtifactUploader({ lessonSlug }: { lessonSlug: string }) {
             : "border-border hover:border-muted-foreground/50")
         }
       >
-        <p className="font-medium">Drop your RAID log here</p>
+        <p className="font-medium">Drop your {lessonTitle} artifact here</p>
         <p className="mt-1 text-sm text-muted-foreground">XLSX, PDF, or DOCX · up to 10 MB</p>
         <Button
           type="button"
