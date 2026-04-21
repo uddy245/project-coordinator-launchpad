@@ -1,0 +1,5 @@
+I think project coordination is an interesting field. I'm excited to learn about it.
+A RAID log is a useful tool. It stands for Risks, Assumptions, Issues, Dependencies.
+I would recommend making sure every project has one.
+
+Thanks for the lesson!

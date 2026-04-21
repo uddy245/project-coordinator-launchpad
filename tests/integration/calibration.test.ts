@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { parseRubric } from "@/lib/grading/rubric";
 import { gradeWithContext } from "@/lib/grading/service";
@@ -11,14 +11,20 @@ import { gradeWithContext } from "@/lib/grading/service";
 const shouldRun = process.env.RUN_CALIBRATION === "1" && !!process.env.ANTHROPIC_API_KEY;
 const describeIf = shouldRun ? describe : describe.skip;
 
-const FIXTURES_DIR = join(__dirname, "..", "fixtures", "raid-submissions");
+const FIXTURES_DIR = join(__dirname, "..", "fixtures", "risk_identification");
 const RUBRIC_PATH = join(__dirname, "..", "..", "docs", "rubrics", "raid-v1.json");
 const PROMPT_PATH = join(__dirname, "..", "..", "docs", "prompts", "grade-raid-v1.md");
 
+type ExpectedDimensionScore = { score: number; tolerance: number };
+
 type Expected = {
-  label: "novice" | "intermediate" | "hire-ready";
-  notes?: string;
-  expected_scores: Record<string, number>;
+  fixture_id: string;
+  scenario_ref?: string;
+  expected_dimension_scores: Record<string, ExpectedDimensionScore>;
+  expected_overall_competency_score: number;
+  expected_pass: boolean;
+  expected_hire_ready: boolean;
+  notes_for_human_reviewer?: string;
 };
 
 type Fixture = {
@@ -28,12 +34,24 @@ type Fixture = {
 };
 
 function loadFixtures(): Fixture[] {
-  const files = readdirSync(FIXTURES_DIR).filter((f) => f.endsWith(".txt") && f !== "scenario.txt");
-  return files.sort().map((file) => {
-    const slug = file.replace(/\.txt$/, "");
-    const submissionText = readFileSync(join(FIXTURES_DIR, file), "utf8");
+  // Discover fixtures by looking for subdirectories containing
+  // submission.txt + expected.json. Enables folder-per-fixture shape
+  // without hardcoding each slug.
+  const entries = readdirSync(FIXTURES_DIR)
+    .filter((name) => {
+      const path = join(FIXTURES_DIR, name);
+      try {
+        return statSync(path).isDirectory();
+      } catch {
+        return false;
+      }
+    })
+    .sort();
+
+  return entries.map((slug) => {
+    const submissionText = readFileSync(join(FIXTURES_DIR, slug, "submission.txt"), "utf8");
     const expected = JSON.parse(
-      readFileSync(join(FIXTURES_DIR, `${slug}.expected.json`), "utf8")
+      readFileSync(join(FIXTURES_DIR, slug, "expected.json"), "utf8")
     ) as Expected;
     return { slug, submissionText, expected };
   });
@@ -49,7 +67,7 @@ describeIf("calibration corpus [hits Anthropic API]", () => {
   const allCells: Array<{ fixture: string; dim: string; expected: number; actual: number }> = [];
 
   for (const fx of fixtures) {
-    it(`${fx.slug} (${fx.expected.label}) — every dim within ±2 of expected; quotes present for score ≥3`, async () => {
+    it(`${fx.slug} — every dim within per-dim tolerance; quotes present for score ≥3`, async () => {
       const result = await gradeWithContext({
         rubric,
         promptBody,
@@ -63,23 +81,21 @@ describeIf("calibration corpus [hits Anthropic API]", () => {
       const { score } = result.data;
 
       for (const dim of score.dimension_scores) {
-        const expected = fx.expected.expected_scores[dim.dimension];
+        const expected = fx.expected.expected_dimension_scores[dim.dimension];
         expect(expected, `no expected score for ${dim.dimension}`).toBeDefined();
-        const diff = Math.abs(dim.score - expected!);
+        const diff = Math.abs(dim.score - expected!.score);
         allCells.push({
           fixture: fx.slug,
           dim: dim.dimension,
-          expected: expected!,
+          expected: expected!.score,
           actual: dim.score,
         });
-        // Per-cell gate at ±2 catches wild misses while tolerating the
-        // run-to-run variance Claude shows on borderline cells even at
-        // temperature 0. The ±1 expectation is enforced in aggregate
-        // below, per BUILD_PLAN §11.4.
+        // Per-dim tolerance lets us tighten floor/ceiling fixtures while
+        // leaving room for run-to-run variance on borderline cells.
         expect(
           diff,
-          `${fx.slug}/${dim.dimension}: expected ${expected}, got ${dim.score} (quote="${dim.quote.slice(0, 80)}")`
-        ).toBeLessThanOrEqual(2);
+          `${fx.slug}/${dim.dimension}: expected ${expected!.score} (tol ±${expected!.tolerance}), got ${dim.score} (quote="${dim.quote.slice(0, 80)}")`
+        ).toBeLessThanOrEqual(expected!.tolerance);
 
         if (dim.score >= 3) {
           expect(

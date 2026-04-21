@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_02",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 2, "tolerance": 1 },
+    "risk_differentiation": { "score": 2, "tolerance": 1 },
+    "mitigation_realism": { "score": 2, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 2, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.85,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Has table structure but fields half-filled (many '—'). Miscategorizes frequently (steering meeting is not a Risk; nurse training is an Issue not an Assumption; HL7 interface is a Dependency not a Risk). Owners mostly missing. Mitigations are placeholders ('TBD', 'Plan migration', '—'). Floor on living-artifact."
+}

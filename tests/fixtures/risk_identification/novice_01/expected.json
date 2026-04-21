@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 1, "tolerance": 1 },
+    "risk_differentiation": { "score": 2, "tolerance": 1 },
+    "mitigation_realism": { "score": 1, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 1, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor-level submission. Vague bullets, no structure, no owners, generic mitigations. RAID categories misapplied (lead engineer on leave is an Issue/Dependency framing, not a Risk). If the AI scores anything above 2 on completeness/mitigation/ownership/living, 'be nice' drift has set in."
+}

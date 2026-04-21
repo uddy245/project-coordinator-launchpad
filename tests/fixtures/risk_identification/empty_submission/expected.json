@@ -1,0 +1,15 @@
+{
+  "fixture_id": "empty_submission",
+  "scenario_ref": "meridian-claims-portal-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 1, "tolerance": 0 },
+    "risk_differentiation": { "score": 1, "tolerance": 0 },
+    "mitigation_realism": { "score": 1, "tolerance": 0 },
+    "ownership_and_accountability": { "score": 1, "tolerance": 0 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 0 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Edge case — empty submission. Per grading prompt rules: 'If the submission is empty or I don't know, return all scores as 1.' Tight tolerance on all dimensions — any non-1 score is a prompt break. Special handling note: the quote-verification assertion in the calibration test may need to be skipped or relaxed for this fixture, since there is no submission text to quote from. Recommended approach: the grader should produce the justification 'Dimension not addressed in submission.' per the prompt rule, and the test skips the quote-in-submission check for this case. Alternatively, the grading service can short-circuit on empty input and return all-1s without calling Claude at all."
+}
