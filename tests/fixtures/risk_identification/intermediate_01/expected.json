@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 3, "tolerance": 1 },
+    "risk_differentiation": { "score": 4, "tolerance": 1 },
+    "mitigation_realism": { "score": 3, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 4, "tolerance": 2 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 3.05,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Structured; owners on every item; R1/R2 fully complete. Triggers inconsistent (R3/R4 missing). Some mitigations specific (R1, R2), others vague (R4 'Investigate'). Categories correctly applied. Single snapshot — floor on living-artifact. Two cells have tolerance 2: living_artifact_evidence (Claude ~1pt drift on borderline single-snapshot cases) and ownership_and_accountability (CONTENT-001 first CI run scored it 2 vs expected 4; the fixture has owners on R1–R4 but I/A/D sections are less uniform which Claude reads inconsistently)."
+}

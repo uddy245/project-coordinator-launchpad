@@ -1,0 +1,15 @@
+{
+  "fixture_id": "off_topic_submission",
+  "scenario_ref": "meridian-claims-portal-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 1, "tolerance": 0 },
+    "risk_differentiation": { "score": 1, "tolerance": 0 },
+    "mitigation_realism": { "score": 1, "tolerance": 0 },
+    "ownership_and_accountability": { "score": 1, "tolerance": 0 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 0 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Edge case — on topic in the sense that it mentions RAID but does not attempt the scenario. Per grading prompt: 'If a dimension cannot be evaluated from the submission, score 1.' Should score 1 across the board. The risk here is that the AI is lenient because the learner was 'polite' or 'mentions RAID' — tight tolerance guards against that drift. The quote-verification check can succeed on this fixture because the submission does contain text, and the AI can legally quote something like 'It stands for Risks, Assumptions, Issues, Dependencies.' even while correctly scoring all dimensions as 1."
+}

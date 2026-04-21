@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_02",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 5, "tolerance": 1 },
+    "risk_differentiation": { "score": 5, "tolerance": 1 },
+    "mitigation_realism": { "score": 4, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 5, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 4.2,
+  "expected_pass": false,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Every risk has all 5 fields; named owners + follow-up dates; mitigations specific and actionable; clean RAID categorization. Single snapshot — no prior-week column, no closed/reopened items, no status history. Lives or dies on the 'living artifact' dimension. Overall weighted average 4.2 → hire_ready=true even with one dim floored (rubric formula: any-dim-under-3 → pass=false, but hire_ready based on overall only). living_artifact_evidence tolerance widened to 2 because Claude shows ~1pt drift on this dim at T=0."
+}
