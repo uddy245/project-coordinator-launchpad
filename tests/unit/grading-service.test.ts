@@ -93,7 +93,11 @@ function makeFakeSupabase() {
       hire_ready: null as boolean | null,
       graded_at: null as string | null,
     },
-    lesson: { scenario_text: "Scenario text." },
+    lesson: {
+      scenario_text: "Scenario text.",
+      competency: "risk_identification",
+      prompt_name: "grade-raid",
+    },
     rubric: { id: "rubric-1", schema_json: RUBRIC },
     prompt: { version: 1, body: PROMPT },
     rubricScores: [] as Row[],
