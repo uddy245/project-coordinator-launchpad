@@ -289,18 +289,25 @@ async function loadContext(
 
   const { data: lesson } = await supabase
     .from("lessons")
-    .select("scenario_text")
+    .select("scenario_text, competency, prompt_name")
     .eq("id", sub.lesson_id)
     .single();
 
   if (!lesson?.scenario_text) {
     return { ok: false, error: "Lesson scenario missing", code: "NOT_FOUND" };
   }
+  if (!lesson.competency || !lesson.prompt_name) {
+    return {
+      ok: false,
+      error: "Lesson missing competency or prompt_name",
+      code: "NOT_FOUND",
+    };
+  }
 
   const { data: rubricRow } = await supabase
     .from("rubrics")
     .select("id, schema_json")
-    .eq("competency", "risk_identification")
+    .eq("competency", lesson.competency)
     .eq("is_current", true)
     .single();
 
@@ -311,7 +318,7 @@ async function loadContext(
   const { data: promptRow } = await supabase
     .from("prompts")
     .select("version, body")
-    .eq("name", "grade-raid")
+    .eq("name", lesson.prompt_name)
     .eq("is_current", true)
     .single();
 
