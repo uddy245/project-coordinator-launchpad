@@ -16,7 +16,8 @@ on:
       - "src/lib/anthropic/**"
       - "docs/prompts/**"
       - "docs/rubrics/**"
-      - "tests/fixtures/raid-submissions/**"
+      - "tests/fixtures/risk_identification/**"
+      - "tests/fixtures/project_intake/**"
       - "tests/integration/calibration.test.ts"
       - ".github/workflows/calibration.yml"
 
