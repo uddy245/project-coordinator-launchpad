@@ -6,6 +6,7 @@ import { LessonTabs, type LessonTabKey } from "@/components/lessons/tabs";
 import { WorkbookPanel } from "@/components/lessons/workbook-panel";
 import { QuizPanel } from "@/components/lessons/quiz-panel";
 import { VideoPanel } from "@/components/lessons/video-panel";
+import { ReadPanel } from "@/components/lessons/read-panel";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -14,7 +15,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 function resolveTab(raw: string | string[] | undefined): LessonTabKey {
   const value = Array.isArray(raw) ? raw[0] : raw;
-  if (value === "workbook" || value === "quiz" || value === "video") return value;
+  if (value === "workbook" || value === "quiz" || value === "video" || value === "read") {
+    return value;
+  }
   return "video";
 }
 
@@ -35,6 +38,7 @@ export default async function LessonPage({
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
+  const lessonTitle = lesson?.title ?? "";
 
   if (!lesson) {
     // Either the slug doesn't exist or RLS hid it (has_access=false).
@@ -56,7 +60,8 @@ export default async function LessonPage({
 
       <section aria-label={`${active} content`}>
         {active === "video" && <VideoPanel lessonSlug={slug} />}
-        {active === "workbook" && <WorkbookPanel lessonSlug={slug} />}
+        {active === "read" && <ReadPanel lessonSlug={slug} />}
+        {active === "workbook" && <WorkbookPanel lessonSlug={slug} lessonTitle={lessonTitle} />}
         {active === "quiz" && <QuizPanel lessonSlug={slug} />}
       </section>
     </div>
