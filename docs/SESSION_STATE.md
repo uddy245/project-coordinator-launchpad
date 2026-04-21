@@ -1,23 +1,27 @@
 # SESSION_STATE.md
 
 Snapshot for a fresh Claude Code session to pick up where we left off.
-Last updated **2026-04-19** (afternoon session — COST-001 just merged).
+Last updated **2026-04-21** (evening session — CAL-003 just merged).
 
 ---
 
 ## TL;DR
 
-MVP is **complete and live on production** plus a round of post-MVP
-hardening shipped today (GRADE-012/013, CAL-001/002, TEST-001,
-COST-001, ADR-0002). All 38 BUILD_PLAN tickets plus 7 follow-ups.
-End-to-end flow works:
+MVP is **complete and live on production** plus two rounds of post-MVP
+hardening and the start of multi-lesson enablement. All 38 BUILD_PLAN
+tickets plus 12 follow-ups. End-to-end flow works:
 signup → Stripe-paid access → lesson → video → workbook template
 download → artifact upload → Claude-graded rubric score card →
 audit queue → admin override surfaces back to learner.
 
 **Production:** https://project-coordinator-launchpad.vercel.app
-**Main branch:** clean, **132 tests** passing + 26 skipped (integration
-tests that need a local Supabase or `RUN_CALIBRATION=1`).
+**Main branch:** clean, **132 tests** passing + 30 skipped (integration
+tests that need a local Supabase or `RUN_CALIBRATION=1` — which now
+covers **9 RAID fixtures** after CAL-003).
+
+**Next major blocker:** Lesson 1 content package from the other Claude.
+Engine is ready to accept it (A1 + A2 + A3 shipped); it's one mechanical
+integration PR when it arrives.
 
 ---
 
@@ -118,8 +122,50 @@ tests that need a local Supabase or `RUN_CALIBRATION=1`).
   the rubric and prompt versioning process end-to-end (file copy,
   two-step pointer-swap migration, calibration gating, rollback,
   and why historical submissions don't get re-graded). Created
-  `docs/adrs/` directory — CLAUDE.md references an ADR 0001 that
-  was never written (tracked as a follow-up).
+  `docs/adrs/` directory.
+- **ADR-0001** (PR #55, merged) — backfill of the stack-choice ADR
+  CLAUDE.md has referenced since day one but never existed. Captures
+  rationale for Next 16 / Supabase / Sonnet 4.5 / Stripe Checkout /
+  Vercel / Bunny / PostHog / Sentry / pnpm plus what was explicitly
+  not chosen (PlanetScale, Clerk, Drizzle, tRPC) and why.
+
+### Post-MVP hardening shipped 2026-04-21 (multi-lesson enablement)
+- **CONTENT-001** (PR #57, merged) — imported the pre-built Lesson 20
+  content package (`/Users/udechukwuoguagha/Desktop/Project Cordinator/launchpad_content_package/`)
+  into the repo:
+    - `docs/scripts/lesson-20-raid-logs.md` — 14-min video script
+    - `docs/workbook-specs/raid-logs.md` — XLSX design intent
+    - `docs/extras/lesson-20-interview.md` + `-exercises.md`
+  Also reorganized fixtures from flat → folder convention:
+  `tests/fixtures/raid-submissions/*.txt+json` →
+  `tests/fixtures/risk_identification/<label>/{submission.txt,expected.json}`.
+  Adopted the richer per-dim `{score, tolerance}` expected.json schema +
+  `expected_overall_competency_score`/`pass`/`hire_ready`. Added 2
+  scenario-agnostic edge cases (`empty_submission`, `off_topic_submission`).
+- **A1** (PR #58, merged) — generalized the grading lookup. Added
+  `competency` + `prompt_name` columns to the `lessons` table, backfilled
+  Lesson 20, made them NOT NULL. `loadContext()` in
+  `src/lib/grading/service.ts` reads both from the lesson row instead
+  of hardcoded `"risk_identification"` / `"grade-raid"` strings.
+  Migration applied to `launchpad-prod` before merge.
+- **A2** (PR #59, merged) — generalized the calibration harness.
+  `tests/integration/calibration.test.ts` loops over a `COMPETENCIES`
+  config array; adding a new competency is one new line. Same 9
+  RAID fixtures, same tolerances, same semantics.
+- **A3** (PR #60, merged) — UI parameterization + Read tab. Templates
+  by slug (`src/lib/lessons/templates.ts`), `lessonTitle` prop on
+  the artifact uploader, dynamic portfolio CTA, new Read tab rendering
+  `docs/lessons/<slug>.md` via `react-markdown`. Lesson 20 empty-state
+  until a reading lands.
+- **CAL-003** (PR #61, merged) — 7 → 9 fixtures. Added
+  `mixed_profile_01` (adapted from the Meridian version to the
+  healthcare scenario; halo-effect test — strong differentiation +
+  living-artifact, weak mitigation + ownership) and
+  `structured_but_empty_01` (the "good structure, platitude content"
+  failure mode SESSION_STATE loose end #1 specifically called out).
+  Also fixed the calibration workflow's paths filter after
+  CONTENT-001 renamed the fixture directory (stale path meant CAL-003
+  wouldn't have triggered otherwise).
 
 ---
 
@@ -219,18 +265,35 @@ gh pr merge <#> --squash --delete-branch
 
 ## Known loose ends / follow-ups
 
-### Closed today (2026-04-19)
+### Closed 2026-04-19
 - ~~Learner "Request human review" button~~ — GRADE-013 (PR #48).
 - ~~Admin override display on learner's page~~ — GRADE-012 (PR #46).
 - ~~Daily cost cap enforcement~~ — COST-001 (PR #50).
 - ~~Calibration CI promotion~~ — CAL-002 (PR #52). PR-gated on
-  grading-path changes; caught two real issues on first use.
+  grading-path changes.
 - ~~Rubric/prompt versioning process doc~~ — ADR-0002 (PR #53).
 - ~~ADR-0001 (stack choice) backfill~~ — PR #55.
-- ~~Calibration corpus (stub)~~ — CAL-001 (PR #47). **Partially
-  closed**: v0 ships 5 fixtures, BUILD_PLAN §11.4 targets 20.
 - ~~Async grading smoke-test on production~~ — implicitly covered
-  by the 12:36 PM upload walkthrough today.
+  by the 12:36 PM upload walkthrough.
+
+### Closed 2026-04-21
+- ~~Lesson 20 video script + workbook-spec + interview/exercises
+  materials missing from repo~~ — CONTENT-001 (PR #57). Pre-built
+  content package imported wholesale.
+- ~~Grading pipeline N-lesson-capable~~ — A1 (PR #58) + A2 (PR #59)
+  + A3 (PR #60). Every hardcoded RAID-specific string in the hot
+  paths is gone; each lesson declares its competency + prompt_name
+  in the DB, templates via a slug map, UI text via props, Read tab
+  via `docs/lessons/<slug>.md`.
+- ~~Calibration corpus (stub)~~ — partially closed across CAL-001
+  (PR #47 — 5 fixtures) → CONTENT-001 (PR #57 — 7 fixtures with 2
+  edge cases) → CAL-003 (PR #61 — 9 fixtures with mixed profile +
+  good-structure-empty-content). Still short of BUILD_PLAN §11.4's
+  20-fixture target.
+- ~~"Good structure, empty content" failure-mode gap~~ —
+  `structured_but_empty_01` in CAL-003.
+- ~~Deferred Meridian `mixed_profile_01` fixture~~ — adapted to the
+  healthcare scenario in CAL-003.
 
 ### Still open
 1. **Calibration corpus v1** — expand 5 → 20 fixtures per
@@ -262,27 +325,31 @@ gh pr merge <#> --squash --delete-branch
 ## Kickoff prompt for the next session
 
 ```
-Read @CLAUDE.md and @docs/SESSION_STATE.md. MVP + seven post-MVP
-hardening PRs (GRADE-012/013, CAL-001/002, TEST-001, COST-001,
-ADR-0002) shipped. Before picking up new work, sanity-check:
+Read @CLAUDE.md and @docs/SESSION_STATE.md. MVP + 12 post-MVP
+follow-ups shipped. The grading pipeline is N-lesson-capable
+(A1/A2/A3); the Lesson 20 content package is fully imported; the
+calibration corpus is at 9 fixtures with the key failure modes
+covered. Next big blocker is the Lesson 1 content package from
+the other Claude.
+
+Before picking up new work, sanity-check:
 
   - git status clean, on main, up to date
   - pnpm typecheck && pnpm lint pass
   - production at https://project-coordinator-launchpad.vercel.app
     still responds 200 at /
 
-Then ask me what to focus on next. Candidates (all content-light
-or bounded; bigger strategic asks need their own session):
+Candidates:
 
-  (a) expand calibration corpus v0 → v1 (5 → 20 fixtures), add the
-      "good structure, empty content" failure mode, revisit the
-      dropped [w1]/[w2] fixture
-  (b) net-new lesson to prove the template generalizes (multi-step;
-      spawn its own session)
-  (c) real Bunny Stream video swap (content-dependent, one UPDATE)
-  (d) cost-cap smoke test on prod (ANTHROPIC_SPEND_CAP_USD=0.001
-      in preview env, upload, confirm refusal)
-  (e) backfill ADR-0001 (stack-choice) referenced by CLAUDE.md
+  (a) Integrate Lesson 1 content package (PR C1) — when the other
+      Claude delivers launchpad_content_package_project_intake/. The
+      engine is ready to accept it.
+  (b) Expand calibration corpus 9 → 20 per BUILD_PLAN §11.4
+  (c) Cost-cap smoke test on prod (ANTHROPIC_SPEND_CAP_USD=0.001
+      in preview env, upload, confirm refusal, then revert)
+  (d) Lesson 20 video script review (story uniqueness + read-aloud
+      runtime; both need the user's hands)
+  (e) Bunny Stream wiring when real video exists
 ```
 
 ---
