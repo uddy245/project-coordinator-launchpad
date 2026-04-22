@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { updateVideoProgress } from "@/actions/video-progress";
+import { isIframeEmbedUrl } from "@/lib/video/providers";
 
 type Props = {
   lessonSlug: string;
@@ -10,15 +11,16 @@ type Props = {
 };
 
 const REPORT_INTERVAL_MS = 10_000;
-const BUNNY_HOST_RE = /iframe\.mediadelivery\.net/;
 
 /**
  * Lesson video player. Degrades gracefully in three cases:
  *
  *   - No videoUrl configured yet → "coming soon" placeholder
- *   - Bunny Stream iframe URL → renders an iframe, no inline progress
- *     telemetry (Bunny postMessage events not wired in MVP; progress
- *     can be reported manually via the Mark-as-watched button)
+ *   - Recognized iframe host (Bunny Stream, HeyGen; see
+ *     src/lib/video/providers.ts) → renders an iframe. No inline
+ *     progress telemetry because we'd need a postMessage bridge per
+ *     provider; progress is reported manually via the Mark-as-watched
+ *     button under the iframe.
  *   - Any other URL → native <video> element with timeupdate reporting
  *     every 10s and on pause
  */
@@ -31,20 +33,21 @@ export function VideoPlayer({ lessonSlug, videoUrl, initialSeconds = 0 }: Props)
     );
   }
 
-  if (BUNNY_HOST_RE.test(videoUrl)) {
-    return <BunnyEmbed lessonSlug={lessonSlug} src={videoUrl} />;
+  if (isIframeEmbedUrl(videoUrl)) {
+    return <IframeEmbed lessonSlug={lessonSlug} src={videoUrl} />;
   }
 
   return <NativeVideo lessonSlug={lessonSlug} src={videoUrl} initialSeconds={initialSeconds} />;
 }
 
-function BunnyEmbed({ lessonSlug, src }: { lessonSlug: string; src: string }) {
+function IframeEmbed({ lessonSlug, src }: { lessonSlug: string; src: string }) {
   const [reporting, setReporting] = useState(false);
 
   async function markWatched() {
     setReporting(true);
-    // We don't know duration from outside the iframe without postMessage
-    // setup on the Bunny side; pass seconds=duration=1 to flip watched.
+    // We don't know duration from outside the iframe without a
+    // per-provider postMessage bridge; pass seconds=duration=1 to
+    // flip watched via the Mark-as-watched button.
     await updateVideoProgress({ lessonSlug, seconds: 1, duration: 1 });
     setReporting(false);
   }
@@ -63,7 +66,7 @@ function BunnyEmbed({ lessonSlug, src }: { lessonSlug: string; src: string }) {
       </div>
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>
-          Progress tracking for this video host will land when Bunny Stream postMessage events are
+          Progress tracking for this video host will land when per-provider postMessage events are
           wired. For now, mark it watched when you finish.
         </span>
         <button
