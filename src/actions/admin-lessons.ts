@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { ActionResult } from "@/lib/types";
+import { QuizItemSchema } from "@/lib/quiz/schema";
 
 // ──────────────────────────────────────────────────────────────────────
 // Lesson upsert
@@ -89,24 +90,6 @@ export async function upsertLesson(input: AdminLessonInput): Promise<ActionResul
 // Quiz items bulk replace — paste a JSON array, replaces all quiz items
 // for the lesson in a single transaction.
 // ──────────────────────────────────────────────────────────────────────
-
-const QuizItemSchema = z.object({
-  sort: z.number().int().min(1),
-  stem: z.string().trim().min(5),
-  options: z
-    .array(
-      z.object({
-        id: z.string().min(1).max(4),
-        text: z.string().min(1),
-      })
-    )
-    .min(2)
-    .max(8),
-  correct: z.string().min(1).max(4),
-  distractor_rationale: z.record(z.string(), z.string()).default({}),
-  competency: z.string().min(1).max(80),
-  difficulty: z.enum(["easy", "medium", "hard"]),
-});
 
 const QuizItemsInputSchema = z.object({
   lessonSlug: z.string(),

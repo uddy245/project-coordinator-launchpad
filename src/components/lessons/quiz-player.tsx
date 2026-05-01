@@ -2,7 +2,11 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { submitQuizAttempt, type SubmitQuizData } from "@/actions/quiz";
+import {
+  submitQuizAttempt,
+  refreshQuizItems,
+  type SubmitQuizData,
+} from "@/actions/quiz";
 import { Button } from "@/components/ui/button";
 
 type QuizOption = { id: string; text: string };
@@ -16,15 +20,69 @@ export type QuizItemPublic = {
   difficulty: "easy" | "medium" | "hard";
 };
 
-export function QuizPlayer({ lessonSlug, items }: { lessonSlug: string; items: QuizItemPublic[] }) {
+export function QuizPlayer({
+  lessonSlug,
+  items: initialItems,
+  canRefresh = false,
+}: {
+  lessonSlug: string;
+  items: QuizItemPublic[];
+  canRefresh?: boolean;
+}) {
+  // Items are stateful so the refresh button can swap them in-place
+  // without a page navigation.
+  const [items, setItems] = useState(initialItems);
   const total = items.length;
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<SubmitQuizData | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isRefreshing, startRefresh] = useTransition();
 
   const current = items[index];
   const allAnswered = useMemo(() => items.every((it) => answers[it.id]), [items, answers]);
+
+  function refresh() {
+    if (Object.keys(answers).length > 0 && !result) {
+      // Mid-attempt refresh would discard answers — confirm before clobbering.
+      const ok = window.confirm(
+        "You're partway through this quiz. Refreshing will swap in new questions and discard your current answers. Continue?",
+      );
+      if (!ok) return;
+    }
+    startRefresh(async () => {
+      const res = await refreshQuizItems({ lessonSlug });
+      if (!res.ok) {
+        toast.error(res.error);
+        return;
+      }
+      setItems(
+        res.data.items.map((it) => ({
+          id: it.id,
+          sort: it.sort,
+          stem: it.stem,
+          options: it.options,
+          competency: it.competency,
+          difficulty: it.difficulty,
+        })),
+      );
+      setAnswers({});
+      setIndex(0);
+      setResult(null);
+      if (res.data.generated > 0) {
+        toast.success(
+          `${res.data.generated} new question${res.data.generated === 1 ? "" : "s"} just generated for you.`,
+        );
+      } else {
+        toast.success("Loaded a fresh set.");
+      }
+      if (res.data.poolExhausted) {
+        toast.warning(
+          "Pool's running thin — generation may have failed. Check back later.",
+        );
+      }
+    });
+  }
 
   if (!current) {
     return <p className="text-sm text-muted-foreground">No quiz items available.</p>;
@@ -61,11 +119,24 @@ export function QuizPlayer({ lessonSlug, items }: { lessonSlug: string; items: Q
 
   return (
     <div className="space-y-6">
-      <div className="flex items-baseline justify-between text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-baseline justify-between gap-3 text-sm text-muted-foreground">
         <span>
           Question {index + 1} of {total}
         </span>
-        <span>{Object.keys(answers).length} answered</span>
+        <div className="flex items-center gap-3">
+          <span>{Object.keys(answers).length} answered</span>
+          {canRefresh ? (
+            <button
+              type="button"
+              onClick={refresh}
+              disabled={isRefreshing || isPending}
+              className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground disabled:opacity-50"
+              title="Get a fresh set of questions you haven't seen yet. AI generates new ones if the pool runs out."
+            >
+              {isRefreshing ? "Loading…" : "↻ New questions"}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className="rounded-lg border bg-card p-6">
