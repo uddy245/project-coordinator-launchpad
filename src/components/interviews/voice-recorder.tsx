@@ -72,7 +72,18 @@ export function VoiceRecorder({
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      const recorder = new MediaRecorder(stream);
+      // Pick the first MIME type the browser actually supports.
+      // Safari requires audio/mp4; Chrome/Firefox prefer webm+opus.
+      const mimeType = [
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/mp4",
+        "audio/ogg;codecs=opus",
+        "audio/ogg",
+      ].find((m) => MediaRecorder.isTypeSupported(m)) ?? "";
+
+      const recorderOptions = mimeType ? { mimeType } : undefined;
+      const recorder = new MediaRecorder(stream, recorderOptions);
       mediaRecorderRef.current = recorder;
       chunksRef.current = [];
 
@@ -80,7 +91,10 @@ export function VoiceRecorder({
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
       recorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        // Use the recorder's actual mimeType (may differ from requested if
+        // the browser normalised it) so the Blob header matches the data.
+        const blobType = recorder.mimeType || mimeType || "audio/webm";
+        const blob = new Blob(chunksRef.current, { type: blobType });
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
         stopStream();
