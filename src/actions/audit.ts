@@ -5,6 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { ActionResult } from "@/lib/types";
+import { notifyAuditDecision } from "@/lib/email/notify-audit";
 
 // --------------------------------------------------------------------------
 // Learner-initiated: flag a submission for human review.
@@ -76,6 +77,8 @@ export async function approveAudit(queueId: string): Promise<ActionResult> {
 
   await admin.from("audit_queue").update({ status: "approved" }).eq("id", queueId);
 
+  void notifyAuditDecision({ queueId, decision: "approved" });
+
   revalidatePath("/audit");
   revalidatePath(`/audit/${queueId}`);
   return { ok: true, data: undefined };
@@ -131,6 +134,13 @@ export async function overrideScores(input: OverrideInput): Promise<ActionResult
   if (recordErr) return { ok: false, error: recordErr.message, code: "DB_ERROR" };
 
   await admin.from("audit_queue").update({ status: "overridden" }).eq("id", parsed.data.queueId);
+
+  void notifyAuditDecision({
+    queueId: parsed.data.queueId,
+    decision: "overridden",
+    overrides: parsed.data.overrides,
+    reviewerNote: parsed.data.note,
+  });
 
   revalidatePath("/audit");
   revalidatePath(`/audit/${parsed.data.queueId}`);

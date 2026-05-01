@@ -7,11 +7,12 @@ const LABEL: Record<GateStatus, string> = {
   coming_soon: "Coming soon",
 };
 
-const CLASS: Record<GateStatus, string> = {
-  pending: "bg-muted text-muted-foreground",
-  in_progress: "bg-blue-100 text-blue-800",
-  complete: "bg-green-100 text-green-800",
-  coming_soon: "bg-muted/50 text-muted-foreground italic",
+// Maps to CSS pip variants — see globals.css .pip
+const PIP_STATUS: Record<GateStatus, "not_started" | "in_progress" | "completed"> = {
+  pending: "not_started",
+  in_progress: "in_progress",
+  complete: "completed",
+  coming_soon: "not_started",
 };
 
 export function GateStatusBadge({
@@ -24,14 +25,19 @@ export function GateStatusBadge({
   detail?: string;
 }) {
   return (
-    <div className="rounded-lg border bg-card p-4">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="font-medium">{name}</h3>
-        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${CLASS[status]}`}>
+    <div className="bg-paper p-7">
+      <div className="flex items-baseline justify-between gap-3">
+        <h3 className="font-display text-lg leading-tight text-ink">{name}</h3>
+        <span className="pip" data-status={PIP_STATUS[status]}>
           {LABEL[status]}
         </span>
       </div>
-      {detail && <p className="mt-1 text-sm text-muted-foreground">{detail}</p>}
+      {detail && (
+        <p className="mt-3 font-reading text-[1rem] italic leading-relaxed text-muted-foreground">
+          {detail}
+        </p>
+      )}
     </div>
   );
 }
+

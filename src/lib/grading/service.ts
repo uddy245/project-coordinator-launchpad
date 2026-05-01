@@ -13,6 +13,8 @@ import { buildGradeTool, GRADE_TOOL_NAME } from "./tool-schema";
 import { buildScoreValidator, type ScoreOutput } from "./validator";
 import { shouldSample } from "./audit-sampler";
 import { checkSpendCap } from "./spend-guard";
+import { sendEmail } from "@/lib/email/send";
+import { renderGradingComplete } from "@/lib/email/templates/grading-complete";
 
 export type GradeSubmissionDeps = {
   supabase?: ReturnType<typeof createAdminClient>;
@@ -263,7 +265,76 @@ export async function gradeSubmission(
     await supabase.from("audit_queue").insert({ submission_id: submissionId, reason: "sampled" });
   }
 
+  // Notify the learner — silent so a Resend hiccup doesn't fail the grade.
+  void notifyGradingComplete(supabase, submissionId, score);
+
   return { ok: true, data: { status: "graded" } };
+}
+
+/** Look up the user/lesson and send the graded-submission email. Best-effort. */
+async function notifyGradingComplete(
+  supabase: ReturnType<typeof createAdminClient>,
+  submissionId: string,
+  score: ScoreOutput
+): Promise<void> {
+  try {
+    const { data: row } = await supabase
+      .from("submissions")
+      .select(
+        "id, user_id, lesson:lessons(slug, title), profile:profiles!inner(full_name)",
+      )
+      .eq("id", submissionId)
+      .maybeSingle();
+    if (!row?.user_id) return;
+
+    // Pull the auth email separately — profiles doesn't store it.
+    const { data: authUser } = await supabase.auth.admin.getUserById(row.user_id);
+    const recipientEmail = authUser?.user?.email;
+    if (!recipientEmail) return;
+
+    type LessonRow = { slug: string | null; title: string | null };
+    type ProfileRow = { full_name: string | null };
+    const lesson = (Array.isArray(row.lesson) ? row.lesson[0] : row.lesson) as
+      | LessonRow
+      | null
+      | undefined;
+    const profile = (Array.isArray(row.profile) ? row.profile[0] : row.profile) as
+      | ProfileRow
+      | null
+      | undefined;
+
+    const fullName = profile?.full_name ?? null;
+    const firstName = fullName ? (fullName.split(/\s+/)[0] ?? null) : null;
+
+    // Build a short summary from the strongest and weakest dimensions.
+    const sorted = [...score.dimension_scores].sort((a, b) => b.score - a.score);
+    const top = sorted[0];
+    const bottom = sorted[sorted.length - 1];
+    const summary = score.hire_ready
+      ? `Strong work — your ${top.dimension} stood out (${top.score}/5). Full per-dimension breakdown is on the submission page.`
+      : score.pass
+        ? `You passed. Strongest: ${top.dimension} (${top.score}/5). Most room to grow: ${bottom.dimension} (${bottom.score}/5).`
+        : `The grader flagged ${bottom.dimension} (${bottom.score}/5) as the dimension to revisit. Detailed comments and a suggested next step are on the submission page.`;
+
+    await sendEmail({
+      to: { email: recipientEmail, name: fullName },
+      render: renderGradingComplete({
+        firstName,
+        lessonTitle: lesson?.title ?? "your submission",
+        lessonSlug: lesson?.slug ?? "",
+        submissionId,
+        // overall_competency_score is 1..5; normalise to 0..1 for the email.
+        overallScore: (score.overall_competency_score - 1) / 4,
+        passed: score.pass,
+        hireReady: score.hire_ready,
+        summary,
+      }),
+      silent: true,
+      tag: "grading-complete",
+    });
+  } catch (err) {
+    console.error("[email] grading-complete send failed:", err);
+  }
 }
 
 async function loadContext(

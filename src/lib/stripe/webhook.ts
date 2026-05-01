@@ -1,5 +1,7 @@
 import type Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendEmail } from "@/lib/email/send";
+import { renderPurchaseConfirmed } from "@/lib/email/templates/purchase-confirmed";
 
 /**
  * Handle checkout.session.completed. Idempotent on stripe_session_id —
@@ -54,6 +56,60 @@ export async function handleCheckoutSessionCompleted(
   if (updateError) {
     throw new Error(`Failed to grant access: ${updateError.message}`);
   }
+
+  // Confirmation email (silent / fire-and-forget). We resolve the recipient
+  // off the customer profile; if anything is missing we just skip — Stripe
+  // already sends its own receipt and the user has access regardless.
+  void (async () => {
+    try {
+      const { data: profile } = await admin
+        .from("profiles")
+        .select("full_name")
+        .eq("id", userId)
+        .maybeSingle();
+      const customerEmail =
+        session.customer_details?.email ?? session.customer_email ?? null;
+      if (!customerEmail) return;
+
+      const fullName = profile?.full_name ?? null;
+      const firstName = fullName ? (fullName.split(/\s+/)[0] ?? null) : null;
+      const amountCents = session.amount_total ?? 0;
+      // Stripe attaches the hosted receipt URL on the latest charge; if it's
+      // not available we still send the email — just without the receipt CTA.
+      let receiptUrl: string | null = null;
+      try {
+        const piId =
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : (session.payment_intent?.id ?? null);
+        if (piId) {
+          const { stripe } = await import("@/lib/stripe/client");
+          const pi = await stripe.paymentIntents.retrieve(piId, {
+            expand: ["latest_charge"],
+          });
+          const latest = pi.latest_charge;
+          if (typeof latest === "object" && latest && "receipt_url" in latest) {
+            receiptUrl = (latest as { receipt_url: string | null }).receipt_url;
+          }
+        }
+      } catch {
+        // best-effort
+      }
+
+      await sendEmail({
+        to: { email: customerEmail, name: fullName },
+        render: renderPurchaseConfirmed({
+          firstName,
+          amountUsd: amountCents / 100,
+          receiptUrl,
+        }),
+        silent: true,
+        tag: "purchase-confirmed",
+      });
+    } catch (err) {
+      console.error("[email] purchase-confirmed send failed:", err);
+    }
+  })();
 
   return { granted: true };
 }

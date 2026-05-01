@@ -5,6 +5,8 @@ import { z } from "zod";
 import { env } from "@/env";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/types";
+import { sendEmail } from "@/lib/email/send";
+import { renderWelcome } from "@/lib/email/templates/welcome";
 
 const SignUpSchema = z.object({
   email: z
@@ -55,6 +57,17 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
     }
     return { ok: false, error: error.message, code: "UNKNOWN" };
   }
+
+  // Welcome email — fire-and-forget. Silent so a Resend hiccup never breaks
+  // signup itself; the welcome is a nice-to-have, not a blocker.
+  const firstName =
+    parsed.data.fullName?.split(/\s+/)[0]?.trim() || null;
+  void sendEmail({
+    to: { email: parsed.data.email, name: parsed.data.fullName ?? null },
+    render: renderWelcome({ firstName }),
+    silent: true,
+    tag: "welcome",
+  });
 
   // If Supabase has email confirmation enabled, no session is returned.
   // The form branches on this to show a "check your email" state instead

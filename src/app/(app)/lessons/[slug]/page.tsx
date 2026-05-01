@@ -49,18 +49,29 @@ export default async function LessonPage({
   const active = resolveTab(tab);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
-      <LessonHeader
-        number={lesson.number}
-        title={lesson.title}
-        estimatedMinutes={lesson.estimated_minutes}
-      />
+    <div className="space-y-6">
+      <div className="mx-auto max-w-3xl space-y-6">
+        <LessonHeader
+          number={lesson.number}
+          title={lesson.title}
+          estimatedMinutes={lesson.estimated_minutes}
+        />
 
-      <LessonTabs active={active} />
+        <LessonTabs active={active} />
+      </div>
 
-      <section aria-label={`${active} content`}>
+      <section
+        aria-label={`${active} content`}
+        className={active === "read" ? "mx-auto max-w-4xl" : "mx-auto max-w-3xl"}
+      >
         {active === "video" && <VideoPanel lessonSlug={slug} />}
-        {active === "read" && <ReadPanel lessonSlug={slug} />}
+        {active === "read" && (
+          <ReadPanel
+            lessonSlug={slug}
+            lessonNumber={lesson.number}
+            lessonTitle={lessonTitle}
+          />
+        )}
         {active === "workbook" && <WorkbookPanel lessonSlug={slug} lessonTitle={lessonTitle} />}
         {active === "quiz" && <QuizPanel lessonSlug={slug} />}
       </section>

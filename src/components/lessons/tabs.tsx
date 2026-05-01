@@ -23,8 +23,8 @@ export function LessonTabs({ active }: { active: LessonTabKey }) {
   }
 
   return (
-    <nav className="border-b" aria-label="Lesson sections">
-      <ul className="-mb-px flex gap-6">
+    <nav className="border-b border-rule" aria-label="Lesson sections">
+      <ul className="-mb-px flex gap-10">
         {TABS.map((t) => {
           const isActive = t.key === active;
           return (
@@ -33,11 +33,12 @@ export function LessonTabs({ active }: { active: LessonTabKey }) {
                 href={hrefFor(t.key)}
                 scroll={false}
                 className={
-                  "inline-flex border-b-2 px-1 py-3 text-sm font-medium transition-colors " +
+                  "mono-link inline-flex border-b-[2px] px-1 py-4 transition-colors " +
                   (isActive
-                    ? "border-foreground text-foreground"
-                    : "border-transparent text-muted-foreground hover:border-muted-foreground/50 hover:text-foreground")
+                    ? "border-[hsl(var(--accent))] text-ink"
+                    : "border-transparent hover:border-rule")
                 }
+                data-active={isActive ? "true" : "false"}
                 aria-current={isActive ? "page" : undefined}
               >
                 {t.label}
