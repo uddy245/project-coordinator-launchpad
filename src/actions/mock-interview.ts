@@ -52,7 +52,12 @@ export async function submitMockInterview(
     return { ok: false, error: "Scenario not found.", code: "NOT_FOUND" };
   }
 
-  // Upsert the response row in graded_pending state.
+  // Mark the row as in-flight so the UI can show "grading…" if the user
+  // navigates away and back. We deliberately clear the score fields here so
+  // the previous grade can't be confused with the new one — the grader's
+  // result will fill them in below. This is a single upsert (insert-or-replace)
+  // keyed on the (user_id, scenario_id) unique constraint.
+  const nowIso = new Date().toISOString();
   const { data: row, error: upsertErr } = await admin
     .from("mock_interview_responses")
     .upsert(
@@ -65,7 +70,7 @@ export async function submitMockInterview(
         pass: null,
         feedback_summary: null,
         graded_at: null,
-        updated_at: new Date().toISOString(),
+        updated_at: nowIso,
       },
       { onConflict: "user_id,scenario_id" }
     )
@@ -86,16 +91,31 @@ export async function submitMockInterview(
       competency: scenario.competency,
     });
 
-    await admin
+    // Persist the grade. Crucially, we ALSO re-write response_text here so
+    // the row's text and grade are guaranteed to be in sync — if the upsert
+    // above quietly didn't update response_text for any reason (PostgREST
+    // upsert quirks, default-to-null behaviour), this final update fixes it.
+    // Error-checked so silent DB failures don't leave the UI showing a stale
+    // grade.
+    const { error: updateErr } = await admin
       .from("mock_interview_responses")
       .update({
+        response_text: parsed.data.responseText,
         status: "graded",
         overall_score: result.overallScore,
         pass: result.pass,
         feedback_summary: result.feedbackSummary,
         graded_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       })
       .eq("id", row.id);
+    if (updateErr) {
+      return {
+        ok: false,
+        error: `Failed to save grade: ${updateErr.message}`,
+        code: "DB_ERROR",
+      };
+    }
 
     revalidatePath("/interviews");
     revalidatePath(`/interviews/${scenario.id}`);
@@ -108,8 +128,10 @@ export async function submitMockInterview(
         status: "grading_failed",
         feedback_summary: `Grading failed: ${msg}`,
         graded_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       })
       .eq("id", row.id);
+    revalidatePath(`/interviews/${scenario.id}`);
     return { ok: false, error: msg, code: "GRADING_FAILED" };
   }
 }
