@@ -137,11 +137,20 @@ export function MockInterviewForm({
         <VoiceRecorder
           disabled={busy}
           onTranscript={(t) => {
-            // Auto-fill if the textarea is empty; otherwise append after a
-            // blank line so learners can combine multiple takes.
-            setText((prev) =>
-              prev.trim() ? prev.trimEnd() + "\n\n" + t : t,
-            );
+            // Replace, don't append, when the textarea is empty OR still
+            // holds exactly the previously-graded response. The append
+            // behaviour caused a real bug: users recording a fresh attempt
+            // after a graded submission would silently submit BOTH the old
+            // text and the new transcript, and Claude would grade the
+            // combined text — confusing them into thinking the regrade
+            // didn't take. Append is only used when the user has been
+            // actively editing (text differs from initialResponse) so
+            // multiple takes can still be combined mid-draft.
+            setText((prev) => {
+              const isFreshAttempt =
+                !prev.trim() || prev.trim() === initialResponse.trim();
+              return isFreshAttempt ? t : prev.trimEnd() + "\n\n" + t;
+            });
           }}
         />
 
