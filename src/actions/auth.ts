@@ -15,6 +15,10 @@ const SignUpSchema = z.object({
     .transform((v) => v.toLowerCase().trim()),
   password: z.string().min(8, "Password must be at least 8 characters"),
   fullName: z.string().trim().optional(),
+  // Funnel attribution — populated by the signup page from the URL ?ref=
+  // query param (e.g. "preview-coordinator-role"). Sanitised at the page
+  // layer; we still constrain length here as a safety net.
+  signupSource: z.string().trim().max(80).optional().nullable(),
 });
 
 const SignInSchema = z.object({
@@ -41,10 +45,14 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
   }
 
   const supabase = await createClient();
+  const userMeta: Record<string, string> = {};
+  if (parsed.data.fullName) userMeta.full_name = parsed.data.fullName;
+  if (parsed.data.signupSource) userMeta.signup_source = parsed.data.signupSource;
+
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
-    options: parsed.data.fullName ? { data: { full_name: parsed.data.fullName } } : undefined,
+    options: Object.keys(userMeta).length > 0 ? { data: userMeta } : undefined,
   });
 
   if (error) {

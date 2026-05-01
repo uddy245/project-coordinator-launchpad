@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArtifactUploader } from "@/components/grading/artifact-uploader";
 import { SubmissionHistory } from "@/components/grading/submission-history";
 import { createClient } from "@/lib/supabase/server";
-import { templatesFor, type Template } from "@/lib/lessons/templates";
+import { templatesForAsync, type Template } from "@/lib/lessons/templates";
 
 export async function WorkbookPanel({
   lessonSlug,
@@ -11,11 +11,11 @@ export async function WorkbookPanel({
   lessonSlug: string;
   lessonTitle: string;
 }) {
-  const templates = templatesFor(lessonSlug);
+  const supabase = await createClient();
+  const templates = await templatesForAsync(supabase, lessonSlug);
   const starter = templates.find((t) => t.kind === "starter");
   const examples = templates.filter((t) => t.kind === "example");
 
-  const supabase = await createClient();
   const { data: lesson } = await supabase
     .from("lessons")
     .select("id")

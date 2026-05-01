@@ -2,6 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { LessonForm, type LessonFormDefaults } from "@/components/admin/lesson-form";
+import {
+  TemplateUploader,
+  type ExistingTemplate,
+} from "@/components/admin/template-uploader";
 
 export const metadata = { title: "Edit lesson — Admin" };
 export const dynamic = "force-dynamic";
@@ -26,6 +30,22 @@ export default async function EditLessonPage({
     .maybeSingle();
 
   if (!data) notFound();
+
+  const { data: lessonRow } = await admin
+    .from("lessons")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle();
+  const { data: templateRows } = lessonRow
+    ? await admin
+        .from("lesson_templates")
+        .select("id, title, description, kind, file_url, sort")
+        .eq("lesson_id", lessonRow.id)
+        .order("sort", { ascending: true })
+        .order("created_at", { ascending: true })
+    : { data: [] as ExistingTemplate[] };
+
+  const existingTemplates: ExistingTemplate[] = (templateRows ?? []) as ExistingTemplate[];
 
   const defaults: LessonFormDefaults = {
     slug: data.slug,
@@ -66,6 +86,17 @@ export default async function EditLessonPage({
         </div>
       </header>
       <LessonForm defaults={defaults} isEdit={true} />
+
+      <section className="space-y-4 border-t border-rule pt-8">
+        <header>
+          <h2 className="display-title text-xl">Workbook templates</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Upload XLSX, CSV, or PDF templates for this lesson. Goes straight to
+            the workbook tab. Static templates still appear alongside these.
+          </p>
+        </header>
+        <TemplateUploader lessonSlug={data.slug} existing={existingTemplates} />
+      </section>
     </div>
   );
 }

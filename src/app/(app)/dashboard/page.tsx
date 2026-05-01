@@ -6,6 +6,7 @@ import { GateStatusBadge } from "@/components/dashboard/gate-status-badge";
 import { StreakBadge } from "@/components/dashboard/streak-badge";
 import { computeLessonStatus } from "@/lib/lessons/progress";
 import { computeGateSummary, FOUNDATION_SLUGS } from "@/lib/gates/compute";
+import { recommendNextLesson } from "@/lib/lessons/recommender";
 
 export const metadata = { title: "Dashboard — Launchpad" };
 
@@ -127,11 +128,17 @@ export default async function DashboardPage() {
         ? Number(streakRow[0]) || 0
         : 0;
 
-  // Find the next lesson to nudge the learner toward
-  const nextLesson = lessons?.find((l) => {
-    const p = progressByLessonId.get(l.id);
-    return !(p?.video_watched && p.quiz_passed && p.artifact_submitted);
-  });
+  // Heuristic recommender: foundations first → partial progress → next un-touched.
+  // See src/lib/lessons/recommender.ts for the rules.
+  const recommendation = await recommendNextLesson(supabase, user.id);
+  const nextLesson = recommendation
+    ? {
+        id: recommendation.lessonId,
+        slug: recommendation.slug,
+        number: recommendation.number,
+        title: recommendation.title,
+      }
+    : null;
 
   return (
     <div className="space-y-12">
@@ -153,6 +160,11 @@ export default async function DashboardPage() {
             >
               Module {String(nextLesson.number).padStart(2, "0")} — {nextLesson.title}
             </a>
+            {recommendation?.reason ? (
+              <span className="ml-2 text-sm text-muted-foreground">
+                · {recommendation.reason}
+              </span>
+            ) : null}
           </p>
         ) : null}
       </section>

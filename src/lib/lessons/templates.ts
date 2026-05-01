@@ -267,3 +267,49 @@ export const TEMPLATES_BY_SLUG: Record<string, Template[]> = {
 export function templatesFor(lessonSlug: string): Template[] {
   return TEMPLATES_BY_SLUG[lessonSlug] ?? [];
 }
+
+/**
+ * DB-backed templates merged with the static catalog. Used by the
+ * workbook panel so admins can add new templates without redeploying.
+ *
+ * Resolution order:
+ *  1. Static entries from TEMPLATES_BY_SLUG (preserved order)
+ *  2. DB entries from lesson_templates, sorted by `sort` then created_at
+ *
+ * If the DB query fails (e.g. table doesn't exist yet on a fresh checkout),
+ * we silently fall back to static — never crash the lesson page.
+ */
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+export async function templatesForAsync(
+  supabase: SupabaseClient,
+  lessonSlug: string,
+): Promise<Template[]> {
+  const staticEntries = templatesFor(lessonSlug);
+
+  const { data: lesson } = await supabase
+    .from("lessons")
+    .select("id")
+    .eq("slug", lessonSlug)
+    .maybeSingle();
+
+  if (!lesson) return staticEntries;
+
+  const { data, error } = await supabase
+    .from("lesson_templates")
+    .select("title, description, file_url, kind, sort, created_at")
+    .eq("lesson_id", lesson.id)
+    .order("sort", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error || !data) return staticEntries;
+
+  const dbEntries: Template[] = data.map((row) => ({
+    file: row.file_url,
+    title: row.title,
+    kind: row.kind as Template["kind"],
+    description: row.description ?? "",
+  }));
+
+  return [...staticEntries, ...dbEntries];
+}

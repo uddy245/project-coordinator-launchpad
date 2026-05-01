@@ -116,12 +116,21 @@ export default async function CapstonePage() {
                   </ul>
                 </div>
 
-                {!s.is_published ? (
+                {s.is_published ? (
+                  <div className="mt-6">
+                    <a
+                      href={`/capstone/${s.slug}`}
+                      className="mono-link"
+                    >
+                      Open capstone →
+                    </a>
+                  </div>
+                ) : (
                   <div className="mt-6 border-l-4 border-[hsl(var(--accent))] bg-paper px-4 py-3 text-sm text-ink">
                     The case study and rubric are in production. The capstone
                     will open once the full programme ships.
                   </div>
-                ) : null}
+                )}
               </article>
             );
           })}

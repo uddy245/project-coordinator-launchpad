@@ -188,3 +188,170 @@ export async function replaceQuizItems(
   revalidatePath(`/lessons/${parsed.data.lessonSlug}`);
   return { ok: true, data: { inserted: rows.length } };
 }
+
+// ──────────────────────────────────────────────────────────────────────
+// Lesson templates — upload an XLSX/PDF/CSV to Supabase Storage and
+// register it in the lesson_templates table.
+// ──────────────────────────────────────────────────────────────────────
+
+const TEMPLATE_BUCKET = "lesson-templates";
+const MAX_TEMPLATE_BYTES = 10 * 1024 * 1024; // 10 MB
+
+const TemplateUploadInputSchema = z.object({
+  lessonSlug: z.string(),
+  title: z.string().trim().min(2).max(120),
+  description: z.string().trim().max(500).optional().nullable(),
+  kind: z.enum(["starter", "example"]),
+  sort: z.number().int().min(0).max(9999).optional(),
+});
+
+export type UploadTemplateInput = z.input<typeof TemplateUploadInputSchema>;
+
+export async function uploadLessonTemplate(
+  formData: FormData,
+): Promise<ActionResult<{ id: string; file_url: string }>> {
+  const rawInput = {
+    lessonSlug: formData.get("lessonSlug"),
+    title: formData.get("title"),
+    description: formData.get("description") || null,
+    kind: formData.get("kind"),
+    sort: formData.get("sort") ? Number(formData.get("sort")) : undefined,
+  };
+
+  const parsed = TemplateUploadInputSchema.safeParse(rawInput);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      error: parsed.error.issues[0]?.message ?? "Invalid input",
+      code: "INVALID_INPUT",
+    };
+  }
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Pick a file to upload.", code: "INVALID_INPUT" };
+  }
+  if (file.size > MAX_TEMPLATE_BYTES) {
+    return { ok: false, error: "File exceeds 10 MB limit.", code: "INVALID_INPUT" };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
+  const { data: isAdmin } = await supabase.rpc("is_admin");
+  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+
+  const admin = createAdminClient();
+  const { data: lesson } = await admin
+    .from("lessons")
+    .select("id")
+    .eq("slug", parsed.data.lessonSlug)
+    .maybeSingle();
+  if (!lesson) {
+    return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
+  }
+
+  // Object path: <lesson_slug>/<timestamp>-<safe-name>.ext
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const objectPath = `${parsed.data.lessonSlug}/${Date.now()}-${safeName}`;
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const { error: uploadErr } = await admin.storage
+    .from(TEMPLATE_BUCKET)
+    .upload(objectPath, buffer, {
+      contentType: file.type || "application/octet-stream",
+      upsert: false,
+    });
+  if (uploadErr) {
+    return {
+      ok: false,
+      error: `Storage upload failed: ${uploadErr.message}`,
+      code: "STORAGE_ERROR",
+    };
+  }
+
+  const {
+    data: { publicUrl },
+  } = admin.storage.from(TEMPLATE_BUCKET).getPublicUrl(objectPath);
+
+  const { data: row, error: insertErr } = await admin
+    .from("lesson_templates")
+    .insert({
+      lesson_id: lesson.id,
+      title: parsed.data.title,
+      description: parsed.data.description || null,
+      kind: parsed.data.kind,
+      file_url: publicUrl,
+      sort: parsed.data.sort ?? 100,
+    })
+    .select("id")
+    .single();
+
+  if (insertErr) {
+    // Best-effort cleanup of the orphaned file.
+    await admin.storage.from(TEMPLATE_BUCKET).remove([objectPath]).catch(() => {});
+    return {
+      ok: false,
+      error: `Failed to register template: ${insertErr.message}`,
+      code: "DB_ERROR",
+    };
+  }
+
+  revalidatePath(`/lessons/${parsed.data.lessonSlug}`);
+  revalidatePath(`/admin/lessons/${parsed.data.lessonSlug}`);
+  return { ok: true, data: { id: row.id, file_url: publicUrl } };
+}
+
+export async function deleteLessonTemplate(
+  templateId: string,
+): Promise<ActionResult<{ id: string }>> {
+  if (!templateId) {
+    return { ok: false, error: "Missing template id.", code: "INVALID_INPUT" };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
+  const { data: isAdmin } = await supabase.rpc("is_admin");
+  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+
+  const admin = createAdminClient();
+  const { data: row } = await admin
+    .from("lesson_templates")
+    .select("id, file_url, lesson_id")
+    .eq("id", templateId)
+    .maybeSingle();
+  if (!row) return { ok: false, error: "Template not found.", code: "NOT_FOUND" };
+
+  const { error: delErr } = await admin
+    .from("lesson_templates")
+    .delete()
+    .eq("id", templateId);
+  if (delErr) {
+    return {
+      ok: false,
+      error: `Failed to delete: ${delErr.message}`,
+      code: "DB_ERROR",
+    };
+  }
+
+  // Best-effort delete of the underlying object.
+  try {
+    const url = new URL(row.file_url);
+    const pathPrefix = `/storage/v1/object/public/${TEMPLATE_BUCKET}/`;
+    const idx = url.pathname.indexOf(pathPrefix);
+    if (idx >= 0) {
+      const objectPath = url.pathname.slice(idx + pathPrefix.length);
+      await admin.storage.from(TEMPLATE_BUCKET).remove([objectPath]);
+    }
+  } catch {
+    /* swallow — orphaned blob is acceptable */
+  }
+
+  revalidatePath("/admin/lessons");
+  return { ok: true, data: { id: templateId } };
+}

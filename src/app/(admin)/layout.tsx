@@ -23,6 +23,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/lessons" className="mono-link">
               Lessons
             </Link>
+            <Link href="/admin/scenarios" className="mono-link">
+              Scenarios
+            </Link>
+            <Link href="/admin/capstones" className="mono-link">
+              Capstones
+            </Link>
             <Link href="/dashboard" className="mono-link">
               ← Back to app
             </Link>

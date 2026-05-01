@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { submitMockInterview } from "@/actions/mock-interview";
 import { Button } from "@/components/ui/button";
+import { VoiceRecorder } from "@/components/interviews/voice-recorder";
 
 type Status = "graded_pending" | "grading" | "graded" | "grading_failed" | null;
 
@@ -108,6 +109,8 @@ export function MockInterviewForm({
       ) : null}
 
       <form onSubmit={onSubmit} className="space-y-4">
+        <VoiceRecorder disabled={busy} />
+
         <div>
           <label htmlFor="response" className="kicker">
             Your response

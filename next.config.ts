@@ -24,4 +24,19 @@ export default withSentryConfig(nextConfig, {
 
   // Strip the Sentry SDK's logger calls in production for smaller bundles.
   disableLogger: true,
+
+  // Pin the release name so source maps line up across server + client.
+  // Vercel sets VERCEL_GIT_COMMIT_SHA on every build; without it (local /
+  // unconfigured CI), the wrapper falls back to its own auto-detection.
+  release: {
+    name: process.env.VERCEL_GIT_COMMIT_SHA,
+    create: !!process.env.SENTRY_AUTH_TOKEN,
+    finalize: !!process.env.SENTRY_AUTH_TOKEN,
+  },
+
+  // Source map upload defaults — only attempt when an auth token is set.
+  // The wrapper otherwise silently no-ops.
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+  },
 });

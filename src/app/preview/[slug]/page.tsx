@@ -86,7 +86,7 @@ export default async function PreviewPage({
               Sign in
             </Link>
             <Button asChild size="sm">
-              <Link href="/signup">Begin the programme</Link>
+              <Link href={`/signup?ref=preview-${slug}`}>Begin the programme</Link>
             </Button>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default async function PreviewPage({
             </span>
           </div>
           <Button asChild size="sm" variant="outline">
-            <Link href="/signup">Unlock the full module</Link>
+            <Link href={`/signup?ref=preview-${slug}`}>Unlock the full module</Link>
           </Button>
         </div>
       </section>
@@ -137,7 +137,7 @@ export default async function PreviewPage({
           <p className="mt-3 text-xs text-muted-foreground">
             Progress isn&apos;t saved in preview mode.{" "}
             <Link
-              href="/signup"
+              href={`/signup?ref=preview-${slug}`}
               className="underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-[5px]"
             >
               Sign up
@@ -187,7 +187,7 @@ export default async function PreviewPage({
           </div>
           <div className="mt-8 flex items-center gap-3">
             <Button asChild size="lg">
-              <Link href="/signup">Begin the programme</Link>
+              <Link href={`/signup?ref=preview-${slug}`}>Begin the programme</Link>
             </Button>
             <Button asChild variant="ghost" size="lg">
               <Link href="/login">Sign in</Link>

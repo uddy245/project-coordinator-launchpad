@@ -1,0 +1,78 @@
+RAID LOG — Healthcare Integration Pilot, Clinic A
+Owner: M. Okafor, Project Coordinator
+Document version: v3 (current as of 2026-04-15)
+Prior versions on file: v1 (2026-04-01), v2 (2026-04-08)
+Change log appended.
+
+===== RISKS =====
+
+R1 [OPEN — escalating to steering 2026-04-19]
+  Description: Vendor announced API v2 deprecation 2026-03-28; current pilot
+    relies on v1 endpoints for patient lookup and insurance eligibility.
+    Sunset 2026-07-10.
+  Trigger: Vendor EOL email, archived in shared drive (link in change log).
+  Impact: HIGH — both endpoints are critical-path; failure breaks check-in
+    and billing simultaneously. No graceful degradation in current pilot UI.
+  Likelihood: HIGH (vendor confirmed in 2026-04-03 PS call; no extension).
+  Owner: J. Patel (Lead Eng) — out on paternity leave through 2026-05-13.
+    Backup owner: D. Huang, who has been cross-trained on the integration
+    layer and is on-call. Follow-up scheduled 2026-04-26.
+  Mitigation: (v1) flagged for investigation. (v2) Migration spike approved,
+    $18k vendor PS budget. (v3) PS SOW signed 2026-04-14; kickoff 2026-05-14;
+    estimated 4 weeks; cutover dry-run scheduled 2026-06-12.
+
+R2 [OPEN — downgraded v2→v3]
+  Description: Premature scope expansion to Clinics B and C before pilot
+    stabilization criteria are met.
+  Trigger: PO request 2026-04-12 to bring in Clinic B by 2026-05-30.
+  Impact: HIGH→MEDIUM. PO agreed in 2026-04-15 sync to defer to 2026-07-01,
+    contingent on stabilization KPIs (uptime ≥99.5%, P1 incidents = 0 for
+    14 consecutive days). Documented in 2026-04-15 sync notes.
+  Likelihood: MEDIUM→LOW.
+  Owner: K. Bell (Product Owner). Follow-up 2026-05-01.
+  Mitigation: Staged rollout plan accepted by steering 2026-04-08. Pilot
+    KPIs being tracked daily; weekly steering update includes status.
+
+R3 [CLOSED in v3 — was OPEN v1, v2]
+  Description: Coverage gap during lead engineer paternity leave.
+  Resolution: D. Huang cross-trained 2026-04-04 to 2026-04-12; on-call
+    rotation activated 2026-04-15. No P1 incidents in week one of leave.
+  Closure approved by K. Bell + L. Davies 2026-04-15.
+
+===== ASSUMPTIONS =====
+
+A1 [OPEN]
+  Statement: Vendor PS team will hit the 2026-06-12 dry-run date with the
+    v2 migration. Plan depends on this for July cutover.
+  Validation: Weekly status check with vendor PM (T. Reyes); first check
+    2026-05-21. Owner: J. Patel (D. Huang while on leave).
+
+===== ISSUES =====
+
+I1 [OPEN — escalated v2→v3]
+  Description: HL7 lab feed dropping 2–3x/week since 2026-04-02. Clinical
+    team flagged missed result 2026-04-13 (patient impact: delayed but no
+    harm; documented in incident report INC-2026-014).
+  Impact: HIGH (clinical safety). Was MEDIUM in v2; upgraded after 04-13.
+  Owner: D. Huang (eng) + L. Davies (Clinical Ops, escalation channel).
+  Resolution plan: Vendor diagnostic call 2026-04-17. Interim manual
+    reconciliation by clinical team at end-of-day, daily, until resolved.
+    Target resolution: 2026-04-30.
+
+===== DEPENDENCIES =====
+
+D1 [OPEN]
+  Description: Vendor v2 migration (see R1).
+  External owner: T. Reyes (Vendor PM).
+  Internal contact: J. Patel.
+  Coordination cadence: weekly status, escalate to vendor account exec
+    if any milestone slips.
+
+===== CHANGE LOG =====
+
+v3 (2026-04-15) — R3 closed (engineer leave coverage). I1 escalated to HIGH
+  after clinical team flagged missed result. R1 mitigation updated with
+  signed SOW. R2 downgraded after PO sync.
+v2 (2026-04-08) — Added staged rollout plan (R2). I1 added (was risk in v1,
+  materialized 04-02). A1 added.
+v1 (2026-04-01) — Initial log. R1, R2, R3 captured.

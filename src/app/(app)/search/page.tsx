@@ -13,8 +13,33 @@ type SearchResult = {
   title: string;
   summary: string | null;
   competency: string | null;
+  snippet: string | null;
   rank: number;
 };
+
+/**
+ * Render a snippet that contains <mark>…</mark> tags from the Postgres
+ * ts_headline() RPC. Splits on the safe sentinels and only treats the
+ * literal '<mark>' / '</mark>' tokens as markup — anything else stays as
+ * plain text. This avoids `dangerouslySetInnerHTML` while preserving
+ * highlight emphasis.
+ */
+function renderSnippet(s: string) {
+  const parts = s.split(/(<mark>.*?<\/mark>)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("<mark>") && part.endsWith("</mark>")) {
+      return (
+        <mark
+          key={i}
+          className="bg-[hsl(var(--accent))]/15 text-ink decoration-[hsl(var(--accent))] underline decoration-2 underline-offset-2"
+        >
+          {part.slice(6, -7)}
+        </mark>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
 
 export default async function SearchPage({
   searchParams,
@@ -87,7 +112,11 @@ export default async function SearchPage({
                 <h3 className="display-title text-[1.25rem] leading-snug">
                   {r.title}
                 </h3>
-                {r.summary ? (
+                {r.snippet ? (
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {renderSnippet(r.snippet)}
+                  </p>
+                ) : r.summary ? (
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {r.summary}
                   </p>
