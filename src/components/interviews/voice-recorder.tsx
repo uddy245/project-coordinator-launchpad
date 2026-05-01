@@ -5,6 +5,36 @@ import { Button } from "@/components/ui/button";
 
 const MAX_SECONDS = 60;
 
+// English accents the Web Speech API recognises. Picking the variant that
+// matches the speaker's accent dramatically improves transcription quality —
+// Chrome's en-US acoustic model otherwise mis-hears words like "scope" as
+// "socks", "risk" as "Richard", etc., for non-American speakers.
+const SPEECH_LANGS: { value: string; label: string }[] = [
+  { value: "en-US", label: "English (US)" },
+  { value: "en-GB", label: "English (UK)" },
+  { value: "en-NG", label: "English (Nigeria)" },
+  { value: "en-IN", label: "English (India)" },
+  { value: "en-ZA", label: "English (South Africa)" },
+  { value: "en-AU", label: "English (Australia)" },
+  { value: "en-CA", label: "English (Canada)" },
+  { value: "en-IE", label: "English (Ireland)" },
+  { value: "en-NZ", label: "English (New Zealand)" },
+  { value: "en-PH", label: "English (Philippines)" },
+  { value: "en-SG", label: "English (Singapore)" },
+];
+
+const LANG_STORAGE_KEY = "voice-recorder-lang";
+
+function pickInitialLang(): string {
+  if (typeof window === "undefined") return "en-US";
+  const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+  if (stored && SPEECH_LANGS.some((l) => l.value === stored)) return stored;
+  // Fall back to the browser's locale if it's a supported English variant.
+  const navLang = navigator.language;
+  if (navLang && SPEECH_LANGS.some((l) => l.value === navLang)) return navLang;
+  return "en-US";
+}
+
 /**
  * Dual-stream voice recorder for mock-interview practice.
  *
@@ -83,6 +113,9 @@ export function VoiceRecorder({
   const [liveTranscript, setLiveTranscript] = useState("");
   // Whether SpeechRecognition is available in this browser.
   const [hasSpeechSupport, setHasSpeechSupport] = useState(false);
+  // Selected English variant for the recogniser. Persisted in localStorage so
+  // the user only has to set it once.
+  const [lang, setLang] = useState<string>("en-US");
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
@@ -98,6 +131,7 @@ export function VoiceRecorder({
       typeof window !== "undefined" &&
       !!(window.SpeechRecognition ?? window.webkitSpeechRecognition);
     setHasSpeechSupport(supported);
+    setLang(pickInitialLang());
 
     return () => {
       // Cleanup on unmount.
@@ -138,7 +172,7 @@ export function VoiceRecorder({
     const recognition = new SpeechRecognitionCtor();
     recognition.continuous = true;
     recognition.interimResults = true;
-    recognition.lang = "en-US";
+    recognition.lang = lang;
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       let interim = "";
@@ -314,6 +348,36 @@ export function VoiceRecorder({
         <audio controls src={audioUrl} className="w-full">
           Your browser doesn&apos;t support audio playback.
         </audio>
+      ) : null}
+
+      {hasSpeechSupport && !recording ? (
+        <div className="flex flex-wrap items-center gap-2 border-t border-rule pt-3 text-xs text-muted-foreground">
+          <label htmlFor="speech-lang" className="font-mono uppercase tracking-[0.14em]">
+            Accent
+          </label>
+          <select
+            id="speech-lang"
+            value={lang}
+            onChange={(e) => {
+              const next = e.target.value;
+              setLang(next);
+              if (typeof window !== "undefined") {
+                window.localStorage.setItem(LANG_STORAGE_KEY, next);
+              }
+            }}
+            disabled={disabled}
+            className="rounded-sm border border-input bg-background px-2 py-1 text-xs"
+          >
+            {SPEECH_LANGS.map((l) => (
+              <option key={l.value} value={l.value}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+          <span className="ml-1 italic">
+            Pick the variant closest to your accent for best transcription.
+          </span>
+        </div>
       ) : null}
 
       {error ? (
