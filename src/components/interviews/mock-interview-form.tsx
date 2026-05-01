@@ -109,7 +109,16 @@ export function MockInterviewForm({
       ) : null}
 
       <form onSubmit={onSubmit} className="space-y-4">
-        <VoiceRecorder disabled={busy} />
+        <VoiceRecorder
+          disabled={busy}
+          onTranscript={(t) => {
+            // Auto-fill if the textarea is empty; otherwise append after a
+            // blank line so learners can combine multiple takes.
+            setText((prev) =>
+              prev.trim() ? prev.trimEnd() + "\n\n" + t : t,
+            );
+          }}
+        />
 
         <div>
           <label htmlFor="response" className="kicker">

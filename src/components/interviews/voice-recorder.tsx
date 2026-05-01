@@ -6,38 +6,104 @@ import { Button } from "@/components/ui/button";
 const MAX_SECONDS = 60;
 
 /**
- * Minimal voice recorder for mock-interview practice. Records up to 60
- * seconds via MediaRecorder, plays back, and lets the learner copy the
- * waveform-implied transcript into the textarea (we do not auto-transcribe
- * — the act of writing what you said is part of the practice).
+ * Dual-stream voice recorder for mock-interview practice.
  *
- * The recording itself is deliberately ephemeral: it lives in browser
- * memory only, never uploaded. Learners who want a record use the textarea
- * which IS persisted. This keeps the privacy story simple and the storage
- * footprint zero.
+ * Two things happen simultaneously when the learner clicks Record:
+ *  1. MediaRecorder — captures audio for playback (browser memory only, never uploaded)
+ *  2. SpeechRecognition — transcribes speech in real time (browser-native, free, no API)
+ *
+ * When recording stops, the transcript is passed to the parent via `onTranscript`
+ * so it can auto-fill the response textarea. The learner then reviews / edits the
+ * text and submits it for Claude grading — the audio itself is never sent anywhere.
+ *
+ * Graceful degradation: SpeechRecognition is not available in Firefox. In that case
+ * no transcript is produced and the learner falls back to typing manually.
+ *
+ * MIME type detection: Safari requires audio/mp4; Chrome/Firefox prefer webm+opus.
+ * We probe MediaRecorder.isTypeSupported() at start time and pick accordingly.
  */
+
+// Minimal Web Speech API type declarations. TypeScript's DOM lib includes
+// these in recent versions, but they may not be present in all Next.js build
+// environments. We define just enough here to avoid depending on the ambient
+// SpeechRecognition global being present.
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  readonly length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+}
+interface SpeechRecognitionResultList {
+  readonly length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+interface SpeechRecognitionEvent extends Event {
+  readonly resultIndex: number;
+  readonly results: SpeechRecognitionResultList;
+}
+interface ISpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: Event) => void) | null;
+  onend: (() => void) | null;
+  start(): void;
+  stop(): void;
+}
+interface SpeechRecognitionCtor {
+  new (): ISpeechRecognition;
+}
+declare global {
+  interface Window {
+    SpeechRecognition: SpeechRecognitionCtor | undefined;
+    webkitSpeechRecognition: SpeechRecognitionCtor | undefined;
+  }
+}
+
 export function VoiceRecorder({
   onElapsed,
+  onTranscript,
   disabled,
 }: {
   onElapsed?: (seconds: number) => void;
+  onTranscript?: (text: string) => void;
   disabled?: boolean;
 }) {
   const [recording, setRecording] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Live transcript preview while recording (interim + final results combined).
+  const [liveTranscript, setLiveTranscript] = useState("");
+  // Whether SpeechRecognition is available in this browser.
+  const [hasSpeechSupport, setHasSpeechSupport] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recognitionRef = useRef<ISpeechRecognition | null>(null);
+  // Accumulate final (committed) transcript segments.
+  const finalTranscriptRef = useRef("");
   const chunksRef = useRef<Blob[]>([]);
   const tickRef = useRef<number | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
+    // Detect browser support once on mount.
+    const supported =
+      typeof window !== "undefined" &&
+      !!(window.SpeechRecognition ?? window.webkitSpeechRecognition);
+    setHasSpeechSupport(supported);
+
     return () => {
       // Cleanup on unmount.
       stopTick();
       stopStream();
+      stopRecognition();
       if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,9 +121,61 @@ export function VoiceRecorder({
     streamRef.current = null;
   }
 
+  function stopRecognition() {
+    try {
+      recognitionRef.current?.stop();
+    } catch {
+      // Ignore — stop() throws if recognition is already stopped.
+    }
+    recognitionRef.current = null;
+  }
+
+  function startRecognition() {
+    const SpeechRecognitionCtor =
+      window.SpeechRecognition ?? window.webkitSpeechRecognition;
+    if (!SpeechRecognitionCtor) return;
+
+    const recognition = new SpeechRecognitionCtor();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (result.isFinal) {
+          finalTranscriptRef.current += result[0].transcript + " ";
+        } else {
+          interim += result[0].transcript;
+        }
+      }
+      setLiveTranscript(finalTranscriptRef.current + interim);
+    };
+
+    recognition.onerror = () => {
+      // Non-fatal — recording continues even if transcription drops.
+    };
+
+    recognition.onend = () => {
+      // Called when stop() completes. Nothing to do; we read
+      // finalTranscriptRef in recorder.onstop instead.
+    };
+
+    recognitionRef.current = recognition;
+    try {
+      recognition.start();
+    } catch {
+      // If start() throws (e.g. already running), just continue without it.
+      recognitionRef.current = null;
+    }
+  }
+
   async function start() {
     setError(null);
     setElapsed(0);
+    setLiveTranscript("");
+    finalTranscriptRef.current = "";
     if (audioUrl) {
       URL.revokeObjectURL(audioUrl);
       setAudioUrl(null);
@@ -91,16 +209,23 @@ export function VoiceRecorder({
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
       recorder.onstop = () => {
-        // Use the recorder's actual mimeType (may differ from requested if
-        // the browser normalised it) so the Blob header matches the data.
+        // Blob for playback — audio stays in browser memory.
         const blobType = recorder.mimeType || mimeType || "audio/webm";
         const blob = new Blob(chunksRef.current, { type: blobType });
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
         stopStream();
+
+        // Fire transcript callback with the committed text.
+        const transcript = finalTranscriptRef.current.trim();
+        if (transcript && onTranscript) {
+          onTranscript(transcript);
+        }
       };
 
+      // Start both streams together.
       recorder.start();
+      startRecognition();
       setRecording(true);
 
       const startedAt = Date.now();
@@ -123,6 +248,9 @@ export function VoiceRecorder({
   }
 
   function stop() {
+    // Stop speech recognition first so its final results land before
+    // recorder.onstop fires and we read finalTranscriptRef.
+    stopRecognition();
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
     }
@@ -135,6 +263,8 @@ export function VoiceRecorder({
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     setAudioUrl(null);
     setElapsed(0);
+    setLiveTranscript("");
+    finalTranscriptRef.current = "";
   }
 
   return (
@@ -143,8 +273,9 @@ export function VoiceRecorder({
         <div>
           <div className="kicker">Practise out loud · optional</div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Record up to 60 seconds. Audio stays in your browser — nothing is
-            uploaded. Listen back, then write what you said in the box below.
+            {hasSpeechSupport
+              ? "Record up to 60 seconds. Your speech is transcribed live and auto-fills the box below — audio stays in your browser, nothing is uploaded."
+              : "Record up to 60 seconds. Audio stays in your browser — nothing is uploaded. Listen back, then write what you said in the box below."}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -167,8 +298,15 @@ export function VoiceRecorder({
       </div>
 
       {recording ? (
-        <div className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[hsl(var(--accent))]">
-          Recording · {elapsed}s / {MAX_SECONDS}s
+        <div className="space-y-2">
+          <div className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[hsl(var(--accent))]">
+            Recording · {elapsed}s / {MAX_SECONDS}s
+          </div>
+          {hasSpeechSupport && liveTranscript ? (
+            <p className="text-xs italic text-muted-foreground">
+              {liveTranscript}
+            </p>
+          ) : null}
         </div>
       ) : null}
 
