@@ -24,7 +24,16 @@ export type SubmitMockInterviewInput = z.input<typeof SubmitSchema>;
  */
 export async function submitMockInterview(
   input: SubmitMockInterviewInput
-): Promise<ActionResult<{ responseId: string; status: "graded" | "grading_failed" }>> {
+): Promise<
+  ActionResult<{
+    responseId: string;
+    status: "graded" | "grading_failed";
+    overallScore: number;
+    pass: boolean;
+    feedbackSummary: string;
+    responseText: string;
+  }>
+> {
   const parsed = SubmitSchema.safeParse(input);
   if (!parsed.success) {
     return {
@@ -119,7 +128,17 @@ export async function submitMockInterview(
 
     revalidatePath("/interviews");
     revalidatePath(`/interviews/${scenario.id}`);
-    return { ok: true, data: { responseId: row.id, status: "graded" } };
+    return {
+      ok: true,
+      data: {
+        responseId: row.id,
+        status: "graded",
+        overallScore: result.overallScore,
+        pass: result.pass,
+        feedbackSummary: result.feedbackSummary,
+        responseText: parsed.data.responseText,
+      },
+    };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "unknown";
     await admin

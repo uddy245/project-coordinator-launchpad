@@ -28,6 +28,17 @@ export function MockInterviewForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Track the most-recent grade returned by submitMockInterview so the UI
+  // updates immediately, without depending on router.refresh() / cache
+  // invalidation winning the race. Once router.refresh() lands new server
+  // props, this falls back to those.
+  const [freshGrade, setFreshGrade] = useState<{
+    score: number;
+    pass: boolean;
+    feedback: string;
+    forText: string;
+  } | null>(null);
+
   // Sync `text` when the server-side initialResponse changes (router.refresh
   // after submit, navigating between scenarios, etc). React preserves
   // client-state across server-component re-renders, so without this the
@@ -40,11 +51,17 @@ export function MockInterviewForm({
     }
   }, [initialResponse]);
 
-  // Show the grade whenever we have one. If the user has edited the text
-  // since it was graded, we surface a small "edited since grading" hint
-  // so they know the displayed grade is for the previously-submitted text.
-  const isGraded = currentStatus === "graded" && currentScore !== null;
-  const editedSinceGrading = isGraded && text.trim() !== initialResponse.trim();
+  // Prefer the just-returned grade from the latest submit. When the server
+  // catches up via router.refresh() and props update, freshGrade still
+  // applies (we don't auto-clear it on prop changes — props might be
+  // showing the same grade the action returned, and clearing would just
+  // flicker). It's superseded only when the user clicks submit again.
+  const displayedScore = freshGrade?.score ?? currentScore;
+  const displayedPass = freshGrade?.pass ?? currentPass;
+  const displayedFeedback = freshGrade?.feedback ?? currentFeedback;
+  const gradedForText = freshGrade?.forText ?? initialResponse;
+  const isGraded = displayedScore !== null;
+  const editedSinceGrading = isGraded && text.trim() !== gradedForText.trim();
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -61,6 +78,14 @@ export function MockInterviewForm({
       setError(result.error);
       return;
     }
+    // Display the freshly-returned grade immediately. router.refresh() will
+    // also re-fetch server props; if the DB is in sync those will match.
+    setFreshGrade({
+      score: result.data.overallScore,
+      pass: result.data.pass,
+      feedback: result.data.feedbackSummary,
+      forText: result.data.responseText,
+    });
     router.refresh();
   }
 
@@ -72,7 +97,7 @@ export function MockInterviewForm({
       {isGraded ? (
         <div
           className={`border-l-4 px-5 py-4 ${
-            currentPass
+            displayedPass
               ? "border-[hsl(var(--status-complete))] bg-paper"
               : "border-[hsl(var(--accent))] bg-paper"
           }`}
@@ -83,16 +108,16 @@ export function MockInterviewForm({
               {editedSinceGrading ? "Previous grade" : "Latest grade"}
             </span>
             <span className="data-numeral text-2xl text-ink">
-              {currentScore?.toFixed(1)} / 5
+              {displayedScore?.toFixed(1)} / 5
             </span>
             <span
               className={`rounded-sm px-2 py-0.5 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.12em] ${
-                currentPass
+                displayedPass
                   ? "bg-[hsl(var(--status-complete))] text-white"
                   : "bg-[hsl(var(--accent))] text-white"
               }`}
             >
-              {currentPass ? "Passed" : "Needs revision"}
+              {displayedPass ? "Passed" : "Needs revision"}
             </span>
             {editedSinceGrading ? (
               <span className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-muted-foreground">
@@ -100,9 +125,9 @@ export function MockInterviewForm({
               </span>
             ) : null}
           </div>
-          {currentFeedback ? (
+          {displayedFeedback ? (
             <p className="mt-3 text-[0.95rem] leading-relaxed text-ink">
-              {currentFeedback}
+              {displayedFeedback}
             </p>
           ) : null}
         </div>
