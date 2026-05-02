@@ -44,7 +44,7 @@ Each scenario must read like a real interviewer's question — concrete, specifi
 Output a JSON array of scenarios. Each item is an object with these fields:
 - slug: kebab-case identifier, max 60 chars (e.g. "amber-rating-pushback")
 - prompt: the interview question text. 80–800 chars. Set the scene in 1–2 sentences, then ask "walk me through…" / "how do you handle…" / "what do you do first…". No multi-part questions.
-- category: "behavioural" | "procedural" | "judgment"
+- category: exactly one of "behavioural" | "procedural" | "judgment". Use the British spelling "behavioural" (with the u), NOT "behavioral".
 - difficulty: "easy" | "medium" | "hard"
 - competency: a short phrase naming the competency under test (e.g. "stakeholder management", "risk escalation", "schedule integrity")
 - sort: integer (use the values you're given)
