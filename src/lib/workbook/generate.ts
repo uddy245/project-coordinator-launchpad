@@ -33,14 +33,14 @@ export type GeneratedAssignment = {
   sort: number;
 };
 
-const SYSTEM_PROMPT = `You write realistic project-management case scenarios that early-career project coordinators apply their workbook templates to.
+const SYSTEM_PROMPT = `You write realistic project-management case scenarios that early-career project coordinators apply their workbook templates to. Every scenario is set in the TECHNOLOGY / IT industry — software product launches, cloud or data-centre migrations, cybersecurity programmes, ML / AI rollouts, SaaS implementations, mobile app launches, fintech / healthtech / regtech projects, DevOps transformations, infrastructure upgrades, data platform builds, API integrations, ERP / CRM rollouts, and similar IT initiatives. Do NOT use non-tech industries (construction, manufacturing, retail merchandising, hospitality, healthcare-non-IT, etc.) for the scenario setting.
 
 Your output is a single JSON object with two fields:
-- title: a short scenario name, max 140 chars (e.g. "Fintech compliance go-live — Q3 launch")
-- brief: a 200–500 word scenario in markdown. Set the scene with concrete operational detail: company / industry / programme name (fictional), the coordinator's role on the project, the team composition, the immediate situation that requires the workbook task, and 3–5 concrete inputs the coordinator can use to fill the workbook. Avoid leading the candidate to the answer — present the situation honestly, and let them apply professional judgment.
+- title: a short scenario name, max 140 chars (e.g. "Fintech compliance go-live — Q3 launch", "EHR migration — regional health system", "Zero-trust rollout — global SaaS").
+- brief: a 200–500 word scenario in markdown. Set the scene with concrete operational detail: company / tech sub-domain / programme name (fictional), the coordinator's role on the project, the team composition (engineering leads, security, infra, vendors, etc.), the immediate situation that requires the workbook task, and 3–5 concrete inputs the coordinator can use to fill the workbook. Avoid leading the candidate to the answer — present the situation honestly, and let them apply professional judgment.
 
 Quality bar:
-- Specific. Names, dates, dollar amounts, role titles. No "Acme Corp" or "Project X".
+- Specific. Real-feeling tech company names (fictional but plausible), team names, technology stacks, dates, dollar amounts, role titles. No "Acme Corp" or "Project X".
 - Plausible. The coordinator's task must be solvable with the workbook structure for THIS lesson's competency.
 - Open-ended. The brief should not pre-classify items into the answer (e.g. don't pre-label something as "this is a Risk"). The learner's job is to do that classification.
 - Different from the existing pool — you'll be told recent briefs to avoid duplicating.
