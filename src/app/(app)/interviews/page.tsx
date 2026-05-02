@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/require-user";
 import { createClient } from "@/lib/supabase/server";
+import { GenerateMoreButton } from "@/components/interviews/generate-more-button";
 
 export const metadata = { title: "Mock interviews — Launchpad" };
 export const dynamic = "force-dynamic";
@@ -78,9 +79,12 @@ export default async function InterviewsPage() {
         </div>
       ) : (
         <section className="space-y-3">
-          <div className="flex items-baseline justify-between border-b border-rule pb-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-3">
             <h2 className="kicker">Prompts</h2>
-            <span className="kicker">Click to enter →</span>
+            <div className="flex items-center gap-4">
+              <GenerateMoreButton />
+              <span className="kicker">Click to enter →</span>
+            </div>
           </div>
           {scenarios.map((s) => {
             const r = responses.get(s.id);
