@@ -1,8 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
-import { upsertLesson, replaceQuizItems } from "@/actions/admin-lessons";
+import { useState, useRef, type FormEvent } from "react";
+import {
+  upsertLesson,
+  replaceQuizItems,
+  uploadLessonVideo,
+} from "@/actions/admin-lessons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,9 +50,40 @@ export function LessonForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   function set<K extends keyof LessonFormDefaults>(k: K, v: LessonFormDefaults[K]) {
     setValues((prev) => ({ ...prev, [k]: v }));
+  }
+
+  async function onVideoUpload() {
+    const file = fileInputRef.current?.files?.[0];
+    if (!file) {
+      setError("Pick a video file first.");
+      return;
+    }
+    if (!isEdit) {
+      // Upload routes to <slug>/<file>; the slug must exist in the DB
+      // first because the action looks up the lesson before storing.
+      setError("Save the lesson once before uploading a video.");
+      return;
+    }
+    setError(null);
+    setInfo(null);
+    setUploading(true);
+    const fd = new FormData();
+    fd.set("lessonSlug", values.slug);
+    fd.set("file", file);
+    const result = await uploadLessonVideo(fd);
+    setUploading(false);
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+    set("video_url", result.data.url);
+    setInfo("Video uploaded. URL pasted in — click Save changes to publish.");
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   async function onSubmit(e: FormEvent) {
@@ -184,7 +219,7 @@ export function LessonForm({
           </Field>
         </div>
 
-        <Field label="Video URL" hint="Public Supabase Storage URL or empty for now">
+        <Field label="Video URL" hint="Public Supabase Storage URL — paste manually, or upload below to auto-fill">
           <Input
             type="url"
             value={values.video_url}
@@ -192,6 +227,32 @@ export function LessonForm({
             placeholder="https://xiksqmvtxwcrodmjxosy.supabase.co/storage/v1/object/public/lesson-videos/lesson-XX-name.mp4"
           />
         </Field>
+
+        <div className="space-y-2 rounded-md border border-rule bg-paper px-4 py-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="video/mp4,video/quicktime,video/webm"
+              disabled={uploading || !isEdit}
+              className="text-sm"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onVideoUpload}
+              disabled={uploading || !isEdit}
+            >
+              {uploading ? "Uploading…" : "Upload video"}
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {isEdit
+              ? "MP4 / MOV / WebM, max 500 MB. Goes to the lesson-videos bucket and pastes the URL above. Save the lesson afterward to publish."
+              : "Save the lesson once before uploading — we need the slug on disk first."}
+          </p>
+        </div>
       </fieldset>
 
       <fieldset className="space-y-4 border-t border-rule pt-6">

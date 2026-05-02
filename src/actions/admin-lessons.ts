@@ -338,3 +338,105 @@ export async function deleteLessonTemplate(
   revalidatePath("/admin/lessons");
   return { ok: true, data: { id: templateId } };
 }
+
+// ──────────────────────────────────────────────────────────────────────
+// Lesson video upload — push an MP4 to the lesson-videos bucket and
+// return the public URL. The form pastes that URL into video_url and
+// saves the lesson row separately. We don't auto-set video_url here so
+// the admin can decide whether to publish the new file or just stage it.
+// ──────────────────────────────────────────────────────────────────────
+
+const VIDEO_BUCKET = "lesson-videos";
+const MAX_VIDEO_BYTES = 500 * 1024 * 1024; // 500 MB — Bunny etc. handle the big-streaming case
+const ALLOWED_VIDEO_TYPES = new Set([
+  "video/mp4",
+  "video/quicktime",
+  "video/webm",
+]);
+
+const VideoUploadInputSchema = z.object({
+  lessonSlug: z.string().min(1),
+});
+
+export async function uploadLessonVideo(
+  formData: FormData,
+): Promise<ActionResult<{ url: string; objectPath: string }>> {
+  const parsed = VideoUploadInputSchema.safeParse({
+    lessonSlug: formData.get("lessonSlug"),
+  });
+  if (!parsed.success) {
+    return {
+      ok: false,
+      error: parsed.error.issues[0]?.message ?? "Invalid input",
+      code: "INVALID_INPUT",
+    };
+  }
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Pick a video file to upload.", code: "INVALID_INPUT" };
+  }
+  if (file.size > MAX_VIDEO_BYTES) {
+    return {
+      ok: false,
+      error: `File exceeds ${Math.round(MAX_VIDEO_BYTES / 1024 / 1024)} MB limit. Use a streaming host (Bunny / Mux) for larger files.`,
+      code: "INVALID_INPUT",
+    };
+  }
+  if (file.type && !ALLOWED_VIDEO_TYPES.has(file.type)) {
+    return {
+      ok: false,
+      error: `Unsupported file type: ${file.type}. Use MP4 / MOV / WebM.`,
+      code: "INVALID_INPUT",
+    };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
+  const { data: isAdmin } = await supabase.rpc("is_admin");
+  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+
+  const admin = createAdminClient();
+  const { data: lesson } = await admin
+    .from("lessons")
+    .select("id, video_url")
+    .eq("slug", parsed.data.lessonSlug)
+    .maybeSingle();
+  if (!lesson) {
+    return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
+  }
+
+  // Object path: <lesson_slug>/<timestamp>-<safe-name>.ext. Timestamp
+  // prefix means re-uploads don't clobber and we can roll back by
+  // pasting the previous URL back into video_url if needed.
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const objectPath = `${parsed.data.lessonSlug}/${Date.now()}-${safeName}`;
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const { error: uploadErr } = await admin.storage
+    .from(VIDEO_BUCKET)
+    .upload(objectPath, buffer, {
+      contentType: file.type || "video/mp4",
+      upsert: false,
+    });
+  if (uploadErr) {
+    return {
+      ok: false,
+      error: `Storage upload failed: ${uploadErr.message}`,
+      code: "STORAGE_ERROR",
+    };
+  }
+
+  const {
+    data: { publicUrl },
+  } = admin.storage.from(VIDEO_BUCKET).getPublicUrl(objectPath);
+
+  // Don't write video_url here — the form's submit path saves the URL
+  // along with all other lesson fields atomically. Returning the URL
+  // lets the client paste it into the field and confirm before save.
+  revalidatePath(`/admin/lessons/${parsed.data.lessonSlug}`);
+  return { ok: true, data: { url: publicUrl, objectPath } };
+}
