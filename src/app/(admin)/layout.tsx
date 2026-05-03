@@ -29,6 +29,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/capstones" className="mono-link">
               Capstones
             </Link>
+            <Link href="/admin/ai-content" className="mono-link">
+              AI content
+            </Link>
             <Link href="/dashboard" className="mono-link">
               ← Back to app
             </Link>
