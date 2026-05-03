@@ -1,9 +1,16 @@
 import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { requireUser } from "@/lib/auth/require-user";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   await requireUser();
+
+  // Only render the Admin link in the primary nav for admin users. The
+  // /admin routes already gate themselves server-side; this is just so
+  // ordinary learners don't see a link they can't use.
+  const supabase = await createClient();
+  const { data: isAdmin } = await supabase.rpc("is_admin");
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -35,6 +42,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <Link href="/profile" className="mono-link">
               Profile
             </Link>
+            {isAdmin ? (
+              <Link
+                href="/admin/lessons"
+                className="mono-link text-[hsl(var(--accent))]"
+              >
+                Admin
+              </Link>
+            ) : null}
             <SignOutButton />
           </nav>
         </div>
