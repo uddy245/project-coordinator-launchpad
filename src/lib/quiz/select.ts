@@ -1,11 +1,15 @@
 /**
  * Pool-first quiz selection with AI top-up.
  *
- * Given a user and a lesson, return up to `count` items the user has not
- * yet seen. If the unseen pool is shorter than count, generate the gap
- * via Claude (which inserts new items into quiz_items, growing the
- * shared pool for everyone). Then record everything served in
- * quiz_item_seen so the next refresh doesn't repeat them.
+ * Two entry points by design:
+ *   - getCurrentQuizItems: READ-ONLY. Returns the user's most-recently-served
+ *     batch (their "current quiz"). Called on every page render — must NOT
+ *     mark seen rows or generate, otherwise repeated renders explode pool
+ *     mutations and AI cost.
+ *   - selectQuizItemsForUser: MUTATING. Picks a fresh unseen batch, generates
+ *     via Claude if the pool's exhausted, and stamps quiz_item_seen so the
+ *     next call returns something different. Called only by the refresh
+ *     action, and once per user/lesson at bootstrap (first visit).
  */
 
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -156,6 +160,70 @@ export async function selectQuizItemsForUser({
   served.sort((a, b) => a.sort - b.sort);
 
   return { items: served, generated, poolExhausted };
+}
+
+/**
+ * Read-only selection: returns the user's most-recently-served batch
+ * (their current quiz). Called on every page render of the QuizPanel,
+ * so it MUST NOT mutate quiz_item_seen or generate via Claude. Doing so
+ * would mean every page render eats into the unseen pool and, once the
+ * pool is exhausted, triggers AI generation on each render — runaway
+ * cost.
+ *
+ * Bootstrap behaviour: if the user has never seen anything for this
+ * lesson, fall through to selectQuizItemsForUser once to set up the
+ * initial batch. This is the only place a page render can write — and
+ * it happens exactly once per user/lesson.
+ */
+export async function getCurrentQuizItems(args: {
+  supabase: SupabaseClient;
+  userId: string;
+  lessonId: string;
+  lessonSlug: string;
+  lessonTitle: string;
+  lessonSummary: string | null;
+  competency: string;
+  count?: number;
+}): Promise<SelectQuizResult> {
+  const count = args.count ?? 10;
+
+  // Get the most recent `count` items the user has been served. Stable
+  // across page renders — same batch every refresh until the user clicks
+  // the rotate button.
+  const { data: recent } = await args.supabase
+    .from("quiz_item_seen")
+    .select("quiz_item_id, seen_at")
+    .eq("user_id", args.userId)
+    .eq("lesson_id", args.lessonId)
+    .order("seen_at", { ascending: false })
+    .limit(count);
+
+  if (recent && recent.length >= count) {
+    const ids = recent.map((r) => r.quiz_item_id);
+    const { data: items } = await args.supabase
+      .from("quiz_items")
+      .select("id, sort, stem, options, competency, difficulty, is_ai_generated")
+      .in("id", ids)
+      .order("sort", { ascending: true });
+
+    const served: ServedQuizItem[] = (items ?? []).map((it) => ({
+      id: it.id,
+      sort: it.sort,
+      stem: it.stem,
+      options: it.options as { id: string; text: string }[],
+      competency: it.competency,
+      difficulty: it.difficulty as "easy" | "medium" | "hard",
+      source: it.is_ai_generated ? ("ai" as const) : ("pool" as const),
+    }));
+
+    return { items: served, generated: 0, poolExhausted: false };
+  }
+
+  // First-time visitor (or fewer than count seen rows). Bootstrap by
+  // running the mutating selector once. This is intentional — without
+  // marking the bootstrapped items as seen, the user would see the same
+  // 10 by sort on render forever, and a refresh would re-serve them.
+  return selectQuizItemsForUser(args);
 }
 
 /**

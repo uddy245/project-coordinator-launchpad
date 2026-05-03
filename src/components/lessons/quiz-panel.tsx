@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { selectQuizItemsForUser } from "@/lib/quiz/select";
+import { getCurrentQuizItems } from "@/lib/quiz/select";
 import { QuizPlayer, type QuizItemPublic } from "./quiz-player";
 
 export async function QuizPanel({ lessonSlug }: { lessonSlug: string }) {
@@ -41,11 +41,12 @@ export async function QuizPanel({ lessonSlug }: { lessonSlug: string }) {
       .limit(10);
     items = (previewItems ?? []) as QuizItemPublic[];
   } else {
-    // Use the admin client so generate.ts (called inside the selector when
-    // pool is short) can write back to quiz_items. selectQuizItemsForUser
-    // still scopes seen-history reads/writes by the user_id we pass.
+    // Use the admin client so the bootstrap path (first-time visitor)
+    // can write to quiz_items + quiz_item_seen. After bootstrap,
+    // getCurrentQuizItems is read-only so subsequent renders are cheap
+    // and never trigger Claude generation.
     const admin = createAdminClient();
-    const result = await selectQuizItemsForUser({
+    const result = await getCurrentQuizItems({
       supabase: admin,
       userId: user.id,
       lessonId: lesson.id,
