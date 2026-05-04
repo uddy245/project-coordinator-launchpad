@@ -24,13 +24,13 @@ Last reviewed: 2026-05-03 (after PR #65 merge)
 ## Verification (user's hands)
 
 - [ ] **Lesson 20 video script review** — Jennifer Chen story uniqueness check across handbook + read-aloud runtime check (target 14 min, likely runs 16–18). File: `docs/scripts/lesson-20-raid-logs.md`. Most detachable section if over: §"The pre-mortem" (10:00–11:15).
-- [ ] **Verify Vercel deploy of PR #65** — confirm production at https://project-coordinator-launchpad.vercel.app responds 200 and the new routes (`/preview/*`, `/search`, `/interviews`, `/capstone`, `/admin/lessons`, `/admin/ai-content`) render.
 
 ---
 
 ## Recently shipped
 
 - 2026-05-03 — **PR #65** merged (commit `4a3a5dd`): F1–F9 platform features (Resend email, Sentry, Gate 1 wiring, lesson builder, public preview, FTS search, daily streaks, mock interviews, capstone scaffolding) + 22 follow-on commits (refresh systems, admin AI review, in-form video upload, schema fixes).
+- 2026-05-03 — **PR #65 prod smoke test**: root 200, anon preview 200, auth-gated routes 307→login as expected. Deploy verified.
 
 ---
 
