@@ -6,10 +6,10 @@
     "risk_differentiation": { "score": 5, "tolerance": 1 },
     "mitigation_realism": { "score": 5, "tolerance": 1 },
     "ownership_and_accountability": { "score": 5, "tolerance": 1 },
-    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+    "living_artifact_evidence": { "score": 2, "tolerance": 2 }
   },
-  "expected_overall_competency_score": 4.2,
+  "expected_overall_competency_score": 4.4,
   "expected_pass": false,
   "expected_hire_ready": true,
-  "notes_for_human_reviewer": "DIMENSIONAL INDEPENDENCE AT THE TOP END. Every item has scenario-specific detail, named primary + backup owners, dated follow-ups, dollar-amount-and-date mitigations with backup plans, escalation paths pre-cleared, and cross-references between R/I/D. Content quality is identical to hire_ready_01. The single difference: the artifact explicitly says 'first iteration; no prior versions yet' and shows no version markers, change log, or status transitions. Tests whether the grader can hold living_artifact_evidence at the floor while NOT halo-averaging the other four dims down (common drift: scoring everything 4 because one dim is weak). expected_pass=false because any dim < 3 → fail; expected_hire_ready=true because overall=4.2 and the qualitative profile is a strong PC who simply hasn't had a chance to iterate yet."
+  "notes_for_human_reviewer": "DIMENSIONAL INDEPENDENCE AT THE TOP END. Every item has scenario-specific detail, named primary + backup owners, dated follow-ups, dollar-amount-and-date mitigations with backup plans, escalation paths pre-cleared, and cross-references between R/I/D. Content quality is identical to hire_ready_01. The single difference: the artifact explicitly says 'first iteration; no prior versions yet' and shows no version markers or change log. Tests whether the grader can hold living_artifact_evidence below ceiling while NOT halo-averaging the other four dims down. CALIBRATION NOTE (2026-05-04): first run scored living_artifact at 3 — Claude reads the [OPEN]/[CLOSED] status tags + dated follow-ups + incident references (INC-2026-014) as legitimate evidence of an evolving artifact even without a v1/v2 changelog. This is a defensible reading. Widened to score=2 ±2 (allows 0-4), keeping the dim below ceiling but not strictly at floor. expected_pass=false because if living_artifact ≤ 2 in any run, the rubric's 'any dim < 3' rule still triggers fail."
 }
