@@ -140,7 +140,6 @@ export function VoiceRecorder({
       stopRecognition();
       if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function stopTick() {

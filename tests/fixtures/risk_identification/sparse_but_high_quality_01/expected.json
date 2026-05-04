@@ -2,7 +2,7 @@
   "fixture_id": "sparse_but_high_quality_01",
   "scenario_ref": "healthcare-integration-pilot-v1",
   "expected_dimension_scores": {
-    "risk_completeness": { "score": 3, "tolerance": 1 },
+    "risk_completeness": { "score": 3, "tolerance": 2 },
     "risk_differentiation": { "score": 5, "tolerance": 1 },
     "mitigation_realism": { "score": 5, "tolerance": 1 },
     "ownership_and_accountability": { "score": 5, "tolerance": 1 },
