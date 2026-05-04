@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_03",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 3, "tolerance": 2 },
+    "risk_differentiation": { "score": 5, "tolerance": 1 },
+    "mitigation_realism": { "score": 5, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 5, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.6,
+  "expected_pass": false,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "SPARSE-BUT-HIRE-READY VARIANT (different from sparse_but_high_quality_01 which has 6 items). This fixture has only 3 items (1 R, 1 I, 1 D — no Assumptions section, no R2/R3/R4). The 3 items present are at full ceiling: scenario-specific, dated, named primary+backup owners, multi-version mitigations with version-tagged updates and SOW dollar amount, explicit incident reference (INC-2026-014), pre-cleared escalation paths, change log. The completeness floor is more severe than sparse_but_high_quality_01 (3 items vs scenario's 8-15). Tests whether the grader correctly distinguishes 'sparse' from 'shallow' — every present field is hire-ready, but only ~25% of the framework is filled. risk_completeness expected 3 but with tolerance 2 because reasonable graders could score 2 (more severe sparse penalty) or 4 (rewarding scenario-coverage of biggest items). The framework gap is real but the items present cover the highest-impact scenario points (vendor deprecation = R1, HL7 feed = I1, vendor migration dependency = D1)."
+}

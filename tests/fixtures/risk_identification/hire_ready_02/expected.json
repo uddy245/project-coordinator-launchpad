@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_02",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 5, "tolerance": 1 },
+    "risk_differentiation": { "score": 5, "tolerance": 1 },
+    "mitigation_realism": { "score": 5, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 5, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.2,
+  "expected_pass": false,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "DIMENSIONAL INDEPENDENCE AT THE TOP END. Every item has scenario-specific detail, named primary + backup owners, dated follow-ups, dollar-amount-and-date mitigations with backup plans, escalation paths pre-cleared, and cross-references between R/I/D. Content quality is identical to hire_ready_01. The single difference: the artifact explicitly says 'first iteration; no prior versions yet' and shows no version markers, change log, or status transitions. Tests whether the grader can hold living_artifact_evidence at the floor while NOT halo-averaging the other four dims down (common drift: scoring everything 4 because one dim is weak). expected_pass=false because any dim < 3 → fail; expected_hire_ready=true because overall=4.2 and the qualitative profile is a strong PC who simply hasn't had a chance to iterate yet."
+}

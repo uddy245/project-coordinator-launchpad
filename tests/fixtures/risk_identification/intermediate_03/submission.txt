@@ -1,0 +1,47 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Date: 2026-04-15
+
+RISKS
+R1 | Vendor API v2 deprecation in 90 days (sunset 2026-07-10)
+    Trigger: Vendor EOL email 2026-03-28
+    Impact: HIGH — patient-lookup + insurance-eligibility endpoints break
+    Likelihood: HIGH (vendor confirmed; no extension)
+    Owner: Project team
+    Mitigation: Approved $18k vendor PS migration spike; SOW signed 2026-04-14;
+               kickoff 2026-05-14, 4-week estimated duration; cutover dry-run
+               scheduled 2026-06-12. Backup migration plan: in-house port if PS
+               slips, est. 6 weeks.
+
+R2 | Premature scope expansion (Clinics B + C before stabilization)
+    Trigger: PO ask 2026-04-12
+    Impact: HIGH — destabilizes pilot KPIs
+    Likelihood: MEDIUM
+    Owner: Project team
+    Mitigation: Staged rollout plan accepted by steering 2026-04-08; gating
+               criteria: uptime ≥99.5%, P1 incidents = 0 for 14 consecutive
+               days. Daily KPI dashboard in place; weekly steering update.
+
+R3 | Coverage gap during lead engineer paternity leave (4 weeks)
+    Impact: MEDIUM
+    Likelihood: CERTAIN
+    Owner: Eng team
+    Mitigation: Cross-trained backup engineer 2026-04-04 to 2026-04-12; on-call
+               rotation activated 2026-04-15; runbook updated with two-week
+               on-call window.
+
+ISSUES
+I1 | HL7 lab feed dropping 2-3x/week since 2026-04-02
+    Owner: IT Ops
+    Action: Auto-retry deployed 2026-04-09 (reduced drops by ~40%); vendor
+           diagnostic call scheduled 2026-04-17; interim manual reconciliation
+           by clinical team end-of-day until resolved. Target close 2026-04-30.
+
+ASSUMPTIONS
+A1 | Vendor PS team will hit 2026-06-12 dry-run date for v2 migration.
+    Owner: Project team
+    Validation: Weekly status check with vendor PM; first check 2026-05-21.
+
+DEPENDENCIES
+D1 | Vendor v2 migration (linked R1)
+    Coordination: weekly status; escalate to vendor account exec if any
+                 milestone slips.

@@ -1,0 +1,42 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Prepared by: M. Okafor (PC) | Week of 2026-04-15
+
+RISKS
+R1 | Vendor API v2 deprecation
+    Owner: J. Patel (Lead Eng, primary) / D. Huang (backup, while J. on leave)
+    Mitigation: Monitor closely. Address as needed.
+
+R2 | Scope creep — additional endpoints
+    Owner: K. Bell (Product Owner)
+    Mitigation: Manage stakeholder expectations and escalate if necessary.
+
+R3 | Engineer on paternity leave
+    Owner: L. Davies (Eng Manager)
+    Mitigation: Plan accordingly.
+
+R4 | Premature clinic expansion
+    Owner: G. Mensah (Steering Lead)
+    Mitigation: Communicate concerns and align on priorities.
+
+ISSUES
+I1 | HL7 lab feed instability
+    Owner: R. Silva (IT Ops)
+    Action: Investigate.
+
+I2 | Training attendance below target
+    Owner: T. Njoku (Training Lead)
+    Action: Follow up with stakeholders.
+
+ASSUMPTIONS
+A1 | Stakeholder alignment will hold
+    Owner: M. Okafor
+    Validation: Regular communication.
+
+DEPENDENCIES
+D1 | Vendor delivery
+    Owner: C. Morales (Vendor SM)
+    Mitigation: Maintain regular touchpoints.
+
+D2 | Internal IT cutover
+    Owner: R. Silva (IT Ops)
+    Mitigation: Coordinate as scheduled.

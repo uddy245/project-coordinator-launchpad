@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_04",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 4, "tolerance": 1 },
+    "risk_differentiation": { "score": 3, "tolerance": 1 },
+    "mitigation_realism": { "score": 1, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 4, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 2.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "DIMENSIONAL INVERSION — NAMED OWNERS, VAGUE MITIGATIONS. Inverse of intermediate_03. Every item has a named owner with role; some have primary+backup. R/A/I/D categories are correctly applied. But every mitigation is a platitude: 'monitor closely', 'address as needed', 'plan accordingly', 'investigate', 'follow up'. None specific, none dated, none actionable. Tests whether the grader correctly isolates mitigation_realism from ownership (common drift: scoring mitigation 2-3 because owners are good, halo effect). Pass: false (mitigation_realism = 1 < 3). No version history, single snapshot → living_artifact 1."
+}

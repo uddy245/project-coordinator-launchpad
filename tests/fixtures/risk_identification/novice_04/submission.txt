@@ -1,0 +1,29 @@
+RAID LOG — Healthcare Integration Project
+
+RISKS
+R1 - Schedule slippage
+R2 - Budget overrun
+R3 - Scope creep
+R4 - Resource availability
+R5 - Quality issues
+R6 - Stakeholder alignment
+R7 - Communication breakdown
+
+ISSUES
+I1 - Delays in testing phase
+I2 - Approval bottlenecks
+I3 - Resource conflicts
+
+ASSUMPTIONS
+A1 - Resources will be available
+A2 - Requirements are stable
+A3 - Stakeholders are aligned
+
+DEPENDENCIES
+D1 - Vendor cooperation
+D2 - Internal IT support
+D3 - Stakeholder availability
+
+Mitigations: Standard project management practices will be applied. Regular monitoring and escalation as needed.
+
+Owner: Project Manager

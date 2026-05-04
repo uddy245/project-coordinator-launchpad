@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_03",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 4, "tolerance": 1 },
+    "risk_differentiation": { "score": 4, "tolerance": 1 },
+    "mitigation_realism": { "score": 5, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 1, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 3.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "DIMENSIONAL INVERSION — STRONG MITIGATION, NO OWNERS. Mitigations are crisp, specific, dated, with dollar amounts and backup plans (R1 has both primary and contingency, I1 has phased actions with closure target). Risk identification is solid. But every single owner is 'Project team' / 'Eng team' / 'IT Ops' — no named individuals. The rubric scores ownership on whether a specific person is accountable; team-level ownership floors that dim regardless of mitigation quality. Tests whether the grader correctly isolates ownership from mitigation realism (common drift: halo-averaging owners up because mitigations are great). Living-artifact gets 2 because there's date-stamped detail but no version history. Pass: false (any dim < 3 fails)."
+}

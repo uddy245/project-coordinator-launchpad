@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_04",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 1, "tolerance": 1 },
+    "risk_differentiation": { "score": 1, "tolerance": 1 },
+    "mitigation_realism": { "score": 1, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 2, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "BOILERPLATE FAILURE MODE. Items are textbook PM-101 generics that could apply to any project — none reference the specific scenario (vendor v2 deprecation in 90 days, lead engineer on paternity leave 4 weeks, scope creep adding 3 endpoints, premature expansion to 2 more clinics). The grader should recognise the absence of scenario-specific items and floor completeness/differentiation. Mitigation 'standard PM practices' is the canonical platitude. Single owner attribution ('Project Manager') is slightly better than 'project team' but still not specific. Tests whether Claude rewards structure-without-substance — common drift is scoring 2-3 because the format looks correct."
+}

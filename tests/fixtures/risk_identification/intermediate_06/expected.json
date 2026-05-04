@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_06",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 2, "tolerance": 1 },
+    "risk_differentiation": { "score": 2, "tolerance": 1 },
+    "mitigation_realism": { "score": 1, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 2, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "JARGON-AS-CONTENT FAILURE MODE. Reads at first glance like a structured PMO artifact — has executive summary, AMBER status, sections, RACI reference, KPIs callout. Read carefully and it is empty: 'cross-cutting concerns require holistic stakeholder alignment', 'leverage industry best practices', 'operationalize a robust engagement model'. None of the items reference the actual scenario specifics (no vendor v2 deprecation, no paternity leave, no HL7 feed, no clinic B+C expansion ask). Mitigations are pure jargon. Owners are role-only ('Tech Lead', 'PO', 'PMO') without names. RACI 'see appendix (not attached)' is the tell. Tests whether the grader sees through corporate-speak and floors mitigation_realism + ownership. Common drift: scoring 3-4 because the format LOOKS sophisticated. The 'AMBER' status + executive summary may also halo upward — the rubric should catch absence of substance."
+}

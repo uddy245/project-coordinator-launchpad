@@ -1,0 +1,23 @@
+RAID LOG — Healthcare Pilot
+
+Risks:
+- Lead engineer is on leave
+- API will be deprecated
+- Scope creep happened
+- Testing is behind schedule
+- Vendor might be slow
+- Training could be a problem
+- Budget overruns possible
+- Stakeholders might disagree
+- Documentation is incomplete
+- Audit might fail
+- Clinic expansion is happening too fast
+- Network issues sometimes
+- We could lose data
+- Security might be an issue
+- Other clinics may want changes
+
+Owner for everything: Project team
+Mitigation for everything: Will monitor and escalate as needed.
+
+(No assumptions, issues, or dependencies sections. Everything is filed as a risk.)

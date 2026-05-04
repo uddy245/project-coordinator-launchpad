@@ -1,0 +1,15 @@
+{
+  "fixture_id": "borderline_overall_3_01",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 3, "tolerance": 2 },
+    "risk_differentiation": { "score": 3, "tolerance": 2 },
+    "mitigation_realism": { "score": 3, "tolerance": 2 },
+    "ownership_and_accountability": { "score": 3, "tolerance": 2 },
+    "living_artifact_evidence": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 2.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "VARIANCE PROBE — DELIBERATELY BORDERLINE ACROSS ALL FIVE DIMS. Every dim is engineered to land near 3 (the pass threshold per the rubric). Items are scenario-specific but not exhaustive. Mitigations have some dates and some actions but not consistently. Owners are mostly named with some role-only. living_artifact says 'document version: v1' and 'will update' — gestures at a living artifact without yet being one. Tests two things: (1) RUN-TO-RUN VARIANCE — the same fixture should land within ±2 across multiple Claude runs at T=0 (Claude has shown ~2-point swing on borderline items); (2) THRESHOLD STABILITY — does the grader's pass judgment flip between runs as scores hover at 2.8 vs 3.0? Per-dim tolerance kept at 2 (wider than floor/ceiling fixtures) because borderline cells are inherently noisy. Aggregate ≥80% ±1 is the regression gate; this fixture should NOT contribute to the strict ±1 count if scores wobble — it's monitoring the noise floor itself."
+}
