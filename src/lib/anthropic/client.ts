@@ -19,7 +19,7 @@ function getClient(): Anthropic {
   const apiKey = env.ANTHROPIC_API_KEY ?? process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error(
-      "ANTHROPIC_API_KEY is not set. Add it to .env.local and restart the dev server.",
+      "ANTHROPIC_API_KEY is not set. Add it to .env.local and restart the dev server."
     );
   }
   _client = new Anthropic({ apiKey });

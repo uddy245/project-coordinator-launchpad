@@ -21,7 +21,7 @@ function useAdminAction() {
   const [pending, startTransition] = useTransition();
   function run(
     action: () => Promise<{ ok: true } | { ok: false; error: string }>,
-    successMsg: string,
+    successMsg: string
   ) {
     startTransition(async () => {
       const res = await action();
@@ -68,7 +68,7 @@ export function TogglePublishScenarioButton({
       onClick={() =>
         run(
           () => toggleAiScenarioPublished(id),
-          isPublished ? "Scenario unpublished." : "Scenario published.",
+          isPublished ? "Scenario unpublished." : "Scenario published."
         )
       }
       className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground disabled:opacity-50"
@@ -85,7 +85,12 @@ export function DeleteScenarioButton({ id }: { id: string }) {
       type="button"
       disabled={pending}
       onClick={() => {
-        if (!confirm("Delete this AI-generated scenario permanently? Refused if any learner has responded.")) return;
+        if (
+          !confirm(
+            "Delete this AI-generated scenario permanently? Refused if any learner has responded."
+          )
+        )
+          return;
         run(() => deleteAiScenario(id), "Scenario deleted.");
       }}
       className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-[hsl(var(--destructive))] hover:underline disabled:opacity-50"

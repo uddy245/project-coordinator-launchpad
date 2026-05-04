@@ -42,10 +42,7 @@ export async function WorkbookPanel({
   return (
     <div className="space-y-6">
       {user ? (
-        <WorkbookScenarioCard
-          lessonSlug={lessonSlug}
-          initialAssignment={currentAssignment}
-        />
+        <WorkbookScenarioCard lessonSlug={lessonSlug} initialAssignment={currentAssignment} />
       ) : null}
 
       <section className="space-y-3">

@@ -12,13 +12,16 @@ import { z } from "zod";
 // "behavioral" — and arguing with the model is a losing battle, so we
 // preprocess the input to normalise common spelling variants before the
 // enum check. Same logic accommodates "judgement" if it ever shows up.
-const CategoryEnum = z.preprocess((v) => {
-  if (typeof v !== "string") return v;
-  const t = v.trim().toLowerCase();
-  if (t === "behavioral") return "behavioural";
-  if (t === "judgement") return "judgment";
-  return t;
-}, z.enum(["behavioural", "procedural", "judgment"]));
+const CategoryEnum = z.preprocess(
+  (v) => {
+    if (typeof v !== "string") return v;
+    const t = v.trim().toLowerCase();
+    if (t === "behavioral") return "behavioural";
+    if (t === "judgement") return "judgment";
+    return t;
+  },
+  z.enum(["behavioural", "procedural", "judgment"])
+);
 
 export const ScenarioSchema = z.object({
   slug: z

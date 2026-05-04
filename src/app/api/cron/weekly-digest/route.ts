@@ -85,8 +85,8 @@ export async function GET(req: Request) {
   // a hash lookup.
   const since = isoDateNDaysAgo(7);
 
-  const [{ data: activityData }, { data: progressData }, { data: lessonsData }] =
-    await Promise.all([
+  const [{ data: activityData }, { data: progressData }, { data: lessonsData }] = await Promise.all(
+    [
       admin.from("learning_activity").select("user_id, activity_date").gte("activity_date", since),
       admin
         .from("lesson_progress")
@@ -97,7 +97,8 @@ export async function GET(req: Request) {
         .select("id, slug, title, number, is_published")
         .eq("is_published", true)
         .order("number", { ascending: true }),
-    ]);
+    ]
+  );
 
   const activity = (activityData ?? []) as ActivityRow[];
   const progress = (progressData ?? []) as ProgressRow[];
@@ -131,7 +132,7 @@ export async function GET(req: Request) {
       const activeDays = activeByUser.get(u.id)?.size ?? 0;
       const completedSet = completedByUser.get(u.id) ?? new Set<string>();
       const completedThisWeek = (completedDateByUser.get(u.id) ?? []).filter(
-        (r) => r.completed_at && r.completed_at.slice(0, 10) >= since,
+        (r) => r.completed_at && r.completed_at.slice(0, 10) >= since
       ).length;
 
       const { data: streakData } = await admin.rpc("user_streak", { p_user_id: u.id });

@@ -90,22 +90,11 @@ export function TemplateUploader({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="space-y-1.5 sm:col-span-2">
             <Label>File * (XLSX, PDF, or CSV — max 10 MB)</Label>
-            <Input
-              type="file"
-              name="file"
-              required
-              accept=".xlsx,.xls,.csv,.pdf"
-            />
+            <Input type="file" name="file" required accept=".xlsx,.xls,.csv,.pdf" />
           </div>
           <div className="space-y-1.5">
             <Label>Sort order</Label>
-            <Input
-              type="number"
-              name="sort"
-              min={0}
-              max={9999}
-              defaultValue={100}
-            />
+            <Input type="number" name="sort" min={0} max={9999} defaultValue={100} />
           </div>
         </div>
 
@@ -141,13 +130,7 @@ export function TemplateUploader({
   );
 }
 
-function ExistingRow({
-  t,
-  onChanged,
-}: {
-  t: ExistingTemplate;
-  onChanged: () => void;
-}) {
+function ExistingRow({ t, onChanged }: { t: ExistingTemplate; onChanged: () => void }) {
   const [pending, startTransition] = useTransition();
 
   function onDelete() {

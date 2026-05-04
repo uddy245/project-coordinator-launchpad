@@ -21,7 +21,7 @@ export function SearchForm({ initialQuery }: { initialQuery: string }) {
 
   return (
     <form onSubmit={onSubmit} className="flex w-full flex-wrap gap-3">
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <Input
           type="search"
           placeholder="e.g. RAID log · sponsor · stakeholder · scope"

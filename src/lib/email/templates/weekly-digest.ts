@@ -30,9 +30,21 @@ export function renderWeeklyDigest(vars: WeeklyDigestVars): EmailRender {
     },
     { type: "h", text: "This week, in numbers" },
     { type: "fact", label: "Active days", value: `${vars.activeDays} / 7` },
-    { type: "fact", label: "Current streak", value: `${vars.currentStreak} day${vars.currentStreak === 1 ? "" : "s"}` },
-    { type: "fact", label: "Longest streak", value: `${vars.longestStreak} day${vars.longestStreak === 1 ? "" : "s"}` },
-    { type: "fact", label: "Lessons completed", value: `${vars.lessonsCompletedThisWeek} this week · ${vars.lessonsCompletedTotal} total` },
+    {
+      type: "fact",
+      label: "Current streak",
+      value: `${vars.currentStreak} day${vars.currentStreak === 1 ? "" : "s"}`,
+    },
+    {
+      type: "fact",
+      label: "Longest streak",
+      value: `${vars.longestStreak} day${vars.longestStreak === 1 ? "" : "s"}`,
+    },
+    {
+      type: "fact",
+      label: "Lessons completed",
+      value: `${vars.lessonsCompletedThisWeek} this week · ${vars.lessonsCompletedTotal} total`,
+    },
   ];
 
   if (vars.nextLessonSlug && vars.nextLessonTitle) {

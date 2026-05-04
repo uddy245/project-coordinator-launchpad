@@ -23,9 +23,7 @@ export function GenerateMoreButton() {
         return;
       }
       const n = res.data.generated.length;
-      toast.success(
-        `${n} new scenario${n === 1 ? "" : "s"} generated. They're in the list below.`,
-      );
+      toast.success(`${n} new scenario${n === 1 ? "" : "s"} generated. They're in the list below.`);
       router.refresh();
     });
   }

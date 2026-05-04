@@ -40,17 +40,13 @@ export default async function AiContentPage() {
   ] = await Promise.all([
     admin
       .from("quiz_items")
-      .select(
-        "id, lesson_id, sort, stem, options, correct, competency, difficulty, generated_at",
-      )
+      .select("id, lesson_id, sort, stem, options, correct, competency, difficulty, generated_at")
       .eq("is_ai_generated", true)
       .order("generated_at", { ascending: false, nullsFirst: false })
       .limit(200),
     admin
       .from("mock_interview_scenarios")
-      .select(
-        "id, slug, prompt, category, difficulty, competency, is_published, generated_at",
-      )
+      .select("id, slug, prompt, category, difficulty, competency, is_published, generated_at")
       .eq("is_ai_generated", true)
       .order("generated_at", { ascending: false, nullsFirst: false })
       .limit(200),
@@ -64,10 +60,7 @@ export default async function AiContentPage() {
   ]);
 
   const lessonLookup: LessonLookup = new Map(
-    (lessonsRows ?? []).map((l) => [
-      l.id,
-      { slug: l.slug, title: l.title, number: l.number },
-    ]),
+    (lessonsRows ?? []).map((l) => [l.id, { slug: l.slug, title: l.title, number: l.number }])
   );
 
   const quizCount = quizRows?.length ?? 0;
@@ -79,10 +72,9 @@ export default async function AiContentPage() {
       <header className="border-b border-rule pb-4">
         <h1 className="display-title text-2xl">AI-generated content</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Everything Claude has produced for the shared pools. Spot-check
-          quality, unpublish a scenario you don&apos;t want learners seeing,
-          or delete outright. Hand-authored content is not shown here — go
-          to the relevant edit page for those.
+          Everything Claude has produced for the shared pools. Spot-check quality, unpublish a
+          scenario you don&apos;t want learners seeing, or delete outright. Hand-authored content is
+          not shown here — go to the relevant edit page for those.
         </p>
         <div className="mt-3 flex flex-wrap gap-6 text-xs">
           <span className="kicker">
@@ -104,8 +96,8 @@ export default async function AiContentPage() {
         </div>
         {quizCount === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No AI-generated quiz items yet. Learners haven&apos;t exhausted any
-            lesson&apos;s authored pool, or this is a fresh DB.
+            No AI-generated quiz items yet. Learners haven&apos;t exhausted any lesson&apos;s
+            authored pool, or this is a fresh DB.
           </p>
         ) : (
           <div className="space-y-2">
@@ -118,9 +110,7 @@ export default async function AiContentPage() {
                 >
                   <div className="flex flex-wrap items-baseline justify-between gap-3">
                     <div className="space-x-3 text-xs text-muted-foreground">
-                      <span className="kicker">
-                        {lessonLabel(lessonLookup, q.lesson_id)}
-                      </span>
+                      <span className="kicker">{lessonLabel(lessonLookup, q.lesson_id)}</span>
                       <span className="font-mono uppercase tracking-[0.12em]">
                         {q.competency} · {q.difficulty}
                       </span>
@@ -129,9 +119,7 @@ export default async function AiContentPage() {
                     </div>
                     <DeleteQuizItemButton id={q.id} />
                   </div>
-                  <p className="text-sm font-medium leading-snug text-ink">
-                    {q.stem}
-                  </p>
+                  <p className="text-sm font-medium leading-snug text-ink">{q.stem}</p>
                   <ul className="space-y-1 pl-1 text-sm text-muted-foreground">
                     {opts.map((o) => (
                       <li key={o.id}>
@@ -163,25 +151,18 @@ export default async function AiContentPage() {
           <h2 className="kicker">Mock-interview scenarios · {scenarioCount}</h2>
         </div>
         {scenarioCount === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No AI-generated scenarios yet.
-          </p>
+          <p className="text-sm text-muted-foreground">No AI-generated scenarios yet.</p>
         ) : (
           <div className="space-y-2">
             {(scenarioRows ?? []).map((s) => (
-              <article
-                key={s.id}
-                className="space-y-2 rounded-md border border-rule bg-paper p-4"
-              >
+              <article key={s.id} className="space-y-2 rounded-md border border-rule bg-paper p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-3">
                   <div className="space-x-3 text-xs text-muted-foreground">
                     <span className="kicker">{s.slug.toUpperCase()}</span>
                     <span className="font-mono uppercase tracking-[0.12em] text-[hsl(var(--accent))]">
                       {s.category}
                     </span>
-                    <span className="font-mono uppercase tracking-[0.12em]">
-                      {s.difficulty}
-                    </span>
+                    <span className="font-mono uppercase tracking-[0.12em]">{s.difficulty}</span>
                     <span className="font-mono">{s.competency}</span>
                     <span>{fmtDate(s.generated_at)}</span>
                     {!s.is_published ? (
@@ -197,10 +178,7 @@ export default async function AiContentPage() {
                     >
                       Edit
                     </Link>
-                    <TogglePublishScenarioButton
-                      id={s.id}
-                      isPublished={s.is_published}
-                    />
+                    <TogglePublishScenarioButton id={s.id} isPublished={s.is_published} />
                     <DeleteScenarioButton id={s.id} />
                   </div>
                 </div>
@@ -217,28 +195,19 @@ export default async function AiContentPage() {
           <h2 className="kicker">Workbook scenarios · {workbookCount}</h2>
         </div>
         {workbookCount === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No AI-generated workbook scenarios yet.
-          </p>
+          <p className="text-sm text-muted-foreground">No AI-generated workbook scenarios yet.</p>
         ) : (
           <div className="space-y-2">
             {(workbookRows ?? []).map((w) => (
-              <article
-                key={w.id}
-                className="space-y-2 rounded-md border border-rule bg-paper p-4"
-              >
+              <article key={w.id} className="space-y-2 rounded-md border border-rule bg-paper p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-3">
                   <div className="space-x-3 text-xs text-muted-foreground">
-                    <span className="kicker">
-                      {lessonLabel(lessonLookup, w.lesson_id)}
-                    </span>
+                    <span className="kicker">{lessonLabel(lessonLookup, w.lesson_id)}</span>
                     <span>{fmtDate(w.generated_at)}</span>
                   </div>
                   <DeleteWorkbookAssignmentButton id={w.id} />
                 </div>
-                <h3 className="text-base font-medium leading-snug text-ink">
-                  {w.title}
-                </h3>
+                <h3 className="text-base font-medium leading-snug text-ink">{w.title}</h3>
                 <p className="line-clamp-4 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
                   {w.brief}
                 </p>

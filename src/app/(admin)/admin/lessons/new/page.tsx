@@ -12,8 +12,8 @@ export default function NewLessonPage() {
         </Link>
         <h1 className="display-title mt-2 text-2xl">New lesson</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Create a new module. Slug must be unique. Quiz items are optional —
-          you can add them later.
+          Create a new module. Slug must be unique. Quiz items are optional — you can add them
+          later.
         </p>
       </header>
       <LessonForm defaults={EMPTY_DEFAULTS} isEdit={false} />

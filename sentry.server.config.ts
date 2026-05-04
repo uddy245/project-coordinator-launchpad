@@ -54,9 +54,7 @@ if (dsn) {
       if (event.request?.url) event.request.url = scrub(event.request.url);
       if (event.request?.query_string) {
         event.request.query_string = scrub(
-          typeof event.request.query_string === "string"
-            ? event.request.query_string
-            : "",
+          typeof event.request.query_string === "string" ? event.request.query_string : ""
         );
       }
       // 5. Extra / contexts — best-effort scrub of any string values.
@@ -68,19 +66,19 @@ if (dsn) {
 
 function scrub(s: string | undefined): string | undefined {
   if (!s) return s;
-  return s
-    .replace(/[\w._%+-]+@[\w.-]+\.[A-Za-z]{2,}/g, "[email]")
-    // 13-19 digit sequences (credit card-shaped) — overzealous on purpose.
-    .replace(/\b\d{13,19}\b/g, "[number]")
-    // Bearer tokens / common API-key prefixes / JWTs.
-    .replace(/Bearer\s+[A-Za-z0-9._\-]+/gi, "Bearer [redacted]")
-    .replace(/\b(sk|pk)_(live|test)_[A-Za-z0-9]+/g, "$1_$2_[redacted]")
-    .replace(/\beyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+/g, "[jwt]");
+  return (
+    s
+      .replace(/[\w._%+-]+@[\w.-]+\.[A-Za-z]{2,}/g, "[email]")
+      // 13-19 digit sequences (credit card-shaped) — overzealous on purpose.
+      .replace(/\b\d{13,19}\b/g, "[number]")
+      // Bearer tokens / common API-key prefixes / JWTs.
+      .replace(/Bearer\s+[A-Za-z0-9._\-]+/gi, "Bearer [redacted]")
+      .replace(/\b(sk|pk)_(live|test)_[A-Za-z0-9]+/g, "$1_$2_[redacted]")
+      .replace(/\beyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+/g, "[jwt]")
+  );
 }
 
-function scrubData(
-  d: Record<string, unknown> | undefined,
-): Record<string, unknown> | undefined {
+function scrubData(d: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
   if (!d) return d;
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(d)) {

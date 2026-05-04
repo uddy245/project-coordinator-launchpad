@@ -67,7 +67,7 @@ export async function deleteAiQuizItem(id: string): Promise<ActionResult<{ id: s
 // Mock-interview scenarios ────────────────────────────────────────────
 
 export async function toggleAiScenarioPublished(
-  id: string,
+  id: string
 ): Promise<ActionResult<{ id: string; is_published: boolean }>> {
   const parsed = IdSchema.safeParse({ id });
   if (!parsed.success) return { ok: false, error: "Invalid id", code: "INVALID_INPUT" };
@@ -104,9 +104,7 @@ export async function toggleAiScenarioPublished(
   return { ok: true, data: { id: parsed.data.id, is_published: next } };
 }
 
-export async function deleteAiScenario(
-  id: string,
-): Promise<ActionResult<{ id: string }>> {
+export async function deleteAiScenario(id: string): Promise<ActionResult<{ id: string }>> {
   const parsed = IdSchema.safeParse({ id });
   if (!parsed.success) return { ok: false, error: "Invalid id", code: "INVALID_INPUT" };
 
@@ -142,10 +140,7 @@ export async function deleteAiScenario(
     };
   }
 
-  const { error } = await admin
-    .from("mock_interview_scenarios")
-    .delete()
-    .eq("id", parsed.data.id);
+  const { error } = await admin.from("mock_interview_scenarios").delete().eq("id", parsed.data.id);
   if (error) {
     return { ok: false, error: `Delete failed: ${error.message}`, code: "DB_ERROR" };
   }
@@ -158,7 +153,7 @@ export async function deleteAiScenario(
 // Workbook assignments ────────────────────────────────────────────────
 
 export async function deleteAiWorkbookAssignment(
-  id: string,
+  id: string
 ): Promise<ActionResult<{ id: string }>> {
   const parsed = IdSchema.safeParse({ id });
   if (!parsed.success) return { ok: false, error: "Invalid id", code: "INVALID_INPUT" };
@@ -182,10 +177,7 @@ export async function deleteAiWorkbookAssignment(
   }
 
   // workbook_assignment_seen rows cascade-delete via FK; nothing else to clean.
-  const { error } = await admin
-    .from("workbook_assignments")
-    .delete()
-    .eq("id", parsed.data.id);
+  const { error } = await admin.from("workbook_assignments").delete().eq("id", parsed.data.id);
   if (error) {
     return { ok: false, error: `Delete failed: ${error.message}`, code: "DB_ERROR" };
   }

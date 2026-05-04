@@ -15,16 +15,8 @@ export type GradingCompleteVars = {
 
 export function renderGradingComplete(vars: GradingCompleteVars): EmailRender {
   const score = Math.round(vars.overallScore * 100);
-  const verdict = vars.hireReady
-    ? "Hire-ready"
-    : vars.passed
-      ? "Passed"
-      : "Needs revision";
-  const verdictKicker = vars.hireReady
-    ? "HIRE-READY"
-    : vars.passed
-      ? "PASSED"
-      : "NEEDS REVISION";
+  const verdict = vars.hireReady ? "Hire-ready" : vars.passed ? "Passed" : "Needs revision";
+  const verdictKicker = vars.hireReady ? "HIRE-READY" : vars.passed ? "PASSED" : "NEEDS REVISION";
 
   const greeting = vars.firstName
     ? `${vars.firstName} — your ${vars.lessonTitle} artifact has been graded.`

@@ -1,8 +1,5 @@
 import Link from "next/link";
-import {
-  CapstoneForm,
-  EMPTY_CAPSTONE_DEFAULTS,
-} from "@/components/admin/capstone-form";
+import { CapstoneForm, EMPTY_CAPSTONE_DEFAULTS } from "@/components/admin/capstone-form";
 
 export const metadata = { title: "New capstone — Admin" };
 

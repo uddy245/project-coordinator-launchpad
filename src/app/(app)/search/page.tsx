@@ -31,7 +31,7 @@ function renderSnippet(s: string) {
       return (
         <mark
           key={i}
-          className="bg-[hsl(var(--accent))]/15 text-ink decoration-[hsl(var(--accent))] underline decoration-2 underline-offset-2"
+          className="bg-[hsl(var(--accent))]/15 text-ink underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-2"
         >
           {part.slice(6, -7)}
         </mark>
@@ -55,9 +55,7 @@ export default async function SearchPage({
     const supabase = await createClient();
     // Use websearch_to_tsquery — handles user input safely (operators like
     // quotes, OR, -negation), no need to escape.
-    const { data } = await supabase
-      .rpc("search_lessons", { q: query })
-      .limit(20);
+    const { data } = await supabase.rpc("search_lessons", { q: query }).limit(20);
     results = (data ?? []) as SearchResult[];
   }
 
@@ -65,12 +63,10 @@ export default async function SearchPage({
     <div className="space-y-8">
       <header className="border-b border-rule pb-6">
         <span className="kicker">Programme search</span>
-        <h1 className="display-title mt-2 text-[2rem] sm:text-[2.4rem]">
-          Find a module
-        </h1>
+        <h1 className="display-title mt-2 text-[2rem] sm:text-[2.4rem]">Find a module</h1>
         <p className="mt-2 max-w-2xl text-base text-muted-foreground">
-          Search across module titles, summaries, and competencies. Useful when
-          you remember a topic but not which module covers it.
+          Search across module titles, summaries, and competencies. Useful when you remember a topic
+          but not which module covers it.
         </p>
       </header>
 
@@ -97,11 +93,7 @@ export default async function SearchPage({
             <span className="kicker">Ranked by relevance</span>
           </div>
           {results.map((r) => (
-            <Link
-              key={r.id}
-              href={`/lessons/${r.slug}`}
-              className="tile flex items-stretch"
-            >
+            <Link key={r.id} href={`/lessons/${r.slug}`} className="tile flex items-stretch">
               <div className="w-32 flex-shrink-0 border-r border-rule p-5 sm:w-40">
                 <div className="kicker text-[0.7rem]">Module</div>
                 <div className="data-numeral mt-1 text-[1.6rem] leading-none text-ink">
@@ -109,17 +101,13 @@ export default async function SearchPage({
                 </div>
               </div>
               <div className="min-w-0 flex-1 p-5">
-                <h3 className="display-title text-[1.25rem] leading-snug">
-                  {r.title}
-                </h3>
+                <h3 className="display-title text-[1.25rem] leading-snug">{r.title}</h3>
                 {r.snippet ? (
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {renderSnippet(r.snippet)}
                   </p>
                 ) : r.summary ? (
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {r.summary}
-                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{r.summary}</p>
                 ) : null}
                 {r.competency ? (
                   <p className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-[hsl(var(--accent))]">

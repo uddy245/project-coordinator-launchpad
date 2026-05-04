@@ -68,8 +68,7 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
 
   // Welcome email — fire-and-forget. Silent so a Resend hiccup never breaks
   // signup itself; the welcome is a nice-to-have, not a blocker.
-  const firstName =
-    parsed.data.fullName?.split(/\s+/)[0]?.trim() || null;
+  const firstName = parsed.data.fullName?.split(/\s+/)[0]?.trim() || null;
   void sendEmail({
     to: { email: parsed.data.email, name: parsed.data.fullName ?? null },
     render: renderWelcome({ firstName }),

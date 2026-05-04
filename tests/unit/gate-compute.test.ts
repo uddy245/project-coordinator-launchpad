@@ -97,10 +97,7 @@ describe("computeGateSummary — foundation (Gate 1)", () => {
       ["coordinator-role", FULL_PROGRESS],
       ["project-lifecycle", FULL_PROGRESS],
       ["written-voice", FULL_PROGRESS],
-      [
-        "mindset",
-        { video_watched: false, quiz_passed: false, artifact_submitted: true },
-      ],
+      ["mindset", { video_watched: false, quiz_passed: false, artifact_submitted: true }],
     ]);
     const s = computeGateSummary(row(), { byLessonSlug });
     expect(s.foundation.status).toBe("in_progress");

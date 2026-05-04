@@ -67,8 +67,7 @@ export async function handleCheckoutSessionCompleted(
         .select("full_name")
         .eq("id", userId)
         .maybeSingle();
-      const customerEmail =
-        session.customer_details?.email ?? session.customer_email ?? null;
+      const customerEmail = session.customer_details?.email ?? session.customer_email ?? null;
       if (!customerEmail) return;
 
       const fullName = profile?.full_name ?? null;

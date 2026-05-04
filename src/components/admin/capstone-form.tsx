@@ -127,7 +127,7 @@ export function CapstoneForm({
             />
           </Field>
           <div className="flex items-end">
-            <label className="flex items-center gap-2 cursor-pointer select-none pb-2">
+            <label className="flex cursor-pointer select-none items-center gap-2 pb-2">
               <input
                 type="checkbox"
                 className="h-4 w-4"
@@ -150,7 +150,11 @@ export function CapstoneForm({
 
       <fieldset className="space-y-4 border-t border-rule pt-6">
         <legend className="kicker mb-2">Brief</legend>
-        <Field label="Case brief" hint="Markdown supported. The full scenario the learner reads — context, role, constraints, success criteria." required>
+        <Field
+          label="Case brief"
+          hint="Markdown supported. The full scenario the learner reads — context, role, constraints, success criteria."
+          required
+        >
           <textarea
             className="flex min-h-[280px] w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-xs"
             value={values.brief}
@@ -171,7 +175,7 @@ export function CapstoneForm({
           {KNOWN_CAPSTONE_ARTIFACTS.map((a) => (
             <label
               key={a}
-              className="flex items-center gap-2 border border-rule bg-paper px-3 py-2 cursor-pointer select-none"
+              className="flex cursor-pointer select-none items-center gap-2 border border-rule bg-paper px-3 py-2"
             >
               <input
                 type="checkbox"
@@ -187,7 +191,10 @@ export function CapstoneForm({
 
       <fieldset className="space-y-4 border-t border-rule pt-6">
         <legend className="kicker mb-2">Rubric summary (grader context)</legend>
-        <Field label="Rubric summary" hint="Optional but recommended. What separates pass / hire-ready / no-pass on this capstone.">
+        <Field
+          label="Rubric summary"
+          hint="Optional but recommended. What separates pass / hire-ready / no-pass on this capstone."
+        >
           <textarea
             className="flex min-h-[160px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             value={values.rubric_summary}

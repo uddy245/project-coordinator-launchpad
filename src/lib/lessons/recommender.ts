@@ -22,12 +22,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-const FOUNDATION_SLUGS = [
-  "coordinator-role",
-  "project-lifecycle",
-  "written-voice",
-  "mindset",
-];
+const FOUNDATION_SLUGS = ["coordinator-role", "project-lifecycle", "written-voice", "mindset"];
 
 export type LessonRecommendation = {
   lessonId: string;
@@ -58,7 +53,8 @@ function nextStep(p: ProgressRow | undefined): {
 } | null {
   if (!p) return { step: "start", reason: "You haven't opened it yet." };
   if (!p.video_watched) return { step: "video", reason: "The video is the next step." };
-  if (!p.quiz_passed) return { step: "quiz", reason: "The quiz is the only step left to complete this module." };
+  if (!p.quiz_passed)
+    return { step: "quiz", reason: "The quiz is the only step left to complete this module." };
   if (!p.artifact_submitted)
     return { step: "workbook", reason: "Submit your workbook artifact to close out this module." };
   return null; // fully done
@@ -66,7 +62,7 @@ function nextStep(p: ProgressRow | undefined): {
 
 export async function recommendNextLesson(
   supabase: SupabaseClient,
-  userId: string,
+  userId: string
 ): Promise<LessonRecommendation | null> {
   const [{ data: lessonsData }, { data: progressData }] = await Promise.all([
     supabase
@@ -97,9 +93,10 @@ export async function recommendNextLesson(
         slug: l.slug,
         number: l.number,
         title: l.title,
-        reason: step.step === "start"
-          ? "Start with Foundations — Module 01 is the place to begin."
-          : `Foundations — ${step.reason}`,
+        reason:
+          step.step === "start"
+            ? "Start with Foundations — Module 01 is the place to begin."
+            : `Foundations — ${step.reason}`,
         resumeStep: step.step,
       };
     }

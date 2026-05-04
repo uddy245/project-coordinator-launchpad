@@ -2,19 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { LessonForm, type LessonFormDefaults } from "@/components/admin/lesson-form";
-import {
-  TemplateUploader,
-  type ExistingTemplate,
-} from "@/components/admin/template-uploader";
+import { TemplateUploader, type ExistingTemplate } from "@/components/admin/template-uploader";
 
 export const metadata = { title: "Edit lesson — Admin" };
 export const dynamic = "force-dynamic";
 
-export default async function EditLessonPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function EditLessonPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   // The /admin/lessons/new route lives next to this; bail early so we don't
   // mistake the literal "new" path for a slug.
@@ -24,7 +17,7 @@ export default async function EditLessonPage({
   const { data } = await admin
     .from("lessons")
     .select(
-      "slug, number, title, summary, video_url, competency, prompt_name, estimated_minutes, is_published, is_preview",
+      "slug, number, title, summary, video_url, competency, prompt_name, estimated_minutes, is_published, is_preview"
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -71,9 +64,7 @@ export default async function EditLessonPage({
             <h1 className="display-title text-2xl">
               M{String(data.number).padStart(2, "0")} — {data.title}
             </h1>
-            <p className="mt-1 text-xs text-muted-foreground font-mono">
-              /lessons/{data.slug}
-            </p>
+            <p className="mt-1 font-mono text-xs text-muted-foreground">/lessons/{data.slug}</p>
           </div>
           <Link
             href={`/lessons/${data.slug}`}
@@ -91,8 +82,8 @@ export default async function EditLessonPage({
         <header>
           <h2 className="display-title text-xl">Workbook templates</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Upload XLSX, CSV, or PDF templates for this lesson. Goes straight to
-            the workbook tab. Static templates still appear alongside these.
+            Upload XLSX, CSV, or PDF templates for this lesson. Goes straight to the workbook tab.
+            Static templates still appear alongside these.
           </p>
         </header>
         <TemplateUploader lessonSlug={data.slug} existing={existingTemplates} />

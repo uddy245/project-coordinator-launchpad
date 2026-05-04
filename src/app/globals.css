@@ -7,42 +7,42 @@
     /* Career Programme palette — university × office.
        Navy ink. Crisp white. Single confident amber accent.
        Status colors only where they earn their place. */
-    --background: 0 0% 100%;             /* crisp white */
-    --paper:      210 16% 99%;            /* faintest cool tint for tiles */
-    --foreground: 215 30% 12%;            /* navy ink */
-    --ink:        215 30% 12%;
-    --rule:       215 14% 88%;            /* cool neutral divider */
+    --background: 0 0% 100%; /* crisp white */
+    --paper: 210 16% 99%; /* faintest cool tint for tiles */
+    --foreground: 215 30% 12%; /* navy ink */
+    --ink: 215 30% 12%;
+    --rule: 215 14% 88%; /* cool neutral divider */
 
-    --card:       0 0% 100%;
+    --card: 0 0% 100%;
     --card-foreground: 215 30% 12%;
-    --popover:    0 0% 100%;
+    --popover: 0 0% 100%;
     --popover-foreground: 215 30% 12%;
 
     /* Primary action — deep navy ink (institutional) */
-    --primary:    215 30% 12%;
+    --primary: 215 30% 12%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary:  215 14% 96%;
+    --secondary: 215 14% 96%;
     --secondary-foreground: 215 30% 12%;
 
-    --muted:      215 14% 96%;
+    --muted: 215 14% 96%;
     --muted-foreground: 215 12% 38%;
 
     /* Accent — confident amber (achievement / focus / current) */
-    --accent:     38 86% 42%;
+    --accent: 38 86% 42%;
     --accent-foreground: 0 0% 100%;
 
     /* Status — used in pips and progress markers, not as decoration */
     --status-progress: 38 86% 42%;
     --status-complete: 152 56% 32%;
-    --status-locked:   215 12% 65%;
+    --status-locked: 215 12% 65%;
 
     --destructive: 0 72% 45%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 215 14% 88%;
-    --input:  215 14% 86%;
-    --ring:   38 86% 42%;
+    --input: 215 14% 86%;
+    --ring: 38 86% 42%;
     --radius: 0.25rem;
   }
 
@@ -75,7 +75,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "kern" 1, "ss01" 1;
+    font-feature-settings:
+      "kern" 1,
+      "ss01" 1;
   }
   ::selection {
     background: hsl(var(--accent));
@@ -118,7 +120,10 @@
 .tile {
   background: hsl(var(--card));
   border: 1px solid hsl(var(--rule));
-  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
 .tile:hover {
   border-color: hsl(var(--ink));
@@ -202,7 +207,9 @@
 /* DATA NUMERAL — used for big stats / module counts */
 .data-numeral {
   font-family: var(--font-display), serif;
-  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-feature-settings:
+    "tnum" 1,
+    "lnum" 1;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -215,13 +222,13 @@
 
 .read-paper {
   /* Textbook reading — navy ink on white, amber for emphasis. */
-  --ink:        #11161e;
-  --ink-soft:   #2c3340;
-  --ink-mute:   #6a7385;
-  --paper:      #ffffff;
+  --ink: #11161e;
+  --ink-soft: #2c3340;
+  --ink-mute: #6a7385;
+  --paper: #ffffff;
   --paper-warm: #f5f7fa;
-  --rule:       #d9dde4;
-  --accent:     #b8801a;     /* amber */
+  --rule: #d9dde4;
+  --accent: #b8801a; /* amber */
   --accent-soft: #d9a751;
 
   background: var(--paper);
@@ -235,10 +242,12 @@
   position: relative;
   z-index: 1;
   font-family: var(--font-reading-body), Georgia, "Times New Roman", serif;
-  font-size: 1.125rem;        /* 18px — textbook scale */
+  font-size: 1.125rem; /* 18px — textbook scale */
   line-height: 1.7;
   color: var(--ink);
-  font-feature-settings: "kern" 1, "liga" 1;
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1;
   text-rendering: optimizeLegibility;
 }
 

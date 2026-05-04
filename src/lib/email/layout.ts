@@ -60,7 +60,7 @@ function renderHtml(input: LayoutInput): string {
   const blocks = input.blocks.map((b) => htmlBlock(b)).join("\n");
   const signoff = input.signoff
     ? `<p style="margin:32px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.6;color:${PALETTE.inkMute};">${escapeHtml(
-        input.signoff,
+        input.signoff
       )}</p>`
     : "";
 

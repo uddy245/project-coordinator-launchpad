@@ -2,11 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useRef, type FormEvent } from "react";
-import {
-  upsertLesson,
-  replaceQuizItems,
-  uploadLessonVideo,
-} from "@/actions/admin-lessons";
+import { upsertLesson, replaceQuizItems, uploadLessonVideo } from "@/actions/admin-lessons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -170,10 +166,7 @@ export function LessonForm({
               max={360}
               value={values.estimated_minutes}
               onChange={(e) =>
-                set(
-                  "estimated_minutes",
-                  e.target.value === "" ? "" : Number(e.target.value),
-                )
+                set("estimated_minutes", e.target.value === "" ? "" : Number(e.target.value))
               }
             />
           </Field>
@@ -219,7 +212,10 @@ export function LessonForm({
           </Field>
         </div>
 
-        <Field label="Video URL" hint="Public Supabase Storage URL — paste manually, or upload below to auto-fill">
+        <Field
+          label="Video URL"
+          hint="Public Supabase Storage URL — paste manually, or upload below to auto-fill"
+        >
           <Input
             type="url"
             value={values.video_url}
@@ -345,7 +341,7 @@ function Toggle({
   onChange: (v: boolean) => void;
 }) {
   return (
-    <label className="flex items-start gap-3 cursor-pointer select-none">
+    <label className="flex cursor-pointer select-none items-start gap-3">
       <input
         type="checkbox"
         className="mt-1 h-4 w-4"

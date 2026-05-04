@@ -25,7 +25,7 @@ export default async function AdminLessonsPage() {
   const { data } = await admin
     .from("lessons")
     .select(
-      "id, slug, number, title, summary, competency, is_published, is_preview, estimated_minutes, updated_at",
+      "id, slug, number, title, summary, competency, is_published, is_preview, estimated_minutes, updated_at"
     )
     .order("number", { ascending: true });
 

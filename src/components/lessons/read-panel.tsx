@@ -53,8 +53,8 @@ export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
     return (
       <div className="rounded-lg border bg-card p-12 text-center">
         <p className="font-serif italic text-muted-foreground">
-          The companion reading for this lesson hasn&apos;t been set yet. Check back soon — or
-          watch the video.
+          The companion reading for this lesson hasn&apos;t been set yet. Check back soon — or watch
+          the video.
         </p>
       </div>
     );
@@ -63,17 +63,14 @@ export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
   const title = deriveTitle(body, lessonTitle);
   const article = stripFirstH1(body);
   const minutes = readingTimeMinutes(article);
-  const chapterLabel =
-    typeof lessonNumber === "number" ? `Chapter ${lessonNumber}` : "Reading";
+  const chapterLabel = typeof lessonNumber === "number" ? `Chapter ${lessonNumber}` : "Reading";
 
   return (
     <div className="read-paper overflow-hidden border border-[#d9dde4] bg-white">
       {/* Course-handout header */}
-      <header className="border-b border-[#d9dde4] px-8 pt-10 pb-6 sm:px-14 sm:pt-12 sm:pb-8 lg:px-20">
+      <header className="border-b border-[#d9dde4] px-8 pb-6 pt-10 sm:px-14 sm:pb-8 sm:pt-12 lg:px-20">
         <div className="flex items-center justify-between gap-4">
-          <span className="read-masthead">
-            {chapterLabel} · Reading
-          </span>
+          <span className="read-masthead">{chapterLabel} · Reading</span>
           <span className="read-masthead">{minutes} min</span>
         </div>
         <hr className="read-rule mt-3" />
@@ -85,9 +82,7 @@ export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
       <article className="px-8 pb-16 pt-8 sm:px-14 sm:pt-10 lg:px-20">
         <div className="read-prose mx-auto max-w-[68ch]">
           <ReactMarkdown>{article}</ReactMarkdown>
-          <div className="read-end-mark">
-            End of reading · Companion to {chapterLabel}
-          </div>
+          <div className="read-end-mark">End of reading · Companion to {chapterLabel}</div>
         </div>
       </article>
     </div>

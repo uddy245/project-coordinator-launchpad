@@ -24,9 +24,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="grid grid-cols-2 gap-px border border-rule bg-rule">
             <div className="bg-paper px-5 py-4">
               <div className="kicker">Modules</div>
-              <div className="data-numeral mt-1 text-[1.6rem] leading-none text-ink">
-                25
-              </div>
+              <div className="data-numeral mt-1 text-[1.6rem] leading-none text-ink">25</div>
             </div>
             <div className="bg-paper px-5 py-4">
               <div className="kicker">Outcome</div>
@@ -54,10 +52,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       {/* Right — form */}
       <section className="flex items-center justify-center bg-background p-6 lg:p-12">
         <div className="w-full max-w-md">
-          <Link
-            href="/"
-            className="mb-8 inline-flex items-baseline gap-3 lg:hidden"
-          >
+          <Link href="/" className="mb-8 inline-flex items-baseline gap-3 lg:hidden">
             <span className="font-display text-lg font-semibold leading-none text-ink">
               Launchpad
             </span>

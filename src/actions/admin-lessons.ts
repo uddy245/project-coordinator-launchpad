@@ -30,7 +30,9 @@ const LessonSchema = z.object({
 
 export type AdminLessonInput = z.input<typeof LessonSchema>;
 
-export async function upsertLesson(input: AdminLessonInput): Promise<ActionResult<{ id: string; slug: string }>> {
+export async function upsertLesson(
+  input: AdminLessonInput
+): Promise<ActionResult<{ id: string; slug: string }>> {
   const parsed = LessonSchema.safeParse(input);
   if (!parsed.success) {
     return {
@@ -191,7 +193,7 @@ const TemplateUploadInputSchema = z.object({
 export type UploadTemplateInput = z.input<typeof TemplateUploadInputSchema>;
 
 export async function uploadLessonTemplate(
-  formData: FormData,
+  formData: FormData
 ): Promise<ActionResult<{ id: string; file_url: string }>> {
   const rawInput = {
     lessonSlug: formData.get("lessonSlug"),
@@ -274,7 +276,10 @@ export async function uploadLessonTemplate(
 
   if (insertErr) {
     // Best-effort cleanup of the orphaned file.
-    await admin.storage.from(TEMPLATE_BUCKET).remove([objectPath]).catch(() => {});
+    await admin.storage
+      .from(TEMPLATE_BUCKET)
+      .remove([objectPath])
+      .catch(() => {});
     return {
       ok: false,
       error: `Failed to register template: ${insertErr.message}`,
@@ -288,7 +293,7 @@ export async function uploadLessonTemplate(
 }
 
 export async function deleteLessonTemplate(
-  templateId: string,
+  templateId: string
 ): Promise<ActionResult<{ id: string }>> {
   if (!templateId) {
     return { ok: false, error: "Missing template id.", code: "INVALID_INPUT" };
@@ -310,10 +315,7 @@ export async function deleteLessonTemplate(
     .maybeSingle();
   if (!row) return { ok: false, error: "Template not found.", code: "NOT_FOUND" };
 
-  const { error: delErr } = await admin
-    .from("lesson_templates")
-    .delete()
-    .eq("id", templateId);
+  const { error: delErr } = await admin.from("lesson_templates").delete().eq("id", templateId);
   if (delErr) {
     return {
       ok: false,
@@ -348,18 +350,14 @@ export async function deleteLessonTemplate(
 
 const VIDEO_BUCKET = "lesson-videos";
 const MAX_VIDEO_BYTES = 500 * 1024 * 1024; // 500 MB — Bunny etc. handle the big-streaming case
-const ALLOWED_VIDEO_TYPES = new Set([
-  "video/mp4",
-  "video/quicktime",
-  "video/webm",
-]);
+const ALLOWED_VIDEO_TYPES = new Set(["video/mp4", "video/quicktime", "video/webm"]);
 
 const VideoUploadInputSchema = z.object({
   lessonSlug: z.string().min(1),
 });
 
 export async function uploadLessonVideo(
-  formData: FormData,
+  formData: FormData
 ): Promise<ActionResult<{ url: string; objectPath: string }>> {
   const parsed = VideoUploadInputSchema.safeParse({
     lessonSlug: formData.get("lessonSlug"),
@@ -416,12 +414,10 @@ export async function uploadLessonVideo(
   const objectPath = `${parsed.data.lessonSlug}/${Date.now()}-${safeName}`;
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const { error: uploadErr } = await admin.storage
-    .from(VIDEO_BUCKET)
-    .upload(objectPath, buffer, {
-      contentType: file.type || "video/mp4",
-      upsert: false,
-    });
+  const { error: uploadErr } = await admin.storage.from(VIDEO_BUCKET).upload(objectPath, buffer, {
+    contentType: file.type || "video/mp4",
+    upsert: false,
+  });
   if (uploadErr) {
     return {
       ok: false,

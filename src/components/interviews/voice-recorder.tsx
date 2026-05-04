@@ -164,8 +164,7 @@ export function VoiceRecorder({
   }
 
   function startRecognition() {
-    const SpeechRecognitionCtor =
-      window.SpeechRecognition ?? window.webkitSpeechRecognition;
+    const SpeechRecognitionCtor = window.SpeechRecognition ?? window.webkitSpeechRecognition;
     if (!SpeechRecognitionCtor) return;
 
     const recognition = new SpeechRecognitionCtor();
@@ -225,13 +224,14 @@ export function VoiceRecorder({
 
       // Pick the first MIME type the browser actually supports.
       // Safari requires audio/mp4; Chrome/Firefox prefer webm+opus.
-      const mimeType = [
-        "audio/webm;codecs=opus",
-        "audio/webm",
-        "audio/mp4",
-        "audio/ogg;codecs=opus",
-        "audio/ogg",
-      ].find((m) => MediaRecorder.isTypeSupported(m)) ?? "";
+      const mimeType =
+        [
+          "audio/webm;codecs=opus",
+          "audio/webm",
+          "audio/mp4",
+          "audio/ogg;codecs=opus",
+          "audio/ogg",
+        ].find((m) => MediaRecorder.isTypeSupported(m)) ?? "";
 
       const recorderOptions = mimeType ? { mimeType } : undefined;
       const recorder = new MediaRecorder(stream, recorderOptions);
@@ -274,7 +274,7 @@ export function VoiceRecorder({
       setError(
         err instanceof Error
           ? `Microphone access denied: ${err.message}`
-          : "Couldn't access the microphone.",
+          : "Couldn't access the microphone."
       );
       stopStream();
     }
@@ -336,9 +336,7 @@ export function VoiceRecorder({
             Recording · {elapsed}s / {MAX_SECONDS}s
           </div>
           {hasSpeechSupport && liveTranscript ? (
-            <p className="text-xs italic text-muted-foreground">
-              {liveTranscript}
-            </p>
+            <p className="text-xs italic text-muted-foreground">{liveTranscript}</p>
           ) : null}
         </div>
       ) : null}
@@ -379,9 +377,7 @@ export function VoiceRecorder({
         </div>
       ) : null}
 
-      {error ? (
-        <div className="text-xs text-[hsl(var(--destructive))]">{error}</div>
-      ) : null}
+      {error ? <div className="text-xs text-[hsl(var(--destructive))]">{error}</div> : null}
     </div>
   );
 }

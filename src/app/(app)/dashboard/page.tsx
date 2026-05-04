@@ -54,9 +54,7 @@ export default async function DashboardPage() {
     .select("lesson_id, video_watched, quiz_passed, artifact_submitted")
     .eq("user_id", user.id);
 
-  const progressByLessonId = new Map(
-    (progressRows ?? []).map((row) => [row.lesson_id, row]),
-  );
+  const progressByLessonId = new Map((progressRows ?? []).map((row) => [row.lesson_id, row]));
 
   const { data: gateRow } = await supabase
     .from("gate_status")
@@ -89,8 +87,7 @@ export default async function DashboardPage() {
     .from("mock_interview_scenarios")
     .select("id", { count: "exact", head: true })
     .eq("is_published", true);
-  const totalScenarios =
-    (scenarioCountRow as unknown as { count?: number } | null)?.count ?? 0;
+  const totalScenarios = (scenarioCountRow as unknown as { count?: number } | null)?.count ?? 0;
   const { data: passedScenarios } = await supabase
     .from("mock_interview_responses")
     .select("scenario_id")
@@ -101,26 +98,24 @@ export default async function DashboardPage() {
   const gates = computeGateSummary(
     gateRow,
     { byLessonSlug: foundationProgressBySlug },
-    { passed: passedCount2, total: totalScenarios },
+    { passed: passedCount2, total: totalScenarios }
   );
 
   // Stats for the programme banner
   const TOTAL_PROGRAMME = 25;
   const completedCount = Array.from(progressByLessonId.values()).filter(
-    (p) => p.video_watched && p.quiz_passed && p.artifact_submitted,
+    (p) => p.video_watched && p.quiz_passed && p.artifact_submitted
   ).length;
-  const inProgressCount =
-    Array.from(progressByLessonId.values()).filter(
-      (p) =>
-        (p.video_watched || p.quiz_passed || p.artifact_submitted) &&
-        !(p.video_watched && p.quiz_passed && p.artifact_submitted),
-    ).length;
+  const inProgressCount = Array.from(progressByLessonId.values()).filter(
+    (p) =>
+      (p.video_watched || p.quiz_passed || p.artifact_submitted) &&
+      !(p.video_watched && p.quiz_passed && p.artifact_submitted)
+  ).length;
   const publishedCount = lessons?.length ?? 0;
   const completionPct = Math.round((completedCount / TOTAL_PROGRAMME) * 100);
 
   // Daily streak (server-side RPC).
-  const { data: streakRow } = await supabase
-    .rpc("user_streak", { p_user_id: user.id });
+  const { data: streakRow } = await supabase.rpc("user_streak", { p_user_id: user.id });
   const streak: number =
     typeof streakRow === "number"
       ? streakRow
@@ -161,9 +156,7 @@ export default async function DashboardPage() {
               Module {String(nextLesson.number).padStart(2, "0")} — {nextLesson.title}
             </a>
             {recommendation?.reason ? (
-              <span className="ml-2 text-sm text-muted-foreground">
-                · {recommendation.reason}
-              </span>
+              <span className="ml-2 text-sm text-muted-foreground">· {recommendation.reason}</span>
             ) : null}
           </p>
         ) : null}
@@ -171,17 +164,31 @@ export default async function DashboardPage() {
 
       {/* Stats banner — university transcript meets office dashboard */}
       <section className="grid grid-cols-2 gap-px bg-rule lg:grid-cols-4">
-        <StatTile label="Programme progress" value={`${completionPct}%`} hint={`${completedCount} of ${TOTAL_PROGRAMME} modules`} />
-        <StatTile label="In progress" value={String(inProgressCount).padStart(2, "0")} hint="active modules" />
+        <StatTile
+          label="Programme progress"
+          value={`${completionPct}%`}
+          hint={`${completedCount} of ${TOTAL_PROGRAMME} modules`}
+        />
+        <StatTile
+          label="In progress"
+          value={String(inProgressCount).padStart(2, "0")}
+          hint="active modules"
+        />
         <StreakBadge streak={streak} />
-        <StatTile label="Status" value={completionPct === 100 ? "Hire-ready" : "Enrolled"} hint="career track" />
+        <StatTile
+          label="Status"
+          value={completionPct === 100 ? "Hire-ready" : "Enrolled"}
+          hint="career track"
+        />
       </section>
 
       {/* Programme progress bar */}
       <section>
         <div className="flex items-baseline justify-between pb-2">
           <span className="kicker">Curriculum tracker</span>
-          <span className="kicker">{completedCount}/{TOTAL_PROGRAMME}</span>
+          <span className="kicker">
+            {completedCount}/{TOTAL_PROGRAMME}
+          </span>
         </div>
         <div className="track">
           <div

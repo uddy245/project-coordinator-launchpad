@@ -9,11 +9,7 @@ import { VideoPlayer } from "@/components/lessons/video-player";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   return { title: `Preview — ${slug}` };
 }
@@ -35,11 +31,7 @@ function anonClient() {
   );
 }
 
-export default async function PreviewPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function PreviewPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const supabase = anonClient();
 
@@ -99,8 +91,7 @@ export default async function PreviewPage({
             <span className="kicker">Free preview · {moduleCode}</span>
             <span className="h-3 w-px bg-rule" aria-hidden />
             <span className="text-sm text-muted-foreground">
-              Watch the video, read the companion. Workbook and quiz are part of the
-              full programme.
+              Watch the video, read the companion. Workbook and quiz are part of the full programme.
             </span>
           </div>
           <Button asChild size="sm" variant="outline">
@@ -207,24 +198,14 @@ export default async function PreviewPage({
   );
 }
 
-function LockedTile({
-  kicker,
-  title,
-  detail,
-}: {
-  kicker: string;
-  title: string;
-  detail: string;
-}) {
+function LockedTile({ kicker, title, detail }: { kicker: string; title: string; detail: string }) {
   return (
-    <div className="bg-card p-6 tile">
+    <div className="tile bg-card p-6">
       <div className="flex items-center justify-between">
         <span className="kicker">{kicker}</span>
         <span className="kicker text-[hsl(var(--muted-foreground))]">Locked</span>
       </div>
-      <h3 className="mt-2 font-display text-lg font-semibold text-ink leading-snug">
-        {title}
-      </h3>
+      <h3 className="mt-2 font-display text-lg font-semibold leading-snug text-ink">{title}</h3>
       <p className="mt-2 text-sm text-muted-foreground">{detail}</p>
     </div>
   );

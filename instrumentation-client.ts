@@ -19,8 +19,7 @@ const environment =
 // Release tag — Next inlines NEXT_PUBLIC_* into the client bundle at build
 // time. Vercel exposes the commit SHA on its build env; locally this is
 // undefined and Sentry falls back to its own release detection.
-const release =
-  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || undefined;
+const release = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || undefined;
 
 if (dsn) {
   Sentry.init({
@@ -33,11 +32,7 @@ if (dsn) {
     replaysOnErrorSampleRate: 0.05,
     sendDefaultPii: false,
     // Don't capture noisy expected errors.
-    ignoreErrors: [
-      "ResizeObserver loop limit exceeded",
-      "Network request failed",
-      "Load failed",
-    ],
+    ignoreErrors: ["ResizeObserver loop limit exceeded", "Network request failed", "Load failed"],
     beforeSend(event) {
       // PII filtering — keep parity with server config. We never want to
       // leak emails, tokens, or auth headers in client-side error events.

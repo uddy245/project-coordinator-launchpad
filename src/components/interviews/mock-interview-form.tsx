@@ -104,12 +104,8 @@ export function MockInterviewForm({
           aria-live="polite"
         >
           <div className="flex flex-wrap items-baseline gap-3">
-            <span className="kicker">
-              {editedSinceGrading ? "Previous grade" : "Latest grade"}
-            </span>
-            <span className="data-numeral text-2xl text-ink">
-              {displayedScore?.toFixed(1)} / 5
-            </span>
+            <span className="kicker">{editedSinceGrading ? "Previous grade" : "Latest grade"}</span>
+            <span className="data-numeral text-2xl text-ink">{displayedScore?.toFixed(1)} / 5</span>
             <span
               className={`rounded-sm px-2 py-0.5 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.12em] ${
                 displayedPass
@@ -126,9 +122,7 @@ export function MockInterviewForm({
             ) : null}
           </div>
           {displayedFeedback ? (
-            <p className="mt-3 text-[0.95rem] leading-relaxed text-ink">
-              {displayedFeedback}
-            </p>
+            <p className="mt-3 text-[0.95rem] leading-relaxed text-ink">{displayedFeedback}</p>
           ) : null}
         </div>
       ) : null}
@@ -147,8 +141,7 @@ export function MockInterviewForm({
             // actively editing (text differs from initialResponse) so
             // multiple takes can still be combined mid-draft.
             setText((prev) => {
-              const isFreshAttempt =
-                !prev.trim() || prev.trim() === initialResponse.trim();
+              const isFreshAttempt = !prev.trim() || prev.trim() === initialResponse.trim();
               return isFreshAttempt ? t : prev.trimEnd() + "\n\n" + t;
             });
           }}
@@ -159,8 +152,8 @@ export function MockInterviewForm({
             Your response
           </label>
           <p className="mt-1 text-sm text-muted-foreground">
-            Type as you would speak it. Aim for the quality of a real
-            interview answer — specifics, judgment, action.
+            Type as you would speak it. Aim for the quality of a real interview answer — specifics,
+            judgment, action.
           </p>
           <textarea
             id="response"
@@ -181,9 +174,7 @@ export function MockInterviewForm({
               {charCount} / {minChars}+ chars
             </span>
             {isGraded ? (
-              <span className="kicker">
-                Submitting will replace your previous grade
-              </span>
+              <span className="kicker">Submitting will replace your previous grade</span>
             ) : null}
           </div>
         </div>

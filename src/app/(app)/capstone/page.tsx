@@ -59,9 +59,9 @@ export default async function CapstonePage() {
           The hire-ready synthesis.
         </h1>
         <p className="mt-3 max-w-2xl text-base text-muted-foreground">
-          A multi-artifact case study that draws on every module. The
-          capstone is your portfolio piece — the thing a hiring manager
-          can read end-to-end and form a real opinion of your judgment.
+          A multi-artifact case study that draws on every module. The capstone is your portfolio
+          piece — the thing a hiring manager can read end-to-end and form a real opinion of your
+          judgment.
         </p>
       </header>
 
@@ -92,7 +92,7 @@ export default async function CapstonePage() {
                 </p>
 
                 {s.estimated_hours ? (
-                  <p className="mt-4 kicker">
+                  <p className="kicker mt-4">
                     Estimated effort · {s.estimated_hours} hours over 1–2 weeks
                   </p>
                 ) : null}
@@ -118,17 +118,14 @@ export default async function CapstonePage() {
 
                 {s.is_published ? (
                   <div className="mt-6">
-                    <a
-                      href={`/capstone/${s.slug}`}
-                      className="mono-link"
-                    >
+                    <a href={`/capstone/${s.slug}`} className="mono-link">
                       Open capstone →
                     </a>
                   </div>
                 ) : (
                   <div className="mt-6 border-l-4 border-[hsl(var(--accent))] bg-paper px-4 py-3 text-sm text-ink">
-                    The case study and rubric are in production. The capstone
-                    will open once the full programme ships.
+                    The case study and rubric are in production. The capstone will open once the
+                    full programme ships.
                   </div>
                 )}
               </article>
@@ -153,21 +150,22 @@ function Status({ attempt }: { attempt: Attempt | undefined }) {
       </span>
     );
   }
-  return <span className="pip" data-status="in_progress">{attempt.status}</span>;
+  return (
+    <span className="pip" data-status="in_progress">
+      {attempt.status}
+    </span>
+  );
 }
 
 function ComingSoon() {
   return (
     <div className="border border-rule bg-paper p-12 text-center">
       <span className="kicker">Coming soon</span>
-      <h2 className="display-title mt-3 text-xl">
-        Your hire-ready synthesis lives here.
-      </h2>
+      <h2 className="display-title mt-3 text-xl">Your hire-ready synthesis lives here.</h2>
       <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-        The capstone draws on the full programme. We&apos;re sequencing the
-        case study and rubric to ship after Module 25 — once you&apos;ve
-        had every concept put in front of you. In the meantime, your
-        portfolio entries (Gate 2) are how you show progress.
+        The capstone draws on the full programme. We&apos;re sequencing the case study and rubric to
+        ship after Module 25 — once you&apos;ve had every concept put in front of you. In the
+        meantime, your portfolio entries (Gate 2) are how you show progress.
       </p>
     </div>
   );

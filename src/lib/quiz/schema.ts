@@ -15,7 +15,7 @@ export const QuizItemSchema = z.object({
       z.object({
         id: z.string().min(1).max(4),
         text: z.string().min(1),
-      }),
+      })
     )
     .min(2)
     .max(8),

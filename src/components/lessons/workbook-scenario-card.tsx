@@ -20,9 +20,7 @@ export function WorkbookScenarioCard({
   initialAssignment: WorkbookAssignment | null;
 }) {
   const router = useRouter();
-  const [assignment, setAssignment] = useState<WorkbookAssignment | null>(
-    initialAssignment,
-  );
+  const [assignment, setAssignment] = useState<WorkbookAssignment | null>(initialAssignment);
   const [pending, startTransition] = useTransition();
 
   function rotate() {
@@ -58,8 +56,8 @@ export function WorkbookScenarioCard({
           </button>
         </div>
         <p className="text-sm text-muted-foreground">
-          No scenario assigned yet. Click <em>Generate scenario</em> to draft a
-          fictional case to apply your workbook against.
+          No scenario assigned yet. Click <em>Generate scenario</em> to draft a fictional case to
+          apply your workbook against.
         </p>
       </section>
     );
@@ -87,9 +85,7 @@ export function WorkbookScenarioCard({
         </div>
       </div>
       <article className="space-y-3 rounded-md border border-rule bg-paper p-4">
-        <h3 className="text-base font-medium leading-snug text-ink">
-          {assignment.title}
-        </h3>
+        <h3 className="text-base font-medium leading-snug text-ink">{assignment.title}</h3>
         <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
           {assignment.brief}
         </div>

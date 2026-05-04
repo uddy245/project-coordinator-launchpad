@@ -21,7 +21,7 @@ export type RefreshAssignmentData = {
  * Anthropic spend cap and the new brief joins the global pool.
  */
 export async function refreshWorkbookAssignment(
-  input: z.input<typeof RefreshSchema>,
+  input: z.input<typeof RefreshSchema>
 ): Promise<ActionResult<RefreshAssignmentData>> {
   const parsed = RefreshSchema.safeParse(input);
   if (!parsed.success) {

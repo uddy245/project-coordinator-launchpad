@@ -32,15 +32,11 @@ export function LessonHeader({
           <span className="h-3 w-px bg-rule" aria-hidden />
           <span className="kicker">Project Coordinator Launchpad</span>
         </div>
-        {estimatedMinutes ? (
-          <span className="kicker">Est. {estimatedMinutes} min</span>
-        ) : null}
+        {estimatedMinutes ? <span className="kicker">Est. {estimatedMinutes} min</span> : null}
       </div>
 
       {/* Title */}
-      <h1 className="display-title text-[2rem] sm:text-[2.4rem] lg:text-[2.8rem]">
-        {title}
-      </h1>
+      <h1 className="display-title text-[2rem] sm:text-[2.4rem] lg:text-[2.8rem]">{title}</h1>
     </header>
   );
 }

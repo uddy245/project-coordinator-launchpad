@@ -60,14 +60,12 @@ Quality bar:
 
 No preamble, no markdown, no code fences — output ONLY the JSON array.`;
 
-export async function generateQuizItems(
-  args: GenerateQuizItemsArgs,
-): Promise<GeneratedQuizItem[]> {
+export async function generateQuizItems(args: GenerateQuizItemsArgs): Promise<GeneratedQuizItem[]> {
   // Spend cap — bail before calling Claude if we'd blow the daily budget.
   const spend = await checkSpendCap(createAdminClient());
   if (!spend.ok) {
     throw new Error(
-      `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`,
+      `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`
     );
   }
 
@@ -80,9 +78,7 @@ export async function generateQuizItems(
     .order("created_at", { ascending: false })
     .limit(20);
 
-  const avoidList = (existingStems ?? [])
-    .map((r, i) => `${i + 1}. ${r.stem}`)
-    .join("\n");
+  const avoidList = (existingStems ?? []).map((r, i) => `${i + 1}. ${r.stem}`).join("\n");
 
   const userMessage = `Lesson: ${args.lessonTitle}
 Slug: ${args.lessonSlug}
@@ -127,7 +123,7 @@ Output the JSON array now.`;
   const validated = z.array(QuizItemSchema).min(1).safeParse(parsed);
   if (!validated.success) {
     throw new Error(
-      `Generated quiz items failed validation: ${validated.error.issues[0]?.message ?? "unknown"}`,
+      `Generated quiz items failed validation: ${validated.error.issues[0]?.message ?? "unknown"}`
     );
   }
 
@@ -151,9 +147,7 @@ Output the JSON array now.`;
     .insert(rows)
     .select("id, sort, stem, options, competency, difficulty");
   if (insertErr || !inserted) {
-    throw new Error(
-      `Failed to insert generated quiz items: ${insertErr?.message ?? "unknown"}`,
-    );
+    throw new Error(`Failed to insert generated quiz items: ${insertErr?.message ?? "unknown"}`);
   }
 
   return inserted.map((r) => ({

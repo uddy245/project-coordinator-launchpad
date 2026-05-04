@@ -14,14 +14,15 @@ async function requireAdmin() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false as const, error: "Not signed in.", code: "UNAUTHENTICATED" as const };
+  if (!user)
+    return { ok: false as const, error: "Not signed in.", code: "UNAUTHENTICATED" as const };
   const { data: isAdmin } = await supabase.rpc("is_admin");
   if (!isAdmin) return { ok: false as const, error: "Not authorized.", code: "FORBIDDEN" as const };
   return { ok: true as const };
 }
 
 export async function upsertScenario(
-  input: AdminScenarioInput,
+  input: AdminScenarioInput
 ): Promise<ActionResult<{ id: string; slug: string }>> {
   const parsed = ScenarioSchema.safeParse(input);
   if (!parsed.success) {
@@ -67,9 +68,7 @@ export async function upsertScenario(
   return { ok: true, data: { id: data.id, slug: data.slug } };
 }
 
-export async function deleteScenario(
-  scenarioId: string,
-): Promise<ActionResult<{ id: string }>> {
+export async function deleteScenario(scenarioId: string): Promise<ActionResult<{ id: string }>> {
   if (!scenarioId) {
     return { ok: false, error: "Missing id.", code: "INVALID_INPUT" };
   }
@@ -90,10 +89,7 @@ export async function deleteScenario(
     };
   }
 
-  const { error } = await admin
-    .from("mock_interview_scenarios")
-    .delete()
-    .eq("id", scenarioId);
+  const { error } = await admin.from("mock_interview_scenarios").delete().eq("id", scenarioId);
   if (error) {
     return {
       ok: false,

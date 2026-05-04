@@ -74,11 +74,5 @@ export async function QuizPanel({ lessonSlug }: { lessonSlug: string }) {
     );
   }
 
-  return (
-    <QuizPlayer
-      lessonSlug={lessonSlug}
-      items={items}
-      canRefresh={!!user}
-    />
-  );
+  return <QuizPlayer lessonSlug={lessonSlug} items={items} canRefresh={!!user} />;
 }

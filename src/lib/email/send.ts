@@ -52,15 +52,13 @@ export async function sendEmail(opts: {
     const reason = "RESEND_API_KEY not set — email send skipped";
     // Not a hard error; in dev we just log so flows still work end-to-end.
     console.info(
-      `[email] skipped to=${opts.to.email} subject="${opts.render.subject}" (${reason})`,
+      `[email] skipped to=${opts.to.email} subject="${opts.render.subject}" (${reason})`
     );
     return { ok: true, id: null, skipped: true, reason };
   }
 
   try {
-    const recipient = opts.to.name
-      ? `${opts.to.name} <${opts.to.email}>`
-      : opts.to.email;
+    const recipient = opts.to.name ? `${opts.to.name} <${opts.to.email}>` : opts.to.email;
 
     const result = await c.emails.send({
       from: env.RESEND_FROM_EMAIL,

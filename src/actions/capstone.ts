@@ -10,7 +10,7 @@ const ARTIFACT_BUCKET = "capstone-artifacts";
 const MAX_ARTIFACT_BYTES = 25 * 1024 * 1024; // 25 MB
 
 export async function startCapstoneAttempt(
-  scenarioSlug: string,
+  scenarioSlug: string
 ): Promise<ActionResult<{ attemptId: string }>> {
   if (!scenarioSlug || typeof scenarioSlug !== "string") {
     return { ok: false, error: "Missing scenario.", code: "INVALID_INPUT" };
@@ -75,7 +75,7 @@ const ArtifactKindSchema = z
   .regex(/^[a-z0-9_]+$/, "Artifact kind must be snake_case");
 
 export async function uploadCapstoneArtifact(
-  formData: FormData,
+  formData: FormData
 ): Promise<ActionResult<{ id: string; file_url: string }>> {
   const attemptId = String(formData.get("attemptId") ?? "");
   const kindRaw = String(formData.get("kind") ?? "");
@@ -163,7 +163,10 @@ export async function uploadCapstoneArtifact(
     .single();
 
   if (insertErr) {
-    await admin.storage.from(ARTIFACT_BUCKET).remove([objectPath]).catch(() => {});
+    await admin.storage
+      .from(ARTIFACT_BUCKET)
+      .remove([objectPath])
+      .catch(() => {});
     return {
       ok: false,
       error: `Failed to register artifact: ${insertErr.message}`,
@@ -184,7 +187,7 @@ export async function uploadCapstoneArtifact(
 }
 
 export async function submitCapstoneAttempt(
-  attemptId: string,
+  attemptId: string
 ): Promise<ActionResult<{ status: string }>> {
   if (!attemptId) {
     return { ok: false, error: "Missing attempt id.", code: "INVALID_INPUT" };

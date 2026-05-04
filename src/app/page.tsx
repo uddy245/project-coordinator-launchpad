@@ -28,18 +28,16 @@ export default function Home() {
       {/* Hero */}
       <section className="border-b border-rule">
         <div className="mx-auto grid max-w-6xl grid-cols-12 gap-6 px-6 py-16 lg:py-24">
-          <div className="col-span-12 lg:col-span-8 space-y-6">
+          <div className="col-span-12 space-y-6 lg:col-span-8">
             <span className="kicker">A 25-module career programme · Self-paced</span>
             <h1 className="display-title text-[2.6rem] leading-[1.04] sm:text-[3.6rem] lg:text-[4.4rem]">
-              From zero to{" "}
-              <span className="text-[hsl(var(--accent))]">hire-ready</span>{" "}
-              project coordinator.
+              From zero to <span className="text-[hsl(var(--accent))]">hire-ready</span> project
+              coordinator.
             </h1>
             <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              Twenty-five modules built from a working PM&apos;s handbook. Real
-              artifacts, AI-graded against rubrics, and a portfolio you can
-              actually show in interviews. Designed for the early-career
-              professional who wants the role.
+              Twenty-five modules built from a working PM&apos;s handbook. Real artifacts, AI-graded
+              against rubrics, and a portfolio you can actually show in interviews. Designed for the
+              early-career professional who wants the role.
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Button asChild size="lg">
@@ -105,9 +103,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-12">
           <div>
             <div className="kicker">Ready to enrol?</div>
-            <h2 className="display-title mt-1 text-2xl">
-              Twenty-five modules. One outcome.
-            </h2>
+            <h2 className="display-title mt-1 text-2xl">Twenty-five modules. One outcome.</h2>
           </div>
           <div className="flex items-center gap-3">
             <Button asChild size="lg">
@@ -135,38 +131,22 @@ function DefRow({ term, value }: { term: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-4 px-5 py-3">
       <dt className="kicker">{term}</dt>
-      <dd className="font-mono text-sm font-medium text-ink tabular-nums">{value}</dd>
+      <dd className="font-mono text-sm font-medium tabular-nums text-ink">{value}</dd>
     </div>
   );
 }
 
-function Stat({
-  numeral,
-  label,
-  hint,
-}: {
-  numeral: string;
-  label: string;
-  hint: string;
-}) {
+function Stat({ numeral, label, hint }: { numeral: string; label: string; hint: string }) {
   return (
     <div className="bg-card px-6 py-7">
       <div className="data-numeral text-[2.4rem] leading-none text-ink">{numeral}</div>
-      <div className="mt-3 kicker">{label}</div>
+      <div className="kicker mt-3">{label}</div>
       <div className="mt-1 text-xs text-muted-foreground">{hint}</div>
     </div>
   );
 }
 
-function Pillar({
-  code,
-  name,
-  detail,
-}: {
-  code: string;
-  name: string;
-  detail: string;
-}) {
+function Pillar({ code, name, detail }: { code: string; name: string; detail: string }) {
   return (
     <div className="bg-card px-5 py-7">
       <span className="kicker text-[hsl(var(--accent))]">Pillar {code}</span>

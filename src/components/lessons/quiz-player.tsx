@@ -2,11 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
-import {
-  submitQuizAttempt,
-  refreshQuizItems,
-  type SubmitQuizData,
-} from "@/actions/quiz";
+import { submitQuizAttempt, refreshQuizItems, type SubmitQuizData } from "@/actions/quiz";
 import { Button } from "@/components/ui/button";
 
 type QuizOption = { id: string; text: string };
@@ -46,7 +42,7 @@ export function QuizPlayer({
     if (Object.keys(answers).length > 0 && !result) {
       // Mid-attempt refresh would discard answers — confirm before clobbering.
       const ok = window.confirm(
-        "You're partway through this quiz. Refreshing will swap in new questions and discard your current answers. Continue?",
+        "You're partway through this quiz. Refreshing will swap in new questions and discard your current answers. Continue?"
       );
       if (!ok) return;
     }
@@ -64,22 +60,20 @@ export function QuizPlayer({
           options: it.options,
           competency: it.competency,
           difficulty: it.difficulty,
-        })),
+        }))
       );
       setAnswers({});
       setIndex(0);
       setResult(null);
       if (res.data.generated > 0) {
         toast.success(
-          `${res.data.generated} new question${res.data.generated === 1 ? "" : "s"} just generated for you.`,
+          `${res.data.generated} new question${res.data.generated === 1 ? "" : "s"} just generated for you.`
         );
       } else {
         toast.success("Loaded a fresh set.");
       }
       if (res.data.poolExhausted) {
-        toast.warning(
-          "Pool's running thin — generation may have failed. Check back later.",
-        );
+        toast.warning("Pool's running thin — generation may have failed. Check back later.");
       }
     });
   }

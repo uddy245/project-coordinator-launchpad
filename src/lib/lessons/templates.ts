@@ -108,7 +108,7 @@ export const TEMPLATES_BY_SLUG: Record<string, Template[]> = {
     },
   ],
 
-  "mindset": [
+  mindset: [
     {
       file: "/templates/mindset_practice_tracker.xlsx",
       title: "Mindset practice tracker (starter)",
@@ -139,7 +139,7 @@ export const TEMPLATES_BY_SLUG: Record<string, Template[]> = {
     },
   ],
 
-  "methodologies": [
+  methodologies: [
     {
       file: "/templates/methodology_fit_diagnostic.xlsx",
       title: "Methodology Fit Diagnostic (starter)",
@@ -170,7 +170,7 @@ export const TEMPLATES_BY_SLUG: Record<string, Template[]> = {
     },
   ],
 
-  "governance": [
+  governance: [
     {
       file: "/templates/governance_reading_kit.xlsx",
       title: "Governance reading kit (starter)",
@@ -201,7 +201,7 @@ export const TEMPLATES_BY_SLUG: Record<string, Template[]> = {
     },
   ],
 
-  "variables": [
+  variables: [
     {
       file: "/templates/five_variable_posture.xlsx",
       title: "Five-Variable Posture (starter)",
@@ -283,7 +283,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 export async function templatesForAsync(
   supabase: SupabaseClient,
-  lessonSlug: string,
+  lessonSlug: string
 ): Promise<Template[]> {
   const staticEntries = templatesFor(lessonSlug);
 

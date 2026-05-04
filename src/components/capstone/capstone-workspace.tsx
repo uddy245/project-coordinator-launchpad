@@ -32,8 +32,7 @@ export function CapstoneWorkspace({
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
 
-  const allUploaded =
-    artifactSlots.length > 0 && artifactSlots.every((s) => s.uploadedFileName);
+  const allUploaded = artifactSlots.length > 0 && artifactSlots.every((s) => s.uploadedFileName);
 
   function onStart() {
     setError(null);
@@ -49,7 +48,12 @@ export function CapstoneWorkspace({
 
   function onSubmit() {
     if (!attemptId) return;
-    if (!confirm("Submit your capstone for grading? You won't be able to change artifacts after this.")) return;
+    if (
+      !confirm(
+        "Submit your capstone for grading? You won't be able to change artifacts after this."
+      )
+    )
+      return;
     setError(null);
     startTransition(async () => {
       const result = await submitCapstoneAttempt(attemptId);
@@ -66,13 +70,10 @@ export function CapstoneWorkspace({
     return (
       <div className="border border-rule bg-paper p-6">
         <p className="text-sm text-ink">
-          When you&apos;re ready, start the capstone. You&apos;ll be able to
-          upload each artifact independently and submit when all of them are
-          in place — no time pressure.
+          When you&apos;re ready, start the capstone. You&apos;ll be able to upload each artifact
+          independently and submit when all of them are in place — no time pressure.
         </p>
-        {error ? (
-          <div className="mt-3 text-sm text-[hsl(var(--destructive))]">{error}</div>
-        ) : null}
+        {error ? <div className="mt-3 text-sm text-[hsl(var(--destructive))]">{error}</div> : null}
         <Button className="mt-4" onClick={onStart} disabled={pending}>
           {pending ? "Starting…" : "Begin capstone"}
         </Button>
@@ -125,8 +126,8 @@ export function CapstoneWorkspace({
 
       {!allUploaded && attemptStatus === "in_progress" ? (
         <p className="text-xs text-muted-foreground">
-          Upload every required artifact before submitting. Each upload replaces
-          the previous one for that artifact kind.
+          Upload every required artifact before submitting. Each upload replaces the previous one
+          for that artifact kind.
         </p>
       ) : null}
     </div>
@@ -192,9 +193,7 @@ function ArtifactSlotRow({
           <Button type="submit" size="sm" disabled={busy}>
             {busy ? "Uploading…" : slot.uploadedFileName ? "Replace" : "Upload"}
           </Button>
-          {error ? (
-            <span className="text-xs text-[hsl(var(--destructive))]">{error}</span>
-          ) : null}
+          {error ? <span className="text-xs text-[hsl(var(--destructive))]">{error}</span> : null}
         </form>
       ) : null}
     </li>

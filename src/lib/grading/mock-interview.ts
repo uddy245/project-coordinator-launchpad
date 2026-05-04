@@ -57,7 +57,7 @@ export async function gradeMockInterviewResponse(
   const spend = await checkSpendCap(createAdminClient());
   if (!spend.ok) {
     throw new Error(
-      `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`,
+      `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`
     );
   }
 
@@ -102,7 +102,7 @@ Grade now.`;
   const validated = Output.safeParse(parsed);
   if (!validated.success) {
     throw new Error(
-      `Grader output failed validation: ${validated.error.issues[0]?.message ?? "unknown"}`,
+      `Grader output failed validation: ${validated.error.issues[0]?.message ?? "unknown"}`
     );
   }
 

@@ -47,9 +47,7 @@ export default async function InterviewScenarioPage({
             {scenario.difficulty}
           </span>
         </div>
-        <h1 className="display-title mt-3 text-[1.8rem] leading-tight">
-          {scenario.prompt}
-        </h1>
+        <h1 className="display-title mt-3 text-[1.8rem] leading-tight">{scenario.prompt}</h1>
       </header>
 
       <MockInterviewForm

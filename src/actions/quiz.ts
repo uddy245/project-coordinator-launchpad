@@ -5,11 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { gradeQuizAttempt, type QuizItem } from "@/lib/grading/quiz";
-import {
-  selectQuizItemsForUser,
-  resetSeenHistory,
-  type ServedQuizItem,
-} from "@/lib/quiz/select";
+import { selectQuizItemsForUser, resetSeenHistory, type ServedQuizItem } from "@/lib/quiz/select";
 import type { ActionResult } from "@/lib/types";
 
 const AnswerSchema = z.object({
@@ -162,7 +158,7 @@ export type RefreshQuizData = {
 };
 
 export async function refreshQuizItems(
-  input: z.input<typeof RefreshSchema>,
+  input: z.input<typeof RefreshSchema>
 ): Promise<ActionResult<RefreshQuizData>> {
   const parsed = RefreshSchema.safeParse(input);
   if (!parsed.success) {
@@ -212,7 +208,7 @@ export async function refreshQuizItems(
 }
 
 export async function resetQuizHistory(
-  input: z.input<typeof RefreshSchema>,
+  input: z.input<typeof RefreshSchema>
 ): Promise<ActionResult<{ deleted: number }>> {
   const parsed = RefreshSchema.safeParse(input);
   if (!parsed.success) {

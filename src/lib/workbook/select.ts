@@ -13,10 +13,7 @@
  */
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import {
-  generateWorkbookAssignment,
-  type GeneratedAssignment,
-} from "@/lib/workbook/generate";
+import { generateWorkbookAssignment, type GeneratedAssignment } from "@/lib/workbook/generate";
 
 export type WorkbookAssignment = {
   id: string;
@@ -130,16 +127,14 @@ export async function rotateAssignment({
   }
 
   // Mark the chosen assignment as seen so subsequent rotates don't repeat.
-  await supabase
-    .from("workbook_assignment_seen")
-    .upsert(
-      {
-        user_id: userId,
-        assignment_id: assignment.id,
-        lesson_id: lessonId,
-      },
-      { onConflict: "user_id,assignment_id" },
-    );
+  await supabase.from("workbook_assignment_seen").upsert(
+    {
+      user_id: userId,
+      assignment_id: assignment.id,
+      lesson_id: lessonId,
+    },
+    { onConflict: "user_id,assignment_id" }
+  );
 
   return { assignment, generated };
 }

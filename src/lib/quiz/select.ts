@@ -105,7 +105,7 @@ export async function selectQuizItemsForUser({
     }));
 
     const gap = count - served.length;
-    const maxSort = Math.max(0, ...((allItems ?? []).map((r) => r.sort)));
+    const maxSort = Math.max(0, ...(allItems ?? []).map((r) => r.sort));
 
     let aiItems: GeneratedQuizItem[] = [];
     try {

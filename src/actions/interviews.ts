@@ -3,10 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import {
-  generateInterviewScenarios,
-  type GeneratedScenario,
-} from "@/lib/interviews/generate";
+import { generateInterviewScenarios, type GeneratedScenario } from "@/lib/interviews/generate";
 import type { ActionResult } from "@/lib/types";
 
 const RefreshSchema = z.object({
@@ -30,7 +27,7 @@ export type RefreshScenariosData = {
  * learners benefit from any single user's refresh.
  */
 export async function generateMoreScenarios(
-  input: RefreshScenariosInput = {},
+  input: RefreshScenariosInput = {}
 ): Promise<ActionResult<RefreshScenariosData>> {
   const parsed = RefreshSchema.safeParse(input);
   if (!parsed.success) {

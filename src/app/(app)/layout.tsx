@@ -43,10 +43,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               Profile
             </Link>
             {isAdmin ? (
-              <Link
-                href="/admin/lessons"
-                className="mono-link text-[hsl(var(--accent))]"
-              >
+              <Link href="/admin/lessons" className="mono-link text-[hsl(var(--accent))]">
                 Admin
               </Link>
             ) : null}

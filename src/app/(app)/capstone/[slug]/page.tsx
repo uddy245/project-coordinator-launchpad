@@ -2,10 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/require-user";
 import { createClient } from "@/lib/supabase/server";
-import {
-  CapstoneWorkspace,
-  type ArtifactSlot,
-} from "@/components/capstone/capstone-workspace";
+import { CapstoneWorkspace, type ArtifactSlot } from "@/components/capstone/capstone-workspace";
 
 export const metadata = { title: "Capstone — Launchpad" };
 export const dynamic = "force-dynamic";
@@ -31,9 +28,7 @@ export default async function CapstoneScenarioPage({
 
   const { data: scenario } = await supabase
     .from("capstone_scenarios")
-    .select(
-      "id, slug, title, brief, required_artifacts, estimated_hours, is_published",
-    )
+    .select("id, slug, title, brief, required_artifacts, estimated_hours, is_published")
     .eq("slug", slug)
     .maybeSingle();
 
@@ -55,9 +50,7 @@ export default async function CapstoneScenarioPage({
         .eq("attempt_id", attempt.id)
     : { data: [] as Array<{ kind: string; file_name: string; created_at: string }> };
 
-  const artifactByKind = new Map(
-    (artifacts ?? []).map((a) => [a.kind, a]),
-  );
+  const artifactByKind = new Map((artifacts ?? []).map((a) => [a.kind, a]));
 
   const required = (scenario.required_artifacts ?? []) as string[];
   const artifactSlots: ArtifactSlot[] = required.map((kind) => {
@@ -77,11 +70,9 @@ export default async function CapstoneScenarioPage({
           ← Capstone overview
         </Link>
         <span className="kicker mt-3 block">CAPSTONE · {scenario.slug.toUpperCase()}</span>
-        <h1 className="display-title mt-2 text-[2rem] sm:text-[2.4rem]">
-          {scenario.title}
-        </h1>
+        <h1 className="display-title mt-2 text-[2rem] sm:text-[2.4rem]">{scenario.title}</h1>
         {scenario.estimated_hours ? (
-          <p className="mt-2 kicker">
+          <p className="kicker mt-2">
             Estimated effort · {scenario.estimated_hours} hours over 1–2 weeks
           </p>
         ) : null}
@@ -98,20 +89,15 @@ export default async function CapstoneScenarioPage({
         <header>
           <h2 className="display-title text-xl">Your submission</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Upload each artifact independently. Replace any of them at any time
-            until you submit. The capstone is graded as a single package.
+            Upload each artifact independently. Replace any of them at any time until you submit.
+            The capstone is graded as a single package.
           </p>
         </header>
         <CapstoneWorkspace
           scenarioSlug={scenario.slug}
           attemptId={attempt?.id ?? null}
           attemptStatus={
-            (attempt?.status ?? null) as
-              | "in_progress"
-              | "submitted"
-              | "graded"
-              | "withdrawn"
-              | null
+            (attempt?.status ?? null) as "in_progress" | "submitted" | "graded" | "withdrawn" | null
           }
           artifactSlots={artifactSlots}
         />

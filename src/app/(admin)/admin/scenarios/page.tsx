@@ -48,11 +48,7 @@ export default async function AdminScenariosPage() {
       ) : (
         <div className="space-y-2">
           {scenarios.map((s) => (
-            <Link
-              key={s.id}
-              href={`/admin/scenarios/${s.slug}`}
-              className="tile block p-4"
-            >
+            <Link key={s.id} href={`/admin/scenarios/${s.slug}`} className="tile block p-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="kicker">{s.slug.toUpperCase()}</span>
                 <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-[hsl(var(--accent))]">

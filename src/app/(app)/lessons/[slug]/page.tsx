@@ -66,11 +66,7 @@ export default async function LessonPage({
       >
         {active === "video" && <VideoPanel lessonSlug={slug} />}
         {active === "read" && (
-          <ReadPanel
-            lessonSlug={slug}
-            lessonNumber={lesson.number}
-            lessonTitle={lessonTitle}
-          />
+          <ReadPanel lessonSlug={slug} lessonNumber={lesson.number} lessonTitle={lessonTitle} />
         )}
         {active === "workbook" && <WorkbookPanel lessonSlug={slug} lessonTitle={lessonTitle} />}
         {active === "quiz" && <QuizPanel lessonSlug={slug} />}

@@ -76,7 +76,7 @@ const FOUNDATION_TOTAL = FOUNDATION_SLUGS.length;
 export function computeGateSummary(
   row: GateStatusRow | null | undefined,
   foundation?: FoundationProgress | null,
-  interview?: InterviewProgress | null,
+  interview?: InterviewProgress | null
 ): GateSummary {
   const count = row?.portfolio_artifacts_count ?? 0;
   const target = row?.portfolio_artifacts_target ?? 7;
@@ -97,7 +97,7 @@ export function computeGateSummary(
 }
 
 function computeInterview(
-  interview: InterviewProgress | null | undefined,
+  interview: InterviewProgress | null | undefined
 ): GateSummary["interview"] {
   if (!interview || interview.total === 0) {
     return {
@@ -124,7 +124,7 @@ function computeInterview(
 }
 
 function computeFoundation(
-  foundation: FoundationProgress | null | undefined,
+  foundation: FoundationProgress | null | undefined
 ): GateSummary["foundation"] {
   if (!foundation) {
     return {

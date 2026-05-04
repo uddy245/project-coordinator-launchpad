@@ -61,12 +61,12 @@ Quality bar:
 No preamble, no markdown, no code fences — output ONLY the JSON array.`;
 
 export async function generateInterviewScenarios(
-  args: GenerateScenariosArgs,
+  args: GenerateScenariosArgs
 ): Promise<GeneratedScenario[]> {
   const spend = await checkSpendCap(createAdminClient());
   if (!spend.ok) {
     throw new Error(
-      `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`,
+      `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`
     );
   }
 
@@ -90,9 +90,7 @@ export async function generateInterviewScenarios(
     ]);
 
   const slugList = (existingSlugs ?? []).map((r) => r.slug).join(", ");
-  const promptList = (recentPrompts ?? [])
-    .map((r, i) => `${i + 1}. ${r.prompt}`)
-    .join("\n");
+  const promptList = (recentPrompts ?? []).map((r, i) => `${i + 1}. ${r.prompt}`).join("\n");
   const startSort = (maxSortRow?.sort ?? 0) + 1;
 
   const steerLines: string[] = [];
@@ -136,15 +134,13 @@ Output the JSON array now.`;
   try {
     parsed = JSON.parse(cleaned);
   } catch {
-    throw new Error(
-      `Scenario generator returned non-JSON output: ${raw.slice(0, 200)}`,
-    );
+    throw new Error(`Scenario generator returned non-JSON output: ${raw.slice(0, 200)}`);
   }
 
   const validated = z.array(ScenarioSchema).min(1).safeParse(parsed);
   if (!validated.success) {
     throw new Error(
-      `Generated scenarios failed validation: ${validated.error.issues[0]?.message ?? "unknown"}`,
+      `Generated scenarios failed validation: ${validated.error.issues[0]?.message ?? "unknown"}`
     );
   }
 
@@ -178,9 +174,7 @@ Output the JSON array now.`;
     .insert(rows)
     .select("id, slug, prompt, category, difficulty, competency, sort");
   if (insertErr || !inserted) {
-    throw new Error(
-      `Failed to insert generated scenarios: ${insertErr?.message ?? "unknown"}`,
-    );
+    throw new Error(`Failed to insert generated scenarios: ${insertErr?.message ?? "unknown"}`);
   }
 
   return inserted as GeneratedScenario[];

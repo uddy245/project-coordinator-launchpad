@@ -12,10 +12,7 @@
 import { anthropic, GRADING_MODEL } from "@/lib/anthropic/client";
 import { checkSpendCap } from "@/lib/grading/spend-guard";
 import { createAdminClient } from "@/lib/supabase/admin";
-import {
-  WorkbookAssignmentSchema,
-  type WorkbookAssignmentInput,
-} from "@/lib/workbook/schema";
+import { WorkbookAssignmentSchema, type WorkbookAssignmentInput } from "@/lib/workbook/schema";
 
 export type GenerateAssignmentArgs = {
   lessonId: string;
@@ -48,12 +45,12 @@ Quality bar:
 No preamble, no markdown code fence, no explanation outside the JSON.`;
 
 export async function generateWorkbookAssignment(
-  args: GenerateAssignmentArgs,
+  args: GenerateAssignmentArgs
 ): Promise<GeneratedAssignment> {
   const spend = await checkSpendCap(createAdminClient());
   if (!spend.ok) {
     throw new Error(
-      `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`,
+      `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`
     );
   }
 
@@ -75,9 +72,7 @@ export async function generateWorkbookAssignment(
       .maybeSingle(),
   ]);
 
-  const avoidList = (existingTitles ?? [])
-    .map((r, i) => `${i + 1}. ${r.title}`)
-    .join("\n");
+  const avoidList = (existingTitles ?? []).map((r, i) => `${i + 1}. ${r.title}`).join("\n");
   const startSort = (maxSortRow?.sort ?? 99) + 1;
 
   const userMessage = `Lesson: ${args.lessonTitle}
@@ -115,15 +110,13 @@ Generate ONE new workbook scenario. Output the JSON object now.`;
   try {
     parsed = JSON.parse(cleaned);
   } catch {
-    throw new Error(
-      `Workbook generator returned non-JSON output: ${raw.slice(0, 200)}`,
-    );
+    throw new Error(`Workbook generator returned non-JSON output: ${raw.slice(0, 200)}`);
   }
 
   const validated = WorkbookAssignmentSchema.safeParse(parsed);
   if (!validated.success) {
     throw new Error(
-      `Generated workbook assignment failed validation: ${validated.error.issues[0]?.message ?? "unknown"}`,
+      `Generated workbook assignment failed validation: ${validated.error.issues[0]?.message ?? "unknown"}`
     );
   }
 
@@ -150,7 +143,7 @@ Generate ONE new workbook scenario. Output the JSON object now.`;
     .single();
   if (insertErr || !inserted) {
     throw new Error(
-      `Failed to insert generated workbook assignment: ${insertErr?.message ?? "unknown"}`,
+      `Failed to insert generated workbook assignment: ${insertErr?.message ?? "unknown"}`
     );
   }
 

@@ -111,9 +111,7 @@ export function ScenarioForm({
               min={0}
               max={9999}
               value={values.sort}
-              onChange={(e) =>
-                set("sort", e.target.value === "" ? "" : Number(e.target.value))
-              }
+              onChange={(e) => set("sort", e.target.value === "" ? "" : Number(e.target.value))}
               required
             />
           </Field>
@@ -156,7 +154,11 @@ export function ScenarioForm({
 
       <fieldset className="space-y-4 border-t border-rule pt-6">
         <legend className="kicker mb-2">Prompt</legend>
-        <Field label="Prompt text" hint="The scenario the learner sees. Specific, role-grounded, 100–500 words." required>
+        <Field
+          label="Prompt text"
+          hint="The scenario the learner sees. Specific, role-grounded, 100–500 words."
+          required
+        >
           <textarea
             className="flex min-h-[180px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             value={values.prompt}
@@ -166,7 +168,10 @@ export function ScenarioForm({
             maxLength={4000}
           />
         </Field>
-        <Field label="Rubric summary" hint="Optional. What you're looking for in a strong answer — used as grader context.">
+        <Field
+          label="Rubric summary"
+          hint="Optional. What you're looking for in a strong answer — used as grader context."
+        >
           <textarea
             className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             value={values.rubric_summary}
@@ -178,7 +183,7 @@ export function ScenarioForm({
 
       <fieldset className="space-y-4 border-t border-rule pt-6">
         <legend className="kicker mb-2">Visibility</legend>
-        <label className="flex items-start gap-3 cursor-pointer select-none">
+        <label className="flex cursor-pointer select-none items-start gap-3">
           <input
             type="checkbox"
             className="mt-1 h-4 w-4"

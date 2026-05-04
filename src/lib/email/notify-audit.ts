@@ -33,9 +33,7 @@ export async function notifyAuditDecision(args: AuditNotifyArgs): Promise<void> 
 
     const { data: sub } = await admin
       .from("submissions")
-      .select(
-        "id, user_id, overall_score, lesson:lessons(slug, title, competency)",
-      )
+      .select("id, user_id, overall_score, lesson:lessons(slug, title, competency)")
       .eq("id", queueRow.submission_id)
       .maybeSingle();
     if (!sub?.user_id) return;

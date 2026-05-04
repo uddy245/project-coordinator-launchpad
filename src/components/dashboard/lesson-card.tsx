@@ -41,13 +41,9 @@ export function LessonCard({
         {/* Module code column */}
         <div className="col-span-12 border-b border-rule p-5 sm:col-span-2 sm:border-b-0 sm:border-r">
           <div className="kicker text-[0.7rem]">Module</div>
-          <div className="data-numeral mt-1 text-[2rem] leading-none text-ink">
-            {moduleCode}
-          </div>
+          <div className="data-numeral mt-1 text-[2rem] leading-none text-ink">{moduleCode}</div>
           {estimatedMinutes ? (
-            <div className="mt-3 text-xs text-muted-foreground">
-              {estimatedMinutes} min
-            </div>
+            <div className="mt-3 text-xs text-muted-foreground">{estimatedMinutes} min</div>
           ) : null}
         </div>
 
@@ -65,9 +61,7 @@ export function LessonCard({
           </div>
           <h3 className="display-title text-[1.35rem] sm:text-[1.55rem]">{title}</h3>
           {summary ? (
-            <p className="text-[0.95rem] leading-relaxed text-muted-foreground">
-              {summary}
-            </p>
+            <p className="text-[0.95rem] leading-relaxed text-muted-foreground">{summary}</p>
           ) : null}
         </div>
 

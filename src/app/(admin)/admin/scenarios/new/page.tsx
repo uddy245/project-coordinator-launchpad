@@ -1,8 +1,5 @@
 import Link from "next/link";
-import {
-  ScenarioForm,
-  EMPTY_SCENARIO_DEFAULTS,
-} from "@/components/admin/scenario-form";
+import { ScenarioForm, EMPTY_SCENARIO_DEFAULTS } from "@/components/admin/scenario-form";
 
 export const metadata = { title: "New scenario — Admin" };
 

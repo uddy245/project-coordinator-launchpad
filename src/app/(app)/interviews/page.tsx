@@ -39,7 +39,7 @@ export default async function InterviewsPage() {
     .select("scenario_id, status, overall_score, pass")
     .eq("user_id", user.id);
   const responses = new Map(
-    ((responsesData ?? []) as ResponseRow[]).map((r) => [r.scenario_id, r]),
+    ((responsesData ?? []) as ResponseRow[]).map((r) => [r.scenario_id, r])
   );
 
   const passedCount = scenarios.filter((s) => responses.get(s.id)?.pass === true).length;
@@ -52,25 +52,32 @@ export default async function InterviewsPage() {
           Practise the conversations that get you hired.
         </h1>
         <p className="mt-3 max-w-2xl text-base text-muted-foreground">
-          Behavioural, procedural, and judgment prompts grounded in real
-          coordinator situations. Type your response — Claude grades it
-          against the same dimension your modules build.
+          Behavioural, procedural, and judgment prompts grounded in real coordinator situations.
+          Type your response — Claude grades it against the same dimension your modules build.
         </p>
       </header>
 
       <section className="grid grid-cols-2 gap-px bg-rule lg:grid-cols-4">
-        <Stat label="Scenarios" value={String(scenarios.length).padStart(2, "0")} hint="Published" />
-        <Stat label="Passed" value={String(passedCount).padStart(2, "0")} hint={`of ${scenarios.length}`} />
+        <Stat
+          label="Scenarios"
+          value={String(scenarios.length).padStart(2, "0")}
+          hint="Published"
+        />
+        <Stat
+          label="Passed"
+          value={String(passedCount).padStart(2, "0")}
+          hint={`of ${scenarios.length}`}
+        />
         <Stat
           label="Status"
-          value={passedCount >= scenarios.length && scenarios.length > 0 ? "Gate 3 cleared" : "In progress"}
+          value={
+            passedCount >= scenarios.length && scenarios.length > 0
+              ? "Gate 3 cleared"
+              : "In progress"
+          }
           hint="Career milestone"
         />
-        <Stat
-          label="Format"
-          value="Type"
-          hint="60-second rule of thumb · talk it out"
-        />
+        <Stat label="Format" value="Type" hint="60-second rule of thumb · talk it out" />
       </section>
 
       {scenarios.length === 0 ? (
@@ -89,11 +96,7 @@ export default async function InterviewsPage() {
           {scenarios.map((s) => {
             const r = responses.get(s.id);
             return (
-              <Link
-                key={s.id}
-                href={`/interviews/${s.id}`}
-                className="tile block p-5"
-              >
+              <Link key={s.id} href={`/interviews/${s.id}`} className="tile block p-5">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="kicker">{s.slug.toUpperCase()}</span>
                   <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-[hsl(var(--accent))]">
@@ -138,7 +141,11 @@ function StatusPip({ status }: { status: ResponseRow | undefined }) {
     );
   }
   if (status.status === "grading") {
-    return <span className="pip" data-status="in_progress">Grading…</span>;
+    return (
+      <span className="pip" data-status="in_progress">
+        Grading…
+      </span>
+    );
   }
   if (status.status === "grading_failed") {
     return <span className="pip">Try again</span>;

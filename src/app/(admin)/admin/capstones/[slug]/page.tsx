@@ -1,26 +1,21 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
-import {
-  CapstoneForm,
-  type CapstoneFormDefaults,
-} from "@/components/admin/capstone-form";
+import { CapstoneForm, type CapstoneFormDefaults } from "@/components/admin/capstone-form";
 
 export const metadata = { title: "Edit capstone — Admin" };
 export const dynamic = "force-dynamic";
 
-export default async function EditCapstonePage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function EditCapstonePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   if (slug === "new") notFound();
 
   const admin = createAdminClient();
   const { data } = await admin
     .from("capstone_scenarios")
-    .select("id, slug, title, brief, required_artifacts, estimated_hours, is_published, rubric_summary")
+    .select(
+      "id, slug, title, brief, required_artifacts, estimated_hours, is_published, rubric_summary"
+    )
     .eq("slug", slug)
     .maybeSingle();
 

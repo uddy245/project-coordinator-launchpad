@@ -280,9 +280,7 @@ async function notifyGradingComplete(
   try {
     const { data: row } = await supabase
       .from("submissions")
-      .select(
-        "id, user_id, lesson:lessons(slug, title), profile:profiles!inner(full_name)",
-      )
+      .select("id, user_id, lesson:lessons(slug, title), profile:profiles!inner(full_name)")
       .eq("id", submissionId)
       .maybeSingle();
     if (!row?.user_id) return;

@@ -17,7 +17,7 @@ export function renderWelcome(vars: WelcomeVars): EmailRender {
     { type: "h", text: "Your next move" },
     {
       type: "p",
-      text: "Module 01 — \"What a Project Coordinator Actually Does\" — is the place to start. About 45 minutes end-to-end including the quiz.",
+      text: 'Module 01 — "What a Project Coordinator Actually Does" — is the place to start. About 45 minutes end-to-end including the quiz.',
     },
     { type: "cta", label: "Open Module 01 →", url: `${appUrl()}/lessons/coordinator-role` },
     { type: "rule" },

@@ -9,7 +9,11 @@ import { gradeMockInterviewResponse } from "@/lib/grading/mock-interview";
 
 const SubmitSchema = z.object({
   scenarioId: z.string().uuid(),
-  responseText: z.string().trim().min(80, "A 80-character minimum keeps Claude's grade meaningful").max(8000),
+  responseText: z
+    .string()
+    .trim()
+    .min(80, "A 80-character minimum keeps Claude's grade meaningful")
+    .max(8000),
 });
 
 export type SubmitMockInterviewInput = z.input<typeof SubmitSchema>;
@@ -22,9 +26,7 @@ export type SubmitMockInterviewInput = z.input<typeof SubmitSchema>;
  * Claude call returns in a few seconds, and skipping a worker route
  * keeps the surface area small for this MVP.
  */
-export async function submitMockInterview(
-  input: SubmitMockInterviewInput
-): Promise<
+export async function submitMockInterview(input: SubmitMockInterviewInput): Promise<
   ActionResult<{
     responseId: string;
     status: "graded" | "grading_failed";

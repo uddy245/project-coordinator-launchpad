@@ -38,8 +38,7 @@ export default function GlobalError({
         <div style={{ maxWidth: 520, width: "100%" }}>
           <p
             style={{
-              fontFamily:
-                "'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace",
+              fontFamily: "'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace",
               fontSize: 11,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
@@ -69,9 +68,8 @@ export default function GlobalError({
               margin: "0 0 24px",
             }}
           >
-            The error has been logged and we&apos;ll look into it. Try reloading
-            the page — if the problem persists, sign back in or open the
-            dashboard fresh.
+            The error has been logged and we&apos;ll look into it. Try reloading the page — if the
+            problem persists, sign back in or open the dashboard fresh.
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button

@@ -46,11 +46,7 @@ export default async function AdminCapstonesPage() {
       ) : (
         <div className="space-y-2">
           {capstones.map((c) => (
-            <Link
-              key={c.id}
-              href={`/admin/capstones/${c.slug}`}
-              className="tile block p-4"
-            >
+            <Link key={c.id} href={`/admin/capstones/${c.slug}`} className="tile block p-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="kicker">{c.slug.toUpperCase()}</span>
                 {c.is_published ? (
@@ -68,7 +64,8 @@ export default async function AdminCapstonesPage() {
                   </span>
                 ) : null}
                 <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
-                  {c.required_artifacts.length} artifact{c.required_artifacts.length === 1 ? "" : "s"}
+                  {c.required_artifacts.length} artifact
+                  {c.required_artifacts.length === 1 ? "" : "s"}
                 </span>
               </div>
               <h3 className="display-title mt-2 text-[1.15rem]">{c.title}</h3>
