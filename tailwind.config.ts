@@ -9,7 +9,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
+        reading: ["var(--font-reading-body)", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+      },
+      letterSpacing: {
+        kicker: "0.18em",
+        masthead: "0.22em",
+      },
       colors: {
+        ink: "hsl(var(--ink))",
+        paper: "hsl(var(--paper))",
+        rule: "hsl(var(--rule))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

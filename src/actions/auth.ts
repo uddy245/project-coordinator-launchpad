@@ -5,6 +5,8 @@ import { z } from "zod";
 import { env } from "@/env";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/types";
+import { sendEmail } from "@/lib/email/send";
+import { renderWelcome } from "@/lib/email/templates/welcome";
 
 const SignUpSchema = z.object({
   email: z
@@ -13,6 +15,10 @@ const SignUpSchema = z.object({
     .transform((v) => v.toLowerCase().trim()),
   password: z.string().min(8, "Password must be at least 8 characters"),
   fullName: z.string().trim().optional(),
+  // Funnel attribution — populated by the signup page from the URL ?ref=
+  // query param (e.g. "preview-coordinator-role"). Sanitised at the page
+  // layer; we still constrain length here as a safety net.
+  signupSource: z.string().trim().max(80).optional().nullable(),
 });
 
 const SignInSchema = z.object({
@@ -39,10 +45,14 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
   }
 
   const supabase = await createClient();
+  const userMeta: Record<string, string> = {};
+  if (parsed.data.fullName) userMeta.full_name = parsed.data.fullName;
+  if (parsed.data.signupSource) userMeta.signup_source = parsed.data.signupSource;
+
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
-    options: parsed.data.fullName ? { data: { full_name: parsed.data.fullName } } : undefined,
+    options: Object.keys(userMeta).length > 0 ? { data: userMeta } : undefined,
   });
 
   if (error) {
@@ -55,6 +65,16 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
     }
     return { ok: false, error: error.message, code: "UNKNOWN" };
   }
+
+  // Welcome email — fire-and-forget. Silent so a Resend hiccup never breaks
+  // signup itself; the welcome is a nice-to-have, not a blocker.
+  const firstName = parsed.data.fullName?.split(/\s+/)[0]?.trim() || null;
+  void sendEmail({
+    to: { email: parsed.data.email, name: parsed.data.fullName ?? null },
+    render: renderWelcome({ firstName }),
+    silent: true,
+    tag: "welcome",
+  });
 
   // If Supabase has email confirmation enabled, no session is returned.
   // The form branches on this to show a "check your email" state instead

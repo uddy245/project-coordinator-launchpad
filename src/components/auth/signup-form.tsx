@@ -19,7 +19,13 @@ const SignupSchema = z.object({
 
 type SignupValues = z.infer<typeof SignupSchema>;
 
-export function SignupForm({ redirectTo = "/dashboard" }: { redirectTo?: string }) {
+export function SignupForm({
+  redirectTo = "/dashboard",
+  signupSource = null,
+}: {
+  redirectTo?: string;
+  signupSource?: string | null;
+}) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
@@ -37,7 +43,7 @@ export function SignupForm({ redirectTo = "/dashboard" }: { redirectTo?: string 
   function onSubmit(values: SignupValues) {
     setSubmitting(true);
     startTransition(async () => {
-      const result = await signUp(values);
+      const result = await signUp({ ...values, signupSource });
       setSubmitting(false);
       if (!result.ok) {
         toast.error(result.error);

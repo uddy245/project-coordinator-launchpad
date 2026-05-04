@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArtifactUploader } from "@/components/grading/artifact-uploader";
 import { SubmissionHistory } from "@/components/grading/submission-history";
+import { WorkbookScenarioCard } from "@/components/lessons/workbook-scenario-card";
 import { createClient } from "@/lib/supabase/server";
-import { templatesFor, type Template } from "@/lib/lessons/templates";
+import { templatesForAsync, type Template } from "@/lib/lessons/templates";
+import { getCurrentAssignment } from "@/lib/workbook/select";
 
 export async function WorkbookPanel({
   lessonSlug,
@@ -11,19 +13,38 @@ export async function WorkbookPanel({
   lessonSlug: string;
   lessonTitle: string;
 }) {
-  const templates = templatesFor(lessonSlug);
+  const supabase = await createClient();
+  const templates = await templatesForAsync(supabase, lessonSlug);
   const starter = templates.find((t) => t.kind === "starter");
   const examples = templates.filter((t) => t.kind === "example");
 
-  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const { data: lesson } = await supabase
     .from("lessons")
     .select("id")
     .eq("slug", lessonSlug)
     .maybeSingle();
 
+  // Current scenario for this user — falls back to lesson default, or null
+  // if nothing's been seeded yet (the card surfaces a Generate CTA in that case).
+  const currentAssignment =
+    user && lesson
+      ? await getCurrentAssignment({
+          supabase,
+          userId: user.id,
+          lessonId: lesson.id,
+        })
+      : null;
+
   return (
     <div className="space-y-6">
+      {user ? (
+        <WorkbookScenarioCard lessonSlug={lessonSlug} initialAssignment={currentAssignment} />
+      ) : null}
+
       <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           Your template

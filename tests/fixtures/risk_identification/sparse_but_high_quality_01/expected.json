@@ -1,0 +1,15 @@
+{
+  "fixture_id": "sparse_but_high_quality_01",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 3, "tolerance": 2 },
+    "risk_differentiation": { "score": 5, "tolerance": 1 },
+    "mitigation_realism": { "score": 5, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 5, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.6,
+  "expected_pass": false,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "DELIBERATELY DIMENSIONAL-INVERSION FIXTURE. The submission is sparse — only 3 risks, 1 assumption, 1 issue, 1 dependency (6 items vs the 8-15 the scenario requested). That is a clear completeness floor (3/5: covers vendor deprecation, scope creep, leave coverage as risks; misses scope-creep-from-prior-three-endpoints, integration-test-coverage, and similar items the scenario implies). HOWEVER every item present is exceptional: specific dates, named owners with named backups, version-controlled change log with v1/v2/v3, closed item with resolution evidence, escalated item with incident report reference, dependency with both internal and external owners and a coordination cadence. Tests whether the grader can score completeness LOW while scoring differentiation/mitigation/ownership/living_artifact at ceiling. Common drift: halo-averaging every dim down because the artifact is short. expected_pass=false (rubric: any dim under 3 → fail) is borderline — completeness is exactly at 3 — but expected_hire_ready=true because the overall (4.6) clears the bar and the qualitative profile matches a competent coordinator who undershot on quantity, not quality. Per-dim tolerance kept at 1 for the four ceiling dims because the structural signals are unambiguous; completeness allowed 1 because 2-vs-3 is a judgment call (some graders may read 'sparse' as floor)."
+}

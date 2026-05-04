@@ -4,26 +4,46 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Career Programme palette — university × office.
+       Navy ink. Crisp white. Single confident amber accent.
+       Status colors only where they earn their place. */
+    --background: 0 0% 100%; /* crisp white */
+    --paper: 210 16% 99%; /* faintest cool tint for tiles */
+    --foreground: 215 30% 12%; /* navy ink */
+    --ink: 215 30% 12%;
+    --rule: 215 14% 88%; /* cool neutral divider */
+
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 30% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --popover-foreground: 215 30% 12%;
+
+    /* Primary action — deep navy ink (institutional) */
+    --primary: 215 30% 12%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 14% 96%;
+    --secondary-foreground: 215 30% 12%;
+
+    --muted: 215 14% 96%;
+    --muted-foreground: 215 12% 38%;
+
+    /* Accent — confident amber (achievement / focus / current) */
+    --accent: 38 86% 42%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Status — used in pips and progress markers, not as decoration */
+    --status-progress: 38 86% 42%;
+    --status-complete: 152 56% 32%;
+    --status-locked: 215 12% 65%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 14% 88%;
+    --input: 215 14% 86%;
+    --ring: 38 86% 42%;
+    --radius: 0.25rem;
   }
 
   .dark {
@@ -55,5 +75,364 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings:
+      "kern" 1,
+      "ss01" 1;
   }
+  ::selection {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Editorial primitives — small reusable building blocks used across pages.
+   Class API rather than Tailwind utilities to keep markup readable.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* CODE / KICKER — small mono label. Used for module codes, meta, kickers. */
+.kicker {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+/* DISPLAY HEADING — institutional serif. Used for page titles. */
+.display-title {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  color: hsl(var(--ink));
+}
+
+/* SECTION RULE */
+.section-rule {
+  border: 0;
+  border-top: 1px solid hsl(var(--rule));
+}
+
+/* PROGRAMME TILE — structured tile with hover lift + amber accent on hover */
+.tile {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--rule));
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+.tile:hover {
+  border-color: hsl(var(--ink));
+  box-shadow:
+    0 1px 0 hsl(var(--ink) / 0.04),
+    0 8px 24px -12px hsl(var(--ink) / 0.18);
+}
+.tile[data-current="true"] {
+  border-color: hsl(var(--accent));
+  border-left-width: 3px;
+}
+
+/* MONO LINK — for nav and meta links */
+.mono-link {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.76rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: hsl(var(--muted-foreground));
+  transition: color 0.16s ease;
+  font-variant-numeric: tabular-nums;
+}
+.mono-link:hover {
+  color: hsl(var(--ink));
+}
+.mono-link[data-active="true"] {
+  color: hsl(var(--ink));
+}
+
+/* STATUS PIP — semantic colour, not magazine red. */
+.pip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+.pip::before {
+  content: "";
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: hsl(var(--status-locked));
+}
+.pip[data-status="in_progress"] {
+  color: hsl(var(--status-progress));
+}
+.pip[data-status="in_progress"]::before {
+  background: hsl(var(--status-progress));
+  box-shadow: 0 0 0 3px hsl(var(--status-progress) / 0.15);
+}
+.pip[data-status="completed"] {
+  color: hsl(var(--status-complete));
+}
+.pip[data-status="completed"]::before {
+  background: hsl(var(--status-complete));
+}
+
+/* PROGRESS BAR — thin programme-tracker bar */
+.track {
+  height: 3px;
+  background: hsl(var(--rule));
+  position: relative;
+  overflow: hidden;
+}
+.track > .track-fill {
+  position: absolute;
+  inset: 0;
+  background: hsl(var(--ink));
+  transform-origin: left center;
+  transition: transform 0.4s ease;
+}
+
+/* DATA NUMERAL — used for big stats / module counts */
+.data-numeral {
+  font-family: var(--font-display), serif;
+  font-feature-settings:
+    "tnum" 1,
+    "lnum" 1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Reader's Quarterly — typography for the Read tab.
+   Editorial / literary aesthetic. Warm cream paper, distinctive serif,
+   drop cap, ornamental dividers, optimal 64ch measure.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.read-paper {
+  /* Textbook reading — navy ink on white, amber for emphasis. */
+  --ink: #11161e;
+  --ink-soft: #2c3340;
+  --ink-mute: #6a7385;
+  --paper: #ffffff;
+  --paper-warm: #f5f7fa;
+  --rule: #d9dde4;
+  --accent: #b8801a; /* amber */
+  --accent-soft: #d9a751;
+
+  background: var(--paper);
+  color: var(--ink);
+  position: relative;
+  isolation: isolate;
+}
+
+/* The reading page */
+.read-prose {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-reading-body), Georgia, "Times New Roman", serif;
+  font-size: 1.125rem; /* 18px — textbook scale */
+  line-height: 1.7;
+  color: var(--ink);
+  font-feature-settings:
+    "kern" 1,
+    "liga" 1;
+  text-rendering: optimizeLegibility;
+}
+
+.read-prose p {
+  margin: 0 0 1.25em;
+}
+
+/* Section headings — institutional, numbered feel */
+.read-prose h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.55rem;
+  line-height: 1.25;
+  margin: 2.4em 0 0.7em;
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  padding-top: 1.4em;
+  border-top: 1px solid var(--rule);
+}
+.read-prose > h2:first-of-type {
+  margin-top: 1.6em;
+  padding-top: 1.4em;
+}
+
+.read-prose h3 {
+  font-family: var(--font-reading-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin: 1.8em 0 0.5em;
+}
+
+/* Pull-quote / blockquote */
+.read-prose blockquote {
+  font-family: var(--font-display), serif;
+  font-style: italic;
+  font-size: 1.18em;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 1.6em 0;
+  padding: 0.2em 0 0.2em 1.4em;
+  border-left: 3px solid var(--accent);
+}
+.read-prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Inline elements */
+.read-prose strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.read-prose em {
+  font-style: italic;
+  color: var(--ink-soft);
+}
+.read-prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(122, 31, 31, 0.4);
+  transition: text-decoration-color 0.2s ease;
+}
+.read-prose a:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* Code */
+.read-prose code {
+  font-family: var(--font-reading-mono), ui-monospace, monospace;
+  font-size: 0.92em;
+  background: var(--paper-warm);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+  color: var(--ink);
+}
+.read-prose pre {
+  font-family: var(--font-reading-mono), ui-monospace, monospace;
+  background: var(--paper-warm);
+  padding: 1em 1.2em;
+  border-radius: 4px;
+  border-left: 2px solid var(--accent-soft);
+  font-size: 0.9em;
+  line-height: 1.55;
+  overflow-x: auto;
+  margin: 1.6em 0;
+}
+
+/* Lists — hanging punctuation feel */
+.read-prose ul,
+.read-prose ol {
+  margin: 1.2em 0 1.6em;
+  padding-left: 1.4em;
+}
+.read-prose li {
+  margin: 0.5em 0;
+  padding-left: 0.3em;
+}
+.read-prose ul li::marker {
+  color: var(--accent);
+  content: "—  ";
+}
+.read-prose ol li::marker {
+  font-family: var(--font-reading-mono), monospace;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.88em;
+}
+
+/* Tables — editorial style: only top/bottom rules, small-caps headers */
+.read-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.8em 0;
+  font-size: 0.96em;
+}
+.read-prose thead th {
+  font-family: var(--font-reading-mono), monospace;
+  font-size: 0.74em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
+  text-align: left;
+  padding: 0.6em 0.8em;
+  border-bottom: 1.5px solid var(--ink);
+}
+.read-prose tbody td {
+  padding: 0.7em 0.8em;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: var(--ink);
+}
+.read-prose tbody tr:last-child td {
+  border-bottom: 1.5px solid var(--ink);
+}
+
+/* Horizontal rule — clean academic divider */
+.read-prose hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2.4em 0;
+}
+
+/* Header strip — handout-style chapter label + title */
+.read-masthead {
+  font-family: var(--font-reading-mono), monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+}
+.read-title {
+  font-family: var(--font-display), serif;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  margin: 0.6em 0 0.2em;
+  font-weight: 600;
+}
+.read-rule {
+  border: 0;
+  border-top: 2px solid var(--ink);
+  margin: 0;
+}
+.read-thin-rule {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+.read-end-mark {
+  display: block;
+  margin: 3.2em 0 0.4em;
+  border-top: 1px solid var(--rule);
+  padding-top: 1.4em;
+  font-family: var(--font-reading-mono), ui-monospace, monospace;
+  font-size: 0.7rem;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-align: left;
 }

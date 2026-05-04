@@ -1,6 +1,27 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+/**
+ * Read process.env, coercing empty strings to undefined.
+ *
+ * Why: shells (e.g. Claude Desktop, certain IDE integrations) sometimes
+ * export `ANTHROPIC_API_KEY=""` or other empty values, and Next.js's
+ * .env.local loader does NOT override existing process.env entries —
+ * even if those entries are empty strings. The empty string then passes
+ * `.optional()` (because it's still a string), and required keys like
+ * `.min(1)` fail with a confusing message at module-eval time.
+ *
+ * Coercing empty → undefined makes `.optional()` fall through to defaults,
+ * and `.min(1)` produces a clear "Required" error if the value really is
+ * missing. Either way, .env.local "wins" against an empty shell var,
+ * because t3-env reads process.env via this helper after Next.js has
+ * already merged .env.local in.
+ */
+function E(key: string): string | undefined {
+  const v = process.env[key];
+  return v === undefined || v === "" ? undefined : v;
+}
+
 export const env = createEnv({
   onValidationError: (error) => {
     throw new Error(`Invalid environment variables: ${error.message}`);
@@ -25,10 +46,17 @@ export const env = createEnv({
 
     // Email
     RESEND_API_KEY: z.string().optional(),
+    // Allow either plain email or "Display Name <addr@domain>" format.
+    RESEND_FROM_EMAIL: z.string().min(3).default("Launchpad <onboarding@resend.dev>"),
 
     // Internal: shared secret the server action uses to trigger the
     // grading worker route without being impersonable by third parties.
     GRADE_WORKER_SECRET: z.string().min(32),
+
+    // Sentry — server-side DSN. NEXT_PUBLIC_SENTRY_DSN below is the
+    // browser-side equivalent. Both default to undefined; when unset,
+    // Sentry init is a no-op.
+    SENTRY_DSN: z.string().optional(),
   },
 
   client: {
@@ -49,24 +77,26 @@ export const env = createEnv({
   },
 
   runtimeEnv: {
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
-    ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
-    ANTHROPIC_MODEL: process.env.ANTHROPIC_MODEL,
-    ANTHROPIC_SPEND_CAP_USD: process.env.ANTHROPIC_SPEND_CAP_USD,
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-    STRIPE_PRICE_ID: process.env.STRIPE_PRICE_ID,
-    BUNNY_STREAM_LIBRARY_ID: process.env.BUNNY_STREAM_LIBRARY_ID,
-    BUNNY_STREAM_API_KEY: process.env.BUNNY_STREAM_API_KEY,
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
-    GRADE_WORKER_SECRET: process.env.GRADE_WORKER_SECRET,
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
-    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    SUPABASE_SERVICE_ROLE_KEY: E("SUPABASE_SERVICE_ROLE_KEY"),
+    ANTHROPIC_API_KEY: E("ANTHROPIC_API_KEY"),
+    ANTHROPIC_MODEL: E("ANTHROPIC_MODEL"),
+    ANTHROPIC_SPEND_CAP_USD: E("ANTHROPIC_SPEND_CAP_USD"),
+    STRIPE_SECRET_KEY: E("STRIPE_SECRET_KEY"),
+    STRIPE_WEBHOOK_SECRET: E("STRIPE_WEBHOOK_SECRET"),
+    STRIPE_PRICE_ID: E("STRIPE_PRICE_ID"),
+    BUNNY_STREAM_LIBRARY_ID: E("BUNNY_STREAM_LIBRARY_ID"),
+    BUNNY_STREAM_API_KEY: E("BUNNY_STREAM_API_KEY"),
+    RESEND_API_KEY: E("RESEND_API_KEY"),
+    RESEND_FROM_EMAIL: E("RESEND_FROM_EMAIL"),
+    GRADE_WORKER_SECRET: E("GRADE_WORKER_SECRET"),
+    SENTRY_DSN: E("SENTRY_DSN"),
+    NEXT_PUBLIC_SUPABASE_URL: E("NEXT_PUBLIC_SUPABASE_URL"),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: E("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: E("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"),
+    NEXT_PUBLIC_APP_URL: E("NEXT_PUBLIC_APP_URL"),
+    NEXT_PUBLIC_POSTHOG_KEY: E("NEXT_PUBLIC_POSTHOG_KEY"),
+    NEXT_PUBLIC_POSTHOG_HOST: E("NEXT_PUBLIC_POSTHOG_HOST"),
+    NEXT_PUBLIC_SENTRY_DSN: E("NEXT_PUBLIC_SENTRY_DSN"),
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
