@@ -8,7 +8,7 @@
 
 import { env } from "@/env";
 
-const APP_URL = env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
+const APP_URL = (env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
 const PALETTE = {
   ink: "#11161e",
