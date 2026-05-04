@@ -4,6 +4,12 @@ You are working on the Project Coordinator Launchpad, an AI-powered training
 app that takes users from zero to hire-ready as a Project Coordinator via
 video lessons, graded artifacts, and a calibrated AI grading pipeline.
 
+## Start of every session
+**Before anything else, read `docs/PUNCH_LIST.md`.** It's the live tracker
+of what's left to ship. Summarise the open items to the user so they know
+where we left off. Tick boxes and move lines to "Recently shipped" the
+moment work lands on `main`.
+
 ## Stack
 - Next.js 16 (App Router) with TypeScript — note: Next.js 16 renamed `middleware.ts` → `src/proxy.ts` with a named export `proxy` (not `middleware`)
 - Supabase (Postgres + Auth + Storage + Edge Functions) via `@supabase/ssr`
