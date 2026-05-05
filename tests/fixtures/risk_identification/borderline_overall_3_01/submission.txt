@@ -1,0 +1,46 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Prepared by: M. Okafor (PC) | Week of 2026-04-15
+
+RISKS
+R1 | Vendor API v2 deprecation 2026-07-10
+    Trigger: Vendor EOL email 2026-03-28.
+    Impact: High — patient lookup endpoint critical.
+    Likelihood: High.
+    Owner: J. Patel (Lead Eng, on leave). Backup: D. Huang.
+    Mitigation: Schedule migration spike post-leave. Vendor PS option being
+               scoped; SOW expected 2026-04-22.
+
+R2 | Scope expansion ask (Clinics B + C before stabilization)
+    Trigger: PO ask 2026-04-12.
+    Impact: High.
+    Likelihood: Medium.
+    Owner: K. Bell (PO).
+    Mitigation: Push back at 2026-04-19 steering with KPI data; propose
+               deferral to 2026-07-01.
+
+R3 | Engineer paternity leave coverage gap
+    Impact: Medium. Likelihood: Certain.
+    Owner: L. Davies (Eng Manager).
+    Mitigation: D. Huang cross-trained; on-call active.
+
+R4 | HL7 lab feed instability
+    Impact: Medium. Likelihood: High.
+    Owner: R. Silva.
+    Mitigation: Auto-retry deployed; vendor diagnostic 2026-04-17.
+
+ISSUES
+I1 | 3 endpoints added mid-build, testing not planned
+    Owner: M. Okafor (PC). Action: QA plan by 2026-04-22.
+
+ASSUMPTIONS
+A1 | Vendor PS team will deliver migration on the SOW timeline.
+    Owner: J. Patel. Validation: weekly status.
+
+DEPENDENCIES
+D1 | Vendor migration support (linked R1).
+    Owner: T. Reyes (Vendor PM).
+
+D2 | Internal IT cutover support.
+    Owner: R. Silva.
+
+(Document version: v1. Will update for next steering after 2026-04-19.)

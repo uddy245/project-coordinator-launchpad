@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_05",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 2, "tolerance": 1 },
+    "risk_differentiation": { "score": 2, "tolerance": 1 },
+    "mitigation_realism": { "score": 3, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 3, "tolerance": 1 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 2.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "RISKS-ONLY FAILURE MODE. Submitter only filled the Risks section — no Assumptions, Issues, or Dependencies. The Risks themselves are scenario-specific and reasonably structured (better than novice_04), but the missing 75% of the framework is a major completeness/differentiation gap. Issues are the most obviously misfiled item — 'training behind schedule' and 'scope creep added 3 endpoints' have already materialised and belong in Issues, not Risks. Tests whether the grader weights the four-category structure as critical to differentiation. Mitigation/ownership are decent within the Risks shown. Risk_completeness expected 2 because items present have detail but framework is 1/4 complete; tolerance 1 because the gap is unambiguous."
+}

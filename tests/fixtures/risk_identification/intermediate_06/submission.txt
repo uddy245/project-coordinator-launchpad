@@ -1,0 +1,57 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Owner: PMO | Date: 2026-04-15 | Status: AMBER
+
+EXECUTIVE SUMMARY
+This RAID log captures cross-functional risks across the SDLC for the
+clinic A pilot integration, leveraging best-in-class PM frameworks to
+deliver enterprise-grade visibility into the project's risk posture.
+
+RISKS
+R1 | API integration risk
+    Description: Cross-cutting concerns across the vendor integration layer
+                 require holistic stakeholder alignment to operationalize.
+    Owner: Tech Lead
+    Mitigation: Leverage industry best practices and apply a phased
+               approach to risk reduction.
+
+R2 | Resource constraint risk
+    Description: Capacity dynamics in Q2 may impact velocity and throughput
+                 across the workstreams.
+    Owner: Eng Manager
+    Mitigation: Implement a strategic resource allocation framework.
+
+R3 | Stakeholder alignment risk
+    Description: Multi-stakeholder ecosystem requires synchronized
+                 communication touchpoints to drive convergence.
+    Owner: PO
+    Mitigation: Operationalize a robust stakeholder engagement model.
+
+R4 | Compliance risk
+    Description: Regulatory landscape evolution may necessitate
+                 reprioritization of compliance-related deliverables.
+    Owner: Compliance lead
+    Mitigation: Continuously align with regulatory frameworks.
+
+R5 | Quality risk
+    Description: End-to-end quality assurance across the SDLC requires
+                 a comprehensive QA strategy.
+    Owner: QA Lead
+    Mitigation: Embed QA into the DevSecOps pipeline.
+
+ISSUES
+I1 | Cross-functional alignment opportunity
+    Owner: PMO
+    Action: Conduct stakeholder synergy workshop.
+
+ASSUMPTIONS
+A1 | Cross-functional teams will operationalize agreed frameworks.
+A2 | Stakeholder ecosystem will remain aligned to delivery cadence.
+
+DEPENDENCIES
+D1 | Vendor ecosystem
+    Owner: Vendor relations
+D2 | Internal capability matrix
+    Owner: Capability lead
+
+KPIs: TBD
+RACI: see appendix (not attached)

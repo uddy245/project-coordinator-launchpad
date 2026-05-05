@@ -1,0 +1,31 @@
+RAID LOG — Healthcare Integration Pilot
+PC: T. Adeyemi | 2026-04-15
+
+RISKS
+R1 | Vendor API v2 deprecation 90 days out
+    Impact: High. Patient lookup endpoint affected.
+    Likelihood: High. Vendor confirmed.
+    Owner: Lead engineer (on leave). Backup: TBD.
+    Mitigation: Plan migration before sunset.
+
+R2 | Scope creep — 3 new endpoints added since kickoff
+    Impact: Medium. Could miss stabilization window.
+    Owner: Product owner.
+    Mitigation: Push back on additional endpoints until pilot stabilizes.
+
+R3 | Lead engineer on paternity leave 4 weeks
+    Impact: Medium. Slows down active work.
+    Owner: Engineering manager.
+    Mitigation: Cross-train backup engineer.
+
+R4 | Premature expansion to clinics B + C
+    Impact: High. Pilot KPIs not yet met.
+    Owner: Steering committee.
+    Mitigation: Bring data-backed case to defer expansion.
+
+R5 | Training behind schedule for clinic staff
+    Impact: Medium.
+    Owner: Training lead.
+    Mitigation: Add make-up sessions.
+
+(No Assumptions, Issues, or Dependencies sections in this version.)

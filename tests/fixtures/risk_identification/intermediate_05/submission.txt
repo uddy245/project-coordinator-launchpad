@@ -1,0 +1,52 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Prepared by: M. Okafor (PC) | Initial draft 2026-02-10 (kickoff)
+
+RISKS
+R1 | Vendor integration complexity
+    Description: Multiple endpoints to integrate with vendor API; potential for
+                 unexpected behavior at boundaries.
+    Impact: Medium
+    Owner: J. Patel (Lead Eng)
+    Mitigation: Investigating vendor documentation; will schedule architecture
+               review with vendor SE team.
+
+R2 | Scope ambiguity for clinic A pilot
+    Description: Pilot success criteria not fully defined at kickoff.
+    Impact: Medium
+    Owner: K. Bell (PO)
+    Mitigation: Finalize criteria with steering before build start.
+
+R3 | Resource availability
+    Description: Project team capacity uncertain over Q2.
+    Impact: Medium
+    Owner: L. Davies (Eng Manager)
+    Mitigation: Assess team capacity; escalate to leadership if gaps emerge.
+
+R4 | HL7 integration unknown complexity
+    Description: HL7 feeds may need additional adapter work.
+    Impact: Low-Medium
+    Owner: D. Huang (Eng)
+    Mitigation: Investigate during design phase.
+
+ISSUES
+I1 | Awaiting vendor SOW finalization
+    Owner: K. Bell
+    Action: Follow up with vendor account exec.
+
+ASSUMPTIONS
+A1 | Vendor will deliver v1 endpoints on time per kickoff timeline.
+    Owner: J. Patel.
+
+A2 | Clinic A staff training plan will be ready by build complete.
+    Owner: T. Njoku.
+
+DEPENDENCIES
+D1 | Vendor API access
+    Owner: C. Morales (Vendor SM)
+    Note: Awaiting access credentials.
+
+D2 | Internal IT for environment provisioning
+    Owner: R. Silva
+    Note: Tickets submitted.
+
+(End of log. No subsequent updates.)

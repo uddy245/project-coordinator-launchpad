@@ -1,0 +1,42 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+Owner: L. Jansen (PC) | Document version: v2
+v1: 2026-04-08 | v2: 2026-04-15 (this revision)
+
+===== RISKS =====
+
+R1 [OPEN, mitigation updated v1→v2]
+  Description: Vendor API v2 deprecation 2026-07-10; pilot uses v1 for patient
+    lookup + insurance eligibility. EOL announced 2026-03-28.
+  Trigger: Vendor EOL notice.
+  Impact: HIGH — check-in + billing both break.
+  Likelihood: HIGH (vendor confirmed; no extension granted).
+  Owner: J. Patel (Lead Eng) — out 2026-04-15 to 2026-05-13. Backup: D. Huang
+    (cross-trained 2026-04-04 to 2026-04-12, on-call active). Follow-up 04-26.
+  Mitigation: (v1) flagged for investigation. (v2) Migration spike approved
+    2026-04-13; PS SOW signed 2026-04-14, $18k; kickoff 2026-05-14; cutover
+    dry-run 2026-06-12. In-house backup plan if PS slips: D. Huang lead, est.
+    6 weeks, no incremental cost.
+
+===== ISSUES =====
+
+I1 [OPEN, escalated v1→v2]
+  Description: HL7 lab feed dropping 2-3x/week since 2026-04-02.
+  Impact: HIGH (upgraded from MEDIUM after 2026-04-13 missed-result incident
+    INC-2026-014; clinical team flagged patient-care impact).
+  Owner: R. Silva (IT Ops) + L. Davies (Clinical Ops escalation).
+  Resolution plan: (v1) auto-retry deployed 2026-04-09, ~40% drop reduction.
+    (v2) vendor diagnostic call 2026-04-17 + interim EOD reconciliation by
+    clinical team. Target close 2026-04-30; if not closed, escalate to
+    vendor account exec.
+
+===== DEPENDENCIES =====
+
+D1 [OPEN]
+  Vendor v2 migration (linked R1).
+  External: T. Reyes (Vendor PM). Internal: J. Patel.
+  Coordination: weekly status; escalate at any missed milestone.
+
+===== CHANGE LOG =====
+v2 (2026-04-15) — R1 mitigation updated to reflect signed SOW; I1 impact
+  upgraded to HIGH after 04-13 missed-result incident.
+v1 (2026-04-08) — Initial log. R1, I1, D1.

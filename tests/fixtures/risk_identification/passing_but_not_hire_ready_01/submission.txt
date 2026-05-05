@@ -1,0 +1,48 @@
+RAID LOG — Healthcare Integration, Clinic A Pilot
+PC: T. Adeyemi | 2026-04-15
+
+RISKS
+R1 | Vendor v2 deprecation in 90 days
+    Trigger: Vendor announcement 2026-03-28
+    Impact: High
+    Likelihood: High
+    Owner: Lead engineer (currently on leave) / backup engineer
+    Mitigation: Plan migration spike post-leave; will scope vendor PS option.
+
+R2 | Scope creep — 3 endpoints added since kickoff plus PO ask for clinics B+C
+    Impact: High
+    Likelihood: Medium
+    Owner: PO
+    Mitigation: Bring stabilization data to next steering; recommend deferral.
+
+R3 | Engineer on paternity leave (4 weeks)
+    Impact: Medium
+    Likelihood: Certain
+    Owner: Eng manager
+    Mitigation: Cross-train backup; on-call rotation active.
+
+R4 | HL7 lab feed instability
+    Impact: Medium
+    Likelihood: High
+    Owner: IT Ops
+    Mitigation: Investigating; auto-retry deployed; vendor call scheduled.
+
+ISSUES
+I1 | New integration endpoints added mid-build (testing not yet planned)
+    Owner: PC + QA
+    Action: QA scope by 2026-04-22.
+
+ASSUMPTIONS
+A1 | Vendor PS engagement will hit timeline.
+    Owner: PC.
+
+DEPENDENCIES
+D1 | Vendor for migration support
+    Owner: Vendor SM
+    Note: Weekly status sync.
+
+D2 | Internal IT for cutover weekend
+    Owner: IT Ops
+    Note: Runbook review pre-cutover.
+
+(End of document. Single snapshot — no prior versions.)

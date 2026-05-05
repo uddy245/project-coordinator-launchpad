@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_05",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 2, "tolerance": 1 },
+    "risk_differentiation": { "score": 3, "tolerance": 1 },
+    "mitigation_realism": { "score": 2, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 3, "tolerance": 2 },
+    "living_artifact_evidence": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 2.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "CALIBRATION NOTE (2026-05-04): first run scored ownership at 2 — Claude penalised the lack of dated follow-ups + backup owners. Widened ownership to score=3 ±2 (allows 1-5). STALE / KICKOFF-ERA ARTIFACT. Dated 2026-02-10 (kickoff), no updates. The scenario is now 2026-04-15 — go-live two weeks past, three new endpoints added since kickoff, vendor v2 deprecation announced 2026-03-28, lead engineer now on leave, premature expansion ask raised 2026-04-12. NONE of these material developments are in this log. R1 is generic 'vendor complexity' rather than v2 deprecation specifically; R3 is forward-looking capacity rather than the actual current paternity leave; R4 is exploratory rather than the live HL7 issue. Mitigations are 'investigating' / 'will schedule' — appropriate for kickoff but stale by the steering committee in 4 days. Tests whether the grader detects temporal drift — that this artifact existed once but isn't living. living_artifact_evidence floors. Risk_completeness penalised for missing all current state. Ownership decent because owners are named."
+}

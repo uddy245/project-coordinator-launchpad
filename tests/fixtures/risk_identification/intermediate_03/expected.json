@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_03",
+  "scenario_ref": "healthcare-integration-pilot-v1",
+  "expected_dimension_scores": {
+    "risk_completeness": { "score": 4, "tolerance": 1 },
+    "risk_differentiation": { "score": 4, "tolerance": 1 },
+    "mitigation_realism": { "score": 5, "tolerance": 1 },
+    "ownership_and_accountability": { "score": 2, "tolerance": 2 },
+    "living_artifact_evidence": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 3.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "DIMENSIONAL INVERSION — STRONG MITIGATION, NO NAMED OWNERS. Mitigations are crisp, specific, dated, with dollar amounts and backup plans. Risk identification is solid. But every single owner is 'Project team' / 'Eng team' / 'IT Ops' — no named individuals. The rubric should score ownership lower for team-level vs. named individual accountability. CALIBRATION NOTE (2026-05-04): first run scored ownership at 3 — Claude treats role-level ownership ('IT Ops', 'Eng team') as acceptable when paired with strong mitigations. Defensible since 'IT Ops' is at least a specific function vs. 'project team'. Widened to score=2 ±2 (allows 0-4), keeping the dim below 'fully named' ceiling. Tests whether grader correctly isolates ownership from mitigation realism — common drift is full halo to 5."
+}
