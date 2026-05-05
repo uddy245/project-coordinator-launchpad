@@ -1,0 +1,50 @@
+Memo: Programme working model — recommendation
+To: R. Silva (PM), via steering committee
+From: M. Okafor, PC
+Date: end of pre-mobilisation week
+
+R — proposed working model below for steering approval.
+
+Framework analysis.
+
+I worked the four-question framework across the three workstreams.
+
+Scope stability: Dev is low — regulators have opened a consultation that may shift identity-verification mid-build. Procurement is high — fixed deadline, fixed deliverables. Change management is medium — predictable activities but timing depends on dev releases.
+
+Cost of mid-flight change: Dev is low — software can be reworked sprint-to-sprint. Procurement is high — contracts and SOWs lock cost; renegotiation expensive. Change management is medium.
+
+Interdependence: Dev is interdependent with procurement (KYC engine selection) and change management (release dates). Procurement is largely self-contained until vendor selection. Change management is downstream of both.
+
+Governance: Heavy. Risk Committee requires documented plan, change control on regulated requirements, monthly steering in fixed format, quarterly portfolio review.
+
+Recommendation: hybrid weighted toward waterfall at the programme level, with sprint cadence for the dev workstream.
+
+Working model.
+
+Programme level: charter, milestone schedule, RAID register, monthly steering reports in the specified template, change control board for regulated-requirement changes. K. Bell's standard PMO artefacts apply at programme level.
+
+Dev workstream: two-week sprints with a product owner, sprint planning, sprint review, retrospective. J. Patel runs Scrum inside the dev workstream. The product owner is empowered to reprioritise within the agreed scope but escalates to the change control board for changes that affect regulated requirements.
+
+Procurement workstream: standard waterfall — charter, milestone plan, contract milestones, change control on SOW.
+
+Change-management workstream: standard waterfall with a fixed plan, with rolling adjustments to training and comms dates as dev release dates firm up.
+
+Translation moves.
+
+1. Sprint review attendance. I will attend the sprint review every two weeks. Within 24 hours I will produce a one-page sprint summary in the steering-committee format. Owner: me. Cadence: every two weeks.
+
+2. Backlog-to-RAID feed. After every sprint retrospective, J. Patel and I sync for 15 minutes to surface any new risks the team raised. I capture them in the programme RAID. Owner: me, with J. Patel input. Cadence: every two weeks.
+
+3. Change control board for regulated requirements only. The board meets monthly and reviews only changes that affect identity-verification regulated requirements. Other changes are absorbed inside the dev sprint cadence. Owner: K. Bell chairs.
+
+Failure mode I want to prevent.
+
+The current J. Patel / K. Bell argument is risking hybrid-without-translation: each side ends up producing artefacts the other side ignores. The translation moves above are designed to prevent this. If sprint summaries are not landing in steering or the RAID feed is not happening, that is the early-warning signal.
+
+Posture.
+
+Both J. Patel's concerns about waterfall theatre and K. Bell's concerns about ungoverned delivery are legitimate within their own contexts. Neither methodology is wrong. The hybrid above tries to give each workstream the practices that fit its work, and to make the seams explicit through the translation moves rather than implicit through goodwill.
+
+Steering can approve in one meeting.
+
+— M.

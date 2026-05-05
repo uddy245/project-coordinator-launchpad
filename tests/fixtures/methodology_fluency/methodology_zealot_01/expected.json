@@ -1,0 +1,15 @@
+{
+  "fixture_id": "methodology_zealot_01",
+  "scenario_ref": "methodology-fit-bank-onboarding-v1",
+  "expected_dimension_scores": {
+    "fit_framework_application": { "score": 1, "tolerance": 1 },
+    "hybrid_recognition": { "score": 1, "tolerance": 1 },
+    "translation_specificity": { "score": 1, "tolerance": 1 },
+    "failure_mode_awareness": { "score": 2, "tolerance": 1 },
+    "non_partisan_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "PARTISAN-POSTURE FAILURE MODE — the inverse of wrong_methodology_match_01. The learner picks one side enthusiastically. 'Waterfall theatre that has been killing software delivery for thirty years' / 'K. Bell's framework thinking is outdated' / 'project-management worldview that the industry is moving past' — fires the partisan-posture cap unambiguously. Cites the Standish Group and Agile Manifesto polemically. Recommends pure agile across a clearly mixed-characteristic programme — fires pure-methodology mismatch cap on fit_framework AND hybrid_recognition. Skips the four-question framework entirely. Recommends 'no change control board' for a regulated bank — this would fail Risk Committee scrutiny within weeks. Translation moves are absent. Tests whether the grader catches partisan agile-zealotry as failing the chapter's posture requirement, the same way it should catch partisan waterfall-defence (wrong_methodology_match_01). Both fixtures together verify the rubric is symmetric — neither side wins by being loud."
+}

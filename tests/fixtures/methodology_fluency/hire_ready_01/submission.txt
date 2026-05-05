@@ -1,0 +1,79 @@
+Memo: Programme working model — fit-to-work recommendation for steering
+To: R. Silva (PM)
+From: L. Jansen, PC
+Date: end of pre-mobilisation week 0
+Cc: J. Patel (Dev Lead), K. Bell (Procurement Lead), M. Okafor (Change Lead)
+
+R — short version: hybrid with a waterfall frame and Scrum inside the dev workstream. Five concrete translation moves to keep the hybrid honest. Specific failure mode the J. Patel / K. Bell argument is risking, with a prevention move. Steering can approve in one meeting.
+
+1. Framework analysis, workstream by workstream.
+
+I worked the four-question framework — scope stability, cost of mid-flight change, interdependence, governance — across the three workstreams.
+
+Dev workstream:
+- Scope stability: low. The PRA consultation on identity-verification standards is mid-flight; we should expect the requirements to shift at least once before we close. Building to a frozen spec would mean rebuilding to whatever lands.
+- Cost of change: low. Software can be refactored sprint-to-sprint. The cost of guessing wrong up front is higher than the cost of revisiting in flight.
+- Interdependence: high upstream (depends on KYC engine selected by procurement), high downstream (release dates drive change management). The dev workstream's *outputs* must be predictable for the rest of the programme even if the inputs are not.
+- Governance: any change affecting regulated requirements must go through Risk Committee change control. Internal practices are at the dev team's discretion per the CIO.
+
+Conclusion: agile cadence inside the workstream, with a clear regulated-requirement gate for changes that touch governance.
+
+Procurement workstream:
+- Scope stability: high. Defined deliverables (RFP, vendor evaluation, SOW negotiation, contract execution) on a regulator-driven deadline.
+- Cost of change: high. Contracts and SOWs lock cost; renegotiating is expensive and delays vendor onboarding.
+- Interdependence: medium. KYC engine selection blocks dev integration design; vendor SOW shapes change-management training plan.
+- Governance: heavy — formal procurement process, contract sign-off, regulator-visible vendor selection.
+
+Conclusion: standard waterfall — fits the work, fits the governance, fits the deadline.
+
+Change-management workstream:
+- Scope stability: medium-high. Activities are predictable (4,000 staff training, retirement, customer comms). Timing depends on dev releases.
+- Cost of change: medium. Comms drafts are cheap to revise; training delivery slots booked at scale are expensive to reschedule.
+- Interdependence: high downstream. Cannot start training until dev release dates firm up; cannot run comms until vendor identified.
+- Governance: standard internal change-management process.
+
+Conclusion: standard waterfall plan with rolling date-firm-up triggered by dev release confirmations.
+
+2. Working model.
+
+Programme level — waterfall:
+- Charter, milestone schedule (with sprint-cadence-respecting milestone dates for dev), RAID register, budget baseline, stakeholder plan.
+- Monthly steering reports in the Risk Committee template. Quarterly portfolio review with the prescribed materials.
+- Change control board: monthly. Reviews only changes affecting regulated requirements OR contract scope OR programme-level schedule. Other changes absorb at workstream level.
+
+Dev workstream — Scrum:
+- Two-week sprints. Sprint planning, daily scrum, sprint review, retrospective.
+- Product owner: J. Patel's nominee (likely R. Silva from BA team), empowered to reprioritise the backlog within agreed scope; escalates regulated-requirement changes to the CCB.
+- Definition of done includes regulator-traceability tags so we never lose audit trail.
+
+Procurement workstream — waterfall:
+- Procurement plan, RFP, evaluation matrix, contract milestones, SOW change control.
+
+Change-management workstream — waterfall with rolling adjustments:
+- Plan baselined now with placeholder dates. Quarterly re-baseline as dev releases firm up. Training and comms drafts produced at content-stable points.
+
+3. Translation moves (the hybrid stays honest only if these are running).
+
+a) Sprint review attendance + summary. I attend every sprint review. Within 24 hours I produce a one-page sprint summary in the steering-committee template, distributed to programme distribution and filed in SharePoint. Owner: me. Cadence: every two weeks.
+
+b) Backlog-to-RAID feed. After every retrospective, 15-min sync between J. Patel and me to surface new risks raised by the team. I file them in the programme RAID with named owners. Owner: me, with J. Patel input. Cadence: every two weeks.
+
+c) Change control board scope. CCB reviews only changes that touch regulated requirements (R1 from the rubric: any change to identity-verification logic), procurement scope (R2: any change to vendor SOW), or programme schedule (R3: any change to the CCC-visible milestone dates). All other changes absorb at the workstream level. CCB is monthly, K. Bell chairs, I take minutes. Owner: K. Bell chairs, me records.
+
+d) Vendor-selection-to-dev-design handoff. When procurement selects the KYC vendor, K. Bell delivers the engine spec to J. Patel. We schedule a half-day design workshop within 5 working days of the selection so the dev team has the information to build dependent integration. Owner: K. Bell delivers, J. Patel facilitates, me coordinates.
+
+e) Release-date-to-change-management feed. End of every other sprint, J. Patel confirms or revises the next two release dates. I update the change-management plan within 24 hours. M. Okafor uses the updated plan to lock or release training slots. Owner: J. Patel confirms, me updates, M. Okafor consumes. Cadence: every four weeks.
+
+4. The failure mode I want to prevent.
+
+The current argument is risking hybrid-without-translation. J. Patel will produce sprint outputs and never see them feed into the steering committee. K. Bell will produce monthly steering reports and never see them shape sprint priorities. The two layers will run parallel for the first eight weeks; by week twelve they will be visibly out of sync, and one of them will declare the other broken.
+
+Prevention: the translation moves above. If any of the five stops happening within the first two months, that is the early-warning signal — which I will surface in week 8 status report, called out specifically.
+
+5. Posture.
+
+J. Patel's experience of "waterfall theatre" is real — sprints suffocated by status-report overhead is a known failure pattern, and he is right to push back on it. K. Bell's experience of "ungoverned delivery" is also real — agile teams that drop discipline without replacing it are a known failure pattern, and she is right to push back on it. Both of them are pushing back on real failure modes. The hybrid above gives each workstream the practices that fit its work, and binds the seams through translation, so neither failure mode emerges.
+
+This is not about who is right about methodology. It is about which practices fit which parts of this work. Steering can approve in one meeting; J. Patel and K. Bell each get a working model that fits their workstream; the translation moves are the price of the hybrid.
+
+— L.

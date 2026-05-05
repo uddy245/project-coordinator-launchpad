@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "methodology-fit-bank-onboarding-v1",
+  "expected_dimension_scores": {
+    "fit_framework_application": { "score": 5, "tolerance": 1 },
+    "hybrid_recognition": { "score": 5, "tolerance": 1 },
+    "translation_specificity": { "score": 4, "tolerance": 1 },
+    "failure_mode_awareness": { "score": 5, "tolerance": 1 },
+    "non_partisan_posture": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.8,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Strong submission near ceiling. Applies all four framework questions with concrete answers per workstream. Recommends explicit hybrid with workstream-by-workstream weighting. Three concrete translation moves with cadence + ownership (sprint review attendance, backlog-to-RAID feed, change control board scope). Names hybrid-without-translation as the specific failure mode being risked, with prevention. Posture: 'Both J. Patel's concerns... and K. Bell's concerns... are legitimate within their own contexts.' Falls slightly short on translation_specificity (4 not 5) — has 3 moves but could use more on the procurement / change-management seams. This is what we want every learner reading."
+}

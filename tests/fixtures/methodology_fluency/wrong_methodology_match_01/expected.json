@@ -1,0 +1,15 @@
+{
+  "fixture_id": "wrong_methodology_match_01",
+  "scenario_ref": "methodology-fit-bank-onboarding-v1",
+  "expected_dimension_scores": {
+    "fit_framework_application": { "score": 2, "tolerance": 1 },
+    "hybrid_recognition": { "score": 1, "tolerance": 1 },
+    "translation_specificity": { "score": 1, "tolerance": 1 },
+    "failure_mode_awareness": { "score": 2, "tolerance": 1 },
+    "non_partisan_posture": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "PURE-METHODOLOGY MISMATCH FAILURE MODE. The submission picks pure waterfall for a project the chapter explicitly describes as needing hybrid (regulated governance + emergent dev requirements + heavy interdependence). Fires the pure-methodology cap on both fit_framework_application and hybrid_recognition. The reasoning gestures at one framework question (governance) but skips scope-stability, cost-of-change, and interdependence — those would have surfaced that the dev workstream needs sprint cadence regardless of the governance environment. Posture is partisan: 'agile is great in startups... in regulated banks it tends to produce undisciplined delivery' — exact language Chapter 5 calls out as misreading the manifesto. Translation = 'monthly status reports'. Methodology-as-excuse pattern: 'the regulated environment doesn't really allow Scrum' — uses methodology as cover for not engaging with the actual fit question. Tests the pure-methodology mismatch cap firing across both dims, plus partisan-posture cap. Wrong answer to the right question."
+}
