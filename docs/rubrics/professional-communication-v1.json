@@ -1,0 +1,61 @@
+{
+  "rubric_id": "professional-communication-v1",
+  "rubric_version": "1.0.0",
+  "competency": "professional_communication",
+  "competency_label": "Professional Written Voice",
+  "lesson_ref": "written-voice",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "lede_discipline",
+      "description": "Does each piece lead with the most important thing the reader needs to know or decide — versus burying the lede behind context, throat-clearing, or a wind-up paragraph? A reader who reads only the first sentence should still get the core signal.",
+      "anchors": {
+        "1": "All pieces bury the lede behind context or pleasantries; the reader has to hunt for the point.",
+        "3": "One or two pieces lead cleanly; others wind up before getting to the point.",
+        "5": "Every piece leads with the substance. The first sentence of each carries the most important signal. Subject lines (where present) are concrete and action-oriented, not labels like 'Update' or 'Quick question'."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "hedge_density",
+      "description": "Are hedges ('I think', 'maybe', 'perhaps', 'just', 'I might be wrong but', 'I was wondering if') stripped to where they carry real information rather than masking discomfort with the fact of having an opinion? When uncertainty is genuine, is it named precisely (the specific thing not yet known) rather than diffused as a softener?",
+      "anchors": {
+        "1": "Cluster of hedges across the pieces; opinions are buried under so much softening that the reader cannot find them.",
+        "3": "Hedges reduced but still present; some opinions stated cleanly while others remain padded.",
+        "5": "Hedges are absent or carry real information. Uncertainty, where present, is named precisely (e.g. 'vendor PM has not yet confirmed the new date') rather than diffused with generic softeners."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "apology_hygiene",
+      "description": "Are apologies reserved for things that warrant them (a missed commitment, an error, a real imposition) rather than used reflexively as openers ('Sorry to bother you', 'Sorry to chase', 'Sorry if this is a silly question')? Apologizing for doing your job — chasing, asking, following up — undermines authority and inflates the apologies that should land.",
+      "anchors": {
+        "1": "Reflexive apologies open multiple pieces; the writing apologizes for chasing, asking, or following up — all normal coordinator work.",
+        "3": "One or two reflexive apologies present; mostly cleaned up but the habit shows.",
+        "5": "No reflexive apologies. Where an apology appears, it is doing real work (a specific missed commitment or actual error)."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "register_modulation",
+      "description": "Do the three pieces — Slack to a peer, email to PM, note to a senior sponsor not previously written to — show three distinctly different registers (conversational / standard / formal)? A monolithic voice across all audiences is the most common mistake. Reply-register convention also matters: replies should match or slightly elevate, never drop below, the incoming.",
+      "anchors": {
+        "1": "Same register across all three pieces. Either all chatty (sponsor reads as presumptuous), all formal (peer reads as cold), or all neutral-corporate (none feel right).",
+        "3": "Two registers visible — usually conversational vs everything-else — but the distinction between standard and formal is missed.",
+        "5": "Three distinct registers, each fitting its audience and medium. Slack is relaxed but not sloppy. PM email is efficient and direct. Sponsor note is dignified, spare, and free of casualness — without being stiff."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "structural_economy",
+      "description": "Does each piece structure the information so the reader doesn't have to do interpretive work? Asks visible. Decisions clear. Bullets used where bullets help, prose where prose helps. Length proportional to the information, not padded to seem thorough.",
+      "anchors": {
+        "1": "Information is dumped without structure. The reader must hunt for the ask, the decision, or what is wanted of them.",
+        "3": "Structure present in some pieces but inconsistent. Some asks are visible; others are buried.",
+        "5": "Each piece is structured for its medium and audience. Asks are visible. Lengths are proportional. The reader receives the signal in the medium they expect (Slack short and direct, PM email scannable, sponsor note dignified and complete) without having to translate."
+      },
+      "weight": 0.20
+    }
+  ]
+}
