@@ -1,0 +1,61 @@
+{
+  "rubric_id": "methodology-fluency-v1",
+  "rubric_version": "1.0.0",
+  "competency": "methodology_fluency",
+  "competency_label": "Methodology Fluency for Project Coordinators",
+  "lesson_ref": "methodologies",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "fit_framework_application",
+      "description": "Does the learner apply the chapter's four-question framework — scope stability, cost of mid-flight change, interdependence, governance environment — to recommend the methodology mix? Or do they declare a methodology preference and justify it after the fact?",
+      "anchors": {
+        "1": "Picks a methodology by preference or label without applying any framework. 'We should do agile because it is faster.'",
+        "3": "Applies one or two of the four questions but skips the others; recommendation is partly grounded.",
+        "5": "Applies all four questions to the scenario, with concrete answers grounded in the scenario's facts. The recommendation flows visibly from the analysis, not from preference."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "hybrid_recognition",
+      "description": "Does the learner recognise that the right answer is usually a hybrid, with explicit weighting toward waterfall or agile depending on the workstream? Pure waterfall or pure agile recommendations on mixed-characteristic projects miss the chapter's central thesis.",
+      "anchors": {
+        "1": "Recommends pure waterfall or pure agile across the whole project, ignoring workstream variance.",
+        "3": "Acknowledges hybrid in passing but the recommendation is functionally pure-one-way with light gestures toward the other.",
+        "5": "Recommends an explicit hybrid: waterfall-shaped frame for governance/budget/scope/risk, agile cadence for the workstreams where requirements emerge through the work. Names which workstreams go which way and why."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "translation_specificity",
+      "description": "Does the learner name concrete translation moves — how sprint outputs become PMO status reports, how change board decisions become backlog reprioritisations, how sprint reviews surface risks for the project-level RAID? Or are the translation recommendations generic ('we will translate between layers')?",
+      "anchors": {
+        "1": "Generic platitudes about 'aligning' or 'translating' with no concrete mechanism.",
+        "3": "One or two specific translation moves named, but the rest is generic.",
+        "5": "Three or more concrete translation moves with cadence and ownership. Reader can see the actual mechanics of the bridge."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "failure_mode_awareness",
+      "description": "Does the learner spot at least one of the chapter's named failure modes (waterfall theater, agile theater, methodology mismatch, hybrid without translation, methodology as excuse) in the scenario, and name it as a risk to mitigate?",
+      "anchors": {
+        "1": "No mention of failure modes; treats methodology choice as a one-time decision.",
+        "3": "Names one failure mode in passing without tying it to the scenario's specifics.",
+        "5": "Names the specific failure mode the scenario is risking (e.g. 'the developer/PMO argument is producing hybrid-without-translation') with quoted evidence and a concrete prevention move."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "non_partisan_posture",
+      "description": "Does the learner stay out of the methodology fight — not picking a side, not lecturing one camp on why they are wrong, not advocating for a methodology as a worldview? The chapter is explicit that the coordinator is the Switzerland of methodology.",
+      "anchors": {
+        "1": "Picks a side. 'Waterfall is dead.' 'Agile cannot work in regulated environments.' Lectures one camp using the other camp's vocabulary.",
+        "3": "Mostly neutral but with one or two slips into advocacy ('the right answer is clearly...').",
+        "5": "Consistently translator-posture. Acknowledges legitimate concerns from both camps. Recommendations are framed as fit-to-work rather than methodology-as-truth. No advocacy."
+      },
+      "weight": 0.20
+    }
+  ]
+}

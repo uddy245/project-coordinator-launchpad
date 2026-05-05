@@ -55,6 +55,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/professional-mindset-v1.json",
     promptPath: "docs/prompts/grade-mindset-v1.md",
   },
+  {
+    competency: "methodology_fluency",
+    rubricPath: "docs/rubrics/methodology-fluency-v1.json",
+    promptPath: "docs/prompts/grade-methodology-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

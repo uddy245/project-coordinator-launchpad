@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "methodology-fit-bank-onboarding-v1",
+  "expected_dimension_scores": {
+    "fit_framework_application": { "score": 1, "tolerance": 1 },
+    "hybrid_recognition": { "score": 2, "tolerance": 1 },
+    "translation_specificity": { "score": 1, "tolerance": 1 },
+    "failure_mode_awareness": { "score": 1, "tolerance": 1 },
+    "non_partisan_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor failure across the board. Picks agile by preference ('agile is faster, more flexible, better suited'). Calls waterfall 'outdated' — fires non_partisan_posture cap. Skips all four framework questions — fires fit_framework_application cap. Acknowledges procurement is 'traditional' but does not actually shift recommendation; functionally pure agile. Translation = 'regular meetings' — generic platitude, fires translation_specificity cap. No failure mode named. Tests three caps simultaneously."
+}

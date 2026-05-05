@@ -1,0 +1,23 @@
+Memo: Working model — let's actually move at the speed of value
+
+Hi PM,
+
+I've heard both sides and I want to be direct: J. Patel is right and we need to back him up. The bank's PMO approach that K. Bell is defending is exactly the kind of waterfall theatre that has been killing software delivery for thirty years.
+
+Look at the evidence. The Standish Group reports show waterfall projects fail at much higher rates than agile ones. The Agile Manifesto was written precisely to escape the heavy, document-driven approaches that K. Bell is asking us to adopt. The fact that we're in a "regulated environment" is not an excuse — plenty of regulated banks now run agile programmes successfully. K. Bell's framework thinking is outdated.
+
+My recommendation: the entire programme runs as agile. Two-week sprints across all three workstreams. A single product owner empowered to reprioritise everything. Daily standups across the programme. Sprint reviews instead of steering reports. The Risk Committee can adapt — if they want to govern an agile programme, they need to learn how agile programmes report.
+
+Working model:
+- Programme-level Scrum-of-Scrums daily.
+- Two-week sprints aligned across dev, procurement, change management.
+- Single product owner with full authority over all backlogs.
+- Sprint review replaces monthly steering. We invite the Risk Committee chair to attend.
+- No change control board — change requests are inappropriate in an agile context. The product owner reprioritises.
+- No phase gates. We deliver continuously.
+
+K. Bell will resist this but we should hold the line. Her objection is rooted in a project-management worldview that the industry is moving past. If we accommodate it, we'll end up with the same waterfall theatre that has failed so many bank projects.
+
+I recommend we present this to steering and ask them to back the agile working model. If K. Bell escalates further we should be ready to make the case.
+
+Coordinator

@@ -1,0 +1,15 @@
+Memo: Working model recommendation
+
+Hi PM,
+
+Based on my read, I think we should run the project as agile. Agile is faster, more flexible, and better suited to modern projects. Waterfall is generally outdated and would slow us down.
+
+For governance, we can produce the Risk Committee reports as needed.
+
+J. Patel is right that we should run the dev team as Scrum. K. Bell's procurement approach is a bit traditional but we can probably adapt.
+
+Translation between teams will happen through regular meetings.
+
+Let me know what you think.
+
+Coordinator

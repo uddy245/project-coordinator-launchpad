@@ -1,0 +1,25 @@
+You are the Project Coordinator on a new programme starting next month at a mid-sized retail bank. The programme is a customer-onboarding platform replacement. Eighteen-month plan. Mixed characteristics:
+
+- The development workstream (replacing the customer-data screens, identity-verification flow, and decisioning engine) faces emergent requirements: regulators have opened a consultation on identity-verification standards that may shift mid-build. The dev team lead, J. Patel, has done three years of pure Scrum at a fintech and wants two-week sprints, a product owner, and no PMO-format status reports.
+
+- The procurement workstream (vendor selection for the underlying KYC engine, contract negotiation, professional services SOW) has a fixed timeline driven by a regulatory deadline. The procurement lead, K. Bell, has come up through the bank's PMO and wants the standard waterfall artefacts: charter, milestone schedule, change control board, monthly steering reports.
+
+- The change-management workstream (training 4,000 contact-centre staff, retiring the old system, comms to 2.3M customers) has dependencies on the dev team's release dates and on the procurement team's vendor selection. The change-management lead, M. Okafor, is methodology-agnostic but needs predictability for downstream planning.
+
+- Governance: the bank's Risk Committee requires a documented project plan, formal change control on regulated requirements, monthly steering reports in a specified template, and quarterly portfolio reviews. The CIO has signalled flexibility on internal practices as long as the Risk Committee outputs are produced cleanly.
+
+J. Patel and K. Bell have already had two heated meetings about methodology. J. Patel called K. Bell's framework "waterfall theatre that will sink the dev team". K. Bell has filed a written objection to "the developer's refusal to operate within bank governance". Both have escalated to your PM, R. Silva. The PM has asked you to write a memo for the steering committee proposing the working model for the programme.
+
+Write a 700-1100 word memo. The memo must:
+
+1. Apply the four-question framework from the chapter (scope stability, cost of mid-flight change, interdependence, governance environment) workstream-by-workstream. Quote your own conclusions, do not just list the questions.
+
+2. Recommend an explicit hybrid working model: which workstreams operate in which mode, why, and where the boundaries are.
+
+3. Propose three to five concrete translation moves (with cadence and ownership) that prevent the hybrid from becoming hybrid-without-translation.
+
+4. Name the specific failure mode the J. Patel / K. Bell argument is risking, and propose a concrete prevention move.
+
+5. Stay out of the methodology fight. Do not declare waterfall dead. Do not declare agile undisciplined. Frame everything as fit-to-work.
+
+The memo should leave the steering committee with a clear working model they can approve in one meeting, and leave J. Patel and K. Bell with the sense that you have heard them both without taking either side.

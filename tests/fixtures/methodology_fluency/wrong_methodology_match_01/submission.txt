@@ -1,0 +1,23 @@
+Memo: Programme working model
+
+Hi PM,
+
+I've reviewed the programme and recommend we run the entire programme — dev, procurement, and change management — as a single waterfall project under the bank's PMO standards.
+
+The reasoning: this is a regulated bank with a Risk Committee. Heavy governance is non-negotiable. The regulator-driven deadline means we cannot afford the kind of schedule slippage that agile teams sometimes produce. K. Bell's PMO approach is the right fit for the governance environment.
+
+Working model:
+- Charter, scope statement, WBS, Gantt schedule, RAID register, RACI, budget baseline, stakeholder plan, communication plan.
+- Monthly steering reports in the Risk Committee template.
+- Change control board for all changes.
+- Dev workstream: phase-gated waterfall (requirements → design → build → test → deploy). All requirements signed off before build starts.
+- Procurement workstream: as planned by K. Bell.
+- Change management: as planned by M. Okafor.
+
+J. Patel's request for Scrum is understandable but the regulated environment doesn't really allow it. Agile is great in startups and product-led companies but in regulated banks it tends to produce undisciplined delivery that fails Risk Committee scrutiny. We should explain to J. Patel that this isn't the right context for Scrum.
+
+Translation: monthly status reports.
+
+I expect the J. Patel pushback will continue; we may need to escalate to the CIO if he refuses to operate within the working model.
+
+Coordinator
