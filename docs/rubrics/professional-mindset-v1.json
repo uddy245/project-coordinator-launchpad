@@ -1,0 +1,61 @@
+{
+  "rubric_id": "professional-mindset-v1",
+  "rubric_version": "1.0.0",
+  "competency": "professional_mindset",
+  "competency_label": "Professional Mindset for Project Coordinators",
+  "lesson_ref": "mindset",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "ownership_orientation",
+      "description": "Does the learner demonstrate the ownership mindset (what does this project need from me today?) rather than the task mindset (what's on my list?)? On issues within reach — a vendor slip on the PM's leave, a stakeholder question they could route — does the learner act, or do they flag-and-wait?",
+      "anchors": {
+        "1": "Pure task-mindset: every issue is flagged for the PM's return; no actions taken within the learner's reach. 'Adding to my list for Helen' is the dominant mode.",
+        "3": "Mixed: takes ownership of one or two issues but punts the others. The framing is starting to shift but inconsistently applied.",
+        "5": "Clear ownership across all three triggers in the scenario. The learner asks 'what does this project need from me' and acts within reach (calls vendor, drafts response, talks to downstream lead) without overstepping authority. Distinguishes routine operational matters they can handle from non-routine matters that need escalation."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "composure_under_pressure",
+      "description": "Does the learner respond to substance, not tone? When the senior stakeholder writes a sharp email, does the response engage the actual question rather than the heat? Does the learner avoid amplifying others' stress?",
+      "anchors": {
+        "1": "Defensive or matching the heat. Responds to tone rather than content. Adds friction to a tense situation.",
+        "3": "Composed but bland — acknowledges the situation but doesn't actually move it forward. Or: composed in writing but the framing reveals internal panic.",
+        "5": "Crisp, calm response to substance. Names what is known and not known. Sets a return time. Does not lecture, defend, or escalate. Reads as the eye of the storm."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "honest_admission",
+      "description": "When the learner doesn't know something or has made a mistake, do they say so cleanly — without hedging, excuse-making, or catastrophic apology? Or do they fabricate, deflect, or hide?",
+      "anchors": {
+        "1": "Either fabricates an answer to look competent, deflects responsibility, or buries the mistake/uncertainty in hedge-language ('I think possibly something might have').",
+        "3": "Admits gaps but with excessive softening or partial deflection ('I had no way to know', 'wasn't really clear who owned this').",
+        "5": "Says 'I don't know' or 'I made an error' cleanly, with an action attached. No fabrication, no defensive framing, no catastrophic apology. Demonstrates the credibility-account mindset from the chapter."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "failure_response_quality",
+      "description": "When the learner has made a mistake (e.g. wrong figure on Friday's status report), do they follow the own/fix/extract pattern? Or do they hide, excuse, catastrophize, or spiral?",
+      "anchors": {
+        "1": "Hides the mistake, excuses it ('the data wasn't ready'), catastrophizes (apologizes profusely or revisits it 3+ times), or spirals (self-flagellation that asks the reader to manage the writer's feelings).",
+        "3": "Owns and fixes the mistake but skips the lesson-extraction step. Or owns/fixes/extracts but with one or two excessive apologies.",
+        "5": "Clean own/fix/extract: one-sentence ownership, concrete fix with timing, one-sentence lesson noted for self. No drama. Demonstrates the chapter's 'clean and boring' pattern."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "long_view_indicators",
+      "description": "Does the response show the long-view mindset — no grievance-carrying, no fight-picking, no corner-cutting on supposedly low-stakes work? Treats every interaction as a long-term reputation asset?",
+      "anchors": {
+        "1": "Carries grievance, picks unnecessary fights, or visibly shortcuts work assumed to be low-stakes. Treats current week as the measure of worth.",
+        "3": "Mostly long-view but slips somewhere — one passive-aggressive line about a colleague, one corner cut on the small task.",
+        "5": "Consistent long-view posture. Difficult interactions are processed as information ('is the PM under pressure this week?') rather than as personal slights. Small tasks done at full attention. Reputation-as-compounding-asset is implicit."
+      },
+      "weight": 0.20
+    }
+  ]
+}

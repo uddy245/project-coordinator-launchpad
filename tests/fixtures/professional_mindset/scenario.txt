@@ -1,0 +1,23 @@
+It is Monday morning. Your PM, Helen, started a ten-day annual leave on Friday. She has briefed the project sponsor, named a covering PM on a neighbouring project for emergencies, and left you with the standing instruction: "If anything comes up that worries you, call me. Otherwise run it."
+
+Three things have happened since Friday close.
+
+1. The vendor missed a deliverable due Friday — a revised integration plan that two downstream teams (Raj's testing and Priya's data-validation) were planning to use to start dependent work today. The vendor's PM, T. Reyes, emailed at 5:47 pm Friday with a one-line note: "Won't make today, will revert with revised date." No new date proposed. No root cause given.
+
+2. A senior stakeholder you have met twice (D. Sharma's peer in another business unit, M. Whitfield) emailed you Friday afternoon — not the PM — with a sharp two-line message about a regulatory edge case in the new system: "Need to know how this handles split-jurisdiction reporting. Surprised this hasn't been raised. Need answer this week." You don't know the answer. You don't immediately know who would.
+
+3. You discovered late Friday — too late to fix before the weekly status went out — that the finance figure on your status report was outdated by two weeks. The PM had signed off the report. The number is wrong but not catastrophically wrong (£47k of variance against a £2.3m budget). The status went to the sponsor, M. Whitfield's group, and four other senior stakeholders.
+
+It is now 8:15 Monday. Helen is still on leave for nine more days.
+
+Write a 700-1000 word memo to be sent to Helen on her return, explaining what you actually did this morning and across the next few days, and which mindset shifts from the chapter you applied to each move. Be honest. If you handled something poorly, say so and say what you'd do differently.
+
+The memo must:
+
+1. Cover all three triggers — the vendor slip, the M. Whitfield email, and the wrong finance figure.
+2. Show the ownership mindset where it applies, and name where you escalated to the covering PM rather than acted alone (and why).
+3. Demonstrate composure in how you describe handling the M. Whitfield email — substance over tone.
+4. Address the finance-figure mistake using the own/fix/extract pattern. No drama. No catastrophizing.
+5. Show the long view — no grievance-carrying about M. Whitfield's tone, no defensive framing about why the mistake wasn't really your fault.
+
+Write directly. Plain language. The PM should finish the memo and feel that nine days of project absence didn't cost her anything because someone was running it.

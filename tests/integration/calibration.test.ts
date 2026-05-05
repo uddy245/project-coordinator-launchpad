@@ -50,6 +50,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/professional-communication-v1.json",
     promptPath: "docs/prompts/grade-voice-v1.md",
   },
+  {
+    competency: "professional_mindset",
+    rubricPath: "docs/rubrics/professional-mindset-v1.json",
+    promptPath: "docs/prompts/grade-mindset-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

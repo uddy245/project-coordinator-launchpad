@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "ten-day-pm-leave-mindset-v1",
+  "expected_dimension_scores": {
+    "ownership_orientation": { "score": 5, "tolerance": 1 },
+    "composure_under_pressure": { "score": 5, "tolerance": 1 },
+    "honest_admission": { "score": 5, "tolerance": 1 },
+    "failure_response_quality": { "score": 5, "tolerance": 1 },
+    "long_view_indicators": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. Ownership: actioned all three triggers, named explicit escalation criteria, distinguished routine from non-routine. Composure: 'I read his tone as brief, not hostile, and matched the brevity' is exact application of Chapter 2's posture. Honest admission: model 'I don't have the regulatory detail to answer properly' line, identical to chapter's exemplar. Failure response: textbook own/fix/extract, calendar habit added, no repeat apologies. Long view: 'Open item for your return' on covering-PM bar shows the long-view posture (asking the right question for next time, not litigating this time) without grievance. Top of the rubric. Cites the chapter's own framing without performing it."
+}
