@@ -1,0 +1,9 @@
+Project state and trade-offs
+
+The project is currently green. Schedule is on track. Budget is within plan. Scope is being delivered as agreed. Quality remains high.
+
+A few items to note: there has been some additional work on POS integration which the team is handling. The data-residency issue has been resolved by the architect. Authentication is in place.
+
+The sponsor is pleased with the progress. The team is performing well.
+
+We will continue to monitor and report any changes.

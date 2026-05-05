@@ -1,0 +1,15 @@
+{
+  "fixture_id": "quality_blindspot_01",
+  "scenario_ref": "loyalty-platform-status-narrative-v1",
+  "expected_dimension_scores": {
+    "five_variable_completeness": { "score": 2, "tolerance": 1 },
+    "silent_cut_detection": { "score": 1, "tolerance": 1 },
+    "scope_disambiguation": { "score": 1, "tolerance": 1 },
+    "trade_off_visibility": { "score": 1, "tolerance": 1 },
+    "long_term_cost_tracking": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "QUALITY-BLINDSPOT FAILURE MODE — distinct from iron-triangle-zealot. The learner has actually thought about scope/schedule/cost/risk somewhat (so five_variable_completeness scores 2 not 1) but has completely omitted the quality variable. The compressed UAT, the auth fallback, the unbilled overtime, the deferred non-core POS — all are present in the scenario, all are absent from the narrative. 'Sustain the team performance that has carried us through' is the canonical reframe of an unsustainable absorption as competence. No silent cuts named. No scope disambiguation. No trade-off visibility. Tests whether the grader catches a narrative that LOOKS analytical but has the same blindspot the chapter is built to fix. Common drift: scoring this 3 because the structure feels professional. Three caps fire: incomplete coverage, hidden absorption, no long-term cost."
+}

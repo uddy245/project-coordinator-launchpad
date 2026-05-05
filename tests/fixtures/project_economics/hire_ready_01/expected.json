@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "loyalty-platform-status-narrative-v1",
+  "expected_dimension_scores": {
+    "five_variable_completeness": { "score": 5, "tolerance": 1 },
+    "silent_cut_detection": { "score": 5, "tolerance": 1 },
+    "scope_disambiguation": { "score": 5, "tolerance": 1 },
+    "trade_off_visibility": { "score": 5, "tolerance": 1 },
+    "long_term_cost_tracking": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. All five variables fully addressed with current state, evidence, absorption analysis, and downstream cost. Scope disambiguation explicit across all three senses (documented, in-practice, sponsor's mental model) — recommends a sponsor conversation as the chapter prescribes. Silent cuts surfaced with quoted evidence and quantified consequences. Risk envelope assessment is the chapter's exact framing. Three trade-offs made explicit with structure: short-term win, long-term cost. Closeout-items recommendation links current choices to organisational learning. Closes with role-discipline statement ('I am not proposing to escalate to sponsor directly'). Top of the rubric — exactly what we want every learner producing."
+}

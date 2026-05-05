@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "loyalty-platform-status-narrative-v1",
+  "expected_dimension_scores": {
+    "five_variable_completeness": { "score": 1, "tolerance": 1 },
+    "silent_cut_detection": { "score": 1, "tolerance": 1 },
+    "scope_disambiguation": { "score": 1, "tolerance": 1 },
+    "trade_off_visibility": { "score": 1, "tolerance": 1 },
+    "long_term_cost_tracking": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor failure across the board. Reports the surface metrics ('green', 'within plan', 'on track') without surfacing any of the silent cuts the scenario explicitly describes. 'Quality remains high' is the canonical quality-platitude that fires the silent_cut cap. No risk variable visible. No mention of overtime, compressed UAT, fallback auth pattern, drift in sponsor's mental model. Tests whether grader catches a status narrative that is a polished version of the existing-but-misleading status. Three caps fire: incomplete coverage, quality-platitude, hidden absorption."
+}

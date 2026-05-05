@@ -1,0 +1,17 @@
+Project state and trade-offs — month 8
+
+Per project management best practice, projects are constrained by the iron triangle — scope, schedule, cost. We are managing each:
+
+Scope: green. The team is delivering against the agreed scope.
+Schedule: green. We are on track for the November launch date.
+Cost: green. Within the £8m baseline.
+
+In the centre of the triangle is quality, which is the natural outcome of how we manage the three corners. Our quality is solid because we have managed scope, schedule, and cost rigorously.
+
+A few items have come up — POS integration complexity, a compliance architectural change, an authentication framework swap — but the team has handled each within existing capacity. No formal change requests have been needed because nothing has actually changed at the scope/schedule/cost level.
+
+We are managing the triangle effectively. The sponsor has set clear constraints (date non-negotiable, budget fixed, scope agreed), and the project team has met all three. This is what good project management looks like.
+
+Recommendation: continue current approach.
+
+— Coordinator
