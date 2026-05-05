@@ -1,0 +1,15 @@
+{
+  "fixture_id": "off_topic_submission",
+  "scenario_ref": "coordinator-role-first-week-memo-v1",
+  "expected_dimension_scores": {
+    "role_breadth_recognition": { "score": 1, "tolerance": 1 },
+    "role_self_placement": { "score": 1, "tolerance": 1 },
+    "habit_specificity": { "score": 1, "tolerance": 1 },
+    "professional_voice": { "score": 1, "tolerance": 1 },
+    "realistic_humility": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "OFF-TOPIC EDGE CASE. The submission is friendly and well-written but does not address ANY of the four scenario asks (role understanding, self-placement, habits, unknowns). Tests the prompt's off-topic-handling rule (score 1 across the board with justification 'Submission is off-topic for the scenario.'). All five dims at floor with tolerance 1; this should be the most stable fixture in the corpus. Mirrors the off_topic_submission fixture in risk_identification."
+}

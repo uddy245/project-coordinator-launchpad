@@ -1,0 +1,46 @@
+Memo: First week — what I think the role is, where I sit, and what I'm doing about it
+To: J. Patel, PM
+From: M. Okafor, PC
+Date: 2026-05-08 (end of week 1)
+
+J — promised this by Friday close. Here it is.
+
+What the role actually is.
+
+The job description is accurate but thin. The real work, as far as I can tell after a week reading the folder and watching two of your meetings, is six things at once.
+
+I'm the information router. People are coming to me already — not because I have answers, but because I'm visible and the PM is in back-to-backs. By Wednesday I'd already had three vendor questions land in my inbox that didn't have my name on the original thread. I treat 'I'll come back to you by end of day' as a real promise, not a stall.
+
+I'm the project's memory. The decision log we have in SharePoint hasn't been updated since the March steering. By next Friday I want every item from the last six steerings to have an owner, a date, and a current status against it. People will forget what they decided in April; I don't get to.
+
+I'm the early-warning on schedule slip. I noticed in Wednesday's standup that Priya said 'mostly done' on the API contract revision that was due last Thursday. I didn't raise it in the room — that's your call, not mine — but I flagged it to you in Slack the same morning, because two weeks from now that 'mostly done' is the kind of thing that becomes the reason the integration test phase slips a fortnight.
+
+I'm the author of the record. Status notes go out under your name; minutes and read-aheads go out under mine. The senior people who never come to our meetings form opinions about this project from what I write. I take that seriously.
+
+I'm the friction-reducer. The grumpy finance partner who hasn't responded to two of my emails — I'm going to walk over to her desk on Monday rather than send a third. Not because I'm being nice; because friction kills projects more reliably than disasters do.
+
+I'm the shock absorber. When a stakeholder is annoyed they will complain to me before they will complain to you. I don't take it personally. I do escalate the pattern when the same person complains twice.
+
+Where I sit.
+
+Hybrid coordinator-analyst, not aspiring-PM. I draft change requests for your approval; I don't approve any. I maintain the schedule you set; I don't set it. I run the working-level meetings when you're double-booked; I don't run the steering. I'd like, over the next quarter, to take ownership of the integration-test workstream end-to-end as a stepping stone — happy to discuss whether that fits your plans for me.
+
+Three habits I'm building in the next 30 days.
+
+1. Minutes that lead with decisions and actions, not transcript. Out within 24 hours of every meeting I attend, distributed to the meeting list and the project SharePoint. Definition of done: the senior reader can answer 'what was decided and what happens next' in 60 seconds.
+
+2. Friday note to you. Every Friday by 4 pm: three lines on what's on track, three on what's slipping, one thing I want a steer on next week. Definition of done: you can scan it on the train home and decide whether to pull anything forward into Monday.
+
+3. RAID refresh every Monday morning before our 9 am. Same definition of current state we agreed to in our 1:1: every open risk has an owner, a follow-up date, and a current mitigation status. Closed items archived, not deleted. Definition of done: nothing in the live RAID is older than two weeks without a status note.
+
+What I don't know yet.
+
+- Who actually approves change requests under £10k versus what has to go to steering. I'll ask in Monday's 1:1; if the answer is 'depends', I'll ask for a written line to refer back to.
+
+- The history of why the integration approach was chosen in March. The design decision doc references a vendor PoC but doesn't say what alternatives were considered. I'll read the PoC notes first, then ask you for the context I can't reconstruct from the file.
+
+- The actual relationship between you and the sponsor. I've watched one of his catch-ups from the back of the room. I don't yet know which topics get raised in writing versus on the phone. I'll learn this by paying attention.
+
+I expect this list to grow. End of week 4, I'll send you an updated version of this memo with what I got right and what I had to revise.
+
+— M.

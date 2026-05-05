@@ -35,6 +35,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/raid-v1.json",
     promptPath: "docs/prompts/grade-raid-v1.md",
   },
+  {
+    competency: "role_understanding",
+    rubricPath: "docs/rubrics/role-understanding-v1.json",
+    promptPath: "docs/prompts/grade-role-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

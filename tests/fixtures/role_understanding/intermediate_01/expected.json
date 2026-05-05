@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "coordinator-role-first-week-memo-v1",
+  "expected_dimension_scores": {
+    "role_breadth_recognition": { "score": 4, "tolerance": 1 },
+    "role_self_placement": { "score": 4, "tolerance": 1 },
+    "habit_specificity": { "score": 4, "tolerance": 1 },
+    "professional_voice": { "score": 4, "tolerance": 1 },
+    "realistic_humility": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Solid intermediate-to-strong submission. Names three of the unstated functions (memory, early-warning on slip, written-record author) but doesn't get to four+ (no friction-reduction or shock-absorber). Self-placement is grounded in scope ('I'm not running a workstream end-to-end yet'). Habits have cadence + audience + definition-of-done. Voice is plain. Two unknowns are paired with concrete how-to-find-out. All five dims should land 4 — close to ceiling but not at it because role_breadth doesn't hit the four-or-more threshold. Tolerance 1; this fixture should be a clean pass for a calibrated grader."
+}

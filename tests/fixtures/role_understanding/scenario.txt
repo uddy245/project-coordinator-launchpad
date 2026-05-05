@@ -1,0 +1,10 @@
+You have been hired as the Project Coordinator on a nine-month software-integration project at a mid-size insurance firm. The project is mid-build: the previous coordinator left a month ago, the schedule is amber, the steering committee meets in two weeks. You start on Monday.
+
+Write a 600-800 word memo to your project manager, to be sent at the end of your first week. The memo must:
+
+1. Show that you understand what the role actually is — not the job description, but the unstated work that distinguishes a competent coordinator from a glorified note-taker.
+2. Place yourself honestly in one of the three coordinator role types (administrative, hybrid coordinator-analyst, aspiring-PM) and say why, based on the scope of decisions you expect to make.
+3. List three concrete habits you will build in your first 30 days, with cadence, audience, and a definition of done that another person could check.
+4. Name two or three things you do not yet know about this project or this organisation, and how you intend to find them out.
+
+Write in a direct, plain, professional voice. No corporate jargon. No LinkedIn cliché. The PM should finish the memo and feel that you have read the room and understood the work — not that you are performing competence.

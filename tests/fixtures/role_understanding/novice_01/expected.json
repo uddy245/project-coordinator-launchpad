@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "coordinator-role-first-week-memo-v1",
+  "expected_dimension_scores": {
+    "role_breadth_recognition": { "score": 1, "tolerance": 1 },
+    "role_self_placement": { "score": 2, "tolerance": 1 },
+    "habit_specificity": { "score": 1, "tolerance": 1 },
+    "professional_voice": { "score": 2, "tolerance": 1 },
+    "realistic_humility": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor-level submission. Para 2 is a near-verbatim recital of the standard job description (the rubric explicitly caps role_breadth_recognition at 2 for that). Self-placement 'because that is what was on the job posting' shows zero engagement with scope. Habits are platitudes. Voice is generic but not jargon-heavy enough to floor it (no 'leverage' / 'best-in-class'); 2 is appropriate. Unknowns line is dismissive ('I will learn as I go'). If the grader scores anything above 2 on role_breadth, breadth-recognition halo has set in."
+}

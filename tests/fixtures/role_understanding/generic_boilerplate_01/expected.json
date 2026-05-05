@@ -1,0 +1,15 @@
+{
+  "fixture_id": "generic_boilerplate_01",
+  "scenario_ref": "coordinator-role-first-week-memo-v1",
+  "expected_dimension_scores": {
+    "role_breadth_recognition": { "score": 1, "tolerance": 1 },
+    "role_self_placement": { "score": 2, "tolerance": 1 },
+    "habit_specificity": { "score": 1, "tolerance": 1 },
+    "professional_voice": { "score": 1, "tolerance": 1 },
+    "realistic_humility": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "JARGON-FAILURE MODE. The submission is well-structured, executive-summary-style, and reads sophisticated at a glance. Read carefully it is empty: 'leverage cross-functional synergies', 'best-in-class', 'value-add', 'operationalize', 'driving alignment', 'unlock synergies'. Five+ jargon phrases — the prompt rule explicitly floors professional_voice when there are 2+. role_breadth still recites the job-description bullet list (caps at 2 per the prompt rule). Habits are pure jargon. Unknowns line ('continuous learning journey') performs humility without naming any actual unknown. Tests whether the grader sees through corporate-speak. Common drift: scoring 3-4 because the format LOOKS sophisticated."
+}

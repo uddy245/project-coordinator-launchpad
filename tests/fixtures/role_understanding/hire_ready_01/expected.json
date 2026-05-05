@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "coordinator-role-first-week-memo-v1",
+  "expected_dimension_scores": {
+    "role_breadth_recognition": { "score": 5, "tolerance": 1 },
+    "role_self_placement": { "score": 5, "tolerance": 1 },
+    "habit_specificity": { "score": 5, "tolerance": 1 },
+    "professional_voice": { "score": 5, "tolerance": 1 },
+    "realistic_humility": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. All six unstated functions named (information router, memory, early-warning, author, friction-reducer, shock-absorber) with first-week-specific evidence for each. Self-placement is grounded in concrete decision-scope and explicitly names what would shift the learner to the next tier (taking ownership of integration-test workstream). Three habits each have cadence + audience + definition of done. Voice is plain — no jargon. Three unknowns each paired with how-to-find-out. Closes with a self-imposed checkpoint at week 4 (which is a hire-ready signal in itself — owning your own development). Top of the rubric."
+}
