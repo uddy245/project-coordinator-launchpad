@@ -1,0 +1,24 @@
+Memo: Governance assessment
+To: R. Silva
+From: Coordinator
+Subject: Concerns about programme governance
+
+Hi R,
+
+I want to flag some concerns about how this programme is being governed. The reality is that several stakeholders are not pulling their weight and I think we need to call them out.
+
+D. Sharma, frankly, is not doing his job as sponsor. He attends only half the SC meetings, says nothing substantive when he does, and routinely deflects with "let's take that offline." For someone of his seniority this is unacceptable. Our programme is suffering because of his disengagement. I think you should raise this with his peer on the executive committee.
+
+K. Bell has appointed herself the de facto decision-maker, which is not in line with her actual authority. The RACI does not list her as Accountable for anything. The fact that material scope decisions are being made in her side channel with you is a governance breach. We need to push back on this.
+
+The CMO's withdrawal from the SC is essentially abandonment of her oversight responsibility. The Head of Legal sending a deputy who has not been briefed is similarly inadequate. The Head of PMO can be excused because he sends a competent deputy, but the rest of the SC has stopped functioning as a governance body.
+
+I would suggest we draft a formal note from you to the executive sponsor of the PMO documenting these failures. This will create the paper trail we need if the programme runs into trouble later.
+
+For my part, I am going to write up a "governance health" section in next month's status report that names these specific issues. The senior stakeholders deserve to see the truth about how this programme is being governed.
+
+Recommendation: enforce the stated structure. Anyone not engaging at the level the RACI requires should be called out, by name if necessary, in formal materials.
+
+Let me know your thoughts.
+
+Coordinator

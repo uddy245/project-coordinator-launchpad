@@ -1,0 +1,15 @@
+{
+  "fixture_id": "governance_blame_01",
+  "scenario_ref": "governance-diagnostic-memo-v1",
+  "expected_dimension_scores": {
+    "stated_vs_actual_gap_recognition": { "score": 2, "tolerance": 1 },
+    "sponsor_and_committee_typing": { "score": 1, "tolerance": 1 },
+    "routing_strategy_specificity": { "score": 1, "tolerance": 1 },
+    "failure_mode_diagnosis": { "score": 1, "tolerance": 1 },
+    "role_boundary_respect": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "BLAME-NARRATIVE FAILURE MODE — distinct from wrong_escalation_01 in flavour. The learner has not actually read the gap; they have read the situation as moral failure on the part of senior stakeholders. 'D. Sharma is not doing his job', 'K. Bell has appointed herself', 'CMO's withdrawal is essentially abandonment'. The chapter is explicit that this is the wrong reading — the stated structure is the hypothesis, observed behaviour is the data, and most observed behaviour is people doing what they actually have time and authority to do, not negligence. Proposes editorialising in status reports ('write up a governance health section that names these specific issues') — fires role_boundary_respect cap. Proposes formal note from PM to PMO sponsor — overstep. 'Enforce the stated structure' is the chapter's exact anti-pattern: it is the coordinator trying to police governance rather than read it. No typing of sponsor or SC per chapter's specific categories. No failure mode named in chapter's vocabulary — the failure mode IS named (by us, in the rubric) as the most common kind of governance overreach. Tests whether grader catches frustration-as-analysis."
+}

@@ -60,6 +60,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/methodology-fluency-v1.json",
     promptPath: "docs/prompts/grade-methodology-v1.md",
   },
+  {
+    competency: "organisational_navigation",
+    rubricPath: "docs/rubrics/organisational-navigation-v1.json",
+    promptPath: "docs/prompts/grade-governance-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };
