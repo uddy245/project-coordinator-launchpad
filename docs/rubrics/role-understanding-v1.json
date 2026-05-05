@@ -1,0 +1,61 @@
+{
+  "rubric_id": "role-understanding-v1",
+  "rubric_version": "1.0.0",
+  "competency": "role_understanding",
+  "competency_label": "Project Coordinator Role Understanding",
+  "lesson_ref": "coordinator-role",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "role_breadth_recognition",
+      "description": "Does the learner recognise the unstated work of a Project Coordinator beyond the job description — information routing, project memory, early-warning on schedule slip, authoring the written record, friction reduction, and absorbing day-to-day stakeholder pressure?",
+      "anchors": {
+        "1": "Recites the job-description list (takes minutes, tracks risks, schedules meetings) with no recognition of the unstated work.",
+        "3": "Names two or three of the unstated functions (e.g. memory of the project, written-record author) but treats one or two as optional or aspirational rather than core.",
+        "5": "Articulates four or more of the unstated functions as core to the role, with concrete examples that show the learner has internalised why each one matters."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "role_self_placement",
+      "description": "Does the learner identify which of the three coordinator role types they are in (administrative / hybrid coordinator-analyst / aspiring-PM) and why, with reasoning grounded in the actual scope of decision-making rather than the title on the posting?",
+      "anchors": {
+        "1": "No self-placement, or self-placement based on title alone with no reasoning.",
+        "3": "Picks a role tier and gives a one-line rationale, but the rationale is generic or doesn't engage with the actual scope of decision-making.",
+        "5": "Picks a role tier with reasoning grounded in concrete scope ('I am in the hybrid track because I draft change requests but the PM approves them; I do not yet run a workstream end-to-end'). Notes what would shift them to the next tier."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "habit_specificity",
+      "description": "Are the proposed first-30-days habits concrete, observable, and tied to the unstated work — versus generic platitudes ('I will be proactive', 'I will take initiative', 'I will collaborate effectively')?",
+      "anchors": {
+        "1": "Habits are platitudes ('be proactive', 'communicate clearly') with no observable behaviour or artifact.",
+        "3": "Habits are partially concrete (e.g. 'send weekly status') but lack frequency, audience, or what good looks like.",
+        "5": "Three or more habits are concrete, observable, and tied to the unstated work — with cadence, audience, and a definition of done that another person could check ('Within 48 hours of each steering, distribute minutes that lead with decisions and actions, not transcript')."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "professional_voice",
+      "description": "Does the writing read like a working professional — direct, plain, unhurried, free of corporate jargon and LinkedIn cliché — versus padded with 'leverage', 'synergize', 'best-in-class', or signalling-language that performs competence rather than demonstrating it?",
+      "anchors": {
+        "1": "Writing is jargon-heavy ('leverage cross-functional synergies') or LinkedIn-speak ('passionate about driving outcomes'); content is hidden behind performance.",
+        "3": "Writing is mostly plain but occasionally slips into jargon or generic phrases; meaning is mostly clear but not crisp.",
+        "5": "Writing is plain, specific, and confident. No jargon. Sentences carry information; nothing is filler. Reads like the chapter being studied."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "realistic_humility",
+      "description": "Does the learner acknowledge what they do not yet know — without performing inadequacy or hedging every sentence — and name how they will learn it (asking, reading, observing)?",
+      "anchors": {
+        "1": "Either claims confidence in everything (no acknowledged unknowns) or hedges every sentence so heavily that nothing is asserted.",
+        "3": "Names one or two unknowns but does not say how they will close the gap, or hedges defensively.",
+        "5": "Names specific unknowns ('I do not yet know who actually approves change requests under £10k') and pairs each with a concrete way to find out (asking the PM in the first 1:1, reading the governance doc, observing the next steering committee). Confident about what is known, honest about what is not."
+      },
+      "weight": 0.20
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+Memo: First-week notes
+To: J. Patel, PM
+From: M. Okafor, PC
+Date: end of week 1
+
+J — a quick note on what I think I'm walking into and what I plan to do about it.
+
+The role, as I understand it.
+
+I see the coordinator job as more than the bullet list on the posting. The most important parts, in my view, are: keeping the project's memory (where every decision lives, who owned it, when it landed), and being the person who notices when small slips are happening before they stack up. I also expect to do a lot of the writing that goes out — minutes, status notes, the read-aheads — because that's where the project actually communicates with the people who don't sit in our meetings.
+
+I think I'm in the hybrid coordinator-analyst track. I'll maintain the schedule, draft change requests for your approval, run the working-level meetings if you're stuck. I'm not running a workstream end-to-end yet, so I wouldn't call myself an aspiring-PM in this role.
+
+First 30 days — three things I'll build:
+
+1. Minutes that lead with decisions and actions, not transcript. Out within 24 hours of every meeting I attend.
+2. A weekly Friday note to you with three things: what's on track, what's slipping, and one thing I want a steer on.
+3. A clean RAID log refresh every Monday morning so your weekly view starts from current state.
+
+What I don't know yet:
+
+- Who actually approves change requests under a certain threshold versus what needs to go to steering. I'll ask in our first 1:1.
+- The history of why the integration approach chosen in March was chosen over the alternative. I think it'll matter when scope conversations come up; I'll read the design decision log and then ask you for context if anything is unclear.
+
+I'm sure I'll add to this list as I go. I wanted to put a stake in the ground at the end of week one.
+
+Thanks,
+M.
