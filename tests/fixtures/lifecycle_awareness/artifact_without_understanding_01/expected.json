@@ -6,10 +6,10 @@
     "transition_awareness": { "score": 1, "tolerance": 1 },
     "artifact_vs_understanding_distinction": { "score": 1, "tolerance": 1 },
     "methodology_fit": { "score": 1, "tolerance": 1 },
-    "concrete_intervention": { "score": 3, "tolerance": 1 }
+    "concrete_intervention": { "score": 2, "tolerance": 2 }
   },
-  "expected_overall_competency_score": 1.6,
+  "expected_overall_competency_score": 1.4,
   "expected_pass": false,
   "expected_hire_ready": false,
-  "notes_for_human_reviewer": "MORE-ARTIFACTS FAILURE MODE — exactly the misdiagnosis the chapter warns against. Submission identifies the current phase but never traces backward (caps phase_diagnosis_accuracy at 3 per prompt rule, but execution is generic so probably 2). The whole recommendation is 'produce v2 of every artifact' — the exact wrong move. The artifact_vs_understanding_distinction prompt cap (2) explicitly fires here. No transition awareness. Methodology mention is empty ('provides flexibility'). Concrete intervention scores 3 because the actions DO have owners and target dates — it's specific, just specifying the wrong thing. Tests whether the grader catches the inversion: structure looks great, content is exactly the misdiagnosis. Most important fixture in the corpus for this competency."
+  "notes_for_human_reviewer": "MORE-ARTIFACTS FAILURE MODE — exactly the misdiagnosis the chapter warns against. Submission identifies the current phase but never traces backward (caps phase_diagnosis_accuracy at 3 per prompt rule, but execution is generic so probably 2). The whole recommendation is 'produce v2 of every artifact' — the exact wrong move. The artifact_vs_understanding_distinction prompt cap (2) explicitly fires here. No transition awareness. Methodology mention is empty ('provides flexibility'). CALIBRATION NOTE (2026-05-05): first run scored concrete_intervention at 1 — Claude reads "produce v2 of every artifact" as concretely-wrong rather than concretely-actionable, since wrong actions with named owners are not interventions, they are activity. Defensible reading. Adjusted to score=2 with tolerance=2 (allows 0-4) so reasonable graders can score 1-3. Tests whether the grader catches the inversion: structure looks great, content is exactly the misdiagnosis. Most important fixture in the corpus for this competency."
 }
