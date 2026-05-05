@@ -14,16 +14,12 @@ Last reviewed: 2026-05-05 (Part-I grading pipeline mid-rollout, paused on Anthro
 
 ## Open PRs (waiting on credits to merge)
 
-- [ ] **PR #71** — Lesson 3 (written-voice / Ch 3): rubric + prompt + 5 fixtures. Code complete; calibration green-light blocked on credits.
-- [ ] **PR #72** — Lesson 4 (mindset / Ch 2): rubric + prompt + 5 fixtures + grading-engine quote-cap bump (500→750). Code complete; calibration green-light blocked on credits.
+- [ ] **PR #71** — Lesson 3 (written-voice / Ch 3): rubric + prompt + 5 fixtures. Code complete; calibration blocked on credits.
+- [ ] **PR #72** — Lesson 4 (mindset / Ch 2): rubric + prompt + 5 fixtures + grading-engine quote-cap bump (500→750). Code complete; calibration blocked on credits.
+- [ ] **PR #73** — Lesson 5 (methodologies / Ch 5): rubric + prompt + 5 fixtures incl. symmetric partisan-cap probes (waterfall-defence + agile-zealotry). Code complete; calibration blocked on credits.
 
-## Open WIP branches (no PR yet)
+## Content — grading pipelines (Claude can author next)
 
-- [ ] **`feat/lesson-5-methodologies`** — rubric + prompt + scenario authored, 5 fixtures + DB migration + PR pending. Resume by writing the 5 fixtures, applying the migration, opening the PR.
-
-## Content — grading pipelines (Claude can author once credits restored)
-
-- [ ] **Lesson 5 grading pipeline** — methodologies (Ch 5). WIP branch above. Same 5-file pattern.
 - [ ] **Lesson 6 grading pipeline** — governance (Ch 6).
 - [ ] **Lesson 7 grading pipeline** — variables / scope-schedule-cost (Ch 7).
 - [ ] **Lessons 8–19** — handbook covers chapters 8–25 (requirements, WBS, schedules, meetings, minutes, status reports, change requests, dashboards, escalation, push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs which are reading-only.
