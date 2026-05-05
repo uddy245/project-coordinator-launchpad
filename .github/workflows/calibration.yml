@@ -16,8 +16,7 @@ on:
       - "src/lib/anthropic/**"
       - "docs/prompts/**"
       - "docs/rubrics/**"
-      - "tests/fixtures/risk_identification/**"
-      - "tests/fixtures/project_intake/**"
+      - "tests/fixtures/**"
       - "tests/integration/calibration.test.ts"
       - ".github/workflows/calibration.yml"
 
@@ -25,7 +24,7 @@ jobs:
   calibration:
     name: Run calibration corpus
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4
