@@ -1,0 +1,35 @@
+Memo: Compliance-reporting platform — lifecycle diagnostic
+To: J. Patel, PM
+From: M. Okafor, PC
+Date: end of week 12, execution phase
+
+J — here's my read on the project.
+
+Where we actually are.
+
+On the surface we are in execution — kickoff was eight weeks ago, the team is building, sprints are running. Underneath, I don't think the planning question (How will it be done?) has actually been answered. The signs are: the BA is rewriting requirements for the third time even though they were signed off two months ago, the senior developer said "nobody on the team really believes the schedule", and 19 of the new RAID items are issues that already materialised — meaning the planning didn't surface the risks that mattered. The artifacts of planning exist (charter, WBS, schedule, RAID). The shared understanding doesn't.
+
+The transition that went wrong.
+
+Planning-to-execution. We crossed it on the strength of signed documents rather than a real readiness check. The four-week pattern after kickoff — multiple change requests, requirements rewrites, the team not believing the schedule — is the classic signature of a planning-to-execution transition that wasn't ready. The kickoff happened because the calendar said it was time, not because the project was ready.
+
+What we produced versus what we produced.
+
+We produced a 400-line WBS, a schedule, a 52-item risk register, a charter, and a RACI. We did not produce a team that believes the plan. The fix isn't to produce a fuller WBS or a deeper risk register; producing more artifacts on the same foundation will make the gap larger, not smaller. The fix is to rebuild the parts of planning that the artifacts are masking.
+
+Methodology angle.
+
+The hybrid setup matters. The waterfall outer wrapper — charter, plan, kickoff, build, deploy, close — is what we wrote down. The build phase is supposed to run in two-week sprints. The two-week sprint cadence is exactly the right place to fix this without halting the project: the next sprint planning becomes the readiness check we never had. We don't need to "stop and replan" — we need to use the sprint cadence we already have for what it's actually for.
+
+What I'd do next.
+
+Recommendation: convene a 90-minute scope-and-readiness session ahead of next sprint planning, Wednesday afternoon. Participants: PM (you), tech lead, BA, senior dev, the two stakeholders whose requirements have shifted. Items to confirm:
+- Top 5 in-scope outcomes for the next two sprints (not features — outcomes)
+- Which risks on the original 52 are actually live, and which can be retired
+- What the BA needs from the stakeholders to stop the rewrite cycle
+
+'Ready' at the end of the session: a one-page sprint-objective doc the team can point to in standup. If we can't get that out of the room, that itself is the diagnosis — and we escalate to the sponsor with a written assessment.
+
+I'd expect to repeat this every two sprints for the next month before we trust execution to settle.
+
+— M.

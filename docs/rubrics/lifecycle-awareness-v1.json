@@ -1,0 +1,61 @@
+{
+  "rubric_id": "lifecycle-awareness-v1",
+  "rubric_version": "1.0.0",
+  "competency": "lifecycle_awareness",
+  "competency_label": "Project Lifecycle Awareness",
+  "lesson_ref": "project-lifecycle",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "phase_diagnosis_accuracy",
+      "description": "Does the learner correctly identify the project's current phase from the evidence given AND surface which earlier-phase question (Should this exist? How will it be done? Are we doing it? Is it finished?) has not actually been answered? Working the model backward to the source of trouble is the core skill from Chapter 4.",
+      "anchors": {
+        "1": "Names a phase but with no reasoning, or names the wrong phase, or treats 'we are in execution' as the diagnosis.",
+        "3": "Identifies the current phase correctly but stops there — does not work backward to identify the unresolved earlier-phase question.",
+        "5": "Correctly identifies the current phase AND names the specific earlier-phase question that is unanswered, with evidence quoted from the scenario ('the team is in execution but the planning question — How will it be done? — is unresolved because the WBS was built by the PM alone and the team does not believe the schedule')."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "transition_awareness",
+      "description": "Does the learner recognise that most project trouble lives at a phase transition (initiation→planning, planning→execution, execution→closure) and name which transition the troubled project failed to make cleanly?",
+      "anchors": {
+        "1": "No mention of transitions; treats phases as boxes the project is 'in'.",
+        "3": "Mentions transitions in general terms but does not name which specific transition the scenario's project tripped over.",
+        "5": "Names the specific transition that failed ('the planning-to-execution transition was skipped — kickoff happened before a real readiness check'), with reference to the symptoms in the scenario."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "artifact_vs_understanding_distinction",
+      "description": "Does the learner distinguish 'the document exists' from 'the alignment exists'? This is the central thesis of Chapter 4 — that planning produces shared understanding, with artifacts as evidence rather than substitutes. A learner who treats a signed plan or signed charter as proof that a phase is complete has missed the point.",
+      "anchors": {
+        "1": "Treats the existence of artifacts (signed plan, RAID register, RACI) as proof the phase is complete. Recommends producing more artifacts as the fix.",
+        "3": "Acknowledges the distinction in passing but treats it as one of several issues, not the central one.",
+        "5": "Articulates clearly that the project has produced the artifacts without producing the alignment, and that the recovery is to rebuild the shared understanding (not to redo the documents). Quotes from the scenario evidence the gap."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "methodology_fit",
+      "description": "Does the learner note that lifecycle plays out differently under waterfall, agile, and hybrid — and adjust their diagnosis or recommendation to fit the methodology evident in the scenario? The point is not deep methodology knowledge (Chapter 5 covers that); it is recognising that the answer changes when the methodology changes.",
+      "anchors": {
+        "1": "No mention of methodology, or applies waterfall thinking to an obviously agile project (or vice versa).",
+        "3": "Mentions the methodology but doesn't actually adjust the diagnosis or recommendation based on it.",
+        "5": "Identifies the methodology, notes how it changes the appropriate move ('on this hybrid project, the planning workshop pattern still applies to the procurement workstream, but the scope re-alignment for the agile workstream should happen at the next sprint review, not as a one-off planning re-do')."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "concrete_intervention",
+      "description": "Is the proposed recovery move or readiness check specific (named participants, defined criteria, timeline) versus generic ('we should align stakeholders', 'establish governance')? A coordinator who can propose a lightweight readiness check with a real agenda demonstrates Layer 2 (procedural) and Layer 3 (judgment) of the curriculum.",
+      "anchors": {
+        "1": "Recommendation is generic platitudes ('we need better alignment', 'establish proper governance').",
+        "3": "Recommendation has some specificity (e.g. 'run a readiness review') but lacks participants, criteria, or timeline.",
+        "5": "Recommendation is concrete: who is in the room, what specific items will be checked, what 'ready' looks like, when this happens. Another coordinator could pick it up and run it."
+      },
+      "weight": 0.20
+    }
+  ]
+}

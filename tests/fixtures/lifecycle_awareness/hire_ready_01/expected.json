@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "lifecycle-diagnostic-memo-v1",
+  "expected_dimension_scores": {
+    "phase_diagnosis_accuracy": { "score": 5, "tolerance": 1 },
+    "transition_awareness": { "score": 5, "tolerance": 1 },
+    "artifact_vs_understanding_distinction": { "score": 5, "tolerance": 1 },
+    "methodology_fit": { "score": 5, "tolerance": 1 },
+    "concrete_intervention": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. Phase diagnosis names current phase + traces back to planning question with three independent quoted pieces of evidence. Transition explicitly named with the textbook signature ('the canonical sign'). Artifact-vs-understanding distinction is the through-line ('producing them better does not solve the problem'). Methodology fit fully separates waterfall logic from agile cadence as the actual recovery lever, not just a passing mention. Concrete intervention names six participants, three deliverables, time-box, definition of ready, escalation trigger, and proposes a four-cycle plan. Top of the rubric. This is what we want every learner reading."
+}
