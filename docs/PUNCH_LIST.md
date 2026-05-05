@@ -4,7 +4,7 @@ Live tracker for what's left to ship the app. **Claude reads this at the
 start of every session before doing anything else.** Tick a box when the
 work lands on `main`. Add new items as we discover them.
 
-Last reviewed: 2026-05-05 (Part-I grading pipeline mid-rollout, paused on Anthropic credits)
+Last reviewed: 2026-05-05 (Part-I authoring complete: 5 PRs in flight blocked on Anthropic credits)
 
 ---
 
@@ -14,15 +14,17 @@ Last reviewed: 2026-05-05 (Part-I grading pipeline mid-rollout, paused on Anthro
 
 ## Open PRs (waiting on credits to merge)
 
-- [ ] **PR #71** — Lesson 3 (written-voice / Ch 3): rubric + prompt + 5 fixtures. Code complete; calibration blocked on credits.
-- [ ] **PR #72** — Lesson 4 (mindset / Ch 2): rubric + prompt + 5 fixtures + grading-engine quote-cap bump (500→750). Code complete; calibration blocked on credits.
-- [ ] **PR #73** — Lesson 5 (methodologies / Ch 5): rubric + prompt + 5 fixtures incl. symmetric partisan-cap probes (waterfall-defence + agile-zealotry). Code complete; calibration blocked on credits.
+All five Part-I lesson PRs are code-complete. Calibration green-light blocked on credits. Migrations applied to launchpad-prod. Once credits restored, each PR's calibration will run; expect 0–4 score adjustment cycles per PR (same pattern as PR #70).
+
+- [ ] **PR #71** — Lesson 3 (written-voice / Ch 3): rubric + prompt + 5 fixtures.
+- [ ] **PR #72** — Lesson 4 (mindset / Ch 2): rubric + prompt + 5 fixtures + grading-engine quote-cap bump (500→750).
+- [ ] **PR #73** — Lesson 5 (methodologies / Ch 5): rubric + prompt + 5 fixtures incl. symmetric partisan-cap probes (waterfall-defence + agile-zealotry).
+- [ ] **PR #74** — Lesson 6 (governance / Ch 6): rubric + prompt + 5 fixtures incl. overstep + blame-narrative probes.
+- [ ] **PR #75** — Lesson 7 (variables / Ch 7): rubric + prompt + 5 fixtures incl. iron-triangle-zealot + quality-blindspot probes.
 
 ## Content — grading pipelines (Claude can author next)
 
-- [ ] **Lesson 6 grading pipeline** — governance (Ch 6).
-- [ ] **Lesson 7 grading pipeline** — variables / scope-schedule-cost (Ch 7).
-- [ ] **Lessons 8–19** — handbook covers chapters 8–25 (requirements, WBS, schedules, meetings, minutes, status reports, change requests, dashboards, escalation, push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs which are reading-only.
+- [ ] **Lessons 8–19** — handbook covers chapters 8–25 (requirements, WBS, schedules, meetings, minutes, status reports, change requests, dashboards, escalation, push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs which are reading-only. Part III of the handbook (Chapters 8–16) is the procedural artifacts heart of the curriculum and likely needs the most grading-pipeline coverage.
 
 ## Content — blocked on user (recording / authoring)
 
