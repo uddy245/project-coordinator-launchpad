@@ -38,7 +38,7 @@ export function buildGradeTool(rubric: RubricJSON): Anthropic.Messages.Tool {
                 minLength: 10,
                 maxLength: 500,
               },
-              quote: { type: "string", maxLength: 500 },
+              quote: { type: "string", maxLength: 750 },
               suggestion: {
                 type: "string",
                 minLength: 10,
