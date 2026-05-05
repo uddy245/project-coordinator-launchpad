@@ -1,0 +1,18 @@
+Memo: Project Diagnostic
+To: PM
+From: Coordinator
+
+Hi PM,
+
+Looking at the project, I think we are in execution. The team is building. Sprints are running. There are some issues but I think we just need to push through.
+
+The phase is execution because we already did kickoff and we are doing the build.
+
+I think the team needs better stakeholder alignment. We should improve communication and make sure everyone is on the same page. We should also leverage best practices around change management to handle the change requests.
+
+For methodology, we are using hybrid which is good because it gives flexibility.
+
+My recommendation is that we have a meeting next week to discuss the issues and align on the path forward.
+
+Thanks,
+Coordinator

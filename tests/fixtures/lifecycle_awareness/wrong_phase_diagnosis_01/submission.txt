@@ -1,0 +1,18 @@
+Memo: Project diagnostic
+To: PM
+From: Coordinator
+
+Hi PM,
+
+Looking at the situation, I think we are actually still in initiation. We don't have clear sponsorship, the requirements are unclear, and stakeholders aren't aligned. We need to go back to initiation and complete it properly.
+
+Specifically, I would recommend we re-run the charter exercise with the sponsor, re-identify our stakeholders, and re-define the business case. This will take about three weeks and will require pausing the build.
+
+The transition we missed was initiation-to-planning. We should not have started planning before initiation was truly complete.
+
+For methodology, the hybrid approach is making things confusing. I recommend we switch to pure waterfall to bring more rigor.
+
+Recovery move: pause the build for three weeks while we re-do initiation. Convene the sponsor, the PM, and the steering committee. Re-write the charter. Re-baseline the requirements.
+
+Thanks,
+Coordinator

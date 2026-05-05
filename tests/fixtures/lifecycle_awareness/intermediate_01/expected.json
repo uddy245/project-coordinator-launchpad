@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "lifecycle-diagnostic-memo-v1",
+  "expected_dimension_scores": {
+    "phase_diagnosis_accuracy": { "score": 5, "tolerance": 1 },
+    "transition_awareness": { "score": 5, "tolerance": 1 },
+    "artifact_vs_understanding_distinction": { "score": 5, "tolerance": 1 },
+    "methodology_fit": { "score": 4, "tolerance": 1 },
+    "concrete_intervention": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.85,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Strong submission, near ceiling. Phase diagnosis traces backward correctly ('underneath, the planning question - How will it be done? - has not been answered'). Transition explicitly named (planning-to-execution) with three specific symptoms quoted. Artifact-vs-understanding distinction is the central thread. Methodology angle uses the sprint cadence as the lever rather than treating the methodology as decoration — strong but doesn't hit ceiling because it doesn't fully separate waterfall logic from agile logic in the recovery (only 4). Concrete intervention names participants, agenda, time-box, definition of ready. This is what a hire-ready coordinator looks like. Tolerance 1 across all dims; this fixture should be a clean pass for a calibrated grader."
+}

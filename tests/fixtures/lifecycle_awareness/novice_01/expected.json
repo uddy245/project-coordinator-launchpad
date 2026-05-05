@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "lifecycle-diagnostic-memo-v1",
+  "expected_dimension_scores": {
+    "phase_diagnosis_accuracy": { "score": 1, "tolerance": 1 },
+    "transition_awareness": { "score": 1, "tolerance": 1 },
+    "artifact_vs_understanding_distinction": { "score": 1, "tolerance": 1 },
+    "methodology_fit": { "score": 1, "tolerance": 1 },
+    "concrete_intervention": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor submission. Names current phase ('execution') with surface reasoning, never works backward to the unresolved planning question. No transition awareness. No artifact-vs-understanding distinction. Methodology mention is empty ('flexibility'). Recommendation is 'have a meeting'. Tests whether the grader correctly bottoms out a clearly-shallow submission. Common drift: scoring 2-3 because the format LOOKS like a memo. The phase_diagnosis_accuracy cap rule (no backward trace caps at 3) is borderline — Claude might give 2 here; tolerance 1 allows 1-2."
+}

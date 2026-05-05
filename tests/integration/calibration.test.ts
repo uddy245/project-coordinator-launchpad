@@ -40,6 +40,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/role-understanding-v1.json",
     promptPath: "docs/prompts/grade-role-v1.md",
   },
+  {
+    competency: "lifecycle_awareness",
+    rubricPath: "docs/rubrics/lifecycle-awareness-v1.json",
+    promptPath: "docs/prompts/grade-lifecycle-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

@@ -1,0 +1,54 @@
+Memo: Compliance-reporting platform — lifecycle diagnostic and proposed recovery
+To: J. Patel, PM
+From: L. Jansen, PC
+Date: 2026-05-08, end of week 12
+
+J — short version: we look like we're in execution; we are actually working through an unresolved planning phase. The artifacts of planning exist; the shared understanding does not. Detail below, with one concrete move I'd like to propose.
+
+1. Where we are, and where the trouble actually lives.
+
+Surface phase: execution. Kickoff happened week 4. Sprints are running. Build is in flight.
+
+Underneath, the question that isn't answered is the planning question — How will this be done? Three pieces of evidence:
+
+- The BA is rewriting requirements for the third time, against a document that was signed two months ago. A signed-but-unbelieved scope is the canonical sign that planning produced the artifact without producing the alignment.
+- The senior developer told you off the record that nobody on the team believes the schedule. A schedule the team does not believe is the canonical sign that the WBS and the schedule were built without the people who would do the work.
+- 19 of the 19 new RAID items in the past four weeks are issues that have already materialised, not risks. A risk register that surfaces issues only after they materialise is the canonical sign that the risk-identification work in planning was a template-fill, not a conversation.
+
+Three independent signals. They all point to the same source: the planning phase ended on the strength of artifacts produced, not on the strength of shared understanding reached.
+
+2. The transition that failed.
+
+Planning-to-execution. The kickoff happened because the schedule said it was time. There was no real readiness check. The four-week pattern after kickoff is the textbook signature: multiple change requests in the first month of execution, the risk register growing faster than it shrinks, requirements rewrites starting almost immediately, the team operating from understandings held in pockets rather than on paper. We are now eight weeks into recovery work disguised as delivery work, and the cost compounds every week we don't name it.
+
+3. Artifacts versus understanding.
+
+We have: a charter, a 400-line WBS, an MS Project schedule, a 52-item RAID, a RACI. None of those need to be produced again. Producing them better — a more detailed WBS, a deeper risk register — does not solve the problem. The problem is that the team did not co-author the plan, and now they are not executing it; they are producing whatever they produce while the artifacts sit in SharePoint.
+
+The fix is to do the planning conversations that didn't happen, with the people who should have been in them, on the scope that is now in front of us — not the scope that was in front of us in February. We don't go backward; we re-anchor the next eight weeks of build with the right people in the room.
+
+4. Methodology.
+
+This is a hybrid project. The outer wrapper is waterfall — charter, plan, kickoff, build, deploy, close — and we already crossed the planning-to-build gate. We are not going to stop and re-plan formally; that would lose two weeks and ten thousand dollars of pride.
+
+The build is supposed to run in two-week sprints. Sprint cadence is the agile mechanism designed for exactly this — re-anchoring scope at a regular cadence with the people doing the work. We have been treating sprints as a build rhythm. We need to start treating sprint planning as a small, real planning ceremony — the one we should have run in February, run instead at the start of every two-week cycle for the next two months.
+
+5. Concrete move I'd like to propose.
+
+A 90-minute scope-and-readiness session before the next sprint, Wednesday at 14:00.
+
+In the room: you, R. Silva (tech lead), D. Huang (senior dev), the BA, the two stakeholders whose requirements have shifted (T. Reyes and K. Bell). Six people. One agenda.
+
+Three items to land in the 90 minutes:
+
+a) The five in-scope outcomes for the next two sprints. Not features. Outcomes. Quoted from the BA's current draft, validated by the stakeholders in the room, agreed by R. Silva as buildable in the cycle.
+
+b) The risks the team actually owns. Walk the 71-item RAID, retire the noise, name an owner for each live item. I expect the list to fall to ~15 real risks with named owners by the end. I will pre-cull the obvious noise so we are not doing it live.
+
+c) The questions we cannot answer in the room — captured as open questions with owners and a date by which we'll have an answer. These become the spine of the next sprint review.
+
+'Ready' at the end of the session: a one-page sprint objective + risk owners + open questions list, sent by 17:00 Wednesday, agreed in standup Thursday morning. If we cannot land it in 90 minutes, that is the diagnosis itself, and I will draft a written escalation to the sponsor before Friday.
+
+If this works, I'd propose we run the same readiness session at the start of every two-week sprint for the next four sprints, then stop when the team is operating from a believed plan rather than reconstructing it weekly.
+
+— L.

@@ -1,0 +1,17 @@
+You have been asked to diagnose a struggling project at your firm. The facts are these.
+
+It is a compliance-reporting platform build for a financial-services client. Eight months planned, mid-build now (week 12 of execution). The project completed planning eight weeks ago: the charter is signed, the WBS has 400 line items, the schedule is in MS Project, the RAID register lists 52 risks, RACI is drawn up, kickoff was held.
+
+Today the project is struggling. Specifically: the developers are working but the build does not seem to be producing what the requirements describe. The business analyst is rewriting the requirements for the third time — requirements that were "signed off" two months ago. Multiple change requests have been filed in the past four weeks. The risk register grew from 52 to 71 and most of the new risks are issues that have already materialised. The senior developer told the PM, off the record, that "nobody on the team really believes the schedule". The sponsor is asking pointed questions in the steering committee.
+
+The project uses a hybrid methodology: waterfall structure for the overall lifecycle (charter, plan, kickoff, build, deploy, close), with the development workstream running in two-week sprints inside the build phase.
+
+Write a 600-900 word memo to your PM diagnosing what is actually going wrong and what to do next. The memo must:
+
+1. Identify the project's current phase, AND name which earlier-phase question (Should this exist? / How will it be done? / Are we doing it? / Is it finished?) has not actually been answered. Quote evidence from the scenario.
+2. Identify which phase transition was made badly, with the specific symptoms that prove it.
+3. Distinguish what the project has produced (the artifacts) from what it has not produced (the shared understanding) — without recommending that the team simply produce more / better artifacts.
+4. Note how the hybrid methodology affects your recommendation: where waterfall logic applies, where agile cadence is the better lever.
+5. Propose one concrete recovery move with named participants, specific check-items, a timeline, and what 'ready' looks like at the end of it.
+
+Write directly. No corporate jargon. The PM should finish the memo and feel that you have read the chapter and applied the four-questions mental model — not that you have produced a generic project-rescue plan.

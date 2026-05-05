@@ -1,0 +1,15 @@
+{
+  "fixture_id": "wrong_phase_diagnosis_01",
+  "scenario_ref": "lifecycle-diagnostic-memo-v1",
+  "expected_dimension_scores": {
+    "phase_diagnosis_accuracy": { "score": 2, "tolerance": 2 },
+    "transition_awareness": { "score": 3, "tolerance": 1 },
+    "artifact_vs_understanding_distinction": { "score": 2, "tolerance": 1 },
+    "methodology_fit": { "score": 2, "tolerance": 1 },
+    "concrete_intervention": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 2.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "OVER-CORRECTION FAILURE MODE. The learner has read the chapter and tried to work the model backward — but went one step too far, diagnosing the trouble as initiation-incomplete rather than planning-incomplete. The scenario does not support 'unclear sponsorship' or 'unclear business case' — those words are not in the scenario. The learner has imported a generic diagnosis. The transition naming (initiation-to-planning) is wrong; the actual failure is planning-to-execution. The recommendation to pause the build for three weeks and re-do initiation is the wrong intervention. Methodology angle ('switch to pure waterfall') is reactive and wrong. Tests whether the grader catches a confidently-wrong diagnosis vs a humble correct-but-shallow one. Phase_diagnosis tolerance widened to 2 because reasonable graders could score 1-3 here — the answer is wrong but the structure of the thinking matches the chapter."
+}

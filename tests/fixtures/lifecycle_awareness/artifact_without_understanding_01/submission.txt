@@ -1,0 +1,43 @@
+PROJECT DIAGNOSTIC MEMO
+To: Project Manager
+From: Project Coordinator
+Re: Compliance-reporting platform — recommended actions
+
+EXECUTIVE SUMMARY
+
+The project is currently in the execution phase and is experiencing typical mid-build challenges. After thorough analysis, I recommend strengthening our project documentation and governance to address the issues observed.
+
+PHASE ASSESSMENT
+
+The project is in execution, having completed planning eight weeks ago and held kickoff. Build is underway with sprints running on the development workstream. We have all the standard project documentation in place: a signed charter, a 400-line WBS, the MS Project schedule, a 52-item RAID register, and a RACI matrix.
+
+ROOT CAUSE ANALYSIS
+
+The recent issues — requirements rewrites, change requests, RAID growth — point to gaps in our documentation rigor. Specifically:
+
+1. The requirements document, while signed off, lacks the level of detail needed to prevent ambiguity. We should produce a v2 of the requirements document with finer-grained acceptance criteria.
+
+2. The WBS has 400 line items but several appear to be at the wrong level of decomposition. We should refine the WBS to a more granular level — I estimate this would bring it to ~600 line items.
+
+3. The risk register has grown to 71 items, indicating that our initial risk identification was incomplete. We should run a comprehensive risk re-identification workshop and produce a v2 risk register, ideally with 90+ items to ensure full coverage.
+
+4. The RACI may need updating to reflect the current team composition. I propose producing a v2 RACI matrix.
+
+5. Our change-request log should be expanded to include more detailed impact assessments.
+
+METHODOLOGY
+
+We are running a hybrid model. I recommend continuing this approach as it provides flexibility.
+
+RECOMMENDED ACTIONS
+
+1. Produce v2 of the requirements document (owner: BA, target: end of next sprint)
+2. Refine the WBS to ~600 line items (owner: PM, target: end of week 14)
+3. Run risk re-identification workshop and produce v2 RAID (target: week 14)
+4. Update RACI matrix (target: week 13)
+5. Strengthen change-request documentation template (target: week 13)
+
+By producing more thorough documentation across these five areas, we will establish the rigor needed to bring the project back on track.
+
+Thank you,
+Coordinator
