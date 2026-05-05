@@ -4,7 +4,7 @@ Live tracker for what's left to ship the app. **Claude reads this at the
 start of every session before doing anything else.** Tick a box when the
 work lands on `main`. Add new items as we discover them.
 
-Last reviewed: 2026-05-05 (after PR #67 merge)
+Last reviewed: 2026-05-05 (after PR #68 merge)
 
 ---
 
@@ -17,8 +17,7 @@ Last reviewed: 2026-05-05 (after PR #67 merge)
 
 ## Engine work (Claude can do solo)
 
-- [ ] **Cost-cap prod smoke test** — temporarily set `ANTHROPIC_SPEND_CAP_USD=0.001` in Vercel preview env, upload, confirm `grading_failed` with code `COST_CAP_EXCEEDED`, revert env.
-- [ ] **More mock interview scenarios** — expand beyond the 5 seeded for full Gate 3 coverage. Files: `mock_interview_scenarios` table seeds.
+- [ ] **Cost-cap prod smoke test** — temporarily set `ANTHROPIC_SPEND_CAP_USD=0.001` in Vercel preview env, upload, confirm `grading_failed` with code `COST_CAP_EXCEEDED`, revert env. Needs Vercel env access.
 
 ## Verification (user's hands)
 
@@ -32,6 +31,7 @@ Last reviewed: 2026-05-05 (after PR #67 merge)
 - 2026-05-03 — **PR #65 prod smoke test**: root 200, anon preview 200, auth-gated routes 307→login as expected. Deploy verified.
 - 2026-05-05 — **PR #66** merged: punch list infra (CLAUDE.md + docs/PUNCH_LIST.md). Session-start source of truth.
 - 2026-05-05 — **PR #67** merged: calibration corpus 9 → 20 fixtures. 11 new failure-mode probes (3 novice, 4 intermediate, 2 hire-ready, 2 edge cases). 3 CI runs to settle scores; 6 expected-score adjustments documented in fixture notes.
+- 2026-05-05 — **PR #68** merged: 7 hand-authored mock-interview scenarios filling behavioural-medium/hard, procedural-easy, judgment-easy gaps. Pool 11 → 18; all 9 category × difficulty cells now ≥1.
 
 ---
 
