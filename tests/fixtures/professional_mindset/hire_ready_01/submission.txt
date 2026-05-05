@@ -1,0 +1,42 @@
+Memo to Helen
+Subject: Your nine-day absence — three triggers, three actions, one mistake owned, one open question for your return
+
+Hi Helen,
+
+Short version: vendor slip handled at routine level, M. Whitfield's question routed and closed Wednesday, finance-figure mistake on Friday's status corrected Monday morning. One open item I'd like your judgment on at the bottom.
+
+Detail.
+
+1. Vendor slip — integration plan.
+
+T. Reyes emailed 5:47 Friday with no new date. The chapter's framing was useful here: this is the project needing me to keep moving, not waiting for you. I emailed her Monday 8:30 with a specific ask: firm date by EOD Monday plus one-line root cause. Tuesday morning she returned with next Wednesday, "internal capacity". I judged this routine vendor-management; the slip is one week, the project plan absorbs it, and pushing for root cause was within my reach. I did not escalate to the covering PM because the situation didn't warrant her time. My escalation criterion if T. Reyes had stayed silent: 24-hour silence triggers covering-PM loop-in for visibility, even if no action needed.
+
+I told Raj and Priya same morning so they could replan their week. Raj switched to the data-validation harness work he'd flagged last week as a useful adjacency; Priya spent two days on documentation prep we had queued for week six. Net week-loss: zero. Net schedule risk: zero, with one week of buffer eaten.
+
+Mindset shift applied: ownership over task. The task list said "wait for vendor". The project needed someone to chase the vendor on day one.
+
+2. M. Whitfield email — split-jurisdiction regulatory question.
+
+I responded Monday 9:30 with what I'd quote as the model from Chapter 2: "Thanks for raising this — I don't have the regulatory detail to answer properly. Routing to R. Silva (tech lead) this morning; I'll come back to you by Wednesday EOD." I did not respond to the tone of his email; I responded to the question. He had been brief and slightly sharp; I read that as brief, not hostile, and matched the brevity.
+
+Routed to R. Silva same morning with the email forwarded and one paragraph of context (urgency, why this stakeholder, what he likely needs). R. Silva came back Tuesday with a written analysis. I sent it to M. Whitfield Wednesday 9 am with you copied. He replied "thanks, that's clear." Loop closed.
+
+Mindset shift applied: refusal to pretend, and composure under pressure. The pull was to either fabricate something to look competent, or apologize my way through a non-answer. Neither was the move.
+
+3. Wrong finance figure on Friday's status.
+
+This was my error. I noticed Friday afternoon — too late to fix the report, which had gone out under your name to the sponsor and four senior stakeholders. The figure was off by £47k against £2.3m budget; not catastrophic, but wrong.
+
+Owned it Monday 9:00 with a single email to the full distribution: "Status correction — finance figure on page 2 was outdated by two weeks. Revised figure £x; variance against budget unchanged at amber. Apologies for the error." Attached the corrected page. No drama, no repeat apologies.
+
+Lesson noted for self: the finance figure on the status report should be cross-checked against the live tracker on Friday morning, not Friday afternoon. I've added a 9 am Friday check to my recurring calendar. Won't happen again.
+
+Mindset shift applied: own / fix / extract. Hiding it until your return was the wrong move and would have made it worse — by then M. Whitfield's office would have been planning against the wrong number.
+
+Open item for your return.
+
+The covering PM. I did not loop her in on any of this because none of it warranted her time. In hindsight I think a one-line "for your awareness" email on Monday afternoon would have been the right move — not to ask her to act, but to keep the covering relationship warm. I'd like your steer on whether the bar for looping in a covering PM is "needs action" or "needs awareness". I lean toward awareness; want your view before the next time this situation arises.
+
+Welcome back. Will write up the longer narrative for Friday's status.
+
+— Coordinator

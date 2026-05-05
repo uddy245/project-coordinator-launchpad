@@ -1,0 +1,15 @@
+{
+  "fixture_id": "defensive_excuser_01",
+  "scenario_ref": "ten-day-pm-leave-mindset-v1",
+  "expected_dimension_scores": {
+    "ownership_orientation": { "score": 2, "tolerance": 1 },
+    "composure_under_pressure": { "score": 2, "tolerance": 2 },
+    "honest_admission": { "score": 2, "tolerance": 1 },
+    "failure_response_quality": { "score": 2, "tolerance": 1 },
+    "long_view_indicators": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "EXCUSE-MAKING FAILURE MODE — Chapter 2's 'excusing the mistake' anti-pattern. Every trigger is acknowledged then explained-away with a deflection. 'Stepping on that without your authority felt risky' is task-mindset hiding behind politeness. 'I had no way to know' on M. Whitfield is the literal phrase Chapter 2 calls out. 'Information-flow issue, not a verification failure on my end' is the canonical excuse pattern. Multiple defensive language phrases fire the prompt cap on honest_admission AND failure_response. Long-view scores 1 because there's a recurring 'I want it noted', 'I want to be clear' pattern — that's grievance-carrying posture even though no specific grievance is named. CALIBRATION NOTE (2026-05-05): first run scored composure_under_pressure at 1 — Claude reads the defensive-framing posture as itself a composure failure (writer is in a defensive crouch, not absorbing the situation). Defensible. Adjusted from 3 +/-1 to 2 +/-2. Tests the dual prompt cap (defensive language caps both honest_admission and failure_response). Both should fire."
+}

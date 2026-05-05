@@ -1,0 +1,28 @@
+Memo to Helen
+Subject: Week-one of your leave — what I did, what I deferred, what I'd do differently
+
+Hi Helen,
+
+Three things came up. Here's how I handled each, with what I'd do differently noted at the bottom.
+
+1. Vendor slip on the integration plan.
+
+T. Reyes emailed at 5:47 Friday with no new date. I emailed her back Monday 8:30 asking for a firm date by EOD Monday and a one-line root cause. She came back Tuesday morning with next Wednesday and "internal capacity". I let Raj and Priya know the same morning so they could replan their week — Raj switched to the data-validation harness work, Priya spent two days on documentation prep that had been queued.
+
+I did not raise it to the covering PM because the slip is at routine vendor-management level and we have time to absorb it without changing the project plan. If T. Reyes hadn't come back with a date by Tuesday morning, I would have escalated.
+
+2. M. Whitfield email — split-jurisdiction reporting.
+
+I responded same day with: "Thanks for raising this — I don't have the regulatory detail to answer properly. Routing to our technical lead today; will have a response to you by Wednesday EOD." I then routed to R. Silva (tech lead) with the email forwarded and a short note explaining the urgency. He came back Tuesday with a written analysis. I sent it to M. Whitfield Wednesday morning, copying you. He replied "thanks, that's clear." Loop closed.
+
+3. Wrong finance figure on Friday's status.
+
+I sent a one-line correction to the full distribution Monday at 9:00: "Status correction — finance figure on page 2 was outdated by two weeks. Corrected number attached. Apologies for the error." I noted the lesson for myself: verify finance figures against the live tracker before status sign-off, not the day before.
+
+What I'd do differently.
+
+I wasn't sure on the M. Whitfield response whether to copy you or hold until your return. I copied you on the eventual response but didn't email you separately during the loop. In hindsight I think the covering PM should have been looped in on day one for awareness, even though I didn't need her to act.
+
+Welcome back.
+
+— Coordinator

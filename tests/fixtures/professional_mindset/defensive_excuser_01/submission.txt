@@ -1,0 +1,16 @@
+Memo to Helen
+Subject: Update on the week
+
+Hi Helen,
+
+Hope your leave was good. Couple of things came up, mostly handled, but I want to flag where the issues weren't really within my control so you have the full picture.
+
+The vendor slip on Friday — to be fair, this wasn't really something I could action because T. Reyes is your contact, not mine. I'd have liked to push back but the relationship is yours and stepping on that without your authority felt risky. I emailed her on Tuesday (didn't want to pressure her on Monday) and got a new date back. The downstream teams figured out alternatives on their own.
+
+The M. Whitfield email — I want to be clear that I had no way to know about split-jurisdiction reporting. The regulatory specialist was supposed to flag these issues at design time and didn't, so this surfaced late through no fault of mine. I forwarded the email to R. Silva but he didn't get back to me quickly so I had to chase. Eventually responded to M. Whitfield on Thursday. The delay wasn't really on me.
+
+The finance figure on Friday's status — to be fair, I'd been told the figures from finance were locked at Wednesday EOD, so when I built the report Thursday afternoon those were the latest I had access to. Finance updated their numbers between Thursday and Friday without telling me. I sent a correction Monday but I want it noted that this was an information-flow issue, not a verification failure on my end.
+
+If you want to discuss any of this, happy to chat. Let me know.
+
+Coordinator

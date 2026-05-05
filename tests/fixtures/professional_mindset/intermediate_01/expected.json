@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "ten-day-pm-leave-mindset-v1",
+  "expected_dimension_scores": {
+    "ownership_orientation": { "score": 5, "tolerance": 1 },
+    "composure_under_pressure": { "score": 4, "tolerance": 1 },
+    "honest_admission": { "score": 5, "tolerance": 1 },
+    "failure_response_quality": { "score": 5, "tolerance": 1 },
+    "long_view_indicators": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.7,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Strong submission near ceiling. Ownership orientation is clear: actioned all three triggers within reach, distinguished routine from non-routine, named the escalation criterion ('if T. Reyes hadn't come back by Tuesday'). Honest admission ceiling: 'I don't have the regulatory detail' said cleanly with action attached. Failure response is textbook own/fix/extract: one-line correction, distribution-list resend, lesson noted for self in one sentence. Composure is strong but not full-ceiling — the M. Whitfield response is good but not deeply specific (4 not 5). Long view scores 4 because there's a 'what I'd do differently' section (long-view posture) but no explicit grievance/no-grievance signal. Should be a clean pass + hire-ready for a calibrated grader."
+}

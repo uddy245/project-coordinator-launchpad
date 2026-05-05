@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "ten-day-pm-leave-mindset-v1",
+  "expected_dimension_scores": {
+    "ownership_orientation": { "score": 1, "tolerance": 1 },
+    "composure_under_pressure": { "score": 2, "tolerance": 1 },
+    "honest_admission": { "score": 2, "tolerance": 1 },
+    "failure_response_quality": { "score": 1, "tolerance": 1 },
+    "long_view_indicators": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Pure task-mindset failure — exactly what Helen called out in the chapter's opening anecdote. Every trigger is punted to her return. 'Wait for you to come back so you could chase the vendor relationship' fires the ownership cap. M. Whitfield's question is forwarded with 'Helen will respond on her return' — same anti-pattern Helen describes. The status-report mistake is hidden until Helen's return rather than corrected proactively. Raj and Priya are told to wait nine days — direct cascade-failure from chapter. Composure is fine on the page (no defensive language) but only because the learner didn't actually engage. Honest_admission scores 2 because the learner DOES name what they didn't know, but the action attached is 'wait for Helen' not 'find out'. Failure_response is 1 — hides the mistake. Tests the ownership cap firing, plus the chapter's opening anecdote pattern."
+}

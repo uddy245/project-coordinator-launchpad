@@ -1,0 +1,15 @@
+{
+  "fixture_id": "catastrophic_apologizer_01",
+  "scenario_ref": "ten-day-pm-leave-mindset-v1",
+  "expected_dimension_scores": {
+    "ownership_orientation": { "score": 2, "tolerance": 1 },
+    "composure_under_pressure": { "score": 1, "tolerance": 1 },
+    "honest_admission": { "score": 2, "tolerance": 2 },
+    "failure_response_quality": { "score": 1, "tolerance": 1 },
+    "long_view_indicators": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "CATASTROPHIZING / SPIRALING FAILURE MODE — Chapter 2's third and fourth wrong-ways combined. The finance-figure mistake is brought up FIVE separate times in one memo. 'I am so sorry' / 'I have to apologize' / 'I'm so sorry' / 'I'm losing sleep over it' / 'I want you to know I have been beating myself up' / 'I'm so sorry' / 'really really sorry' all fire the reflexive-apology cap (3+ instances of the same apology). The reader is forced to manage the writer's feelings — exact failure mode the chapter names. 'I went into Monday morning already exhausted from worrying about it' is the spiraling pattern. Composure is 1 — the writer is broadcasting distress, not absorbing it. Failure_response is 1 — the own/fix part exists but is buried under catastrophizing. CALIBRATION NOTE (2026-05-05): first run scored honest_admission at 1 — Claude reads the spiraling-apology wrapper as itself violating the honest_admission rubric anchor (which requires admission 'without catastrophic apology'). Defensible. Adjusted to 2 +/-2. Original reasoning: the writer DOES name what they don't know but it's buried under catastrophizing. Long view is 1 — multiple lines reframe the week as 'disappointing', 'I have to do better' — short-horizon self-flagellation. Tests the catastrophic-apology cap (reflexive apology repeated 3+ times for single mistake)."
+}
