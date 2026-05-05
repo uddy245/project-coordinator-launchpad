@@ -1,0 +1,22 @@
+PIECE 1 — SLACK TO RAJ
+
+Hey Raj, sorry to bother you with this — I was just wondering if maybe I could grab a moment of your time? So I've kind of just heard from the vendor and it seems like they might possibly not have the integration plan ready today after all. I think they're sort of suggesting maybe next Wednesday could work? I'm just a bit worried this could perhaps affect the testing prep you were going to do tomorrow. I might be wrong but it seems like we should perhaps think about whether there's anything else you could do in the meantime. Just a thought though, happy to go with whatever you think is best!
+
+PIECE 2 — EMAIL TO HELEN (PM)
+
+Subject: Just a quick thought on the vendor
+
+Hi Helen,
+
+Sorry to keep coming back to you on this — just wanted to flag something. I think maybe the vendor might possibly not deliver the integration plan today as we were perhaps hoping. They've sort of suggested maybe next Wednesday but I'm not entirely sure if that's a firm date or just a suggestion. I was just thinking it could perhaps be worth raising with them. I might be wrong but it seems like there could maybe be some impact on Raj's testing work tomorrow. Just wanted to share a few thoughts in case any of this is useful. Sorry again for the long message — happy to chat if helpful.
+
+PIECE 3 — EMAIL TO DAVID SHARMA (SPONSOR)
+
+Subject: Apologies for the bother
+
+Hi David,
+
+Sorry to bother you, I hope this message finds you well. I was just wondering if I could share a small update with you. I think maybe the vendor might not be delivering the integration plan today as we were hoping. They've kind of suggested next Wednesday but I'm not entirely sure if that's confirmed. I just wanted to make sure you were perhaps aware of this in case it comes up. I might be wrong about the impact but I think it could potentially affect testing. Sorry again for the long email and thanks so much for your time.
+
+Best,
+Coordinator

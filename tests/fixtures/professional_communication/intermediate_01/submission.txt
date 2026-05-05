@@ -1,0 +1,36 @@
+PIECE 1 — SLACK TO RAJ
+
+Raj — vendor's slipped the integration plan to next Wednesday (8 days late). I know you were going to start dependent test-prep tomorrow. Want to defer, or have a Plan B you can pull forward? Happy to hop on a 10-min call if useful.
+
+PIECE 2 — EMAIL TO HELEN (PM)
+
+Subject: Vendor slipped integration plan to next Wednesday — testing affected
+
+Hi Helen,
+
+Vendor told me this morning the integration plan won't be ready today as committed; they're proposing next Wednesday (8 days late). I've messaged Raj since his test-prep was due to start tomorrow.
+
+Two things from you would help:
+
+1. Do you want to raise this with the vendor in Thursday's sync, or want me to push them sooner for a firm commit?
+2. Should I send David a brief note today so he isn't surprised at next steering, or wait for your call?
+
+I'll add it to the RAID as a live issue either way.
+
+Thanks,
+Coordinator
+
+PIECE 3 — EMAIL TO DAVID SHARMA (SPONSOR)
+
+Subject: Integration plan — vendor slip noted, mitigation in progress
+
+Dear David,
+
+A short note for your awareness ahead of next steering. Our integration vendor has notified us today that they will not deliver the integration plan on the committed date; the revised date is next Wednesday, eight days behind the original commitment.
+
+The downstream effect is on the testing workstream, which had planned dependent work for tomorrow. We are reviewing options to limit the impact and will report the path forward in the weekly status.
+
+Helen and I will discuss the vendor relationship in her Thursday sync. I will share the outcome.
+
+Regards,
+Coordinator

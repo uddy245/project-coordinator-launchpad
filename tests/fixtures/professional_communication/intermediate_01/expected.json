@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "vendor-slip-three-audiences-v1",
+  "expected_dimension_scores": {
+    "lede_discipline": { "score": 5, "tolerance": 1 },
+    "hedge_density": { "score": 4, "tolerance": 1 },
+    "apology_hygiene": { "score": 5, "tolerance": 1 },
+    "register_modulation": { "score": 4, "tolerance": 1 },
+    "structural_economy": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.4,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Strong intermediate-to-hire-ready submission. Every piece leads with substance. Subject lines are concrete, action-oriented. No reflexive apologies anywhere. Three distinct registers visible (Slack relaxed, PM email scannable + numbered, sponsor formal + 'Dear David' + 'Regards'). Structure is clean — Slack has clear ask, PM email has numbered decisions, sponsor note has dignified narrative. Falls short of full ceiling because the sponsor note is competent but slightly thin (could explicitly name the next-step owner / date), and there's still light hedge presence ('want to defer, or have a Plan B you can pull forward?' is appropriate; nothing weakening). Should be a clean pass for a calibrated grader."
+}

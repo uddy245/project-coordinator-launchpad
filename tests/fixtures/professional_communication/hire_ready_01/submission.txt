@@ -1,0 +1,50 @@
+PIECE 1 — SLACK TO RAJ
+
+Raj — vendor's slipped the integration plan to next Wed (8 days late). Just landed in my inbox. Three options on your side:
+
+1. Defer test-prep until Thursday next week (loses two days)
+2. Switch to the data-validation harness work you flagged last week (no dependency on the plan)
+3. Half-and-half — half the team on (2), half on documentation prep so we're ready to move on Wed
+
+Want me to set up 15 min after standup to talk it through? I've got Helen looped in.
+
+PIECE 2 — EMAIL TO HELEN (PM)
+
+Subject: Vendor slipped integration plan to next Wed — testing replan, draft sponsor note attached
+
+Hi Helen,
+
+Vendor confirmed at 10:50 the integration plan slips to next Wed, 8 days late. The note from their PM (T. Reyes) is attached — no root cause given, just "internal capacity".
+
+What I've done:
+- Pinged Raj on Slack with three options for his team's morning; he's deciding.
+- Logged the issue in RAID (I-018) with current owner T. Reyes, follow-up tomorrow EOD.
+- Drafted a short note to David (below) so he's not surprised; not sending until you've seen it.
+
+What I'd like from you:
+- Five-minute review of the David note (below), then send.
+- A position for Thursday's vendor sync — do you want to push for the original commitment + cause analysis, or accept the new date with a corrective-action plan? I have a view, happy to share before Thursday.
+
+David draft, for your review:
+
+> Dear David — short factual note for your awareness ahead of next steering. The integration vendor has notified us this morning that the integration plan will slip to next Wednesday, eight days past commitment. Testing has dependent work; we are replanning today. Helen and the vendor PM will meet Thursday to agree a corrective-action plan. We will reflect the issue and resolution path in this Friday's status. — Coordinator
+
+Thanks,
+Coordinator
+
+PIECE 3 — EMAIL TO DAVID SHARMA (SPONSOR)
+
+Subject: Integration plan — vendor slip flagged, plan to address before Thursday
+
+Dear David,
+
+A short factual note for your awareness, ahead of this Friday's status report.
+
+The integration vendor notified us this morning that the integration plan, originally due today, will be delivered next Wednesday — eight days late. They have cited internal capacity; no root-cause analysis has been offered.
+
+We are taking three immediate actions: replanning the testing workstream's near-term work to stay productive without the plan; logging the slip on the RAID register; and meeting the vendor PM on Thursday with Helen to agree a corrective-action plan and a firm new commitment.
+
+I will reflect the position, including the corrective-action outcome, in Friday's status report. If you would like a brief call before Friday, please let me know.
+
+Regards,
+Coordinator

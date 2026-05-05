@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "vendor-slip-three-audiences-v1",
+  "expected_dimension_scores": {
+    "lede_discipline": { "score": 1, "tolerance": 1 },
+    "hedge_density": { "score": 1, "tolerance": 1 },
+    "apology_hygiene": { "score": 1, "tolerance": 1 },
+    "register_modulation": { "score": 1, "tolerance": 1 },
+    "structural_economy": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor submission across the board. Every piece buries the lede behind 'hope you're well' / 'I just wanted to'. Hedge cluster fires in every piece ('just wanted', 'maybe', 'I think', 'I am not sure'). Reflexive apologies open the Slack and the sponsor note ('sorry to bother', 'sorry for the long email'). All three pieces share the same one-register voice — there is no shift in formality between Slack and sponsor; the sponsor note is too casual ('Hope you're well!'). Subject lines are 'Update' and 'Quick update' — exactly the empty labels Chapter 3 calls out. Structural economy gets 2 because the pieces ARE labelled and have subject lines (some structure exists), even if buried. Tests four scoring caps simultaneously: hedge density, reflexive apology, monolithic register, buried lede. All should fire."
+}

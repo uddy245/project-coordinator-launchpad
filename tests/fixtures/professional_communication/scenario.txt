@@ -1,0 +1,18 @@
+It is 11:00 on a Tuesday. The vendor on your project (an integration provider) has just emailed you to say their team will not deliver the integration plan today, despite a written commitment that it would be ready by close of business. They are now asking for an extension to next Wednesday — eight days late.
+
+This affects three things:
+1. Raj, the test lead on your team, was planning to start dependent test-prep work tomorrow morning based on that plan.
+2. Helen, your PM, owns the relationship with the vendor and has a vendor sync booked for Thursday.
+3. The sponsor, David Sharma, sees the project's RAG status weekly. He has not been emailed directly by you before. Helen has briefed him verbally on the integration workstream once.
+
+You need to produce three short pieces — total combined length 350-700 words — to handle the situation in writing this morning. Each is to a different audience and medium:
+
+1. **Slack to Raj** — peer, daily collaborator. He needs to know now so he can decide whether to start the dependent work, defer it, or shift to other tasks.
+
+2. **Email to Helen (PM)** — your manager, who needs to know what you're doing about it and whether you need her to step in. She will likely raise it with the vendor on Thursday.
+
+3. **Email to David Sharma (Sponsor)** — senior, has not been emailed directly by you before. He needs a brief, dignified factual note so he is not surprised if the slip surfaces in the steering report.
+
+Apply the chapter's principles. Lede first in every piece. Strip the hedges. Do not apologize for doing your job. Modulate the register — Slack should not read like a sponsor note, and the sponsor note should not read like Slack.
+
+Write all three pieces in a single document. Label each (e.g. "PIECE 1 — SLACK TO RAJ"). Include subject lines for the two emails.

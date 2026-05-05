@@ -1,0 +1,25 @@
+PIECE 1 — SLACK TO RAJ
+
+Hey Raj, hope you're doing well! I just wanted to let you know that I got an email from the vendor this morning and they said that they're not going to be able to deliver the integration plan today like they promised. They're saying maybe next Wednesday now. I just wanted to flag this for you because I know you were planning to start the dependent work tomorrow morning. Sorry to bother you with this. Let me know if you have any questions!
+
+PIECE 2 — EMAIL TO HELEN (PM)
+
+Subject: Update
+
+Hi Helen,
+
+Hope you had a good morning. I just wanted to follow up with you on something. I just got off email with the vendor and unfortunately they have informed me that they will not be able to provide the integration plan today, which they had committed to delivering today. They are now proposing a new date of next Wednesday. I wanted to flag this to you because I think it might have some implications for our project, particularly for Raj's testing prep work which was scheduled to begin tomorrow. I have let Raj know via Slack. I am not sure if you will want to discuss this with the vendor in your Thursday sync or if there's something else you'd like me to do. Sorry for the long email — let me know your thoughts.
+
+Thanks!
+Coordinator
+
+PIECE 3 — EMAIL TO DAVID SHARMA (SPONSOR)
+
+Subject: Quick update
+
+Hi David,
+
+Hope you're well! Sorry to bother you. I just wanted to give you a quick heads up that the vendor on the project has informed us today that they will not be delivering the integration plan as promised. They have now said maybe next Wednesday. I just wanted to make sure you knew about this in case it comes up. Let me know if you have any questions or if you'd like to discuss further.
+
+Thanks so much!
+Coordinator

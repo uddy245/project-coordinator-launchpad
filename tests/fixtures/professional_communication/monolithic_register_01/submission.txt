@@ -1,0 +1,38 @@
+PIECE 1 — SLACK TO RAJ
+
+Subject: Notification of vendor delivery delay
+
+Dear Mr. Raj,
+
+I am writing to inform you that the integration vendor has communicated that they will not be delivering the integration plan on the date originally committed. The revised delivery date provided by the vendor is next Wednesday. As you had planned dependent test-preparation activities for tomorrow morning, this notification is being shared with you so that you may consider the implications and adjust your plans accordingly.
+
+Please advise on your preferred course of action.
+
+Regards,
+Coordinator
+
+PIECE 2 — EMAIL TO HELEN (PM)
+
+Subject: Notification of vendor delivery delay
+
+Dear Ms. Helen,
+
+I am writing to inform you that the integration vendor has communicated that they will not be delivering the integration plan on the date originally committed. The revised delivery date provided by the vendor is next Wednesday, representing an eight-day delay. As this affects the testing workstream's planned dependent work, and as you maintain the relationship with the vendor with a sync scheduled for Thursday, this notification is being provided for your awareness and to seek guidance.
+
+Please advise on your preferred course of action.
+
+Regards,
+Coordinator
+
+PIECE 3 — EMAIL TO DAVID SHARMA (SPONSOR)
+
+Subject: Notification of vendor delivery delay
+
+Dear Mr. Sharma,
+
+I am writing to inform you that the integration vendor has communicated that they will not be delivering the integration plan on the date originally committed. The revised delivery date provided by the vendor is next Wednesday. As this notification has implications for the project's testing activities, this communication is being provided to you for awareness ahead of the steering committee.
+
+Please advise on your preferred course of action.
+
+Regards,
+Coordinator

@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "vendor-slip-three-audiences-v1",
+  "expected_dimension_scores": {
+    "lede_discipline": { "score": 5, "tolerance": 1 },
+    "hedge_density": { "score": 5, "tolerance": 1 },
+    "apology_hygiene": { "score": 5, "tolerance": 1 },
+    "register_modulation": { "score": 5, "tolerance": 1 },
+    "structural_economy": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. Each piece leads with substance and the most important fact is in the first line. No hedges anywhere — uncertainty is named precisely (vendor 'cited internal capacity, no root-cause analysis offered') rather than diffused. No reflexive apologies. Three sharply distinct registers: Slack is short, contraction-rich, three-option ask; PM email is structured with what-I've-done / what-I-need-from-you and an embedded draft for review; sponsor note is dignified, formal, complete in itself with three concrete actions and a clear next-step. Subject lines are content-rich. Length is proportional throughout. This is what hire-ready written voice looks like."
+}

@@ -18,7 +18,7 @@ export function buildScoreValidator(rubric: RubricJSON) {
       dimension: z.enum(dimensionNames),
       score: z.number().int().min(1).max(5),
       justification: z.string().min(10).max(500),
-      quote: z.string().max(500),
+      quote: z.string().max(750),
       suggestion: z.string().min(10).max(500),
     })
     .refine((v) => v.score < 3 || v.quote.trim().length > 0, "quote is required when score >= 3");

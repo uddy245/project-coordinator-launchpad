@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hedge_heavy_01",
+  "scenario_ref": "vendor-slip-three-audiences-v1",
+  "expected_dimension_scores": {
+    "lede_discipline": { "score": 2, "tolerance": 1 },
+    "hedge_density": { "score": 1, "tolerance": 1 },
+    "apology_hygiene": { "score": 1, "tolerance": 1 },
+    "register_modulation": { "score": 1, "tolerance": 1 },
+    "structural_economy": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "HEDGE-AND-APOLOGY FAILURE MODE — exact inverse of hire_ready_01. Structure exists (three labelled pieces, subject lines), but every single piece is buried under hedges. Counted: piece 1 has ~10 hedges ('just', 'maybe', 'kind of', 'might possibly', 'sort of', 'I think', 'perhaps', 'I'm a bit', 'I might be wrong but', 'just a thought'); pieces 2 and 3 similarly. Reflexive apology opens all three. Same hedge-heavy register across all three pieces — no register modulation. Tests four caps simultaneously: hedge density (3+ in any piece), reflexive apology (2+ pieces), monolithic register, buried lede. All four caps should fire. The most important fixture in the corpus for catching the chapter's central failure mode."
+}
