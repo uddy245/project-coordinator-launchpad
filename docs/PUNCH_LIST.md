@@ -4,7 +4,7 @@ Live tracker for what's left to ship the app. **Claude reads this at the
 start of every session before doing anything else.** Tick a box when the
 work lands on `main`. Add new items as we discover them.
 
-Last reviewed: 2026-05-05 (after PR #68 merge)
+Last reviewed: 2026-05-05 (after cost-cap smoke test)
 
 ---
 
@@ -17,7 +17,7 @@ Last reviewed: 2026-05-05 (after PR #68 merge)
 
 ## Engine work (Claude can do solo)
 
-- [ ] **Cost-cap prod smoke test** — temporarily set `ANTHROPIC_SPEND_CAP_USD=0.001` in Vercel preview env, upload, confirm `grading_failed` with code `COST_CAP_EXCEEDED`, revert env. Needs Vercel env access.
+_All known engine items shipped._
 
 ## Verification (user's hands)
 
@@ -32,6 +32,7 @@ Last reviewed: 2026-05-05 (after PR #68 merge)
 - 2026-05-05 — **PR #66** merged: punch list infra (CLAUDE.md + docs/PUNCH_LIST.md). Session-start source of truth.
 - 2026-05-05 — **PR #67** merged: calibration corpus 9 → 20 fixtures. 11 new failure-mode probes (3 novice, 4 intermediate, 2 hire-ready, 2 edge cases). 3 CI runs to settle scores; 6 expected-score adjustments documented in fixture notes.
 - 2026-05-05 — **PR #68** merged: 7 hand-authored mock-interview scenarios filling behavioural-medium/hard, procedural-easy, judgment-easy gaps. Pool 11 → 18; all 9 category × difficulty cells now ≥1.
+- 2026-05-05 — **Cost-cap prod smoke test** done end-to-end via Vercel CLI + Supabase MCP. Set `ANTHROPIC_SPEND_CAP_USD=0.001` in Preview, deployed fresh preview build, inserted synthetic submission (status=pending), called `/api/grade/<id>` with worker secret. Grade endpoint returned `{ok:false, code:"COST_CAP_EXCEEDED"}`; DB confirmed `submissions.status=grading_failed`. Reverted cap to 100, deleted synthetic submission. COST-001 enforcement verified in real life.
 
 ---
 
