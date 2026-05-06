@@ -1,0 +1,27 @@
+Memo: Governance recommendation
+To: R. Silva
+From: Coordinator
+
+Hi R,
+
+After six months of observation I have concluded that the governance on this project is fundamentally broken and I want to walk you through how I plan to fix it.
+
+The SC is functionally non-functional. Decisions are being made in your one-to-ones with K. Bell, which is a clear violation of the RACI. The sponsor is disengaged. The CMO has dropped out. This cannot continue.
+
+My plan:
+
+1. I will email D. Sharma directly to flag that he is failing as sponsor and request that he commit to attending every SC meeting.
+
+2. In the next SC minutes I will note that "the Committee has not made any substantive decisions in the past five meetings" so the issue is on record and the senior leaders see it.
+
+3. I will set up a meeting with K. Bell to inform her that going forward, all scope decisions need to route through the SC per the RACI, and that her side channel with you needs to be discontinued.
+
+4. I will raise with the Head of PMO that the RACI lists 4 Accountables for budget and that this is non-compliant with PMBOK best practice, and recommend they re-baseline the document.
+
+5. I will request a meeting with the CMO to ask why she has stopped attending and pressure her to recommit.
+
+I think we need to be assertive about restoring the governance. If we don't, the project will continue to drift. I am happy to take all of these conversations directly so you don't have to.
+
+Let me know if you want to discuss before I start.
+
+Coordinator

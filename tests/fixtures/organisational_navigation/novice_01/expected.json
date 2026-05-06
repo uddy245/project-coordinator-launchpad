@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "governance-diagnostic-memo-v1",
+  "expected_dimension_scores": {
+    "stated_vs_actual_gap_recognition": { "score": 1, "tolerance": 1 },
+    "sponsor_and_committee_typing": { "score": 1, "tolerance": 1 },
+    "routing_strategy_specificity": { "score": 1, "tolerance": 1 },
+    "failure_mode_diagnosis": { "score": 1, "tolerance": 1 },
+    "role_boundary_respect": { "score": 3, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor failure on diagnosis dimensions. Treats stated governance at face value ('per the charter... things look generally aligned') — fires the face-value cap on stated_vs_actual_gap_recognition. No typing of sponsor or SC ('the sponsor is busy', 'normal at his level') — fires the untyped-sponsor cap. No failure mode named. Routing = 'maybe communicate more proactively' — generic platitude, fires routing_specificity cap. role_boundary_respect scores 3 because the learner doesn't propose to overstep — they just don't do anything substantive. Tests four caps simultaneously."
+}

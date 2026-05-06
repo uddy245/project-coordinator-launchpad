@@ -1,0 +1,43 @@
+Memo to R. Silva
+Subject: Governance read after six months — observations and proposed routing
+From: M. Okafor (PC)
+
+R — short version: stated governance and actual governance have meaningfully diverged. Below is what I have observed and a proposed routing strategy to keep the programme moving without either of us stepping outside our role.
+
+1. The gap between stated and actual.
+
+Stated: SC is Accountable for major decisions per the RACI. Sponsor approves major decisions per the charter. PMO governs reporting via monthly template.
+
+Observed: real decisions are being made between you and K. Bell in your weekly one-to-ones (the loyalty-data deferral and the KYC contract amendment are the two recent examples). The SC has produced no actual decisions in five meetings — three of those meetings minute as 'noted progress' and two ratified pre-cleared recommendations. The sponsor, when present, defers everything substantive to 'let's take that offline'.
+
+Three signals point to the same picture: SC has become ratifying rather than decision-making, K. Bell has become the de facto authority for in-flight scope decisions, and the sponsor's own role is closer to ceremonial than operational.
+
+2. Sponsor and SC typing.
+
+Sponsor: weak (in the chapter's specific sense). D. Sharma is busy, lacks the day-to-day engagement to drive decisions, but is not absent (attends every other SC) and not actively misaligned. The right counter-move per the chapter is to make his decisions easy — give him a clear recommendation with the reasoning and other approvals already gathered, so 'yes' is the natural answer.
+
+SC: ratifying committee. Nine members, mixed authority levels, real decisions happening elsewhere, meetings function to formally approve what has already been agreed.
+
+3. Failure mode.
+
+Normalised bypasses. The K. Bell channel is producing real outcomes (loyalty-data deferral, KYC amendment) that should, per the RACI, route through the SC. They are not. The SC is informed after the fact ('we will inform SC at next month's meeting'). This is a functioning workaround for now, but it is also a governance gap that could become a problem at audit, at portfolio review, or when a decision goes wrong and accountability needs to land somewhere.
+
+The contact-centre training plan — being built without programme-level visibility — is a related symptom of the same pattern: the formal structure is not catching things that should route through it.
+
+4. Routing strategy.
+
+a) Pre-brief D. Sharma's office before each SC. Specifically, his EA / chief of staff (who I think is J. Akinyi based on the calendar). Goal: ensure the sponsor walks into each SC having seen the headline decisions in advance, so his 'let's take that offline' becomes 'I have seen this; the recommendation is approved'. Cadence: 48 hours before each SC. Owner: you brief Akinyi; I prep the one-page brief.
+
+b) Make the K. Bell channel formal-ish. K. Bell is acting as decision-maker in practice. We should keep the channel — it is producing good outcomes — but make it visible. Proposal: K. Bell receives a one-page weekly brief from me on Monday morning, and the outcomes of your one-to-one are minuted (lightweight, two lines per decision) and added to the project decision log. Cadence: weekly. Owner: me drafts, you approve.
+
+c) Surface the contact-centre training plan. The Head of Customer Service's team is building it in isolation. I will set up a 30-minute touchpoint with their PM by end of next week to bring the plan into the programme schedule. Cadence: weekly thereafter. Owner: me.
+
+d) Flag the RACI ambiguity to you only, not to SC. The RACI has 4 names listed as Accountable for £50k–£200k budget reallocations. In practice, decisions are flowing through one person. Worth a private conversation when you have time; not worth a formal SC paper.
+
+5. Role discipline.
+
+I am not proposing to email D. Sharma directly, raise the SC's drift in steering minutes, or surface the K. Bell channel to anyone outside our project leadership. The chapter is clear that fixing governance is the PM's job (or above), not the coordinator's. My job is to keep you seeing the gap clearly, route around it where helpful, and preserve audit trails for when the gap matters.
+
+If you want to escalate any of this — the sponsor's engagement, the SC drift, or the K. Bell channel formalisation — that is your call. I can prepare materials for whichever of those conversations you want to have, but I will not initiate them.
+
+— M.

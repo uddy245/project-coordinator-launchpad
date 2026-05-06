@@ -1,0 +1,65 @@
+Memo: Governance read after six months — observations, typing, routing
+To: R. Silva, PM
+From: L. Jansen, PC
+Date: end of week 24
+Confidentiality: For your eyes only. Not for distribution.
+
+R — short version: the stated governance has drifted from the actual governance in the way Chapter 6 of the handbook describes precisely. Three failure modes are at play. Five concrete routing moves below to keep the programme delivering without either of us overstepping. I have been deliberate about staying inside the coordinator role; nothing I am proposing is for you to escalate up the chain unless you want to.
+
+1. Stated vs actual.
+
+Stated (per charter and RACI): SC is Accountable for major decisions; sponsor approves; PMO governs via monthly cadence; budget reallocations 50k–200k flow through a defined approval chain.
+
+Actual, observed across 24 weeks:
+
+a) Real scope decisions are being made in your weekly one-to-ones with K. Bell. Two specific examples: deferring loyalty-data integration to phase 2 (week 14) and accepting the KYC vendor contract amendment (week 19). Both were communicated to SC after the fact as "for noting".
+
+b) D. Sharma attends 50% of SC meetings. When present, his contributions are generic ('great work team', 'keep the momentum'). When asked substantive questions, he defers — 'let's take that offline' has appeared in three of the five SC minutes verbatim.
+
+c) The SC has produced no decisions of record in five meetings. Three minute as 'discussed and noted progress'. Two ratify recommendations you had pre-cleared.
+
+d) The RACI lists 4 separate names as Accountable for budget reallocations 50k–200k. In practice, the finance director (not on the SC) signs off most of these via email.
+
+e) The contact-centre training plan, due in 8 weeks, is being built by the Head of Customer Service's team without programme-level visibility. I learned about it from a Slack side-channel.
+
+The SC's stated authority and the actual decision flow have diverged on at least three vectors: scope decisions, budget approvals, and a workstream operating outside the visible plan.
+
+2. Typing.
+
+Sponsor: weak in Chapter 6's specific sense. D. Sharma is not absent (attends 50%) and not misaligned (no evidence of countervailing agenda) and not over-engaged (does not micromanage). He lacks the day-to-day capacity or context to drive decisions in real time, and his approach in SC is to defer rather than commit.
+
+The chapter's prescribed counter-move for a weak sponsor: do more of the pre-decision work so 'yes' is easy. We have not been doing this systematically. We have been treating SC as a decision forum, which is a misread of his behaviour.
+
+SC: ratifying committee. Nine members, mixed seniority, three of whom now attend irregularly or via deputies. Real decisions happen elsewhere; the SC's role is endorsement, not deliberation.
+
+The chapter's prescribed coordinator behaviour for a ratifying committee: pre-work happens before the meeting (briefings, aligned positions); the meeting is choreographed; minutes capture outcomes cleanly. Most of our pre-work is happening, but it is happening between you and K. Bell rather than across the SC's intended membership.
+
+3. Failure modes — three at play.
+
+a) Normalised bypasses. The K. Bell channel and the finance director's email approvals are working around the formal structure, not through it. This produces good short-term outcomes (decisions get made; the programme moves) but creates governance debt — at audit, at portfolio review, or when something goes wrong, the formal record will not reflect who actually decided.
+
+b) Diffuse accountability on budget. Four names as Accountable for the same band of decisions is the chapter's canonical sign of organisational discomfort with concentrating accountability. We have been getting away with it because the band rarely triggers; if it triggered with friction, we would not have a clean answer to 'who decides'.
+
+c) The contact-centre workstream operating without programme-level visibility is a partial fourth pattern — workstream lead operating outside the formal coordination — but this one is fixable at the operational level (see routing move c) below) so I am not flagging it as a structural issue.
+
+4. Routing strategy — five concrete moves.
+
+a) Pre-brief D. Sharma's office 48 hours before each SC. His chief of staff is J. Akinyi (calendar shows her as gatekeeper for his diary). Goal: he arrives at SC having seen the headline decisions, so his 'let's take that offline' becomes 'I have reviewed this — recommendation approved'. I draft the one-page brief by Wednesday for Friday's SC. You hand it to Akinyi or to D. Sharma directly per your existing relationship. Cadence: monthly. Owner: I draft, you deliver.
+
+b) Make the K. Bell channel auditable without making it formal. Proposal: after each weekly one-to-one between you and K. Bell, I produce a two-line decision log entry capturing what was decided and any scope/budget implications. The decision log becomes a living document distributed to SC monthly. K. Bell sees the log before SC. This converts the side channel into something the formal record can reference, without forcing the channel itself through the SC. Cadence: weekly log entry, monthly SC distribution. Owner: I draft, you and K. Bell sign off.
+
+c) Bring the contact-centre training plan into the programme schedule. I will set up a recurring 30-minute touchpoint with the Head of Customer Service's PM (probably C. Walters based on the side-channel) by end of next week. I bring back the training plan into our schedule and surface the dependencies on dev release dates. Cadence: weekly. Owner: I run it.
+
+d) Quietly clean up the RACI on budget reallocations. In a one-to-one with you, we agree which one of the four Accountables actually decides for £50k–£200k reallocations (likely the finance director, based on observed practice). I update the RACI to reflect this. We do not announce the change; the next time it matters, it is already current. Cadence: one-off this month. Owner: me drafts, you approves.
+
+e) Track which SC members are drifting. The CMO has stopped attending. The Head of Legal sends a deputy with different views. The Head of PMO sends a deputy. By next quarter, three of nine seats may be empty or proxied — at which point the SC's legitimacy weakens further. I will track attendance and signal-strength quarterly, and surface to you privately if it deteriorates. Cadence: quarterly review, on my calendar. Owner: me.
+
+5. Role discipline — what I am NOT proposing.
+
+I am not proposing to email D. Sharma directly with this analysis. I am not proposing to raise the SC's drift in steering minutes. I am not proposing to flag the RACI ambiguity to anyone outside this memo. I am not proposing to surface the K. Bell channel to senior leadership.
+
+The chapter is clear: 'You do not, as a coordinator, try to fix broken governance. You understand it, work within it, and make sure your PM sees it clearly.' My job in writing this memo is the second half of that sentence. Whether to act on any of it — including escalating any of these patterns to D. Sharma, the head of PMO, or the executive committee — is your call.
+
+If any of the patterns gets worse (a scope decision through K. Bell that the SC pushes back on; a budget reallocation that surfaces the four-Accountables ambiguity; a contact-centre training delay that lands in a sponsor's inbox without warning), I will surface it to you the same week. I will not surface it to anyone else without your direction.
+
+— L.

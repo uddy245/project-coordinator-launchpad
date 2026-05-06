@@ -1,0 +1,36 @@
+You are the Project Coordinator on a customer-data-platform programme at a large UK retailer. Six-month tenure on this project. Stated governance, per the charter:
+
+- Sponsor: D. Sharma, Group CFO. Charter says the sponsor "approves all major project decisions and provides senior leadership."
+- Steering committee: 9 members. CFO (chair), CTO, CMO, COO, Head of Data, Head of Customer Service, Head of Legal, Head of PMO, plus a rotating director representative.
+- PM: R. Silva. RACI shows R. Silva as Responsible across most decisions, SC as Accountable, sponsor as Consulted.
+- PMO: standard governance — monthly status report in fixed template, quarterly portfolio review, change control board for changes >£50k.
+
+What you have actually observed in six months:
+
+- D. Sharma (sponsor) attends roughly every other SC. When he attends, he speaks last and briefly. His interventions in meetings are generic: "great work team, let's keep momentum, look forward to the next update." When asked direct questions in SC, he routinely defers to "let's take that offline."
+
+- The SC has met five times. Three of those meetings produced minutes saying "the Committee discussed X and noted progress" with no decisions captured. Two produced what looked like decisions but were essentially confirmations of recommendations the PM had pre-cleared.
+
+- R. Silva has weekly 30-min one-to-ones with K. Bell, the Director of Data Platforms (NOT on the SC). After two of those one-to-ones the PM has come back to the team with what appeared to be material decisions about scope (specifically: deferring the loyalty-data integration to phase 2, and accepting a contract amendment with the KYC vendor). When you asked R. Silva who approved the scope deferral, the answer was "K. Bell signed off, we'll inform SC at next month's meeting."
+
+- The CMO has stopped attending SC. The Head of Customer Service attends but speaks rarely. The Head of Legal sends a deputy. The Head of PMO sends a deputy who has different views than the Head of PMO.
+
+- The RACI has 4 separate names listed as Accountable for budget reallocations between £50k and £200k.
+
+- The actual contact-centre training plan, due to start in 8 weeks, is still being planned by the Head of Customer Service's team without programme-level visibility. You found out about it accidentally from a Slack message in a side channel.
+
+R. Silva, your PM, has asked you to write a 700-1100 word memo to him diagnosing the governance situation and proposing a routing strategy that will keep the programme moving without you or him overstepping your roles.
+
+The memo must:
+
+1. Identify the specific gap between stated and actual governance, with quoted evidence from the observations above.
+
+2. Type the sponsor (good / absent / weak / over-engaged / wrong-level / misaligned) AND the SC (decision-making / ratifying / ceremonial / political), with reasoning.
+
+3. Name at least one of the chapter's failure modes (diffuse accountability / SC as black hole / performative sponsor / toothless PMO / normalised bypasses) and tie it to specific evidence.
+
+4. Propose three to five concrete routing moves — who to brief in advance, which side channels to leverage, what cadence — with named individuals.
+
+5. Stay inside the coordinator's role. You are not fixing the governance. You are surfacing the gap to R. Silva and proposing how to operate within it.
+
+Write directly. The memo will be read by R. Silva only — it is not going up the chain.

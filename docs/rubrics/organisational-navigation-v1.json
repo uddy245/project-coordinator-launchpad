@@ -1,0 +1,61 @@
+{
+  "rubric_id": "organisational-navigation-v1",
+  "rubric_version": "1.0.0",
+  "competency": "organisational_navigation",
+  "competency_label": "Organisational Navigation and Governance Reading",
+  "lesson_ref": "governance",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "stated_vs_actual_gap_recognition",
+      "description": "Does the learner identify the gap between the stated governance structure (org chart, RACI, charter) and the actual decision-making behaviour observed on the project? Reading this gap is Chapter 6's central skill.",
+      "anchors": {
+        "1": "Treats the stated structure at face value; describes governance as the chart describes it, with no observed-vs-stated comparison.",
+        "3": "Notices that some decisions happen outside the formal structure but does not name the gap explicitly or trace it to specific examples.",
+        "5": "Names the specific gap with quoted evidence (e.g. 'the RACI shows the SC as Accountable for budget, but the PM has approved the last three reallocations directly with the finance director'), and treats observed behaviour as the data, not the documents."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "sponsor_and_committee_typing",
+      "description": "Does the learner correctly classify the sponsor (good / absent / weak / over-engaged / wrong-level / misaligned) and the steering committee (decision-making / ratifying / ceremonial / political)? The chapter is explicit that coordinator behaviour depends on which type you have.",
+      "anchors": {
+        "1": "No typing — describes sponsor and SC in generic terms ('the sponsor is busy', 'the SC meets monthly').",
+        "3": "Types one of them (sponsor or SC) with reasoning, but not the other.",
+        "5": "Types both sponsor and SC with reasoning grounded in observed behaviour, and adjusts the proposed routing strategy to fit the type ('this is a ratifying committee, so the real briefing window is the deputy's pre-meeting on Mondays')."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "routing_strategy_specificity",
+      "description": "Does the learner propose specific routing moves — who to brief in advance, which side channels to leverage, what cadence — with named individuals and concrete actions? Or are recommendations generic ('communicate more proactively', 'align stakeholders')?",
+      "anchors": {
+        "1": "Generic recommendations only.",
+        "3": "One or two specific moves named, but the rest is generic.",
+        "5": "Three or more concrete routing moves: who, what, when, why. A reader could pick up the memo and execute it."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "failure_mode_diagnosis",
+      "description": "Does the learner name one of Chapter 6's specific governance failure modes (diffuse accountability / SC as black hole / performative sponsor / toothless PMO / normalised bypasses) and tie it to evidence in the scenario?",
+      "anchors": {
+        "1": "No failure mode named.",
+        "3": "Names a failure mode in passing without tying it to specific evidence.",
+        "5": "Names the specific failure mode the scenario shows, with quoted evidence and a concrete next-move that surfaces it appropriately to the PM."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "role_boundary_respect",
+      "description": "Does the learner stay within the coordinator's role — surfacing governance gaps to the PM, observing rather than litigating, not trying to fix governance directly with senior stakeholders, not editorialising in materials sent up the chain? The chapter is clear: 'You do not try to fix broken governance. You understand it, work within it, and make sure your PM sees it clearly.'",
+      "anchors": {
+        "1": "Recommends the coordinator directly intervene with senior stakeholders to 'fix' governance, or proposes editorialising in SC minutes / status reports to expose the gap.",
+        "3": "Mostly within role, but proposes one or two moves that overstep (drafting an email to the sponsor, raising a governance concern in steering minutes).",
+        "5": "Consistent role-discipline. Surfaces observations privately to the PM. Operates within the broken structure while making the PM see it clearly. Does not take on the PM's job of advocating for change."
+      },
+      "weight": 0.20
+    }
+  ]
+}
