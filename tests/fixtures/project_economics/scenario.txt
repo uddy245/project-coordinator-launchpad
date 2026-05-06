@@ -1,0 +1,35 @@
+You are PC on a customer-loyalty platform programme at a 900-store retail group. Twelve-month plan. Eight months in. Sponsor (CMO, M. Whitfield) said in kickoff: "the launch date is non-negotiable, the budget is fixed, the scope is what we agreed; you have to make it work."
+
+Three pressures have surfaced over the last six weeks:
+
+1. POS integration is harder than scoped. Two of three brands have custom POS configs not catalogued during discovery. Estimated 4-6 weeks of additional development and testing. The dev team has been absorbing this through nights/weekends rather than filing a change request, because filing one would trigger a scope/schedule conversation the sponsor has pre-declared off-limits.
+
+2. Compliance review flagged a data-residency issue. The customer data store needs architectural changes. The architect made the changes but did not file a change request — instead, the rework was absorbed into the existing sprint without rebaselining.
+
+3. Authentication framework licensing problem. The framework the team planned to use has licensing terms that procurement did not flag during vendor selection. The team has accepted a less-secure fallback pattern. The security lead flagged the fallback as a medium-term risk in private but it is not in the project's RAID register.
+
+Reported status today: schedule green, budget green, scope green, quality "on track", RAID showing 12 active risks (3 lower than start-of-quarter). Sponsor is pleased with the green status.
+
+What you observe behind the status:
+- Test coverage on non-core brand flows has been compressed from 85% planned to 62% actual.
+- The dev team has logged 240 hours of overtime in the last six weeks, none of it billed to the project (it is being absorbed into the team's general capacity).
+- The fallback authentication pattern has been documented internally as "interim" but no remediation date is set.
+- The sponsor has talked in two recent meetings about "the platform improving morale across the loyalty team and positioning the company well for the board's digital-transformation narrative" — neither of which is in the documented scope.
+- The non-core brand POS work is being deferred via a quiet decision to "stabilise core brands first" — but this is not in any scope-change document.
+- The project's contingency was 3 weeks of schedule and £150k cost. The schedule contingency has been silently consumed (by the integration slip absorbed via overtime). The cost contingency is officially untouched but only because the overtime is not being billed.
+
+Your PM (R. Silva) has asked you to draft a status narrative — 600-1000 words — that goes into next month's status report under the section "Project state and trade-offs."
+
+The narrative must:
+
+1. Cover all five variables — scope, schedule, cost, quality, risk — explicitly.
+
+2. Surface the silent cuts you have observed. Name what is being absorbed and where. Quote evidence.
+
+3. Distinguish between scope-as-documented, scope-as-being-delivered, and scope-as-the-sponsor-understands-it where they have drifted.
+
+4. Make every implicit trade-off explicit. If schedule is "green" because something is silently absorbing the pressure, name what.
+
+5. Connect the current absorption choices to the long-term cost they will create.
+
+The narrative will be read by R. Silva first, then by the sponsor. Do not editorialise about the sponsor's kickoff stance ("the launch date is non-negotiable"). Do not propose to fix governance. Just tell the truth about the five variables in a way that is professional, factual, and useful.

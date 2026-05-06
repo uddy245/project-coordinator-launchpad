@@ -1,0 +1,23 @@
+Project state and trade-offs — month 8
+
+Status across project variables:
+
+Schedule. Currently green at the milestone level, though there has been pressure on the integration workstream. The team has worked through it and we remain on track for November launch.
+
+Scope. Stable. The documented scope is being delivered. Two minor architectural adjustments were made but did not affect the scope baseline — they were absorbed within the sprint cadence.
+
+Cost. Tracking within the £8m baseline. Cost contingency is available if needed.
+
+Risk. The RAID register has been actively maintained. 12 active risks, down 3 from start of quarter. The trend is positive.
+
+Notable observations:
+
+- The integration workstream had a difficult six weeks but the team rallied and we are caught up.
+- The compliance review surfaced a data-residency issue which the architect resolved efficiently.
+- The authentication framework swap was handled by the team within existing capacity.
+
+Sponsor relationship is strong. Steering committee feedback has been positive. The team is delivering well under pressure.
+
+Recommendation: maintain current approach. Continue active risk management. Sustain the team performance that has carried us through the integration workstream challenge.
+
+— Coordinator

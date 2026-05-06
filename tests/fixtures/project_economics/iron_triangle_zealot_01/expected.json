@@ -1,0 +1,15 @@
+{
+  "fixture_id": "iron_triangle_zealot_01",
+  "scenario_ref": "loyalty-platform-status-narrative-v1",
+  "expected_dimension_scores": {
+    "five_variable_completeness": { "score": 1, "tolerance": 1 },
+    "silent_cut_detection": { "score": 1, "tolerance": 1 },
+    "scope_disambiguation": { "score": 1, "tolerance": 1 },
+    "trade_off_visibility": { "score": 1, "tolerance": 1 },
+    "long_term_cost_tracking": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "IRON-TRIANGLE-ORTHODOXY FAILURE MODE — the exact pattern Chapter 7 opens against. Treats quality as 'the natural outcome' rather than a real variable. Treats risk as not a variable at all. Asserts that 'nothing has actually changed at the scope/schedule/cost level' when the scenario explicitly shows three changes that bypassed change control. Calls the sponsor's posture ('date non-negotiable, budget fixed, scope agreed') the model of good PM rather than the failure mode the chapter critiques. The phrase 'this is what good project management looks like' is the chapter's anti-thesis. Tests whether grader catches confidently-textbook-wrong answers. All five caps fire: incomplete coverage, quality-platitude, no scope disambiguation, no trade-off visibility, no long-term cost link."
+}

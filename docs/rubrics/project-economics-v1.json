@@ -1,0 +1,61 @@
+{
+  "rubric_id": "project-economics-v1",
+  "rubric_version": "1.0.0",
+  "competency": "project_economics",
+  "competency_label": "Project Economics — Five-Variable Trade-off Awareness",
+  "lesson_ref": "variables",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "five_variable_completeness",
+      "description": "Does the learner's analysis cover all five variables — scope, schedule, cost, quality, and risk — rather than just the visible three (scope/schedule/cost)? The chapter is explicit that quality and risk are real variables, not passive outcomes.",
+      "anchors": {
+        "1": "Covers only scope/schedule/cost. Quality and risk absent or treated as passive outcomes.",
+        "3": "Covers four of five with one variable shallow or implicit.",
+        "5": "All five variables explicitly named and their current state assessed. Quality and risk get the same analytical weight as scope/schedule/cost."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "silent_cut_detection",
+      "description": "Does the learner identify where pressure is being absorbed silently — usually into quality or risk — when one of the other variables is under strain? This is the chapter's central skill.",
+      "anchors": {
+        "1": "Does not detect silent cuts; treats reported metrics at face value.",
+        "3": "Notices one cut is being absorbed silently but does not trace it to a specific variable or quantify it.",
+        "5": "Names the specific silent cut with quoted evidence, identifies which variable is absorbing the pressure, and quantifies the long-term cost where possible (e.g. 'compressed UAT to 60% from a planned 85%; expect 2-3 post-launch defect spikes')."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "scope_disambiguation",
+      "description": "Does the learner distinguish product scope vs project scope vs the scope in the sponsor's head when scope is being discussed? The three are different and conflating them is a source of project trouble.",
+      "anchors": {
+        "1": "Uses 'scope' as a single undifferentiated concept.",
+        "3": "Distinguishes two of the three senses, or distinguishes them implicitly without naming.",
+        "5": "Names all three when relevant to the scenario, or two of three with the third explicitly noted as out of scope for the analysis. Catches sponsor-mental-model drift where the scenario shows it."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "trade_off_visibility",
+      "description": "Does the status narrative make implicit trade-offs explicit? A status report that says 'schedule amber due to integration slip, currently absorbed through compressed UAT timeline which carries a quality risk on non-core flows' is the chapter's exemplar — the trade-off is named, not hidden.",
+      "anchors": {
+        "1": "Status narrative is RAG summaries with no trade-off explicitness. Pressures are present but absorption is hidden.",
+        "3": "Names one trade-off explicitly but treats other absorption choices as background.",
+        "5": "Each pressure is followed by an explicit absorption statement: which variable is taking the pressure, why that was the choice, and what the trade-off costs. No implicit absorption."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "long_term_cost_tracking",
+      "description": "Does the learner connect short-term choices (compressed testing, deferred quality work, accepted risks) to the long-term cost they create (post-launch defects, follow-up projects, technical debt, security incidents)? The chapter's loyalty-platform anecdote is the model: a project that 'launched on time, in budget' but cost 30% more in true terms over 18 months.",
+      "anchors": {
+        "1": "No connection between current choices and downstream cost.",
+        "3": "Names long-term cost in passing without quantifying or attributing it.",
+        "5": "For each short-term absorption, names the likely long-term cost with rough magnitude where possible. Captures the choice in a closeout-items list or risk register so it surfaces later."
+      },
+      "weight": 0.20
+    }
+  ]
+}

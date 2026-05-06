@@ -1,0 +1,29 @@
+Project state and trade-offs — month 8
+
+Headline: surface metrics are green but the project is absorbing pressure into quality and into team capacity that is not visible in the cost line. Detail below across the five variables.
+
+Scope. Documented scope is unchanged. In practice, the non-core brand POS work has been quietly deferred — the team has prioritised core brands first, with non-core integration likely to slip into a phase 2 follow-up. This decision is not in any scope-change document. Recommend formalising as a deferred-scope item ahead of next steering. Sponsor's mental model also has elements not in the documented scope (loyalty-team morale, board narrative on digital transformation) — those are out of scope as documented but worth a conversation if they are influencing his expectations.
+
+Schedule. Showing green. The 4-6 week POS integration overrun has been absorbed by team overtime (240 hours logged in the last six weeks, not billed to the project). Schedule contingency originally 3 weeks; in practice consumed already through this absorption, even though the project plan does not show it. If a further slip materialises, no contingency remains.
+
+Cost. Showing green. The £150k cost contingency is officially untouched. In practice, the overtime above is a real labour cost that is being absorbed into the team's general capacity rather than billed. If we costed it conservatively at standard rates, that is roughly £18k of effort already absorbed.
+
+Quality. Test coverage on non-core brand flows has been compressed to 62% from a planned 85%. The fallback authentication pattern (deployed because of the licensing issue) has been flagged by the security lead as a medium-term risk; not yet in the RAID register. Both are quality cuts, both are absorbing pressure that the other variables are not.
+
+Risk. The RAID register shows 12 active risks (3 lower than start-of-quarter), but at least two new risks should be added: (a) post-launch defect risk on non-core brand flows due to compressed UAT, and (b) auth-fallback security risk with no documented remediation date. Recommend both go in this week.
+
+Trade-offs that are currently being made implicitly:
+
+- Schedule pressure is being absorbed into quality (compressed UAT) and into team capacity (overtime).
+- Cost pressure is being deferred (overtime not billed; non-core POS deferred to phase 2).
+- The "green status" is real on the visible variables but conceals real absorption on quality and on hidden cost.
+
+Long-term implications, in rough magnitude:
+
+- Compressed UAT on non-core flows: expect 1-3 post-launch defect spikes within first 60 days, remediation effort ~£50-150k depending on severity.
+- Auth fallback: medium-term security risk; if it materialises before the planned remediation, incident response cost likely £100-500k.
+- Non-core POS deferral: phase 2 work likely £200-400k separately funded, plus 2-4 months delay before full multi-brand functionality.
+
+Recommendation to PM: surface these to sponsor in a private conversation ahead of next steering. The choice to absorb into quality and into team capacity is defensible if conscious; it is dangerous if it remains implicit.
+
+— Coordinator

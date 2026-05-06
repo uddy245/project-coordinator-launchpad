@@ -1,0 +1,61 @@
+Project state and trade-offs — month 8
+
+Headline: surface metrics show green but the project is absorbing material pressure into quality and into team capacity that is not visible in the reported cost or schedule lines. Three implicit trade-offs are currently being made; each carries a long-term cost that should be explicit before next steering. Detail follows, variable by variable, with absorption and downstream-cost noted for each.
+
+Scope.
+
+Documented scope is unchanged at the artifact level. In practice, three changes have happened that have not flowed through change control:
+
+a) Non-core brand POS integration has been quietly deferred. The team has prioritised core brands; non-core POS work is being scoped as a phase-2 follow-up. Not in any scope-change document. Recommend formalising as deferred scope before next steering.
+
+b) Architectural change to the customer data store (driven by the data-residency compliance flag) was absorbed inside the sprint without a change request. Real engineering effort, real impact on the design baseline, no record.
+
+c) Sponsor's mental model includes "improving morale across the loyalty team" and "positioning the company well for the board's digital-transformation narrative". Neither is in the documented scope. The risk: the project may launch as documented and still disappoint him, because what he is actually buying is partly outside what the team is delivering. Recommend a 30-minute conversation between PM and sponsor before launch to confirm what success looks like to him personally.
+
+Schedule.
+
+Reported green. In practice the 4-6 week POS integration overrun has been absorbed through 240 hours of unbilled team overtime over six weeks. Schedule contingency was 3 weeks at planning; in real terms it has been consumed already, because the work that consumed it would otherwise have shown up as a slip. The plan does not reflect this consumption. If any further slip materialises in the remaining four months, the project has no buffer.
+
+Cost.
+
+Reported green. £150k cost contingency officially untouched. In practice, the overtime above is real labour cost being absorbed into the team's general capacity rather than billed to the project. At standard charged rates the absorption is roughly £18k. The auth-fallback work to deploy the less-secure pattern was also unbilled. The reported cost number is not lying, but it is not the full economic picture, and the gap will widen if the absorption continues.
+
+Quality.
+
+The dimension absorbing the most pressure. Two specific cuts:
+
+a) Test coverage on non-core brand flows compressed to 62% from a planned 85%. This is a real reduction in defect-detection capability for the non-core launch flows. Likely consequence: 1-3 post-launch defect spikes in the first 60 days on non-core brands, remediation effort approximately £50-150k depending on severity.
+
+b) Authentication fallback pattern in production is the less-secure variant the team had planned to avoid. Security lead has flagged it as a medium-term risk in private. No remediation date set. If exploited before remediation, incident response cost is in the £100-500k range and reputational impact on a customer-facing platform is meaningful.
+
+Risk.
+
+RAID register shows 12 active risks, down 3 from start of quarter. The reported reduction is real for retired risks but does not capture two new risks that should be added this week:
+
+a) Post-launch defect risk on non-core brand flows due to compressed UAT (impact MEDIUM-HIGH; likelihood HIGH given the coverage gap; owner: testing lead).
+
+b) Authentication fallback security risk (impact HIGH; likelihood UNKNOWN until threat assessment runs; owner: security lead with remediation date to be set).
+
+Risk envelope assessment: project's remaining flex is now low. Schedule contingency consumed, cost contingency officially intact but eroding through unbilled effort, scope already absorbing pressure through quiet deferrals. The next material risk that materialises will have to land somewhere visible — at which point the green status will not survive.
+
+Trade-offs being made implicitly, made explicit here:
+
+1. Schedule is being protected by absorbing into quality (compressed UAT) and team capacity (overtime). The trade is: short-term green schedule line, in exchange for medium-term defect spike and team morale risk.
+
+2. Cost is being protected by deferring non-core scope and not billing overtime. The trade is: a smaller-looking total cost on closeout, in exchange for £200-400k of phase-2 follow-up cost on non-core POS plus the morale/attrition cost of unbilled overtime.
+
+3. The visible scope/schedule/cost commitments are being protected by allowing quality and risk to flex without a change request. The trade is: the kickoff promise looks honoured, in exchange for the chapter's classic loyalty-platform pattern — a launch that meets the visible bar but produces a 25-30% true-cost overrun in the 12 months after.
+
+Recommendation to PM.
+
+Three moves I would propose for steering or for a private conversation with sponsor:
+
+a) Surface the three trade-offs above to sponsor before next steering. Frame as "the project has been absorbing pressure into variables that are not on the headline status; we want to make sure the absorption is a conscious choice, not a default."
+
+b) Add the two new risks (post-launch defects, auth fallback) to the RAID this week with named owners and remediation dates.
+
+c) Build a closeout-items list now — overtime accumulated, non-core POS deferral, auth fallback remediation — so that when the launch closes and the case study is written, the long-term costs are linked back to the choices that created them. Organisations that connect these dots learn; ones that cannot, repeat the pattern.
+
+I am not proposing to escalate to sponsor directly or to editorialise in the public status report. The above goes to you for your judgment on what surfaces and how.
+
+— Coordinator
