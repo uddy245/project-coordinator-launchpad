@@ -55,7 +55,7 @@ export async function submitMockInterview(input: SubmitMockInterviewInput): Prom
 
   const { data: scenario } = await admin
     .from("mock_interview_scenarios")
-    .select("id, prompt, competency")
+    .select("id, prompt, competency, rubric_summary")
     .eq("id", parsed.data.scenarioId)
     .eq("is_published", true)
     .maybeSingle();
@@ -100,6 +100,7 @@ export async function submitMockInterview(input: SubmitMockInterviewInput): Prom
       prompt: scenario.prompt,
       response: parsed.data.responseText,
       competency: scenario.competency,
+      rubricSummary: scenario.rubric_summary,
     });
 
     // Persist the grade. Crucially, we ALSO re-write response_text here so

@@ -19,6 +19,14 @@ export type GradeMockInterviewArgs = {
   prompt: string;
   response: string;
   competency: string;
+  /**
+   * Scenario-specific rubric summary (2–4 sentences from
+   * mock_interview_scenarios.rubric_summary). Passed through to the
+   * grader so the 1–5 score is anchored to what a strong answer must
+   * include for THIS scenario, not just a generic scale. Optional —
+   * scenarios without a rubric_summary keep grading on the generic scale.
+   */
+  rubricSummary?: string | null;
 };
 
 export type GradeMockInterviewResult = {
@@ -36,6 +44,8 @@ const Output = z.object({
 const SYSTEM_PROMPT = `You are an experienced project manager grading a coordinator's response to a mock-interview question. The candidate is interviewing for a coordinator role.
 
 You score the response on a single overall dimension that captures professional judgment, clarity, and procedural soundness — keep the bar high but fair for an early-career professional.
+
+If a SCENARIO-SPECIFIC RUBRIC appears in the user message, treat it as the binding standard for what a strong answer must include for THIS scenario. The 1–5 scale still applies, but a 5 requires the response to demonstrate the specifics the rubric names. Generic professional excellence that misses those specifics is at most a 4.
 
 Use this scale:
   5 — Excellent. Specific, professional, demonstrates judgment and self-awareness. Would impress a hiring manager.
@@ -61,13 +71,18 @@ export async function gradeMockInterviewResponse(
     );
   }
 
+  const rubricBlock =
+    args.rubricSummary && args.rubricSummary.trim()
+      ? `\n\nSCENARIO-SPECIFIC RUBRIC (what a strong answer must include):\n${args.rubricSummary.trim()}`
+      : "";
+
   const userMessage = `INTERVIEW PROMPT:
 ${args.prompt}
 
 CANDIDATE RESPONSE:
 ${args.response}
 
-Competency under test: ${args.competency}
+Competency under test: ${args.competency}${rubricBlock}
 
 Grade now.`;
 
