@@ -21,11 +21,13 @@ export function CapstoneWorkspace({
   attemptId,
   attemptStatus,
   artifactSlots,
+  rubricSummary,
 }: {
   scenarioSlug: string;
   attemptId: string | null;
   attemptStatus: "in_progress" | "submitted" | "graded" | "withdrawn" | null;
   artifactSlots: ArtifactSlot[];
+  rubricSummary?: string | null;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -68,21 +70,42 @@ export function CapstoneWorkspace({
 
   if (!attemptId) {
     return (
-      <div className="border border-rule bg-paper p-6">
-        <p className="text-sm text-ink">
-          When you&apos;re ready, start the capstone. You&apos;ll be able to upload each artifact
-          independently and submit when all of them are in place — no time pressure.
-        </p>
-        {error ? <div className="mt-3 text-sm text-[hsl(var(--destructive))]">{error}</div> : null}
-        <Button className="mt-4" onClick={onStart} disabled={pending}>
-          {pending ? "Starting…" : "Begin capstone"}
-        </Button>
+      <div className="space-y-4">
+        {rubricSummary ? (
+          <div className="border border-rule bg-paper px-5 py-4">
+            <span className="kicker">What a strong submission must include</span>
+            <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-ink">
+              {rubricSummary}
+            </p>
+          </div>
+        ) : null}
+        <div className="border border-rule bg-paper p-6">
+          <p className="text-sm text-ink">
+            When you&apos;re ready, start the capstone. You&apos;ll be able to upload each artifact
+            independently and submit when all of them are in place — no time pressure.
+          </p>
+          {error ? (
+            <div className="mt-3 text-sm text-[hsl(var(--destructive))]">{error}</div>
+          ) : null}
+          <Button className="mt-4" onClick={onStart} disabled={pending}>
+            {pending ? "Starting…" : "Begin capstone"}
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      {rubricSummary ? (
+        <div className="border border-rule bg-paper px-5 py-4">
+          <span className="kicker">What a strong submission must include</span>
+          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-ink">
+            {rubricSummary}
+          </p>
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center justify-between gap-3 border border-rule bg-paper px-5 py-4">
         <div>
           <span className="kicker">Attempt status</span>

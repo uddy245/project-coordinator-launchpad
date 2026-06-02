@@ -28,7 +28,9 @@ export default async function CapstoneScenarioPage({
 
   const { data: scenario } = await supabase
     .from("capstone_scenarios")
-    .select("id, slug, title, brief, required_artifacts, estimated_hours, is_published")
+    .select(
+      "id, slug, title, brief, required_artifacts, estimated_hours, is_published, rubric_summary"
+    )
     .eq("slug", slug)
     .maybeSingle();
 
@@ -100,6 +102,7 @@ export default async function CapstoneScenarioPage({
             (attempt?.status ?? null) as "in_progress" | "submitted" | "graded" | "withdrawn" | null
           }
           artifactSlots={artifactSlots}
+          rubricSummary={scenario.rubric_summary ?? null}
         />
       </section>
 
