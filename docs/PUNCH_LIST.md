@@ -4,7 +4,7 @@ Live tracker for what's left to ship the app. **Claude reads this at the
 start of every session before doing anything else.** Tick a box when the
 work lands on `main`. Add new items as we discover them.
 
-Last reviewed: 2026-05-05 (Part-I grading pipelines complete: Lessons 1–7 fully gradable on main)
+Last reviewed: 2026-06-02 (capstone rubric_summary surfaced to learners; Part-I grading pipelines complete: Lessons 1–7 fully gradable on main)
 
 ---
 
@@ -41,6 +41,7 @@ _All known engine items shipped._
 
 ## Recently shipped
 
+- 2026-06-02 — **PR #76** merged: capstone `rubric_summary` surfaced to learners (kicker-styled panel above Begin/Submit) + `.claude/` added to .gitignore. Reconstructs unstaged WIP lost in the 2026-05-16 reset from `97153fe` (mock-interview rubric_summary thread-through), inferred from code-smell analysis (admin selected `rubric_summary`, learner side didn't).
 - 2026-05-03 — **PR #65** merged: F1–F9 platform features (Resend email, Sentry, Gate 1 wiring, lesson builder, public preview, FTS search, daily streaks, mock interviews, capstone scaffolding) + 22 follow-on commits.
 - 2026-05-03 — **PR #65 prod smoke test**: deploy verified.
 - 2026-05-05 — **PR #66** merged: punch list infra.
