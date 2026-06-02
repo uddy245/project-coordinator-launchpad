@@ -29,3 +29,6 @@ playwright-report/
 
 # os
 .DS_Store
+
+# claude code
+.claude/
