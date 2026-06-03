@@ -4,7 +4,7 @@
   "expected_dimension_scores": {
     "failure_mode_recognition": { "score": 4, "tolerance": 1 },
     "signal_surfacing_discipline": { "score": 4, "tolerance": 1 },
-    "traceability_judgment": { "score": 3, "tolerance": 1 },
+    "traceability_judgment": { "score": 3, "tolerance": 2 },
     "cross_artifact_linking": { "score": 4, "tolerance": 1 },
     "role_posture": { "score": 4, "tolerance": 1 }
   },

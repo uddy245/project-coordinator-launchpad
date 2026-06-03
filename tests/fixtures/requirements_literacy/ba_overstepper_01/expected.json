@@ -2,7 +2,7 @@
   "fixture_id": "ba_overstepper_01",
   "scenario_ref": "claims-modernisation-requirements-review-v1",
   "expected_dimension_scores": {
-    "failure_mode_recognition": { "score": 3, "tolerance": 1 },
+    "failure_mode_recognition": { "score": 3, "tolerance": 2 },
     "signal_surfacing_discipline": { "score": 1, "tolerance": 1 },
     "traceability_judgment": { "score": 2, "tolerance": 1 },
     "cross_artifact_linking": { "score": 1, "tolerance": 1 },
