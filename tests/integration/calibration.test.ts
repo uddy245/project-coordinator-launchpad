@@ -75,6 +75,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/requirements-literacy-v1.json",
     promptPath: "docs/prompts/grade-requirements-v1.md",
   },
+  {
+    competency: "wbs_discipline",
+    rubricPath: "docs/rubrics/wbs-discipline-v1.json",
+    promptPath: "docs/prompts/grade-wbs-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

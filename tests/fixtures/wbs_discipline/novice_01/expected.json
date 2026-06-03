@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "branch-systems-modernisation-wbs-review-v1",
+  "expected_dimension_scores": {
+    "hundred_percent_rule_compliance": { "score": 1, "tolerance": 1 },
+    "deliverable_orientation": { "score": 1, "tolerance": 1 },
+    "decomposition_quality": { "score": 1, "tolerance": 1 },
+    "cross_artifact_traceability": { "score": 2, "tolerance": 1 },
+    "collaborative_process_recognition": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Classic novice. Accepts the draft as comprehensive at face value ('overall I think it looks comprehensive'). No 100%-rule audit — misses every named omission category (PMO, change management, training, documentation, transition, hypercare, closure). Does not address the activity-vs-deliverable distinction at all even though the draft is full of verb-led leaves. No decomposition reasoning. LinkedIn-speak in the suggestions ('leverage testing best practices', 'good stakeholder engagement'). Explicitly recommends AGAINST the workshop validation move — 'calling everyone into a workshop feels like overkill' — which is the exact opposite of the chapter's named approach. Light credit for cross_artifact_traceability because of the passing budget mention. Otherwise floor."
+}

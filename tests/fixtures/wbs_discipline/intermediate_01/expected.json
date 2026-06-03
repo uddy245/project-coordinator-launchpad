@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "branch-systems-modernisation-wbs-review-v1",
+  "expected_dimension_scores": {
+    "hundred_percent_rule_compliance": { "score": 4, "tolerance": 1 },
+    "deliverable_orientation": { "score": 4, "tolerance": 1 },
+    "decomposition_quality": { "score": 4, "tolerance": 1 },
+    "cross_artifact_traceability": { "score": 3, "tolerance": 2 },
+    "collaborative_process_recognition": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 3.8,
+  "expected_pass": true,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Solid intermediate. Names five of the seven omission categories (change mgmt, training, hypercare, PMO, documentation/transition). Names the activity-vs-deliverable distinction with three specific rewrites. Decomposition critique addresses both depth (the small leaves in 1.2.1) and consistency (1.2.2/1.2.3 underdeveloped vs 1.2.1). Cross-artefact reasoning is correct (hypercare-budget, change-mgmt-RAM) but only two examples and tolerance on the third dimension widened to 2 because the reasoning is correct-but-light. Validation move is specific and chapter-aligned (workshop with the doers, scoped to the time pressure, coordinator's facilitation/capture jobs named). Not yet hire-ready — could go deeper on the artifact-is-residue framing and could trace more gaps cross-artifact."
+}

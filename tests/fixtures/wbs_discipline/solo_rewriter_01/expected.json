@@ -1,0 +1,15 @@
+{
+  "fixture_id": "solo_rewriter_01",
+  "scenario_ref": "branch-systems-modernisation-wbs-review-v1",
+  "expected_dimension_scores": {
+    "hundred_percent_rule_compliance": { "score": 4, "tolerance": 1 },
+    "deliverable_orientation": { "score": 3, "tolerance": 1 },
+    "decomposition_quality": { "score": 3, "tolerance": 2 },
+    "cross_artifact_traceability": { "score": 1, "tolerance": 1 },
+    "collaborative_process_recognition": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 2.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "SOLO-REWRITER FAILURE MODE — the symmetric opposite of diagram_polisher. The learner has clearly internalised the 100%-rule omission categories (legitimately scores 4 on coverage) and partly fixed deliverable-orientation (some leaves are now nouns) but commits the central process error: rewriting the WBS solo and declaring it ready to baseline ('I think this is now ready to baseline directly'), explicitly waving off the workshop/walkthrough ('I do not think the leads will have meaningful additions to make'). This is the chapter's anti-pattern in full — treating the WBS as a deliverable to be produced rather than a shared model to be built. Caps fire hard on collaborative_process_recognition (1) — proposes 'courtesy review' as the alternative to substantive team validation, framed dismissively. cross_artifact_traceability also caps at 1 because the rewrite focuses on the artefact itself with no propagation reasoning. Decomposition tolerance widened to 2 because the rewrite is internally reasonable but uses the learner's own judgement rather than the doers' input — the chapter's exact failure mode. Tests whether the grader catches competent-looking work that exhibits the central process error."
+}

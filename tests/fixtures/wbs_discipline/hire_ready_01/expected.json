@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "branch-systems-modernisation-wbs-review-v1",
+  "expected_dimension_scores": {
+    "hundred_percent_rule_compliance": { "score": 5, "tolerance": 1 },
+    "deliverable_orientation": { "score": 5, "tolerance": 1 },
+    "decomposition_quality": { "score": 5, "tolerance": 1 },
+    "cross_artifact_traceability": { "score": 5, "tolerance": 1 },
+    "collaborative_process_recognition": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. All seven 100%-rule omission categories named with specific gap-to-branch mapping and consequence. Activity-vs-deliverable distinction named with chapter's framing and deliverable-form rewrites for every problematic leaf. Decomposition critique covers both depth (small leaves in 1.2.1) and consistency (1.2.2/1.2.3 vs 1.2.1) with explicit reasoning about why the asymmetry matters. Cross-artefact reasoning includes four distinct propagation chains (hypercare-budget, change-mgmt-RAM-risk-reporting, underdeveloped-integration-schedule-critical-path, activity-leaves-status-tracking). Validation move is specific (format, duration, participants, output, coordinator's three jobs explicit), proposes a fallback if half-day impossible, AND pushes back on the COO deadline as the actual constraint. Closes with explicit humility ('two things I am NOT certain on'). This is what every learner should produce."
+}

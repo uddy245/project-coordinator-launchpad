@@ -1,0 +1,15 @@
+{
+  "fixture_id": "diagram_polisher_01",
+  "scenario_ref": "branch-systems-modernisation-wbs-review-v1",
+  "expected_dimension_scores": {
+    "hundred_percent_rule_compliance": { "score": 1, "tolerance": 1 },
+    "deliverable_orientation": { "score": 1, "tolerance": 1 },
+    "decomposition_quality": { "score": 3, "tolerance": 2 },
+    "cross_artifact_traceability": { "score": 1, "tolerance": 1 },
+    "collaborative_process_recognition": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "DIAGRAM-POLISHER FAILURE MODE — the chapter's named anti-pattern in disguise. Treats the WBS as an artefact to be polished (numbering scheme, Excel rebuild, COO diagram) rather than as a shared model that needs the team's contribution. Misses every named 100%-rule omission (change mgmt, training, hypercare, closure, PMO, documentation, transition). Proposes additional leaves that are themselves activities ('API design', 'API build', 'API test', 'Performance testing') — the symmetric failure: cannot critique activity-orientation while replicating it. Decomposition advice is partly right (1.2.2/1.2.3 do need depth) but for the wrong reason — symmetry-with-1.2.1 rather than the integration risk profile. No cross-artefact reasoning. Explicitly proposes baselining and then sharing with leads 'for their information' — the exact failure mode the chapter warns against. Caps fire on activity-replication, missed 100%-rule, missed deliverable distinction, no cross-artefact, and accepted-solo-author."
+}

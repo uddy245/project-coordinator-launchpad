@@ -1,0 +1,41 @@
+To: T. Adeyemi
+From: PC
+Subject: WBS v0.1 — review note ahead of Wednesday's 1:1
+
+T — review note as requested. Five things stood out on a careful read.
+
+1. 100% rule gaps. A few categories I think are missing from the draft:
+
+   - Change management. Given what I have heard about how end-user readiness has gone on past projects, I do not think we can rely on line managers absorbing it again. There is no branch on the WBS for change management work. I would propose a new 1.5 (or fold it into Deployment as 1.4.x) covering stakeholder comms, branch readiness checks, and change-impact assessment.
+
+   - Training. Same pattern — past projects have absorbed training into the soft-launch window. The WBS has no training package. With 84 branches and a new teller app, this is going to be substantial. I would propose 1.6 Training with leaves for materials development, train-the-trainer, and per-wave delivery.
+
+   - Hypercare. Ops have already told me they do not have capacity to run hypercare after go-live. The WBS ends at 1.4.4 (Wave 3 rollout). There is no closure or hypercare package, which means the work will fall on operations unbudgeted.
+
+   - Project management overhead. Status reporting, governance, steering — these are real work, often a meaningful percentage of total effort. They are not on the WBS.
+
+   - Documentation and transition to operations are also missing.
+
+2. Activity-vs-deliverable distinction. Some of the leaves are framed as activities rather than deliverables. A WBS should describe what is produced, not what is done. For example:
+
+   - 1.1.1 "Interview branch managers" is an activity. The deliverable is something like "Branch-manager interview synthesis" or "Current-state inputs document."
+   - 1.1.2 "Document current-state workflows" — the deliverable is the document itself, e.g. "Current-state workflow map."
+   - 1.3.1 "Run unit tests" — the deliverable is "Unit test suite + passing-rate report."
+
+   I would propose rewriting these in deliverable form across the WBS.
+
+3. Decomposition. Two observations:
+
+   - 1.2.1 (Teller application) has seven leaves, some of which feel quite small (1.2.1.6 Data validation layer, 1.2.1.7 Error handling). Worth checking whether these are properly 8-80 person-hours each or whether some are really sub-components of other leaves.
+   - By contrast, 1.2.2 (Core banking integration) and 1.2.3 (Customer records migration) are single leaves with no decomposition. Either you know much more about the teller app than about integration and migration, or the decomposition is uneven. Given the integration team's release cadence and the migration risk profile, I would expect both of these to need at least 3-4 leaves.
+
+4. Cross-artefact implications. Two examples:
+
+   - Missing hypercare in the WBS means the schedule ends at Wave 3 rollout and the budget excludes hypercare staff time. When ops cannot take it on, the project will need an unbudgeted extension or pull funds from contingency.
+   - Missing change management work in the WBS means the RAM has no owner for end-user readiness, so when it goes wrong (which past pattern suggests it will) there is nobody accountable.
+
+5. Validation move. The draft was authored solo over a weekend. I think the right next step before baselining is to walk through it with the workstream leads — at minimum the teller-app dev lead, the integration lead, the migration lead, and somebody from ops who will inherit hypercare. A two-hour structured walkthrough (rather than a full two-day workshop, given the COO's week-5 deadline) would let them flag gaps in their own areas and give us the team buy-in we will need for execution. I am happy to facilitate the capture and tracking if you run the conversation.
+
+Happy to discuss in our 1:1.
+
+PC
