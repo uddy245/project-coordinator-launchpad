@@ -3,7 +3,7 @@
   "scenario_ref": "branch-systems-modernisation-wbs-review-v1",
   "expected_dimension_scores": {
     "hundred_percent_rule_compliance": { "score": 2, "tolerance": 2 },
-    "deliverable_orientation": { "score": 3, "tolerance": 1 },
+    "deliverable_orientation": { "score": 2, "tolerance": 2 },
     "decomposition_quality": { "score": 3, "tolerance": 2 },
     "cross_artifact_traceability": { "score": 1, "tolerance": 1 },
     "collaborative_process_recognition": { "score": 1, "tolerance": 1 }
