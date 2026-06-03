@@ -4,13 +4,13 @@ Live tracker for what's left to ship the app. **Claude reads this at the
 start of every session before doing anything else.** Tick a box when the
 work lands on `main`. Add new items as we discover them.
 
-Last reviewed: 2026-06-03 (Lesson 9 WBS Discipline grading pipeline shipped; Lessons 1–9 fully gradable on main)
+Last reviewed: 2026-06-03 (Lesson 10 Schedules grading pipeline shipped; Lessons 1–10 fully gradable on main)
 
 ---
 
 ## Content — grading pipelines (Claude can author next)
 
-- [ ] **Lessons 10–19** — handbook covers Chapters 10–25 (WBS, schedules, meetings, minutes, status reports, change requests, dashboards, escalation, push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs reading-only. Part III of the handbook (Chapters 9–16) is the procedural-artifacts heart of the curriculum and likely needs the most grading-pipeline coverage.
+- [ ] **Lessons 11–19** — handbook covers Chapters 11–25 (meetings, minutes, status reports, change requests, dashboards, escalation, push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs reading-only. Part III of the handbook (Chapters 9–16) is the procedural-artifacts heart of the curriculum and likely needs the most grading-pipeline coverage.
 
 ## Content — blocked on user (recording / authoring)
 
@@ -41,6 +41,7 @@ _All known engine items shipped._
 
 ## Recently shipped
 
+- 2026-06-03 — **PR #79** merged: Lesson 10 (Schedules, Dependencies, Critical Path / Ch 10) grading pipeline. 5 fixtures (novice / intermediate / hire_ready / green_reassurer_01 / schedule_rewriter_01). All schedule_literacy fixtures green first calibration run; 1 retry needed for an unrelated `organisational_navigation/wrong_escalation_01/failure_mode_diagnosis` transient flake (drifted to 1 vs expected 3 ±1), green on rerun. `schedule_rewriter_01` audit-vs-rewrite caps held as predicted from Lesson 9 learning. Lessons 1–10 now fully gradable end-to-end.
 - 2026-06-03 — **PR #78** merged: Lesson 9 (WBS Discipline / Ch 9) grading pipeline. 5 fixtures (novice / intermediate / hire_ready / diagram_polisher_01 / solo_rewriter_01). Two cells on `solo_rewriter_01` widened (hundred_percent_rule_compliance 4→2 tol 1→2; deliverable_orientation 3→2 tol 1→2) — Claude reads the rewrite as inventing rather than auditing and caps both dims hard, the chapter's intended failure mode. Lessons 1–9 now fully gradable end-to-end.
 - 2026-06-02 — **PR #77** merged: Lesson 8 (Requirements Literacy / Ch 8) grading pipeline. 5 fixtures (novice / intermediate / hire_ready / self_suppressor_01 / ba_overstepper_01). Two cells widened to tol ±2 (failure_mode_recognition on ba_overstepper, traceability_judgment on intermediate); 1 calibration retry for transient validator flake on an unrelated `lifecycle_awareness` fixture, then green. Lessons 1–8 now fully gradable end-to-end.
 - 2026-06-02 — **PR #76** merged: capstone `rubric_summary` surfaced to learners (kicker-styled panel above Begin/Submit) + `.claude/` added to .gitignore. Reconstructs unstaged WIP lost in the 2026-05-16 reset from `97153fe` (mock-interview rubric_summary thread-through), inferred from code-smell analysis (admin selected `rubric_summary`, learner side didn't).
@@ -58,7 +59,7 @@ _All known engine items shipped._
 - 2026-05-05 — **PR #74** merged: Lesson 6 (governance / Ch 6) grading pipeline with overstep + blame-narrative probes. 4 calibration cycles + quote-cap bump (750→1500) to settle.
 - 2026-05-05 — **PR #75** merged: Lesson 7 (variables / Ch 7) grading pipeline with iron-triangle-zealot + quality-blindspot probes. Calibration green first try (post-rebase).
 
-**Part-I grading pipelines complete + Lessons 8 (Requirements Literacy) and 9 (WBS Discipline) shipped. Lessons 1–9 are fully gradable end-to-end via the AI grading service. Calibration corpus is 70 fixtures across 9 competencies (35 risk_identification + 5 each for the other 8).**
+**Part-I grading pipelines complete + Lessons 8 (Requirements Literacy), 9 (WBS Discipline), and 10 (Schedule Literacy) shipped. Lessons 1–10 are fully gradable end-to-end via the AI grading service. Calibration corpus is 75 fixtures across 10 competencies (35 risk_identification + 5 each for the other 9).**
 
 ---
 
