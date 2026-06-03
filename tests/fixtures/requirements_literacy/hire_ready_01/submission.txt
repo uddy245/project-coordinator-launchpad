@@ -1,0 +1,67 @@
+To: D. Okafor (PM)
+From: PC
+Subject: Critical-pass review — §4 Claims Intake (review note ahead of Tuesday's walkthrough)
+
+D — review note as requested. I read §4 carefully twice. Below is what stood out, grouped by failure mode with proposed surfacing for each. I have written this so you can forward the parts you find useful to Priya as-is.
+
+FAILURE MODES IN THE §4 EXCERPT
+
+A. Ambiguity (landmine words)
+- REQ-4.1.3 "timely acknowledgements" — no threshold.
+- REQ-4.1.4 "user-friendly and intuitive" — partly numeric (two-hour training target), but "user-friendly" itself unspecified. The two-hour target is useful; the "user-friendly" framing will still produce divergent expectations in UAT.
+- REQ-4.1.8 "real-time fraud-detection scoring" — "real-time" is the same landmine ("sub-second to claimant? scored before routing? scored asynchronously?").
+
+B. Unstated assumption
+- REQ-4.1.2 "in line with current practice in the existing claims platform" — assumes the existing platform's identity-validation rules are documented and stable. Neither is true (per my week-five conversations, the rules are not documented and the owning team is down to two people).
+- REQ-4.1.7 "the period required by current regulation" — assumes a single regulator. The carrier operates in three regions with different retention rules. Without disambiguation, this is unimplementable as written.
+- REQ-4.1.9 "as discussed in the workshop with the claims operations team on 14 March" — assumes the workshop's decision was unambiguous and traceable. No minutes in SharePoint; the workshop predates my start; the decision's provenance is therefore opaque.
+
+C. Conflict (latent, between two requirements)
+- REQ-4.1.6 (five-second routing SLA at peak 18,000 intakes/day) and REQ-4.1.8 (real-time fraud scoring via third-party REST API, contract not signed, latency not validated). If the FraudGuard call is in the critical path, the two requirements are likely in tension at peak. The conflict is not visible in the document because the two requirements live in different sub-sections; they will become visible in load testing.
+
+D. Incompleteness
+- REQ-4.1.5 lists supported formats and file size but no maximum document count per claim, no behaviour on virus/malware detection, no behaviour on upload failure (resume? restart? error?). On a claims-intake path, the failure modes matter as much as the happy path.
+
+E. Solution-in-disguise
+- REQ-4.1.9 "all intake fields in a single-page form" is written as a solution. The need it serves ("to reduce handler keystrokes") is named in the same line but is not the requirement; the requirement is the form layout. Single-page is one design choice for that need; it may not be the best one given REQ-4.1.5 (large supporting-document uploads) and accessibility constraints we have not yet considered.
+
+F. Wrong level of abstraction
+- REQ-4.1.6 prescribes the routing strategy ("the existing triage rules engine"), which constrains implementation. If the triage engine cannot meet the five-second SLA at peak volume, the requirement is in conflict with itself. Worth checking whether the "use the existing engine" piece is a true requirement or an organisational constraint that should be labelled as such.
+
+SUGGESTED SURFACING (matched to channel)
+
+1. To Priya — single short note before Monday, ahead of the Tuesday walkthrough:
+   "Priya — five flags from the §4 read ahead of Tuesday. Three quick ambiguities (REQ-4.1.3 / 4.1.4 / 4.1.8 landmine words), one unstated assumption I think rises to a risk (REQ-4.1.2's dependency on undocumented legacy rules), and one possible latent conflict (REQ-4.1.6 SLA vs REQ-4.1.8 fraud-scoring latency). Fifteen minutes Monday morning to walk through, or shall I bring them to the walkthrough itself? — PC"
+   The note is short, named, and lets Priya choose the channel. No second-guessing.
+
+2. To the RAID — two risk entries (assuming you agree):
+   - "REQ-4.1.2: identity-validation rules in the legacy platform are undocumented and the owning team is down to two people. Discovery cost not scoped." Owner: Priya / Architecture. Likelihood: high. Impact: medium-high (4-6 week integration slip).
+   - "REQ-4.1.6 + REQ-4.1.8: five-second routing SLA may be in conflict with real-time fraud-scoring latency at peak (18k/day). Not yet load-tested; FraudGuard contract not signed." Owner: Architecture. Likelihood: medium. Impact: high (post-architecture rework if surfaced in load testing).
+
+3. To our 1:1 — two items for governance:
+   - REQ-4.1.9's missing workshop minutes are a process gap, not just a single-requirement issue. Worth asking the BA team how they are capturing requirements provenance generally.
+   - REQ-4.1.7's regulatory ambiguity probably needs compliance in the room, not just Priya. Who routes that?
+
+4. To the requirements walkthrough — REQ-4.1.5's incompleteness around upload failures and document counts. Surface in the walkthrough rather than offline because it is the kind of thing the claims handlers in the room can answer directly.
+
+TRACEABILITY
+
+I would not propose a row-per-atomic-requirement matrix; the document has ~40 requirements in §4 alone and I expect ~300-500 across the whole document. Maintaining that at the row level is the anti-pattern. I would instead push for traceability at the requirement-group level (one row per sub-section) with backwards links to the originating business objective and forward links to the work-package or epic. That is maintainable and it is what we will actually use during change-request scoping.
+
+REQ-4.1.9 is the canonical example of an untraceable requirement (no workshop minutes, no stakeholder we can name). If we cannot trace it after the walkthrough, my recommendation is to flag it as a scope-cut candidate, not as a defect — the question becomes whether the underlying need has an owner who wants it built.
+
+DOWNSTREAM ARTEFACTS WHERE THESE WILL SURFACE IF UNADDRESSED
+
+- The REQ-4.1.3 / 4.1.4 / 4.1.8 ambiguities will surface as UAT defects — handlers and claimants will say "this is not what we meant". Cost: re-work in late testing.
+- The REQ-4.1.6 / REQ-4.1.8 latency conflict will surface in load testing or, worse, in production. Cost: architecture rework. Catching it now is catching it cheap.
+- The REQ-4.1.2 legacy-platform dependency will surface as a schedule slip in the integration sprint. Cost: 4-6 weeks plus discovery-team capacity we have not booked.
+- The REQ-4.1.7 regulatory ambiguity will surface in audit if we choose wrong, or in pre-launch compliance review if we choose right but cannot evidence the choice. Cost: depends on which region.
+- REQ-4.1.9 will surface as a defect attributed to the wrong team — handlers will say the form is not what they asked for, the BA team will say it is, and there will be no minutes to settle it.
+
+POSTURE
+
+To be explicit about what I am and am not doing here: I have read the document carefully and noticed the things that, on my reading, prompted uncertainty. I am surfacing them through you so that you and Priya can decide which are worth her time. I am not proposing to rewrite the requirements; I am not proposing to take any of these to the sponsor or steering before the BA and PM have had a chance to look at them. The noticing is the contribution. The deciding is yours.
+
+Two things I am NOT confident I have right and would value your read on: (a) whether the REQ-4.1.6 / 4.1.8 latency call is actually in the critical path — I am reading from the document, not from a sequence diagram — and (b) whether the regulatory ambiguity in REQ-4.1.7 has already been handled in a part of the document I have not yet read.
+
+PC

@@ -70,6 +70,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/project-economics-v1.json",
     promptPath: "docs/prompts/grade-variables-v1.md",
   },
+  {
+    competency: "requirements_literacy",
+    rubricPath: "docs/rubrics/requirements-literacy-v1.json",
+    promptPath: "docs/prompts/grade-requirements-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

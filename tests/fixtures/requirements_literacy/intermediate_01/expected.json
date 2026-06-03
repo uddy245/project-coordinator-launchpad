@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "claims-modernisation-requirements-review-v1",
+  "expected_dimension_scores": {
+    "failure_mode_recognition": { "score": 4, "tolerance": 1 },
+    "signal_surfacing_discipline": { "score": 4, "tolerance": 1 },
+    "traceability_judgment": { "score": 3, "tolerance": 2 },
+    "cross_artifact_linking": { "score": 4, "tolerance": 1 },
+    "role_posture": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 3.8,
+  "expected_pass": true,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Solid intermediate. Identifies five distinct failure modes correctly categorised. Surfacing moves are differentiated by channel (BA note vs RAID vs PM 1:1). Downstream artefacts named (UAT defects, load testing, integration-sprint slip). Posture is appropriate ('not proposing to second-guess Priya'). Misses incompleteness in REQ-4.1.5 (no max document count, no virus scan, no failure-mode behaviour) and the wrong-level-of-abstraction issue across multiple requirements. Traceability reasoning is correct but light — names the orphaned REQ-4.1.9 without proposing systematic next steps. Not yet hire-ready because the analysis is competent but not yet a step ahead of the BA."
+}
