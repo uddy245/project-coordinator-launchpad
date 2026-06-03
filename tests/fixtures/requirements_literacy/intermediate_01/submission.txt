@@ -1,0 +1,31 @@
+To: D. Okafor (PM)
+From: PC
+Subject: Critical-pass review — §4 Claims Intake, ahead of Tuesday's walkthrough
+
+D — short review note ahead of the walkthrough. Five things stood out to me on a careful read of the §4 excerpt. I would group them as follows.
+
+1. Ambiguity in REQ-4.1.3 ("timely acknowledgements") and REQ-4.1.4 ("user-friendly and intuitive"). "Timely" and "user-friendly" are the kind of words that read precisely until you push on them. Different stakeholders will hear different things. I would ask Priya to confirm the specific thresholds — e.g. acknowledgements within N seconds, training-to-productivity already has a number (two hours) so that part is fine.
+
+2. Unstated assumption in REQ-4.1.2 ("in line with current practice in the existing claims platform"). The existing platform is fourteen years old and its identity-validation rules are not documented. "In line with current practice" assumes that current practice is known, documented, and stable. None of that is true here. This one I would flag as a risk in the RAID rather than just a clarification question — it has time and discovery cost attached.
+
+3. Unstated regulatory assumption in REQ-4.1.7 ("the period required by current regulation"). The carrier operates in three regions with different retention rules. I do not know which regulator is being referenced. This is a clarification for Priya and possibly for compliance.
+
+4. Potentially conflicting requirements between REQ-4.1.6 (five-second routing SLA at peak 18k/day) and REQ-4.1.8 (real-time fraud scoring via a third-party REST API whose contract is not signed and whose latency is not validated). If the fraud-scoring call is in the critical path of the five-second SLA, the two requirements may be in tension. I would flag this for the walkthrough so the architect can speak to it.
+
+5. Solution-in-disguise in REQ-4.1.9 (the "single-page form" decision attributed to a workshop with claims operations on 14 March). The minutes are not in SharePoint and I cannot trace where this decision actually came from or who agreed to it. The requirement is written as a solution ("a single-page form") rather than as the need it serves (reducing handler keystrokes). I would ask Priya whether the underlying need has been confirmed and whether single-page is the right way to meet it.
+
+Suggested surfacing moves:
+
+- Short note to Priya, before the walkthrough: "Priya, ahead of Tuesday — for REQ-4.1.2, REQ-4.1.3, REQ-4.1.4, REQ-4.1.7, REQ-4.1.9, I have specific clarification questions. Could we do fifteen minutes Monday morning?"
+- One RAID risk entry: "REQ-4.1.2 relies on undocumented identity-validation rules from a deprecated platform; discovery cost not yet scoped." Owner: Priya / Architecture. Mitigation: scoping discovery sprint.
+- One item for our 1:1: "REQ-4.1.6 and REQ-4.1.8 may conflict on latency at peak volume; should we ask Architecture to validate before we commit?"
+
+On traceability: the document has requirement IDs which is good. I would not propose a row-per-requirement matrix — too costly to maintain and not the point — but the orphaned requirement at REQ-4.1.9 is a candidate. If we cannot trace it to a stakeholder decision, it is either scope that should not be there or traceability that has broken. Worth raising.
+
+Downstream artefacts where these will surface if we do nothing: the ambiguities in REQ-4.1.3 and REQ-4.1.4 will become defects in UAT (handlers say "this is not what we meant"). The REQ-4.1.6 / REQ-4.1.8 latency tension will surface in load testing — and at that point we will be at the architecture-rework cost, not the requirements-clarification cost. The REQ-4.1.2 unstated assumption will surface as schedule slip in the integration sprint.
+
+To be clear on posture: I am not proposing to second-guess Priya. These are observations from a careful read, surfaced through her so she can decide which are worth her time. The ones I think are genuinely risks (the platform-dependency one) I am proposing we treat as risks rather than as questions.
+
+Happy to discuss any of these in our 1:1.
+
+PC

@@ -1,0 +1,34 @@
+To: D. Okafor (PM)
+From: PC
+Subject: §4 Requirements — Critical Review and Recommended Rewrites
+
+D,
+
+I have reviewed §4 in detail and I have to be direct: this document is not ready for the Tuesday walkthrough. Priya's section needs substantive rework before we should be inviting stakeholders to walk through it. I am attaching my proposed rewrites and a recommendation that we escalate the BA workstream to the Sponsor before further work proceeds.
+
+REWRITTEN REQUIREMENTS
+
+REQ-4.1.3 (Priya's version): "The system shall produce timely acknowledgements to claimants on successful intake."
+PC rewrite: "The system shall produce an acknowledgement to the claimant within 30 seconds of successful intake confirmation. The acknowledgement shall be delivered via email and via SMS (where the claimant has provided a mobile number on intake), and shall contain the claim reference number, the claimant name, the date and time of intake, and the URL to the claimant self-service portal."
+
+REQ-4.1.4 (Priya's version): "The system shall be user-friendly and intuitive..."
+PC rewrite: "The system shall present a four-pane handler interface (intake form, customer history, supporting documents, triage decision) on a single screen at 1920x1080 resolution. The intake form shall use the existing claims-handler keyboard shortcut profile (see Appendix C). A new handler shall reach independent productivity within two hours of training, measured by their ability to process five standard-tier intakes unaided."
+
+REQ-4.1.7 (Priya's version): "The system shall maintain an audit trail of all intake events for regulatory reporting. The audit trail shall be retained for the period required by current regulation."
+PC rewrite: "The system shall maintain an audit trail of all intake events for the retention period of the longest-required regulator across the carrier's three operating regions (currently seven years under FCA UK, ten years under NAIC US, and seven years under APRA AU — system shall be configured for ten years and applied uniformly)."
+
+REQ-4.1.9 — recommend deletion. The single-page-form decision cannot be traced to a documented workshop output. It should be removed and re-elicited.
+
+RECOMMENDED ACTIONS
+
+1. The BA workstream should be paused while §4 (and likely the rest of the document) is rewritten using the standard the rewrites above demonstrate. I am happy to lead this work in collaboration with Priya, though my read is that Priya may benefit from external BA support given the gaps the §4 review has surfaced.
+
+2. We should escalate this to the COO (sponsor) ahead of Tuesday's walkthrough. Walking through a document with these problems risks the credibility of the project.
+
+3. Going forward, all requirements should be reviewed and signed off by the PC function before they enter the document. This will catch issues like §4's at source rather than after they have been written.
+
+I appreciate Priya is the BA on the project. However, the gap in quality is significant enough that I do not think it should be allowed to stand on grounds of seniority alone. Coordinating quality is the coordinator's job; this is me doing my job.
+
+Let me know if you want me to brief the COO or whether you would prefer to do that directly.
+
+PC

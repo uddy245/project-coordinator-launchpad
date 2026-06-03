@@ -1,0 +1,50 @@
+You are PC on a twelve-month claims-modernisation programme at a mid-size insurance carrier. Sponsor is the COO. The lead BA (Priya Raman) and her team have produced a 142-page requirements document for the new claims platform. You are five weeks in. Your PM (D. Okafor) has asked you to read the document critically and send her a short review note before the requirements walkthrough next Tuesday.
+
+The PM has told you, in passing: "Priya is excellent. I am not asking you to second-guess her. I am asking you because four sets of eyes catch more than three, and the coordinator's read is usually the one that catches the kind of things the senior people skim past."
+
+Below is an excerpt from §4 (Claims Intake and Triage) of the requirements document. Use it as the basis for your review note. The excerpt contains nine requirements; in the real document this section runs to about forty.
+
+---
+
+REQ-4.1.1 The system shall allow claims handlers to intake new claims via the web portal, the mobile app, the inbound email gateway, and the partner-broker API.
+
+REQ-4.1.2 The system shall validate claimant identity at intake. Validation shall be performed in line with current practice in the existing claims platform.
+
+REQ-4.1.3 The system shall produce timely acknowledgements to claimants on successful intake.
+
+REQ-4.1.4 The system shall be user-friendly and intuitive for claims handlers, requiring no more than two hours of training for a new handler to reach independent productivity.
+
+REQ-4.1.5 The system shall allow handlers to upload supporting documents at intake. Supported formats: PDF, JPG, PNG, TIFF, DOCX, XLSX. Maximum file size: 50 MB per document.
+
+REQ-4.1.6 The system shall automatically triage incoming claims by complexity tier (simple / standard / complex) using the existing triage rules engine, and route triaged claims to the appropriate handler queue within five seconds of intake.
+
+REQ-4.1.7 The system shall maintain an audit trail of all intake events for regulatory reporting. The audit trail shall be retained for the period required by current regulation.
+
+REQ-4.1.8 The system shall include a real-time fraud-detection scoring layer that flags suspicious claims at intake for secondary review. The fraud scoring engine shall use the new third-party model provided by FraudGuard Inc., integrated via REST API.
+
+REQ-4.1.9 The system shall present all intake fields in a single-page form to reduce handler keystrokes, as discussed in the workshop with the claims operations team on 14 March.
+
+---
+
+Background context you have picked up in week five:
+
+- The "existing claims platform" referenced in REQ-4.1.2 is a 14-year-old system whose identity-validation rules are not documented; the team that owns it has shrunk to two people.
+- The FraudGuard contract (REQ-4.1.8) has not yet been signed; procurement flagged it as outstanding in last week's status. The integration approach has not been technically validated.
+- The "five seconds" routing SLA in REQ-4.1.6 has not been load-tested at the expected claim volumes (peak 18,000 intakes/day).
+- "Current regulation" in REQ-4.1.7 — you do not know which regulator is being referenced. The carrier operates in three regions with different retention rules.
+- The "workshop with claims operations on 14 March" referenced in REQ-4.1.9 happened before you joined; there are no minutes in the project SharePoint. You do not know whether the single-page-form decision was reached unanimously, was a proposal that survived discussion, or was Priya's interpretation of an ambiguous conversation.
+- The wider section §4 contains forty requirements; the same patterns appear throughout the rest of §4 and almost certainly throughout the other sections of the document.
+
+Your PM wants a review note — 500-800 words — that:
+
+1. Identifies the specific failure modes you found in the excerpt. Name them by category (ambiguity, incompleteness, conflict, unstated assumption, solution-in-disguise, wrong level of abstraction, current-system-as-requirement). Reference requirement IDs and quote the phrases that prompted the flag.
+
+2. For each flagged item, proposes the specific surfacing move you would make. A short note to Priya (draft the actual one-line question), a RAID entry, an item for your next PM 1:1, or a flag for the requirements walkthrough — choose the right channel for each.
+
+3. Comments briefly on traceability — at the right level — and on which of the flagged items, if any, are candidates for risk-register entries rather than just clarification notes.
+
+4. Names two or three downstream artefacts (WBS / schedule / tests / acceptance criteria / change requests / RAID) where these issues will surface if unaddressed, with a one-line description of the symptom.
+
+5. Frames the note in the appropriate coordinator posture. You are not the BA. You are not declaring Priya wrong. You are doing the noticing that is part of the coordinator's contribution to quality, and surfacing what you have noticed so that the BA and PM can decide what to do about it.
+
+The PM will read the note first, then forward the parts she finds useful to Priya. Do not address Priya directly in the note. Do not rewrite the requirements.

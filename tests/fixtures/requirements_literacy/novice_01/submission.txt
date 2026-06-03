@@ -1,0 +1,24 @@
+To: D. Okafor (PM)
+From: PC
+Subject: Review of §4 Requirements
+
+Hi D,
+
+I read the section you sent me. The requirements look comprehensive and Priya has clearly done a thorough job. I have a few thoughts.
+
+Overall I think the section is well-organised and covers the main intake channels. The fraud detection piece in REQ-4.1.8 is a good addition and will help us meet our compliance goals. The five-second SLA in REQ-4.1.6 is ambitious but achievable.
+
+A few things I noticed:
+
+- REQ-4.1.4 says the system should be user-friendly. I think we should communicate clearly with stakeholders about what user-friendly means to make sure everyone is aligned. I would leverage best practices to drive a good outcome here.
+- REQ-4.1.5 lists supported document formats. We might want to add some more formats in future but the current list is fine.
+- REQ-4.1.9 mentions a workshop with claims operations. I assume the minutes are somewhere and we can find them if needed.
+
+I would recommend we set up a meeting with Priya to discuss any open items. We should also make sure we have good stakeholder engagement going forward to ensure project success.
+
+I am happy to take on whatever actions come out of the walkthrough. As coordinator I see my role as supporting Priya and the broader team, and I do not want to step on her toes by raising requirements concerns directly — she is the BA and knows this area better than I do.
+
+Let me know if you have any questions.
+
+Best,
+PC

@@ -1,0 +1,19 @@
+To: D. Okafor (PM)
+From: PC
+Subject: §4 Requirements — review note
+
+D,
+
+You asked for a critical-pass review. Honest answer: I do not think it is my place to critique Priya's work.
+
+Reading §4 carefully, I did notice a few things that surprised me on my own read. REQ-4.1.3 uses the word "timely" without defining it. REQ-4.1.4 uses "user-friendly". REQ-4.1.2 refers to "current practice in the existing claims platform" — which I understand is an old system that nobody has documented. REQ-4.1.9 attributes a single-page-form decision to a workshop whose minutes I cannot find. And there is what I think might be a conflict between REQ-4.1.6's five-second routing SLA and REQ-4.1.8's fraud-scoring integration, but I would not be confident enough to claim that without architectural input.
+
+That said, Priya is the BA. She has been doing this for years. If she has written the requirements this way, I have to assume she has a reason — either she has already clarified these points in conversations I was not part of, or she is going to clarify them in the walkthrough. Raising them through you would be going around her, and I think that would damage the working relationship.
+
+I would prefer to listen carefully in the walkthrough on Tuesday and only flag anything that is clearly unresolved AFTER Priya has had a chance to walk us through the document. If at that point things are still unclear, I will raise them in our 1:1.
+
+On the wider question of traceability — I think Priya and her team are responsible for that, and I would not want to second-guess how they are running their artefact. I am happy to support if asked.
+
+Apologies if you were expecting more. Let me know if you want me to take a different approach.
+
+PC

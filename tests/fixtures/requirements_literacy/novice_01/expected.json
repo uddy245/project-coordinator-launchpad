@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "claims-modernisation-requirements-review-v1",
+  "expected_dimension_scores": {
+    "failure_mode_recognition": { "score": 1, "tolerance": 1 },
+    "signal_surfacing_discipline": { "score": 2, "tolerance": 1 },
+    "traceability_judgment": { "score": 1, "tolerance": 1 },
+    "cross_artifact_linking": { "score": 1, "tolerance": 1 },
+    "role_posture": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Classic novice: reads requirements at face value ('the requirements look comprehensive'), praises rather than analyses, uses LinkedIn-speak ('leverage best practices', 'good stakeholder engagement'), and self-suppresses ('I do not want to step on her toes'). The 'I assume the minutes are somewhere' on REQ-4.1.9 actually exhibits the failure mode the chapter warns against (treating unstated assumptions as fine). Only one weak surfacing move (vague 'meeting with Priya'). No requirement IDs quoted in failure-mode terms, no downstream artefacts named, no traceability reasoning. Role posture caps at 2 because self-suppression is explicit."
+}

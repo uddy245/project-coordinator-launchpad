@@ -1,0 +1,15 @@
+{
+  "fixture_id": "self_suppressor_01",
+  "scenario_ref": "claims-modernisation-requirements-review-v1",
+  "expected_dimension_scores": {
+    "failure_mode_recognition": { "score": 3, "tolerance": 1 },
+    "signal_surfacing_discipline": { "score": 1, "tolerance": 1 },
+    "traceability_judgment": { "score": 1, "tolerance": 1 },
+    "cross_artifact_linking": { "score": 1, "tolerance": 1 },
+    "role_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "SELF-SUPPRESSOR FAILURE MODE — the exact anti-thesis of Chapter 8's 'daily story'. The learner actually identifies several real failure modes (timely, user-friendly, current-practice, missing workshop minutes, latency conflict) — so failure_mode_recognition is a legitimate 3 — but then explicitly refuses to surface them ('I do not think it is my place to critique Priya's work', 'Raising them through you would be going around her'). This is the chapter's named failure: noticing without surfacing. The PM's exact line in the chapter is the rebuttal: 'You had the signal. You had the responsibility to surface the signal.' Caps on signal_surfacing_discipline (no surfacing proposed), role_posture (self-suppression is the named anti-pattern), traceability_judgment ('not my place'), and cross_artifact_linking (no downstream artefacts named) all fire. Tests whether the grader catches superficially-humble-but-actually-failure submissions."
+}

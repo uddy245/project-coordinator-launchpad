@@ -1,0 +1,15 @@
+{
+  "fixture_id": "ba_overstepper_01",
+  "scenario_ref": "claims-modernisation-requirements-review-v1",
+  "expected_dimension_scores": {
+    "failure_mode_recognition": { "score": 3, "tolerance": 1 },
+    "signal_surfacing_discipline": { "score": 1, "tolerance": 1 },
+    "traceability_judgment": { "score": 2, "tolerance": 1 },
+    "cross_artifact_linking": { "score": 1, "tolerance": 1 },
+    "role_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "BA-OVERSTEPPER FAILURE MODE — the symmetric opposite of self_suppressor. The learner correctly identifies several failure modes (so failure_mode_recognition holds at 3) but responds by (a) rewriting the requirements themselves rather than surfacing to the BA, (b) recommending the BA's work be paused and the workstream escalated to the sponsor BEFORE a BA conversation has been attempted, (c) recommending PC sign-off of all future requirements (positioning themselves as the requirements authority), and (d) suggesting Priya may need 'external BA support' on the basis of a single section review. Every named scoring cap fires: no appropriate surfacing move (escalation to sponsor before BA clarification = signal_surfacing_discipline 1), overstep is the named anti-pattern (role_posture 1), and the analytical work is so dominated by the rewrite-and-escalate posture that downstream artefacts are not addressed (cross_artifact_linking 1). Tests whether the grader catches the symmetric failure — competence performed as authority. This is the failure mode of the confident newcomer who has read the chapter but missed the framing."
+}

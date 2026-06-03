@@ -1,0 +1,61 @@
+{
+  "rubric_id": "requirements-literacy-v1",
+  "rubric_version": "1.0.0",
+  "competency": "requirements_literacy",
+  "competency_label": "Requirements Literacy — Critical Reading and Early Ambiguity Surfacing",
+  "lesson_ref": "requirements-literacy",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "failure_mode_recognition",
+      "description": "Does the learner identify the specific failure modes embedded in the requirements excerpt — ambiguity (landmine words like 'timely', 'user-friendly', 'seamless'), incompleteness (missing edge cases / error handling), conflict (two requirements that cannot both be met), unstated assumptions (phrases like 'as per current practice', 'consistent with existing systems'), wrong level of abstraction (too vague or too prescriptive), requirements that describe the current system instead of the desired one, and requirements that are really solutions in disguise? The chapter names these as distinct, recurring patterns.",
+      "anchors": {
+        "1": "Reads the document at face value. Either reports 'no issues' or flags only one generic problem. Landmine words are not identified as landmines.",
+        "3": "Identifies two or three failure modes by name. At least one is correctly categorised (e.g. 'this is an ambiguity, not an incompleteness'). Misses the conflict OR the solution-in-disguise OR the unstated-assumption phrases.",
+        "5": "Identifies four or more distinct failure modes from the excerpt, each correctly categorised and tied to a specific requirement ID or quoted phrase. Catches the embedded conflict and at least one unstated-assumption phrase. Does not invent failures the document does not contain."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "signal_surfacing_discipline",
+      "description": "Does the learner translate observation into action by drafting the specific, low-cost surfacing move the chapter prescribes — a short, named BA note ('On requirement 4.3.7, can you confirm…'), a RAID risk entry, or a one-line item for the PM 1:1? The chapter's 'daily' story is explicit: the failure was not noticing but not surfacing. A response that lists problems without proposing how to surface them, or that escalates to the sponsor when a two-minute BA note would do, does not pass.",
+      "anchors": {
+        "1": "No surfacing move proposed, OR proposes surfacing through inappropriate channels (sponsor / steering / formal CR) before a BA clarification has been attempted. Treats the analysis as the deliverable.",
+        "3": "Proposes BA clarification in general terms ('I would check with the BA') but does not draft the specific note, name the requirement ID, or distinguish which observations need a note vs a RAID entry vs a PM 1:1 item.",
+        "5": "Drafts at least two specific, ready-to-send surfacing moves: short, named, low-friction, addressed to the right person (BA for clarification, RAID for live risks, PM for governance). Each move references a specific requirement ID and asks a concrete question. Demonstrates the 'two-minute email that protects against six weeks of rework' move."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "traceability_judgment",
+      "description": "Does the learner reason about traceability at the right level of abstraction (requirement groups / user stories, not atomic bullets), apply it to the artefact at hand (e.g. flagging requirements that cannot be traced to a business objective or a stakeholder as risks), and avoid treating the traceability matrix as a paperwork artefact for its own sake? The chapter is explicit: 'do not try to maintain traceability at the lowest level of detail.'",
+      "anchors": {
+        "1": "Traceability not addressed, OR proposes a row-per-atomic-requirement matrix as the solution (the chapter's named anti-pattern). Treats traceability as a deliverable rather than a tool for scope conversations.",
+        "3": "Names traceability as relevant. Identifies at least one requirement that lacks a traceable source or implementation, but does not propose what to do with it (flag as risk, raise with PM, surface in CR scoping).",
+        "5": "Names the right level of granularity, identifies one or more untraceable requirements and proposes treating them as risks or scope-cut candidates, and references how traceability would inform a downstream activity (CR scoping, test design, scope-cut conversation). Does not over-promise on matrix maintenance."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "cross_artifact_linking",
+      "description": "Does the learner trace each problematic requirement forward into the artefacts it affects — WBS items, schedule milestones, test cases, acceptance criteria, change-request scoping? The chapter is clear that requirements thread through everything; a critical-pass that stops at the requirements document misses where the failure will actually surface.",
+      "anchors": {
+        "1": "Treats requirements as a standalone document. No mention of WBS / schedule / tests / ACs / CRs.",
+        "3": "Names one or two downstream artefacts in passing. Does not connect a specific requirement to a specific downstream impact.",
+        "5": "For at least two of the flagged failure modes, traces the downstream artefact that will absorb the failure if not addressed (e.g. 'this ambiguity will surface as a failing test case in UAT and as a defect that re-opens the architecture discussion'). Names the artefact, the symptom, and the cost."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "role_posture",
+      "description": "Does the learner take the coordinator's appropriate posture — your noticing is part of quality control, surfacing is your job, but you do not take over BA work, perform expertise you do not have, or position yourself as the requirements authority? The chapter's PM line is the anchor: 'You had the signal. You had the responsibility to surface the signal. Surfacing the signal is not interfering with the BA. It is doing your job.' Equally, the chapter is clear that coordinators do not rewrite requirements or override the BA.",
+      "anchors": {
+        "1": "Either self-suppresses ('this is the BA's job, not mine, I would not raise it') OR oversteps (rewrites the requirements, declares the BA wrong, proposes to escalate over the BA's head). Misses the coordinator's specific contribution.",
+        "3": "Acknowledges the coordinator's role in noticing but is uncertain or apologetic about surfacing ('I would gently mention it if it came up'). OR proposes to surface but without the chapter's framing of noticing-as-QC.",
+        "5": "Frames noticing as core to the coordinator's job (not interference, not optional). Drafts surfacing moves that are respectful of the BA's authority and expertise, addressed appropriately, and grounded in the coordinator's actual perspective ('I read this and was uncertain whether…'). Does not perform requirements-analyst expertise."
+      },
+      "weight": 0.20
+    }
+  ]
+}
