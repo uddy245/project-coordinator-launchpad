@@ -1,0 +1,25 @@
+To: S. Park (PM)
+From: PC
+Subject: Schedule review — ready for Friday
+
+S,
+
+Read through the snapshot carefully. Here is my read.
+
+The headline is that the project is well-positioned for the steering committee. 71% complete at end of month 3 maps to roughly 80% expected at end of month 4, which would have us comfortably on track for 30 September. The two amber items (WP-07 ETL and WP-08 test environment) are within normal mid-project variability and I would not flag them as red.
+
+Specifically:
+
+- WP-04 at 78% is exactly where you would expect a strong workstream lead to be at this stage. M. Reyes has a track record of delivery on this team. I would treat his percentage as a leading indicator that Tier 1 is well in hand.
+- WP-07 ETL at 45% is the kind of mid-build dip you see when a team is working through complexity. A. Singh's standup comment is a normal expression of pressure, not a flag of structural concern.
+- WP-08 (test env) is gated on infra. The infra team will deliver — we just need to keep gently pushing.
+- WP-10 (regulator) at 0% with a 1 September planned start is comfortably in the future. Procurement is on it.
+- Buffer: 2 weeks remaining out of 3 is a normal absorption profile for a project of this length and complexity. We have plenty of room.
+
+For Friday, I would recommend you affirm the existing GREEN status. The CCO has been told the project is tracking; reversing that on Friday without a concrete materialised slip risks the relationship and may produce more anxiety than the underlying situation warrants. The right time to discuss any amber-to-red transition is when one of the amber items hardens into a real slip, which on current evidence has not happened.
+
+I would communicate confidence and continuity to the steering committee. If anything firms up over the next two weeks we can revisit then.
+
+Happy to help draft the GREEN-status narrative for Friday if useful.
+
+PC

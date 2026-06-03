@@ -1,0 +1,23 @@
+To: S. Park (PM)
+From: PC
+Subject: Schedule Review
+
+Hi S,
+
+Thanks for sharing the snapshot. I had a look. Overall I think the project is in good shape — 71% complete at the end of month three is solid progress and most packages are showing green.
+
+A few observations:
+
+- WP-04 is at 78% which is great. M. Reyes is clearly delivering. I would say we are well on track for the Tier 1 reports.
+- WP-05 and WP-07 are amber, but I think this is manageable. The teams will catch up. We should keep an eye on them.
+- WP-08 (test environment) is also amber. We should reach out to the infra team to nudge them.
+- The buffer situation looks fine — 2 weeks remaining is enough to absorb any small slips. I would not be too concerned at this stage.
+
+For the steering committee on Friday, I think you can confidently report that the project is tracking well. The end date of 30 September looks achievable. The CCO will be reassured.
+
+In terms of communication, I would leverage clear stakeholder messaging to drive a positive narrative around the project's progress. Good communication is critical at this stage to maintain confidence.
+
+If there are specific risks you want me to dig into I am happy to do so. Otherwise I think the snapshot is broadly accurate and the message to the steering committee can be that we are on track.
+
+Best,
+PC

@@ -1,0 +1,52 @@
+You are PC on a six-month regulatory-reporting platform replacement for a wholesale bank. Sponsor is the Chief Compliance Officer. The project replaces the bank's legacy regulatory-reporting engine with a new vendor platform (RegStream) integrated with the existing risk warehouse. Go-live target: 30 September. You are at the end of month three.
+
+Your PM (S. Park) sent you the schedule snapshot below this morning with a note: "I'm presenting this to the steering committee on Friday. Before I do, give it your honest read — I want to know what I am missing."
+
+---
+
+SCHEDULE SNAPSHOT — REGSTREAM IMPLEMENTATION (end of month three, week 12)
+
+Reported overall completion: 71%
+Reported end date: 30 September (unchanged)
+Buffer: 3 weeks named (originally), 2 weeks remaining
+
+Work packages (with reported % complete and current status colour):
+
+WP-01  Discovery and design                       100%   GREEN   (closed M2)
+WP-02  RegStream vendor contract                  100%   GREEN   (closed M1)
+WP-03  Risk-warehouse integration spec             95%   GREEN   (lead: J. Okafor)
+WP-04  RegStream configuration — Tier 1 reports    78%   GREEN   (lead: M. Reyes)
+WP-05  RegStream configuration — Tier 2 reports    62%   AMBER   (lead: M. Reyes, dependency on WP-04 sign-off)
+WP-06  Risk-warehouse build                        80%   GREEN   (lead: J. Okafor)
+WP-07  ETL pipelines (warehouse → RegStream)       45%   AMBER   (lead: A. Singh, dependency on WP-06)
+WP-08  Test environment provisioning               60%   AMBER   (lead: I. Hartman, depends on infra team)
+WP-09  UAT preparation                             10%   GREEN   (planned start: 1 August)
+WP-10  Regulator pre-submission review              0%   GREEN   (planned start: 1 September)
+WP-11  Go-live deployment                           0%   GREEN   (planned start: 15 September)
+
+Critical path as originally identified (month 0): WP-01 → WP-03 → WP-04 → WP-09 → WP-10 → WP-11.
+
+Background you have observed in months one to three:
+
+- WP-04 has been reported as "on track" by M. Reyes every Friday for the last six weeks, stepping up 2-3 percentage points each week. M. Reyes is responsive and delivery-oriented but tends to report optimistically; in past projects with him you have seen the "94% for six weeks" pattern.
+- WP-06 (risk-warehouse build) shows 80% complete with 62% of the budgeted hours consumed. WP-07 (ETL) shows 45% complete with 72% of the budgeted hours consumed.
+- WP-07's reported AMBER reflects a real concern raised by A. Singh in last week's standup: the warehouse schema has changed twice since spec sign-off and the ETL has been partially rewritten each time. A. Singh said in private "we'll catch up, but only if WP-06 stops changing."
+- WP-08 depends on the bank's infrastructure team for provisioning. That team has not yet committed a delivery date — they have said "we'll get to it" for three weeks. This dependency is not visible in the schedule snapshot above as a separate item.
+- WP-10 (regulator pre-submission review) requires the regulator (FCA) to make available a reviewer in early September. Procurement reached out a month ago; no confirmation has come back. This is not flagged as a risk.
+- The integration pattern between RegStream and the risk warehouse was originally planned to use the vendor's native REST integration. In week 8, the bank's architecture board declined the pattern (latency concerns) and asked the team to use a message-queue-based pattern instead. The team accepted this and made the change. The schedule was not rebaselined. WP-03's reported 95% completion reflects the original spec; the new pattern has not been re-specified.
+- Buffer: 3 weeks were named at month 0 — 1 week before WP-04 → WP-09 transition, 1 week before WP-10, 1 week before WP-11. The PM's note above says "2 weeks remaining" but does not say which week was consumed or where.
+- Steering committee on Friday has been told previously that the project is "tracking green." The CCO has a regulatory deadline of 1 October for the first reporting cycle on the new platform — any slip into October would be material.
+
+Your PM wants a review note — 500-800 words — that:
+
+1. Identifies the current critical path through the schedule snapshot. Note whether it has shifted from the original (WP-01 → WP-03 → WP-04 → WP-09 → WP-10 → WP-11). Name which activities are on it now and which are not.
+
+2. Audits the reported percentages against the evidence you have. For each package where the reported number looks soft or unsupported, name what evidence would actually verify the figure and what your current best estimate is. Be specific about which packages you trust at face value and which you do not.
+
+3. Categorises the dependencies that are missing or under-named in the snapshot. Use the chapter's source categories (internal / external / resource / decision). Surface the ones the schedule currently hides.
+
+4. Tracks buffer consumption explicitly. How much of the 3 weeks of named buffer has been consumed, and which package consumed it? Is the project burning buffer faster than work?
+
+5. Produces a short, evidence-backed status narrative (three to five sentences) that S. could use in the Friday steering committee. It must name what has slipped (or is likely to), the cause, the downstream effect, and whether the 30 September end date is at risk. Treat the CCO as capable of hearing bad news.
+
+Do not rewrite the schedule. Do not redraft work packages. Audit the snapshot. S. asked for what you think she is missing — that is the deliverable.

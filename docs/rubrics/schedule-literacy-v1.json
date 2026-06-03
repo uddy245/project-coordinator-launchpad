@@ -1,0 +1,61 @@
+{
+  "rubric_id": "schedule-literacy-v1",
+  "rubric_version": "1.0.0",
+  "competency": "schedule_literacy",
+  "competency_label": "Schedule Literacy — Critical Path, Honest Status, and the Verification Discipline",
+  "lesson_ref": "schedules",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "critical_path_awareness",
+      "description": "Does the learner identify the project's current critical path from the schedule snapshot, distinguish critical-path slippage from off-path slippage, and recognise that the critical path can shift as the project progresses? The chapter is explicit: every project has a critical path, not every project knows what it is. Treating all slippages as equally urgent is the named failure mode.",
+      "anchors": {
+        "1": "Critical path not identified. All slippages treated as equivalent. No reasoning about which activities determine the end date.",
+        "3": "Names the critical path or at least identifies one or two critical activities. Distinguishes one slip as more consequential than another but does not systematically separate critical from off-path slips.",
+        "5": "Explicitly walks the critical path through the schedule, names which activities are on it, distinguishes critical-path slips (end-date impact) from off-path slips (absorbed in slack), and notes whether the critical path has shifted from the original plan."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "dependency_categorization",
+      "description": "Does the learner categorise dependencies by source — internal, external, resource, decision — and surface the categories that are typically missing from schedules? The chapter is clear that external, resource, and decision dependencies are where slippage usually comes from, and that schedules showing only internal task-to-task dependencies will be surprised in directions they did not predict.",
+      "anchors": {
+        "1": "Dependencies not addressed, OR only internal task-to-task dependencies named. No mention of external, resource, or decision dependencies even where the snapshot exposes them.",
+        "3": "Names two of the four categories with at least one specific example from the snapshot (e.g. flags one external dependency or one decision dependency).",
+        "5": "Names three or four categories with specific examples from the snapshot. Calls out which dependencies are missing from the current schedule and proposes adding them (especially decision and resource dependencies that schedules typically omit)."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "evidence_vs_assertion_discipline",
+      "description": "Does the learner treat reported percentages skeptically and ask what they are based on? Does the learner cross-check reported completion against actuals (hours logged, sub-tasks done) and propose binary tracking for small packages? The chapter's anchor anecdote is rolled-up soft numbers reflecting hope rather than progress. A submission that takes the snapshot's percentages at face value misses the point.",
+      "anchors": {
+        "1": "Accepts the reported percentages at face value. No skepticism about how the numbers were produced. No reference to actuals or binary tracking.",
+        "3": "Names that one or two percentages look soft or unsupported, but does not systematically apply the evidence-vs-assertion lens. Mentions actuals or sub-task progress in passing.",
+        "5": "Systematically distinguishes evidence-backed completion from asserted percentages across the snapshot. Cross-checks against actuals where available. Proposes binary tracking for short packages. Treats the rollup as suspect until verified."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "buffer_and_slack_management",
+      "description": "Does the learner track buffer explicitly, distinguish slack-absorption (off-path slip with no end-date impact) from buffer consumption, and call out the burning-buffer-faster-than-work warning sign? Does the learner understand that uniform task-padding is not buffer and that buffer at named points is the chapter's recommended approach?",
+      "anchors": {
+        "1": "Buffer not addressed. Slack and buffer used interchangeably or not at all. No tracking of how much buffer has been consumed.",
+        "3": "Notes that buffer exists and one or two slips have consumed it. Distinguishes one off-path slip as absorbed in slack. Does not systematically track buffer-burn-vs-work-burn.",
+        "5": "Tracks buffer consumption explicitly, distinguishes slack absorption from buffer drawdown, and calls out the warning sign (buffer burning faster than work, or buffer consumed in early execution). Proposes how the PM should report on buffer state going forward."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "schedule_communication",
+      "description": "Does the learner produce a precise, evidence-backed status narrative that treats the sponsor as capable of hearing bad news — naming what slipped, the cause, the downstream effect, and whether the end date is moving? The chapter's exemplar is the three-sentence narrative ('Integration delivery slipped from May 28 to June 11 due to vendor capacity; testing pushed June 1 to June 15; three-week slip absorbed in buffer, no end-date impact'). Vague reassurance, softened slippage, or Gantt-without-narrative all miss the point.",
+      "anchors": {
+        "1": "Status narrative absent, vague ('tracking well'), softens slippage, or substitutes Gantt-chart description for narrative. Reads as reassurance rather than reporting.",
+        "3": "Produces a status narrative that names one slip and its cause but does not consistently include the downstream effect or end-date implication. Mixes reassurance with reporting.",
+        "5": "Produces a short, evidence-backed status (three sentences or comparable) that names what slipped, the cause, the downstream effect, and whether the end date is moving. Treats the sponsor as capable of hearing bad news. Names what's at risk and when the project will know."
+      },
+      "weight": 0.20
+    }
+  ]
+}

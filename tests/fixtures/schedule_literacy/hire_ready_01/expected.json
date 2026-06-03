@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "regstream-schedule-audit-v1",
+  "expected_dimension_scores": {
+    "critical_path_awareness": { "score": 5, "tolerance": 1 },
+    "dependency_categorization": { "score": 5, "tolerance": 1 },
+    "evidence_vs_assertion_discipline": { "score": 5, "tolerance": 1 },
+    "buffer_and_slack_management": { "score": 5, "tolerance": 1 },
+    "schedule_communication": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. Identifies the critical path has shifted from WP-04 to WP-06/WP-07 because of the integration pattern change, names every activity on the current critical path, and explicitly notes WP-04/WP-05 are off the new critical path. Evidence-vs-assertion analysis is comprehensive: catches the Reyes step-up pattern, the WP-07 hours-inversion (with A. Singh's quote), the WP-03 obsolete-spec issue, AND proposes binary sub-task tracking as the corrective. All four dependency categories named with specific examples and follow-up actions. Buffer analysis goes beyond the snapshot: distinguishes recorded-consumption from silent-consumption, calls out the scenario the buffer cannot cover ('cannot absorb WP-04 slip AND WP-07 slip AND FCA AND WP-08'). Status narrative is the exemplar — five sentences naming slips, causes, downstream effect, end-date risk, AND specific actions. Closes with chapter's framing ('the sponsor was furious not at the slip but at the surprise') and explicit humility ('two things I am not certain on'). This is what every learner should produce."
+}

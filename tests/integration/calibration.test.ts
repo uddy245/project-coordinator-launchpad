@@ -80,6 +80,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/wbs-discipline-v1.json",
     promptPath: "docs/prompts/grade-wbs-v1.md",
   },
+  {
+    competency: "schedule_literacy",
+    rubricPath: "docs/rubrics/schedule-literacy-v1.json",
+    promptPath: "docs/prompts/grade-schedule-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

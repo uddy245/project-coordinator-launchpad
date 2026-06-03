@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "regstream-schedule-audit-v1",
+  "expected_dimension_scores": {
+    "critical_path_awareness": { "score": 4, "tolerance": 1 },
+    "dependency_categorization": { "score": 4, "tolerance": 1 },
+    "evidence_vs_assertion_discipline": { "score": 4, "tolerance": 1 },
+    "buffer_and_slack_management": { "score": 3, "tolerance": 2 },
+    "schedule_communication": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 3.8,
+  "expected_pass": true,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Solid intermediate. Identifies that the critical path has shifted from the original WP-04 line to the WP-06/WP-07 line because of the integration pattern change. Distinguishes M. Reyes's 6-week step-up pattern as soft, catches the WP-07 hours-vs-completion inversion, catches the WP-03 spec change. Names three of the four dependency categories (external/resource/decision) with specific examples. Buffer reasoning is correct but incomplete — names the 2-of-3-remaining position and the suspicion that it's worse, but does not systematically reconcile the integration change's buffer cost. Tolerance widened to 2 on buffer because the reasoning is right but the analysis is light. Status narrative is precise, names the slips and their causes, names the end-date risk, treats the CCO as capable of bad news. Not yet hire-ready because the analysis is competent but not yet anticipatory — does not connect findings to specific actions S. should take this week."
+}

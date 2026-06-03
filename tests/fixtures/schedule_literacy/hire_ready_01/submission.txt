@@ -1,0 +1,63 @@
+To: S. Park (PM)
+From: PC
+Subject: Schedule audit — RegStream end-of-month-3 snapshot, ahead of Friday steering
+
+S — you asked what you are missing. Five sections below. The headline: 30 September is no longer a credible end date as the snapshot currently stands; I think Friday's steering conversation needs to be different from what was planned.
+
+1. CURRENT CRITICAL PATH (shifted from original)
+
+The original critical path (WP-01 → WP-03 → WP-04 → WP-09 → WP-10 → WP-11) was built on the original RegStream native-REST integration spec. The architecture board's week-8 decision to switch to a message-queue pattern was a structural change, not a tweak. WP-03 was effectively re-opened (the new pattern is not yet re-specified), which means WP-06 and WP-07 now sit on the longest remaining dependent chain. I read the current critical path as:
+
+  WP-06 (warehouse build) → WP-07 (ETL) → WP-09 (UAT) → WP-10 (regulator review) → WP-11 (go-live)
+
+with WP-03 needing rebaseline before WP-06 can be considered downstream-stable. WP-04/WP-05 are no longer on the critical path because the integration pattern change largely decouples Tier 1 reporting from the rest of the build until the new spec lands.
+
+Practical consequence: any slip on WP-06, WP-07, WP-09, WP-10, or WP-11 now moves the end date. M. Reyes's WP-04 work, while important, is no longer end-date-determining. Steering should be told the critical path has shifted; it should not be left as the original.
+
+2. EVIDENCE-vs-ASSERTION ON THE REPORTED PERCENTAGES
+
+I would treat the rollup of 71% as suspect until each package's underlying numbers are verified. Specifics:
+
+  WP-04 (Tier 1 config, reported 78%). M. Reyes has stepped the number up 2-3 points every Friday for six weeks. That is the textbook pattern of optimistic reporting absorbed into rollup. I do not trust 78% at face value. Recommend a direct walk-through with M. Reyes Monday: which of the Tier 1 reports are functionally complete, which are in test, which are not yet started? Binary status by report would replace the percentage with evidence.
+
+  WP-06 (warehouse build, reported 80%, 62% of budgeted hours consumed). Hours-vs-completion ratio is plausible; the 80% is probably approximately right. Still worth confirming because schema has changed twice.
+
+  WP-07 (ETL, reported 45%, 72% of budgeted hours consumed). Hours-vs-completion ratio is inverted, which means either the estimate was substantially low or the progress report is optimistic. A. Singh's private comment ("we'll catch up only if WP-06 stops changing") suggests it's the estimate, not the progress — the schema churn has eaten more time than the budget allowed for. Recommend asking A. Singh directly for his honest current-best-estimate completion date assuming WP-06 stabilises.
+
+  WP-03 (spec, reported 95%). The 95% reflects the original spec. The architecture board's change in week 8 effectively re-opened this package. Functionally, WP-03 is closer to 60-70% complete against current scope. Reporting it at 95% understates the work remaining on the critical path.
+
+  WP-04, WP-05, WP-06, WP-07 percentages should ideally be replaced with sub-task binary status until UAT, where percent-complete becomes meaningful again.
+
+3. DEPENDENCIES THE SCHEDULE HIDES
+
+By source category:
+
+  External: WP-10 requires an FCA reviewer in early September. Procurement reached out a month ago. No confirmation. This is the single largest unflagged risk on the project. If the FCA cannot make a reviewer available in early September, WP-10 cannot start, and there is no recovery path before 30 September. Recommend a RAID entry today (likelihood: medium-high; impact: end-date slip). Procurement should re-engage with FCA this week, not next.
+
+  Resource: WP-08 (test env) depends on the bank's infra team. They have said "we'll get to it" for three weeks. That is not a delivery commitment. WP-08's AMBER does not capture the underlying issue: a resource dependency on a team that has not committed to a date. Recommend escalating to the infra team's lead this week with a specific date request.
+
+  Decision: the architecture board's week-8 pattern change was a decision that should have triggered a rebaseline. It did not. The schedule still reflects the original pattern. Until WP-03 is re-specified against the new pattern, the schedule is fictional in that area. Recommend treating the rebaseline as a P0 item — until it is done, no steering report can be honest.
+
+  Internal: covered in the schedule reasonably well, though the WP-04/WP-05 dependency relationship (WP-05 depends on WP-04 sign-off) is the only one of these that the snapshot actually surfaces. Worth confirming whether there are similar inter-package dependencies inside WP-06/WP-07 that are currently implicit.
+
+4. BUFFER
+
+Named buffer at month 0: 3 weeks (1 before WP-09 transition, 1 before WP-10, 1 before WP-11). The PM note says 2 weeks remaining.
+
+I do not know which week was consumed or where, and the snapshot does not tell us. My best inference: the week-8 integration pattern change probably consumed at least one week of effort. If that week came from one of the named buffer points, then there is a recorded consumption somewhere. If it did not, then it was absorbed silently — which is the chapter's classic "buffer burning faster than work" failure pattern and means the actual buffer position is worse than the 2 weeks the snapshot reports.
+
+Either way, I would want answers to two questions before Friday: (a) which named buffer point did the 1 consumed week come from? (b) has any buffer been consumed silently outside the named points? If (b) is yes, the buffer position is materially worse than reported.
+
+Also: even at 2 weeks remaining, the buffer cannot absorb both the likely WP-04 slip (if M. Reyes's percentages are soft) AND the likely WP-07 slip (if A. Singh's worry is right) AND a missed FCA window AND a delayed WP-08 provisioning. The buffer covers maybe one of these, not all of them.
+
+5. STATUS NARRATIVE FOR FRIDAY STEERING
+
+Suggested 5-sentence narrative:
+
+"Project shows 71% complete and 2 of 3 buffer weeks remaining, but those numbers reflect a schedule baseline that has not been updated to reflect the week-8 architecture decision (REST → message queue), which re-opened WP-03 and shifted the critical path through WP-06 → WP-07. WP-04 reported percentages should be verified — M. Reyes has stepped up 2-3 points weekly for six weeks, the pattern of optimistic-reporting-absorbed-into-rollup the team has seen before. WP-07 (ETL) shows 45% complete against 72% of budgeted hours, suggesting the schema churn has eaten more time than estimated. WP-10 (regulator review) depends on FCA reviewer availability in early September — no confirmation has come back to procurement after a month of attempted contact. Recommend: rebaseline against the new integration pattern this week, escalate the FCA dependency today, replace M. Reyes's percentages with binary sub-report status, and present a revised end-date forecast on Friday rather than reaffirming 30 September."
+
+S. — I know this is not what the CCO is expecting to hear on Friday. I think the more expensive conversation is the one where, in three weeks, the project misses the 1 October regulatory deadline and the surprise becomes the story. The chapter's framing — the sponsor was furious not at the slip but at the surprise — fits this one exactly.
+
+Two things I am not certain on and want your read: (a) whether my read of the critical path is right — you have more visibility on the inter-package dependencies than I do; (b) whether the FCA dependency has any back-channel I am not seeing.
+
+PC
