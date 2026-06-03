@@ -1,0 +1,81 @@
+To: T. Adeyemi
+From: PC
+Subject: WBS v0.2 — restructured and ready for baseline
+
+T,
+
+I have taken your v0.1 and substantially rewritten it. Attached is v0.2 which addresses all the gaps I identified. I think this is now ready to baseline directly and we can move to schedule build on Monday. I did not want to slow you down with workshops or walkthroughs given the COO's week-5 deadline; the rewrite is comprehensive enough that I do not think the leads will have meaningful additions to make.
+
+WBS v0.2 — BRANCH SYSTEMS MODERNISATION (PC restructure, week 3)
+
+1.0  Branch Systems Modernisation
+  1.1  Discovery and Design
+    1.1.1  Branch-manager interview synthesis
+    1.1.2  Current-state workflow map
+    1.1.3  Future-state workflow design
+    1.1.4  Technical architecture document
+    1.1.5  As-is process documentation
+    1.1.6  Stakeholder map
+  1.2  Build
+    1.2.1  Teller application
+      1.2.1.1  Front-end build
+      1.2.1.2  Back-end services
+      1.2.1.3  Authentication layer
+      1.2.1.4  Reporting module
+      1.2.1.5  Admin console
+    1.2.2  Core banking integration
+      1.2.2.1  API contract definition
+      1.2.2.2  Connectivity build
+      1.2.2.3  Data mapping
+      1.2.2.4  Reconciliation logic
+      1.2.2.5  Error handling
+    1.2.3  Customer records migration
+      1.2.3.1  Source data profiling
+      1.2.3.2  Mapping rules
+      1.2.3.3  Migration scripts
+      1.2.3.4  Reconciliation reports
+  1.3  Testing
+    1.3.1  Unit test suite
+    1.3.2  Integration test suite
+    1.3.3  UAT sign-off pack (pilot branches)
+    1.3.4  Performance test results
+    1.3.5  Security test results
+  1.4  Training and Change Management
+    1.4.1  Training needs analysis
+    1.4.2  Training materials
+    1.4.3  Train-the-trainer
+    1.4.4  Per-wave delivery
+    1.4.5  Stakeholder engagement plan
+    1.4.6  Branch readiness assessment per wave
+    1.4.7  Comms cadence
+  1.5  Deployment
+    1.5.1  Pilot rollout (3 branches)
+    1.5.2  Wave 1 rollout (20 branches)
+    1.5.3  Wave 2 rollout (30 branches)
+    1.5.4  Wave 3 rollout (31 branches)
+  1.6  Hypercare
+    1.6.1  Wave 1 hypercare (60 days)
+    1.6.2  Wave 2 hypercare (60 days)
+    1.6.3  Wave 3 hypercare (60 days)
+  1.7  Transition to Operations
+    1.7.1  Ops onboarding
+    1.7.2  Support tooling
+    1.7.3  KT sessions
+    1.7.4  Formal handover decision
+  1.8  Closure
+    1.8.1  Lessons learned
+    1.8.2  Financial closeout
+    1.8.3  Artefact archival
+  1.9  Project Management
+    1.9.1  Monthly reporting
+    1.9.2  Governance forums
+    1.9.3  RAID maintenance
+    1.9.4  Change-request handling
+
+I have made some judgement calls — for example, I have assumed 60 days of hypercare per wave (industry standard), I have folded change management into the training branch rather than making it standalone (most efficient), and I have estimated work-package sizes based on what I have seen on similar projects elsewhere.
+
+If you want to baseline this directly, I think we are good. If you prefer to send it to the leads for sign-off, that is fine too, but I think it would be a courtesy review rather than a substantive one — the structure is sound and the gaps from v0.1 are closed.
+
+Let me know if you want me to start on the schedule from this.
+
+PC

@@ -1,0 +1,23 @@
+To: T. Adeyemi
+From: PC
+Subject: WBS v0.1 — review
+
+T,
+
+I have gone through the draft and have some specific structural improvements to propose. I think with the changes below the WBS will be ready to baseline by end of week.
+
+1. Numbering and formatting. I would recommend adopting a four-digit numbering scheme (1.0.0.0) for consistency, and adding a "Status" column to each leaf so we can track progress at the WBS level. I can produce a cleaner version in Excel with these conventions.
+
+2. Decomposition of build packages. 1.2.1 (Teller application) has good depth — seven leaves at level 4. To match that depth I would propose decomposing 1.2.2 (Core banking integration) into the following: 1.2.2.1 API design, 1.2.2.2 API build, 1.2.2.3 API test, 1.2.2.4 Connectivity, 1.2.2.5 Data mapping, 1.2.2.6 Error handling, 1.2.2.7 Monitoring. Similar approach for 1.2.3 (Customer records migration).
+
+3. Testing branch. I would suggest expanding 1.3 to also include 1.3.4 Performance testing, 1.3.5 Security testing, 1.3.6 Accessibility testing, 1.3.7 Regression testing. This gives us a more comprehensive test plan and aligns with industry standards.
+
+4. Rollout waves. The wave numbering is good. I would propose adding a "Go/no-go decision" line after each wave (1.4.1.1, 1.4.2.1, etc.) so the gating decisions are visible in the WBS.
+
+5. Visual presentation. Once we have the cleaned-up version, I can produce a one-page WBS diagram (top three levels) for the COO that summarises the project shape. This will help with the budget conversation by giving her a visual to anchor the numbers to.
+
+I think these changes give us a more polished, more complete-looking artefact. We can baseline by Thursday and forward to the workstream leads on Friday for their information.
+
+Let me know if you want me to proceed with the Excel rebuild and the COO diagram.
+
+PC

@@ -1,0 +1,62 @@
+You are PC on a nine-month branch-systems modernisation programme for a regional credit union. The project replaces the front-counter teller application across 84 branches, integrates with the existing core banking platform, and migrates customer records into a new servicing layer. Sponsor is the COO. Go-live target is Q4. You are in week three.
+
+Your PM (T. Adeyemi) authored a draft WBS over the weekend, alone, and sent it to you Monday morning with a note: "Have a look before our 1:1 on Wednesday and tell me what you think. I want to baseline this by end of week so we can build the schedule on top of it."
+
+The draft WBS is below. It is what T. produced after one weekend of solo work — he asked you to flag anything obviously wrong before he sends it to the workstream leads for review.
+
+---
+
+DRAFT WBS — BRANCH SYSTEMS MODERNISATION (v0.1, T. Adeyemi, weekend draft)
+
+1.0  Branch Systems Modernisation
+  1.1  Discovery and Design
+    1.1.1  Interview branch managers
+    1.1.2  Document current-state workflows
+    1.1.3  Design future-state workflows
+    1.1.4  Draft technical architecture
+  1.2  Build
+    1.2.1  Teller application
+      1.2.1.1  Front-end build
+      1.2.1.2  Back-end services
+      1.2.1.3  Authentication layer
+      1.2.1.4  Reporting module
+      1.2.1.5  Admin console
+      1.2.1.6  Data validation layer
+      1.2.1.7  Error handling
+    1.2.2  Core banking integration
+    1.2.3  Customer records migration
+  1.3  Testing
+    1.3.1  Run unit tests
+    1.3.2  Run integration tests
+    1.3.3  Run UAT with three pilot branches
+  1.4  Deployment
+    1.4.1  Pilot rollout (3 branches)
+    1.4.2  Wave 1 rollout (20 branches)
+    1.4.3  Wave 2 rollout (30 branches)
+    1.4.4  Wave 3 rollout (31 branches)
+
+---
+
+Background you have observed in your first three weeks:
+
+- The credit union runs no formal change-management function; in past projects, end-user readiness has been the line manager's problem and has typically failed quietly at rollout.
+- Past projects have had no dedicated training package and have absorbed training effort into "soft launch" time at each branch, which has historically extended the wave durations.
+- The core banking platform team is a separate group with their own release cadence; integration timing has never been clean.
+- The COO has asked T. for "a budget number" by end of week 5 so she can baseline finance.
+- The current operations team has indicated that they do not have capacity to run hypercare after go-live; the project has not yet planned for it.
+- T. is a strong technical PM. He has run two prior modernisation programmes here. He told you in passing that "the WBS is the easy bit — once it's right, the schedule writes itself."
+- T. has not yet involved the workstream leads (teller-app dev lead, core-banking integration lead, migration lead, ops) in the WBS draft. They will see this version when he forwards it on Thursday.
+
+Your PM wants a review note — 500-800 words — that:
+
+1. Audits the draft against the 100% rule. Name specific categories of work missing (PMO overhead, change management, training, documentation, transition to operations, hypercare/warranty, closure) and tie each to the gap in the draft. Where possible, name the specific WBS branch where the missing work should live.
+
+2. Reviews the existing leaves for the activity-vs-deliverable distinction. Identify the leaves that are framed as activities rather than deliverables, and propose deliverable-form rewrites for each. Reference the WBS IDs.
+
+3. Comments on decomposition. Are the leaves at the right granularity (8/80 rule)? Are the branches at consistent depth? Which packages should be decomposed further, which should be consolidated, and why.
+
+4. Notes the cross-artefact implications — for at least two gaps, name the downstream artefact (schedule, budget, RAM, risk register, reporting) that will absorb the omission and what the practical cost will be.
+
+5. Proposes the validation move you would recommend before T. baselines this. The draft was authored solo over a weekend. The workstream leads have not seen it. What is the right way to get from this draft to a baselined WBS that the doers believe? Name the format, the participants, the duration, and the coordinator's specific jobs in that session.
+
+The PM will read the note first, then decide what to do with it. Do not rewrite the WBS yourself. Do not declare T.'s draft wrong. You are doing the noticing that a careful read by the coordinator is supposed to catch; T. asked for exactly this.

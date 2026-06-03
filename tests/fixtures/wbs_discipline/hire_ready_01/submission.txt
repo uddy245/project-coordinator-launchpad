@@ -1,0 +1,72 @@
+To: T. Adeyemi
+From: PC
+Subject: WBS v0.1 — review note ahead of Wednesday's 1:1
+
+T — review note as requested. I have read the draft carefully and grouped my observations under the five things you would want to know before baselining. The note is long enough to be useful, short enough to read in one sitting; happy to walk through any section in our 1:1.
+
+100% RULE — WHAT IS MISSING
+
+Seven categories the chapter and our past patterns both call out are absent or thin in the draft:
+
+A. Project management overhead. Status reporting, steering committee preparation, governance, risk management, change-control administration. Across a nine-month programme this is non-trivial — typically 8-12% of effort. No package for it. Recommend new 1.5 Project Management with leaves for monthly reporting cycles, governance forums, RAID maintenance, change-request handling.
+
+B. Change management. The credit union has no formal CM function and past programmes have failed quietly at end-user readiness. With 84 branches and a new teller workflow, this is the highest-likelihood gap in the current draft. Recommend new 1.6 Change Management with leaves for stakeholder engagement plan, branch-readiness assessments per wave, comms cadence, and post-wave adoption checks. Owner: not yet identified — should be a workshop decision.
+
+C. Training. No package. Past pattern is absorption into "soft launch" time which has extended wave durations. With a new teller app touching every customer-facing interaction, training is a substantial workstream. Recommend new 1.7 Training with leaves for needs analysis, materials development (job aids, e-learning modules, instructor guides), train-the-trainer for branch managers, per-wave delivery, and post-go-live reinforcement.
+
+D. Documentation. The draft has no documentation deliverables. Operational runbooks, troubleshooting guides, integration documentation, and admin/support documentation are all needed. Recommend leaves under each build branch (1.2.1.x, 1.2.2.x, 1.2.3.x) for the documentation outputs, plus a consolidated runbook deliverable under transition.
+
+E. Transition to operations. The draft ends at Wave 3 rollout (1.4.4). There is no handover package — no formal handoff of ownership, support tooling provisioning, knowledge transfer to ops, or hypercare bridging. Recommend new 1.8 Transition to Operations with leaves for ops onboarding, support tooling, KT sessions, and the formal handover decision.
+
+F. Hypercare / warranty period. Ops have told me directly they do not have capacity. If hypercare is not on the WBS it is not budgeted and not staffed. Recommend new 1.9 Hypercare with leaves per wave (since waves go live at different times and hypercare for each runs its own 30-60 day window) and a defined exit-to-business-as-usual milestone for each wave.
+
+G. Closure. No project closure package. Lessons learned, financial closeout, stakeholder thank-yous, contract closeout, archival of project artefacts. Recommend new 1.10 Closure.
+
+ACTIVITY-VS-DELIVERABLE — WHERE THE DRAFT BREAKS THE PRINCIPLE
+
+The chapter is direct: the WBS describes what the project produces (nouns/outputs), not what the team does (verbs/actions). Activities belong in the schedule. The draft has multiple activity-leaves. Rewrites:
+
+- 1.1.1 "Interview branch managers" → "Branch-manager input synthesis (12 interviews compiled and themed)"
+- 1.1.2 "Document current-state workflows" → "Current-state workflow map (per branch type)"
+- 1.1.3 "Design future-state workflows" → "Future-state workflow design (signed off by ops)"
+- 1.1.4 "Draft technical architecture" → "Technical architecture document (approved by architecture board)"
+- 1.3.1 "Run unit tests" → "Unit test suite, coverage report, pass/fail evidence"
+- 1.3.2 "Run integration tests" → "Integration test suite + integration test report"
+- 1.3.3 "Run UAT with three pilot branches" → "UAT sign-off pack from three pilot branches"
+- 1.4.x "Pilot/Wave rollouts" — these are slightly ambiguous; if the deliverable is "branches operational on new system" then it is a deliverable, but as written it reads more like an activity. Recommend reframing as "84 branches operational on new system" with per-wave leaves expressed as completion milestones.
+
+DECOMPOSITION — DEPTH AND CONSISTENCY
+
+Two distinct issues.
+
+Depth (8/80 rule). 1.2.1.6 "Data validation layer" and 1.2.1.7 "Error handling" feel like sub-components of other leaves — they probably need to fold into the front-end / back-end packages, not stand alone. Worth confirming with the teller-app dev lead.
+
+Consistency. The asymmetry between 1.2.1 (7 leaves), 1.2.2 (zero decomposition), and 1.2.3 (zero decomposition) is the biggest decomposition signal in the draft. Either you know much more about the teller app than about integration and migration, or the planning is uneven. Given (a) the integration team's separate release cadence, (b) the historical pain on integration timing, and (c) the migration risk profile, I would expect both 1.2.2 and 1.2.3 to need at least 3-5 leaves. Without them, those branches will roll up to single line items in the schedule and we will not be able to track them at meaningful granularity.
+
+CROSS-ARTEFACT IMPLICATIONS
+
+Errors in the WBS propagate. Specific examples:
+
+- Missing hypercare (gap F) means the schedule ends at Wave 3 rollout and the budget excludes hypercare staffing. When ops cannot take it on (already flagged), the project will need an unbudgeted extension. Likely cost: 2-3 months of staff time per wave that nobody has booked.
+- Missing change management (gap B) means the RAM has no owner for end-user readiness. The risk register will not contain end-user-adoption risks. The reporting structure will not surface adoption metrics. When adoption fails, there will be no accountability and no signal.
+- Underdeveloped 1.2.2 (Core banking integration) means the integration timing — which has historically been the source of slip on this team's programmes — will not be visible in the schedule until it becomes a problem. The schedule's critical path will be wrong.
+- Activity-oriented leaves (1.1.x, 1.3.x) mean the schedule will track activities rather than outputs, which makes it hard to answer "is the deliverable complete?" at any given checkpoint. Status reports will say "70% of activities done" without anyone knowing whether the deliverable is actually usable.
+
+VALIDATION MOVE — HOW TO GET FROM THIS DRAFT TO A BASELINED WBS
+
+The draft is your weekend work. The workstream leads have not seen it. The chapter is explicit that the WBS's value is the shared model built by the people who will do the work — not the diagram itself. Baselining a solo draft and asking leads to "flag concerns" risks the artefact looking right while the doers do not actually believe it, which is the failure mode that produces "that's not really what I signed up for" later in execution.
+
+Given the COO's end-of-week-5 deadline for the budget number, a full two-day workshop is probably not feasible. The middle option I would recommend:
+
+- Format: a half-day structured walkthrough next week (3 hours, not 2 days).
+- Participants: you, me, teller-app dev lead, core-banking integration lead, migration lead, ops representative (for hypercare), and someone for change management if we can identify them.
+- Output: an updated WBS draft v0.2 that the leads have actually contributed to and which can be baselined that same week.
+- My specific jobs in the session: (a) capture the WBS accurately and visibly as it evolves on the shared screen, (b) surface the categories of work I have flagged above and any others that emerge, (c) track the decisions and dependencies that surface in the conversation — many will feed the schedule, risk register, and stakeholder plan.
+
+If the half-day is genuinely impossible before the COO deadline, the fallback is per-workstream walkthroughs (45 minutes per lead, four sessions). That is worse because it loses the cross-workstream dependency capture, but it preserves doer-buy-in.
+
+I think the COO's budget-number deadline is the constraint to push back on, not the validation depth. A budget number rolled up from a WBS the team does not believe is a number the project will not deliver to. If you want, I can draft a short note to the COO explaining why a one-week slip on the budget number protects the rest of the programme.
+
+Two things I am NOT certain on and want your read: (a) whether the documentation gaps belong in each build branch or in a consolidated documentation branch, and (b) whether the hypercare-per-wave structure is right or whether it should be a single rolling hypercare package.
+
+PC

@@ -1,0 +1,61 @@
+{
+  "rubric_id": "wbs-discipline-v1",
+  "rubric_version": "1.0.0",
+  "competency": "wbs_discipline",
+  "competency_label": "WBS Discipline — Decomposition, Coverage, and the Shared Model",
+  "lesson_ref": "wbs",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "hundred_percent_rule_compliance",
+      "description": "Does the learner audit the WBS against the 100% rule and surface the specific categories of work the chapter names as commonly omitted — project management overhead (status, meetings, governance), change management, training, documentation, transition to operations, warranty/hypercare support, and closure activities? The chapter is explicit that these omissions cause the work to happen anyway, unplanned, unbudgeted, and unsupported.",
+      "anchors": {
+        "1": "Accepts the WBS as covering 100% of the work. Either no omissions identified or only one generic gap flagged. No mention of the named categories (PMO overhead, change management, training, transition, closure).",
+        "3": "Identifies two or three named omission categories with specific examples (e.g. 'training is missing, closure activities are missing'). Misses at least two of the chapter's named categories.",
+        "5": "Names four or more of the omission categories from the chapter, ties each to a specific gap in the draft WBS, and notes the practical consequence ('without a closure package, hypercare effort will be absorbed into operations capacity without budget')."
+      },
+      "weight": 0.25
+    },
+    {
+      "name": "deliverable_orientation",
+      "description": "Does the learner recognise and name the activity-vs-deliverable distinction — that WBS leaves should be things the project will produce (nouns/outputs), not actions the team will take (verbs)? The chapter's example contrast is 'Build integration' (deliverable) vs 'meet with vendor, write specifications, review drafts' (activities). Activities-as-WBS is a named anti-pattern.",
+      "anchors": {
+        "1": "Does not address the activity-vs-deliverable distinction, OR proposes additional leaves that are themselves activities ('hold weekly status meetings', 'review vendor proposals').",
+        "3": "Names the distinction at least once and reframes one or two activity-leaves as deliverables, but tolerates remaining activity-leaves elsewhere in the draft.",
+        "5": "Names the distinction explicitly with the chapter's framing ('deliverables belong in the WBS, activities belong in the schedule'), audits every problematic leaf in the draft, and proposes specific deliverable-form rewrites for each."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "decomposition_quality",
+      "description": "Does the learner reason about decomposition depth (the 8/80 rule), consistency across branches (one branch decomposed to five levels and another to two is a planning signal, not a feature), and the single-owner / single-team principle? Does the learner stop decomposing where further decomposition would not aid planning, rather than turning tasks into rituals?",
+      "anchors": {
+        "1": "Decomposition not addressed, OR proposes decomposing everything to maximum depth without reference to the 8/80 rule or owner-assignability.",
+        "3": "Names the 8/80 rule or the consistency principle and applies it to one or two branches. Does not address both depth and consistency.",
+        "5": "Audits both depth (which packages are too large/too small for 8/80) and consistency (which branches are uneven and why), and connects depth to single-owner assignability. Stops decomposing where further breakdown wouldn't aid planning, and names that as a deliberate choice."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "cross_artifact_traceability",
+      "description": "Does the learner recognise that the WBS is the hub — that schedule, budget, RAM/RACI, risk register, and status reporting all flow from it — and that errors in the WBS propagate into all of these? Does the learner trace at least one flagged WBS gap forward into the downstream artefact that will absorb the omission?",
+      "anchors": {
+        "1": "Treats the WBS as a standalone document. No mention of schedule, budget, RAM, risk register, or reporting.",
+        "3": "Names one or two downstream artefacts that flow from the WBS without specific linkage to the flagged gaps.",
+        "5": "For at least two flagged gaps, traces the downstream artefact that will absorb the omission (e.g. 'no closure package means the budget will not include hypercare staff time and the schedule will end at go-live, so the closure work will fall on operations unbudgeted'). Demonstrates the chapter's 'errors propagate' framing."
+      },
+      "weight": 0.15
+    },
+    {
+      "name": "collaborative_process_recognition",
+      "description": "Does the learner recognise that the WBS's value is the shared model built by the people who will do the work, not the diagram itself — and propose appropriate validation/workshop steps for a draft that was authored solo? Does the learner name the coordinator's three workshop jobs (capture accurately, surface forgotten work, track decisions and dependencies)?",
+      "anchors": {
+        "1": "Treats the WBS as a deliverable to be polished and shipped. Does not raise the solo-author provenance as a concern, OR proposes the coordinator should rewrite it themselves.",
+        "3": "Notes that team validation would be useful but does not propose a specific format (workshop, structured walkthrough, package-owner review). May name one of the coordinator's three workshop jobs.",
+        "5": "Proposes a specific validation move (workshop with the doers, or structured per-workstream walkthroughs if a workshop is impractical), names the coordinator's specific jobs in that session (capture, surface forgotten work, track decisions/dependencies), and frames the artifact-is-residue-the-model-is-the-point distinction."
+      },
+      "weight": 0.20
+    }
+  ]
+}
