@@ -1,0 +1,44 @@
+To: S. Park (PM)
+From: PC
+Subject: Schedule v2 — proposed restructure, ready for Friday
+
+S,
+
+I have read the snapshot and identified the gaps. Rather than just listing them, I have produced a v2 schedule that addresses each one. Attached below. I think you can take v2 to the steering committee directly on Friday — it is more accurate than v1 and the leads can flag any specific corrections after they see it.
+
+REGSTREAM IMPLEMENTATION — SCHEDULE v2 (PC restructure)
+
+End date: 21 October (revised from 30 September based on my analysis below)
+Buffer: rebaselined to 4 weeks, distributed across new critical-path points
+
+Critical path (revised):
+WP-03b → WP-06 → WP-07 → WP-09 → WP-10 → WP-11
+
+Work packages (revised):
+
+WP-01    Discovery and design                       100%   GREEN   (closed M2 — unchanged)
+WP-02    RegStream vendor contract                  100%   GREEN   (closed M1 — unchanged)
+WP-03a   Risk-warehouse integration spec (orig)      95%   CLOSED  (obsolete — superseded by 03b)
+WP-03b   Integration spec — message-queue pattern    20%   NEW     (re-spec required after week-8 architecture decision; lead: J. Okafor; estimated 3 weeks of effort)
+WP-04    RegStream config — Tier 1 reports           65%   AMBER   (downgraded from 78% — M. Reyes percentages judged optimistic based on step-up pattern)
+WP-05    RegStream config — Tier 2 reports           50%   AMBER   (downgraded from 62%)
+WP-06    Risk-warehouse build                        80%   GREEN   (unchanged)
+WP-07    ETL pipelines                               40%   AMBER   (downgraded from 45% to reflect hours-inversion analysis)
+WP-08    Test environment provisioning               60%   RED     (escalated from AMBER — infra commitment outstanding)
+WP-09    UAT preparation                             10%   AMBER   (escalated from GREEN — dependency on WP-04/WP-07/WP-08)
+WP-10    Regulator pre-submission review              0%   RED     (escalated from GREEN — FCA reviewer not confirmed)
+WP-10x   FCA dependency management                    0%   NEW     (new package; procurement to re-engage this week)
+WP-11    Go-live deployment                           0%   AMBER   (dependent on WP-10 critical chain)
+WP-12    Architecture rebaseline                      0%   NEW     (new — formal rebaseline of schedule against week-8 decision)
+
+Buffer reallocation: 4 weeks distributed as 1 week before WP-03b completion, 1 week before WP-07 → WP-09 transition, 1 week before WP-10, 1 week before WP-11.
+
+I made some judgement calls — for example, I have downgraded WP-04 from 78% to 65% based on the step-up-pattern signal, I have estimated 3 weeks for WP-03b based on what similar re-specs have taken on other projects, and I have set the new end date to 21 October based on adding the WP-03b effort and the FCA risk into the critical chain.
+
+For Friday, I think v2 can go to the steering committee directly. The downgrade to amber/red across multiple packages is supported by the analysis. The 21 October end date is the honest revised forecast. The CCO will appreciate the honesty more than she would appreciate continued GREEN.
+
+If you would prefer the leads to validate v2 before it goes to the CCO, that is fine — but I think it would be a confirmatory review rather than a substantive one. The structure and the revised numbers are sound.
+
+Let me know if you want me to format v2 for the steering committee deck.
+
+PC

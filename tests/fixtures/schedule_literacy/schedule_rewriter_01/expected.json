@@ -1,0 +1,15 @@
+{
+  "fixture_id": "schedule_rewriter_01",
+  "scenario_ref": "regstream-schedule-audit-v1",
+  "expected_dimension_scores": {
+    "critical_path_awareness": { "score": 2, "tolerance": 2 },
+    "dependency_categorization": { "score": 2, "tolerance": 2 },
+    "evidence_vs_assertion_discipline": { "score": 2, "tolerance": 2 },
+    "buffer_and_slack_management": { "score": 2, "tolerance": 2 },
+    "schedule_communication": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "SCHEDULE-REWRITER FAILURE MODE — applies the audit-vs-rewrite calibration pattern from Lesson 9 (PR #78). The learner has internalised every right answer from the chapter (critical path shift, Reyes step-up pattern, FCA dependency, WP-03 obsolescence, 21 Oct revised end date) but commits the central process error: produces a v2 schedule and recommends taking it to the steering committee directly, framing team validation as 'confirmatory review rather than substantive'. The scenario explicitly says 'Do not rewrite the schedule. Do not redraft work packages. Audit the snapshot.' The learner has done the audit AS a rewrite. Per the audit-vs-rewrite pattern: coverage-style dims (critical_path_awareness, dependency_categorization, evidence_vs_assertion_discipline, buffer) cap at 2 tol 2 because Claude reads the rewrite as inventing-not-auditing — the analysis is there but expressed as the wrong artefact. schedule_communication caps at 1 because the v2 schedule replaces the status narrative rather than producing one, and proposes the v2 go to the committee solo. All scoring caps anticipate Claude's strict application of the rewrite-as-invention framing. Tests whether the grader catches competent-content-wrong-form submissions on schedule lessons too."
+}

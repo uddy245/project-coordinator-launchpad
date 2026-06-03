@@ -1,0 +1,15 @@
+{
+  "fixture_id": "green_reassurer_01",
+  "scenario_ref": "regstream-schedule-audit-v1",
+  "expected_dimension_scores": {
+    "critical_path_awareness": { "score": 1, "tolerance": 1 },
+    "dependency_categorization": { "score": 1, "tolerance": 1 },
+    "evidence_vs_assertion_discipline": { "score": 1, "tolerance": 1 },
+    "buffer_and_slack_management": { "score": 2, "tolerance": 1 },
+    "schedule_communication": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "GREEN-REASSURER FAILURE MODE — the chapter's anchor anti-pattern. The Friday-update-that-lied. The learner reads every soft signal as benign: M. Reyes's step-up pattern as 'leading indicator', A. Singh's standup as 'normal pressure', infra team's non-commitment as 'will deliver', FCA as 'comfortably in the future'. Explicitly recommends affirming GREEN to avoid 'reversing without a concrete materialised slip' — which is the exact failure pattern the chapter opens with (the sponsor furious not at the slip but at the surprise). No critical-path identification. No dependency categorization. No evidence-vs-assertion lens. Buffer treated as 'normal absorption profile' with no consumption tracking. Status narrative is pure reassurance. Tests whether the grader catches confident-sounding submissions that are actually performing the lie-by-rollup the chapter is built against. Note: buffer dim gets 2 (not 1) because the learner did at least mention the 2-of-3-remaining state, even if interpreted incorrectly."
+}
