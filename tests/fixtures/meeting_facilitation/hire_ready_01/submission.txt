@@ -1,0 +1,74 @@
+To: L. Hassan
+From: PC
+Subject: Tomorrow's status meeting — audit and recommended adjustments
+
+L — you asked for observations before tomorrow. Five sections below, ordered by what I think you should decide before this evening.
+
+1. MEETING PURPOSE — THE CONFLATION IS THE PROBLEM
+
+The meeting as currently designed is two meetings stapled together. The first is an alignment meeting (weekly status — shared situational awareness, surface cross-workstream blockers). The second is a decision meeting (Stripe vs Adyen — a choice that needs to be made and owned). These are different meeting types with different right participants, different right durations, and different right preparation. The chapter's framing is direct: when status meetings are used to decide, either the meeting balloons or the decision is made poorly because the room is not set up for decision-making.
+
+Specifically on this setup:
+- The status meeting needs: delivery leads, recent status data, blocker triage. Pre-read should be one-page-per-workstream sent 24 hours ahead (the lapsed practice).
+- The vendor decision needs: you (decider), M. Wong and A. Singh (technical input), E. Volkov (procurement input), V. Bauer if she actually wants in. Pre-read should be the technical evaluation + procurement findings + a 1-page comparison + your recommended call.
+
+Putting them in the same room produces neither outcome well. Recommend: separate them.
+
+2. AGENDA — EVERY ITEM IS A TOPIC LABEL, NOT AN OUTCOME
+
+Each agenda item should be a sequence of outcomes with a time budget and a named owner. Current items vs proposed rewrites:
+
+- "Status round-robin" → "Confirm each workstream's status against this week's milestones; surface cross-workstream blockers (25 min; leads brief in turn against the pre-read; blockers captured by PC for async resolution)."
+- "Integration vendor discussion" → Move to a separate decision meeting. If kept here, it should read: "DECIDE: Stripe or Adyen (this is not an outcome that fits inside this meeting and should be removed)."
+- "Q&A" → Drop. If a question needs to be raised, it happens during the status item. Standing Q&A items teach the room that questions are deferred.
+- "AOB" → Drop. No AOB items have been raised in the last three meetings. Standing AOB slots that produce nothing waste 5 minutes per meeting × 52 meetings = ~4 hours of time on the calendar that returns no value.
+
+3. INVITEES AND PRE-READ
+
+Invitees (currently 14, the meeting will be poor with this many). My read:
+
+KEEP (delivery leads who genuinely need cross-workstream awareness):
+- L. Hassan (you), PC (me), M. Wong (Tech), D. Rivera (Back-end), A. Singh (Data), I. Hartman (QA), R. Silva (DevOps), K. Olafsson (Security), Y. Mbeki (Ops).
+
+OPTIONAL or RECEIVE-MINUTES (the meeting is not currently serving them):
+- S. Patel (Front-end) — has attended 1 of last 4. Worth a private check: is the meeting useful to them, or should they receive minutes?
+- F. Chen (UX) — declining recently with no comment. Same question.
+
+REMOVE FROM TOMORROW'S STATUS:
+- V. Bauer (CDO / sponsor). Two reasons: she has not asked to attend, and putting her in the room changes what people say (workstream leads under-share concerns when the sponsor is observing). If you want her to have visibility, the right vehicle is the monthly steering committee or your 1:1 with her, not the weekly status.
+- T. Adeyemi (programme director). If she finds value in attending fortnightly that is her call, but inviting her by default makes the meeting more formal than it needs to be. Worth a private question to her: does this serve you, or would minutes suffice?
+- E. Volkov (procurement) — added for the vendor decision; should attend the separate decision meeting instead.
+
+Pre-read: none has been sent for two months; the original one-pager-per-workstream practice lapsed. Recommend reinstating it for the next meeting — 24 hours ahead, owned by each workstream lead, max one page each. Without it, the first 15-20 minutes is briefing rather than discussion, and the meeting effectively starts 20 minutes late.
+
+For the separate vendor decision meeting on (suggest) Thursday: pre-read should be the technical evaluation, procurement findings, a 1-page comparison from M. Wong / A. Singh / E. Volkov jointly, and your recommended call. 48 hours ahead (i.e. send today) so people can come prepared to confirm or push back.
+
+4. FACILITATION PLAN FOR TOMORROW (if you keep tomorrow's meeting as currently configured)
+
+Start on time at 10:00 sharp regardless of who is in. The room learns from your start time.
+
+State the goal in the first minute: "We're here to confirm where each workstream is and surface cross-workstream blockers. The vendor decision is being moved to a focused meeting Thursday — we'll talk about that separately." This pre-empts the question and prevents the vendor topic from leaking into status.
+
+For each lead's status update, hold to ~3 minutes; redirect if they drift into solutioning a blocker ("good — let's take that offline / capture as an action").
+
+Surface dissent actively. R. Silva's multitasking and F. Chen's declines are signals of disengagement. If R. Silva is in the room tomorrow, ask him directly for his read on cross-workstream integration risk. Suppressed disengagement is more expensive than surfaced disengagement.
+
+Close in the last two minutes with: decisions made (likely none for a status meeting — that's fine), actions agreed with owner and due date, follow-ups confirmed. Write the actions visibly. If we hit the half-hour mark with the cross-workstream conversation still going, end on time anyway and propose a focused follow-up — running over teaches the room that scheduled times are suggestions.
+
+Respect the time budget. The original cadence was 30 minutes; we are at 60 because nobody pushed back. Tomorrow is a chance to land back at 30.
+
+5. WHETHER THE MEETING SHOULD HAPPEN AS DESIGNED
+
+My recommendation is: not as designed. The structural redesign I would land with the team:
+
+A. Tomorrow: keep the slot but tighten to 30 minutes. Cover status only. Remove the vendor item from the agenda. Run the facilitation above. This is the immediate move.
+
+B. This week: schedule a 45-minute vendor decision meeting on Thursday with the smaller decision group and a 48-hour pre-read going out today.
+
+C. Going forward: reinstate the weekly pre-read (one-pager per workstream), trim attendance, hold the 30-minute slot. Re-evaluate at the end of the month — if attendance is still drifting after the trim, status moves to async (Slack thread or shared doc) and the slot becomes fortnightly cross-workstream working time.
+
+I think this lands with the team as "getting back to the cadence we had" rather than as a critique of recent practice — that framing matters because the agenda creep happened with everyone's tacit agreement.
+
+Two things I am NOT certain on and want your read: (a) whether V. Bauer's invitation tomorrow was your initiative or something she asked for — if the latter, the analysis above changes; (b) whether the Thursday vendor-decision meeting is realistic given your week — if not, Friday or early next week works as long as it lands before the 5-week integration sprint start.
+
+PC

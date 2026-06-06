@@ -1,0 +1,61 @@
+{
+  "rubric_id": "meeting-facilitation-v1",
+  "rubric_version": "1.0.0",
+  "competency": "meeting_facilitation",
+  "competency_label": "Meeting Facilitation — Purpose, Agenda, Participants, and the Discipline That Makes Them Useful",
+  "lesson_ref": "meetings",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "meeting_purpose_clarity",
+      "description": "Does the learner categorise the meeting by purpose type — decision, alignment, or working — and recognise when the stated agenda mixes types (e.g. a status meeting being used to decide)? The chapter is explicit that before scheduling any meeting you must answer 'which of the three is it?' and that status meetings being used for decisions is the named anti-pattern.",
+      "anchors": {
+        "1": "Does not categorise the meeting by purpose type. Treats 'team status' as a self-evident purpose.",
+        "3": "Names one of the three categories (decision/alignment/working) and applies it to the meeting. Misses the type-conflation in the setup (e.g. does not catch that the vendor decision should not happen in the status meeting).",
+        "5": "Categorises the meeting by purpose type using the chapter's three categories. Identifies any type-conflation in the setup — explicitly flags status-meeting-being-used-to-decide if present, and proposes splitting it. Names the cost of the conflation."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "agenda_quality",
+      "description": "Does the learner critique the agenda for outcome-orientation (sequence of outcomes, not topic labels), time budgets per item, and named owners? The chapter's contrast is explicit: 'Decide on integration vendor (15 minutes) — Sylvia leads' (good) vs 'Integration vendor discussion' (bad). An agenda that is a list of topics is a meeting that will wander.",
+      "anchors": {
+        "1": "Accepts the agenda as fine if it has topic labels. No critique of outcome-orientation, time budgets, or owners.",
+        "3": "Identifies that one or two items lack outcomes or time budgets. Does not systematically audit every item or propose specific rewrites.",
+        "5": "Audits every agenda item against outcome / time-budget / owner. Proposes specific rewrites that replace topic labels with outcomes, name owners, and set realistic time budgets. References the chapter's framing of agendas-as-sequences-of-outcomes."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "participant_and_preread_judgment",
+      "description": "Does the learner critique the invitee list (right deciders, right input-givers, too-many-people producing diluted attention) AND the pre-read situation (does one exist, is it sent 24-48h ahead, would the meeting need one)? The chapter is clear: any meeting that requires context should have a pre-read sent at least 24 hours in advance, and meetings that brief in real time do not respect people's time.",
+      "anchors": {
+        "1": "Accepts the invitee list as fine. No mention of pre-read or its absence.",
+        "3": "Raises one of the two — flags either an invitee issue (too many people, missing decider) OR the absence of a pre-read — but not both. May propose pre-read in general terms without naming the lead time or what would be in it.",
+        "5": "Audits both. For the invitee list, identifies who is missing (deciders, key input-givers) and who could be off (people receiving but not contributing) — proposes specific changes. For the pre-read, identifies what is missing, who should produce it, and the 24-48h lead time. Connects both to the meeting's purpose type."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "facilitation_plan",
+      "description": "Does the learner propose specific facilitation moves the chapter names — start on time, state the goal in the first minute, redirect drift, surface dissent, close with summary of decisions/actions/owners, respect the time budget? A facilitation plan that is generic ('run a tight meeting') or absent misses the point.",
+      "anchors": {
+        "1": "No facilitation moves proposed, OR generic platitudes about 'tight meetings' / 'good engagement' with no specific moves.",
+        "3": "Names two or three of the chapter's facilitation moves (e.g. opening goal-statement, closing summary). May not connect them to specific risks in this meeting.",
+        "5": "Names four or more of the chapter's specific facilitation moves and ties each to a specific risk in this meeting's setup. Closing summary discipline (decisions / actions / owners / due dates, written down visibly) is explicit."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "meeting_design_judgment",
+      "description": "Does the learner question whether the meeting should happen as designed at all — propose splitting the decision out of the status meeting, propose async alternatives for pure-status content, propose consolidation or cancellation where attendance has been drifting? The chapter is explicit that 'canceling unnecessary meetings is one of the highest-impact things a coordinator can do' and that the design move is proposed as a structural change, not an attack ('move status to async and replace the standing slot with a fortnightly working session').",
+      "anchors": {
+        "1": "Treats the meeting as a fixed input to be optimised within. Does not question whether it should happen as designed, OR proposes only superficial changes.",
+        "3": "Raises one structural design question — e.g. notes that the vendor decision should be a separate meeting, OR proposes moving some status to async. Does not propose specific alternative structures.",
+        "5": "Proposes a specific structural redesign — names what should be split out, what should move to async, what time should be saved, and how the proposal would land with the PM (as a design change, not a critique). Demonstrates the 'canceling-meetings-is-high-impact-coordinator-work' framing without overstepping."
+      },
+      "weight": 0.20
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "fixture_id": "meeting_rewriter_01",
+  "scenario_ref": "replatform-status-meeting-audit-v1",
+  "expected_dimension_scores": {
+    "meeting_purpose_clarity": { "score": 2, "tolerance": 2 },
+    "agenda_quality": { "score": 2, "tolerance": 2 },
+    "participant_and_preread_judgment": { "score": 2, "tolerance": 2 },
+    "facilitation_plan": { "score": 1, "tolerance": 1 },
+    "meeting_design_judgment": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 1.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "MEETING-REWRITER FAILURE MODE — same shape as solo_rewriter_01 (Lesson 9) and schedule_rewriter_01 (Lesson 10). The learner has internalised every chapter signal correctly (alignment/decision split, outcome agenda, trimmed attendance, pre-read template, separate vendor decision meeting) but commits the central process error: produces v2 invites and pre-read drafts as finished work, recommends sending them this afternoon, frames team validation as optional ('if you want me to hold them for review'), and even offers to send the invites themselves with calendar permissions — explicit overstep. The scenario explicitly says 'Do not rewrite the invite, agenda, or pre-read in full. Audit the setup.' The learner has done the audit AS a rewrite. Per the audit-vs-rewrite calibration pattern from Lessons 9-10: coverage-style dims (meeting_purpose_clarity, agenda_quality, participant_and_preread_judgment) cap at 2 tol 2 because Claude reads the rewrite as inventing-not-auditing. facilitation_plan and meeting_design_judgment cap at 1 because the v2-as-finished-product replaces the analytical deliverable rather than producing one — there is no facilitation plan, and the design judgment is implicit in the rewrite rather than surfaced as a recommendation for L. Hassan to evaluate. Tests whether the grader catches competent-content-wrong-form submissions on process lessons too."
+}

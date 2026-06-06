@@ -1,0 +1,62 @@
+To: L. Hassan
+From: PC
+Subject: Tomorrow's status meeting — restructured invite + pre-read attached
+
+L,
+
+I have reviewed the invite and put together a v2 setup that addresses the issues. I have drafted the new invite, the new agenda, and the pre-read template below. I think you can send these out this afternoon and we are good for tomorrow.
+
+MEETING v2: Weekly Status — Replatform Programme
+
+WHEN: Tomorrow, 10:00–10:30 (30 minutes — tightened from 60)
+LOCATION: Boardroom 4 + Zoom
+ORGANISER: L. Hassan
+PRE-READ: One-page status per workstream, attached, distributed today.
+
+AGENDA v2:
+1. Goal-setting and check-in (2 min) — L. Hassan
+2. Cross-workstream blockers from the pre-read (15 min) — leads brief in turn (1-2 min each); blockers captured for async resolution
+3. Decisions needed this week (8 min) — L. Hassan to confirm decisions on the table and route them
+4. Closing summary — actions, owners, due dates (5 min) — PC to capture
+
+INVITEES v2 (trimmed from 14 to 9):
+- L. Hassan (PM)
+- PC
+- M. Wong (Tech Lead)
+- D. Rivera (Back-end Lead)
+- A. Singh (Data/Integrations Lead)
+- I. Hartman (QA Lead)
+- R. Silva (DevOps Lead)
+- K. Olafsson (Security Lead)
+- Y. Mbeki (Operations Lead)
+
+DROPPED FROM TOMORROW (will receive minutes):
+- S. Patel (Front-end) — attendance pattern suggests meeting not serving
+- F. Chen (UX) — same
+- V. Bauer (CDO / sponsor) — visibility moved to monthly steering
+- T. Adeyemi (Programme Director) — courtesy invite dropped; will receive minutes
+- E. Volkov (Procurement) — invited to separate vendor decision meeting (see SEPARATE INVITE below)
+
+SEPARATE INVITE v2: Vendor Decision — Stripe vs Adyen
+
+WHEN: Thursday, 14:00–14:45
+INVITEES: L. Hassan, M. Wong, A. Singh, E. Volkov, V. Bauer (optional)
+PRE-READ: Technical evaluation + procurement findings + 1-page comparison + your recommended call (attached, sending today)
+
+PRE-READ TEMPLATE (for each workstream, max one page):
+
+  Workstream: [name]
+  Lead: [name]
+  This week — what we delivered: [3-5 bullets]
+  This week — what slipped: [list with new dates]
+  Cross-workstream blockers: [list]
+  Decisions needed this week: [list, with whose decision]
+  Help wanted from other workstreams: [list]
+
+L — both invites and the pre-read template are above. I think you can send them this afternoon. I have run the structural changes against the chapter framing (alignment vs decision, outcome agenda, trimmed attendance, pre-read 24h) and I am confident the v2 setup is sound.
+
+If you want me to hold them for review I can, but I would suggest sending today so the team has time to prepare. The leads will not be surprised by the change — most of them have probably noticed the meeting is too long.
+
+Happy to send the invites myself if you forward me the calendar permissions.
+
+PC

@@ -1,0 +1,15 @@
+{
+  "fixture_id": "status_quo_defender_01",
+  "scenario_ref": "replatform-status-meeting-audit-v1",
+  "expected_dimension_scores": {
+    "meeting_purpose_clarity": { "score": 2, "tolerance": 1 },
+    "agenda_quality": { "score": 1, "tolerance": 1 },
+    "participant_and_preread_judgment": { "score": 2, "tolerance": 1 },
+    "facilitation_plan": { "score": 1, "tolerance": 1 },
+    "meeting_design_judgment": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "STATUS-QUO-DEFENDER FAILURE MODE — the learner has read the chapter (acknowledges 'combining decision and status content is suboptimal in theory') but rationalises every named failure mode as pragmatic. Explicitly defends: vendor-on-status ('reasonable given senior calendar'), topic-label agenda ('not over-engineer'), 14 invitees ('legitimate reason for cross-workstream awareness'), no pre-read ('marginal benefit does not justify friction'), 'hold the line' on structural change. The meeting_purpose_clarity dim gets a 2 not a 1 because the learner does at least name the chapter's framing before dismissing it. Same for participant_and_preread — does mention the practice exists. Other dims floor at 1 because they actively defend the broken state. Tests whether the grader catches submissions that perform-having-read-the-chapter while endorsing every anti-pattern. This is the coordinator who has read the book and decided the book is wrong about THIS meeting."
+}
