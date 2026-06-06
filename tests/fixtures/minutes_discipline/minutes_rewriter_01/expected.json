@@ -1,0 +1,15 @@
+{
+  "fixture_id": "minutes_rewriter_01",
+  "scenario_ref": "ccb-minutes-audit-v1",
+  "expected_dimension_scores": {
+    "structural_correctness": { "score": 2, "tolerance": 2 },
+    "action_specificity": { "score": 2, "tolerance": 2 },
+    "attribution_and_register": { "score": 2, "tolerance": 2 },
+    "living_artifact_discipline": { "score": 2, "tolerance": 2 },
+    "correction_and_distribution_judgment": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 2.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "MINUTES-REWRITER FAILURE MODE — same shape as solo_rewriter_01 (Lesson 9), schedule_rewriter_01 (Lesson 10), meeting_rewriter_01 (Lesson 11). The learner produces a v2 minutes document and recommends sending it directly today, plus offers to send on J.'s behalf. The substance is largely correct (three-section format applied, actions tightened with owners and dates, attribution cleaned, distribution expanded) but the central process error is severe: makes up the CR-031 security risk condition, makes up the CR-032 steering ratification call, makes up the CR-033 start date — all flagged as 'best-judgement calls' but presented as ready-to-send. The scenario explicitly says 'Do not rewrite J.'s draft as a finished v2 minutes document'. All five dims capped at {2, 2} per the Lesson 9-11 audit-vs-rewrite pattern AND the Lesson 11 design-judgment learning (all five default to {2,2} on rewriter probes, not the older 'process dims floor at 1' rule from Lesson 9). Tests whether the grader catches well-executed-wrong-shape submissions on minutes lessons too. Inventing facts in minutes is a particularly bad failure mode because minutes are a durable record — the wrong content lands in the audit trail and is hard to roll back."
+}

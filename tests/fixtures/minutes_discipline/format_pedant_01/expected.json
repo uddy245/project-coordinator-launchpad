@@ -1,0 +1,15 @@
+{
+  "fixture_id": "format_pedant_01",
+  "scenario_ref": "ccb-minutes-audit-v1",
+  "expected_dimension_scores": {
+    "structural_correctness": { "score": 2, "tolerance": 1 },
+    "action_specificity": { "score": 1, "tolerance": 1 },
+    "attribution_and_register": { "score": 1, "tolerance": 1 },
+    "living_artifact_discipline": { "score": 1, "tolerance": 1 },
+    "correction_and_distribution_judgment": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "FORMAT-PEDANT FAILURE MODE — the chapter's bureaucratic-afterthought concern in human form. The learner focuses entirely on visual structure (H2/H3, ISO dates, PDF vs Word, template library) and entirely misses the substantive issues (loose attribution, vague actions, TBDs, evaluative phrasing, 5-day delay, distribution gap). structural_correctness gets a 2 not a 1 because the learner does at least raise structural concerns, but they are the wrong structural concerns — section headings vs the chapter's Decisions/Actions/Notes discipline. correction_and_distribution_judgment also gets 2 because formatting the distribution list as a bulleted list counts as a passing mention. Everything else floors at 1. Tests whether the grader catches submissions that perform thoroughness through cosmetics while missing every substantive failure mode."
+}

@@ -1,0 +1,38 @@
+To: J. Park
+From: PC
+Subject: Re: CCB minutes draft — feedback before sending
+
+Hi J,
+
+Thanks for sending this. First CCB minutes solo is a real thing — appreciate you being thorough. Below is what I would change before it goes out. Genuinely think you have got the substance; the issues are around format and a few attribution things that matter more on CCB minutes than weekly ones.
+
+1. Format. The chapter I have been using as a reference (Ch 12) treats minutes as three sections: Decisions, Actions, Notes (only when necessary). The draft mixes discussion narrative into the per-CR entries, which works for capturing flavour but isn't really what minutes are for. I would restructure each CR entry as:
+
+   - The decision itself (one to three sentences, attributable, dated)
+   - Actions arising (one named owner, due date, status)
+   - Notes (only if needed for future readers)
+
+   The "team had a great discussion", "really interesting", "got quite heated" type language can come out. CCB minutes are formal documents — they'll be referenced later in closure and potentially in audit, and neutral phrasing holds up better than evaluative.
+
+2. Actions specificity. A few of the actions need tightening:
+
+   - CR-031: "Someone to follow up with R. Singh on the timeline" — needs a named owner and a due date. Best guess from the room — F. Demir or L. Hassan?
+   - CR-032: "TBD — whether this goes to steering" — this should not go out as TBD. Either escalate to L. Hassan now to confirm, or capture as a follow-up with an owner and due date.
+   - CR-033: "TBD — start date for the new hours" — same. Resolve before sending.
+
+3. Attribution. Two things I would change:
+
+   - CR-031 — "the team agreed that the benefits outweighed the risks" — but K. Olafsson raised security concerns. That's not unanimity. Better: "Approved. Concerns raised by K. Olafsson regarding [specific] have been added to the risk register for tracking."
+   - CR-033 — "Everyone was on board" — same issue if Y. Mbeki (absent) was meant to weigh in on ops impact. If approval was unanimous among those present, say so; if absent attendees still need to weigh in, that's not a clean decision yet.
+
+4. F. Demir's growth comments: take that out. Minutes are a record of decisions and actions, not a team morale update. Even if it's nice, it doesn't belong in the formal record.
+
+5. Action tracking and TBDs. For the TBDs specifically: before sending, ping L. Hassan to resolve the steering-ratification question (one Slack message) and ping R. Singh to confirm the support-hours start date. That gets both TBDs out of the document. Going forward, worth having a single action tracker (separate from the minutes) that lists all open CCB actions with owner and due date, reviewed at the top of the next CCB.
+
+6. Timing and distribution. Five days is late — the standard is 24-48 hours. For this one, I'd send today with a brief apology line at the top ("Apologies for the delay — minutes from last Wednesday's CCB; for review and any corrections by Friday"). For distribution, I would include P. Nakamura and Y. Mbeki even though they were absent — they should see the decisions. R. Singh as the vendor should also receive the CR-031 and CR-033 entries that affect his work.
+
+If anyone challenges anything after it goes out, the move is neutral and evidence-based — your meeting notes are the record; corrections go out as an explicit "Updated minutes — change to X" note, not a silent edit.
+
+Send me a revised version when you have it; I can spot-check before it goes out.
+
+PC

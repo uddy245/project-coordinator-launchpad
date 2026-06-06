@@ -1,0 +1,89 @@
+You are PC on a twelve-month payments-platform consolidation programme for a national insurance carrier. Sponsor is the CFO. You are at the end of month six. The programme has weekly delivery meetings, monthly steering, and a Change Control Board (CCB) that meets fortnightly to review change requests.
+
+The regular minute-taker (you) was on leave the week of the last CCB. A junior coordinator, J. Park, took the minutes. J. has been with the team eight weeks. He sent you his draft this morning — five days after the CCB itself — and asked you to give it a read before he sends it out. His Slack message: "First time doing CCB minutes alone — I tried to capture everything that was discussed. Sorry it took a while; I wanted to be thorough. Any feedback welcome before I send to the distribution list."
+
+The draft is below.
+
+---
+
+CHANGE CONTROL BOARD MEETING — MINUTES (DRAFT)
+
+Date: Last Wednesday
+Taken by: J. Park
+Attendees: L. Hassan (PM), F. Demir (Tech Lead), M. Rivera (Procurement), V. Bauer (CDO, sponsor representative), K. Olafsson (Security Lead, dialed in), R. Singh (Vendor Account Manager — Acme Payments). Absent (without apologies): P. Nakamura (Compliance Lead), Y. Mbeki (Ops).
+
+Agenda:
+1. CR-2024-031 — Add support for SEPA Instant
+2. CR-2024-032 — Defer multi-currency settlement to phase 2
+3. CR-2024-033 — Increase vendor support hours
+4. AOB
+
+---
+
+CR-2024-031 — Add support for SEPA Instant
+
+The team had a great discussion about this CR. F. Demir walked through the technical implications, which were really interesting and showed how much the team has learned about the payments space. There were some concerns raised about the impact on the integration sprint, but the team agreed that the benefits outweighed the risks. V. Bauer was supportive and emphasized that this is a strategic priority for the carrier. K. Olafsson raised some security concerns but these were considered manageable.
+
+Decision: Approved (subject to some conditions). The team will work out the conditions and confirm them.
+
+R. Singh from the vendor side confirmed that Acme Payments can support the change but the timeline needs to be discussed further. Action: Someone to follow up with R. Singh on the timeline.
+
+---
+
+CR-2024-032 — Defer multi-currency settlement to phase 2
+
+This was a contentious item. V. Bauer pushed back strongly on the deferral, expressing frustration that the team had not delivered on the original scope. M. Rivera from procurement defended the deferral, arguing that the procurement complexity around the multi-currency vendor had been underestimated. The discussion got quite heated at one point and the chair had to redirect.
+
+In the end, the team agreed to defer to phase 2 with the understanding that V. Bauer would brief the CFO directly on the implications. There was some discussion about whether this would need to go to steering for formal ratification but no clear conclusion was reached.
+
+Decision: Deferred to phase 2 (tentative).
+
+Action: V. Bauer to brief the CFO. M. Rivera to update the vendor on the decision. TBD — whether this goes to steering.
+
+---
+
+CR-2024-033 — Increase vendor support hours
+
+This was a quicker discussion. R. Singh proposed an increase from 200 to 300 monthly support hours at a cost of £8k/month additional. Everyone was on board with the proposal. F. Demir thought it was a great move given the upcoming integration sprint complexity. L. Hassan said she would handle the contractual side.
+
+Decision: Approved.
+
+Actions:
+- Update the SOW (L. Hassan)
+- TBD — start date for the new hours
+
+---
+
+AOB
+
+P. Nakamura was absent and we did not have her input on compliance, which is a shame because some of the security questions on CR-2024-031 probably needed her view. The team agreed to circle back with her offline.
+
+Y. Mbeki was also absent and we did not get his ops perspective on the support hours change. Someone should follow up.
+
+The meeting ran over by 25 minutes (originally 45 min slot). Worth thinking about whether we need more time for CCB going forward.
+
+Next meeting: Same time fortnight.
+
+---
+
+Distribution: L. Hassan, F. Demir, M. Rivera, V. Bauer, K. Olafsson, J. Park.
+
+---
+
+J.'s additional notes to you in Slack: "I wasn't 100% sure on a couple of the decisions. CR-031 was approved but I am not sure what the conditions are — I think L. Hassan said something but I missed it. CR-032 — I think the decision was clear but the steering thing is genuinely unclear. CR-033 was clean. Also I was going to add F. Demir's comments about how the team has been growing because I thought it was nice and showed positive momentum. Let me know if you want me to take that out."
+
+Your PM (L. Hassan) is in back-to-back meetings today and tomorrow morning. The CCB minutes typically need to go out within 48 hours; we are at five days. J. is keen to send them today.
+
+Your review note — 500-800 words — should:
+
+1. Audit the structural correctness of the draft against the chapter's three-section format (Decisions / Actions / Notes). Identify the narrative prose that should be cut and propose the three-section structure for the rewrite.
+
+2. Audit each action for the chapter's four properties (specific verb-led description, one named owner, specific due date, tracked status). Identify the TBDs and propose how to resolve them before sending.
+
+3. Audit the attribution and register. Specific concerns: the "team agreed" phrasing on CR-2024-031 when V. Bauer was supportive and K. Olafsson raised security concerns — was that actually unanimity? The "everyone was on board" on CR-2024-033 — same question. The evaluative phrasing throughout ("great discussion", "really interesting", "great move", "got quite heated"). Propose neutral rewrites.
+
+4. Address the living-artifact discipline. Where should the action tracker live? How should the TBDs in this draft be resolved before sending? What is the pre-meeting review move for next CCB?
+
+5. Address timing, distribution, and the correction posture. Five days late is past the chapter's warning threshold — how does J. handle that on send? The distribution list excludes the absent attendees (P. Nakamura, Y. Mbeki) and the vendor (R. Singh) — should they receive? What does J. do if someone challenges the record after sending?
+
+Do not rewrite J.'s draft as a finished v2 minutes document. Give him the audit and the specific changes so he can revise. He asked for feedback before sending — that is the deliverable.

@@ -1,0 +1,82 @@
+To: J. Park
+From: PC
+Subject: CCB minutes draft — audit and the changes to make before sending
+
+J — first solo CCB minutes is the hardest one. Below is the structured feedback. I'd group it into things to fix right now (today, before sending) and things to build into your process going forward. The substance of what you captured is solid — the issues are around format, attribution, and a few resolution moves before this is ready to go out.
+
+FIX BEFORE SENDING
+
+1. Structure — restructure each CR entry into the three-section format
+
+CCB minutes are durable records. They get referenced later — at programme closure, sometimes in audit, occasionally in legal-adjacent contexts. The three-section discipline (Decisions / Actions / Notes) is what holds up under that referencing. Right now each CR entry is a narrative paragraph that mixes decision, discussion flavour, and action. Restructure as:
+
+  CR-2024-031 — Add support for SEPA Instant
+  Decision: Approved, subject to conditions. [State the conditions explicitly — see point 3 below.]
+  Actions:
+    - [Named owner] to confirm timeline with R. Singh by [date]
+    - [Named owner] to add K. Olafsson's security concerns to the risk register by [date]
+  Notes: K. Olafsson raised security concerns regarding [specific]; logged as risk for tracking. V. Bauer noted the strategic priority. (Notes are optional but useful here because they tie the decision to context that may be needed later.)
+
+Same shape for the other two CRs. The narrative ("great discussion", "really interesting", "got quite heated") all comes out. So does F. Demir's growing-team aside — it is generous, but minutes are not a morale document. Save the recognition for a Slack thread or a 1:1.
+
+2. Actions — every action needs one owner, a specific verb, a date, and a status
+
+The draft has three actions that need work:
+
+  - "Someone to follow up with R. Singh on the timeline" → "F. Demir [or whoever it actually is — confirm with L. Hassan] to confirm SEPA Instant integration timeline with R. Singh by Friday."
+  - "TBD — whether this goes to steering" → this should not go out as TBD. See point 4 (resolve before sending).
+  - "TBD — start date for the new hours" → same. Resolve before sending.
+
+Also worth checking: "M. Rivera to update the vendor on the decision" needs a due date. "Update the SOW (L. Hassan)" needs one too.
+
+Going forward, when you take live notes, capture decisions and actions in separate columns from the start. The minutes almost write themselves when the live capture is structured.
+
+3. Attribution — three places where the language overclaims
+
+  - CR-031: "the team agreed that the benefits outweighed the risks" — but K. Olafsson raised security concerns. The room was not unanimous. Better phrasing: "Decision: Approved. K. Olafsson noted security concerns regarding [specific]; these were considered manageable for the integration scope and have been logged in the risk register for tracking." This captures what happened without asserting a unanimity that didn't exist.
+
+  - CR-031: "V. Bauer was supportive and emphasized that this is a strategic priority" → this is fine as notes context but should not read as attribution-of-decision. The decision is the CCB's; V. Bauer's emphasis is colour.
+
+  - CR-033: "Everyone was on board" — same question. Y. Mbeki was absent. If Y. Mbeki's ops input was needed for the support-hours change, then the decision isn't clean yet. If it wasn't, the right phrasing is "Decision: Approved by attendees" rather than "everyone was on board."
+
+  Register-wise, the chapter line is that minutes are formal documents read by people who were not in the room and sometimes months later. Phrases like "great discussion", "really interesting", "great move", "got quite heated" are evaluative and date badly. They should come out across all three CR entries.
+
+4. Resolve the TBDs before sending
+
+  - CR-031 conditions on approval: J., your Slack note says you missed what L. Hassan said. Ping her today: "For the CR-031 minutes — can you confirm the conditions on approval? I want to capture them precisely." One Slack message, one-line answer.
+  - CR-032 steering ratification: ping L. Hassan or, if you have direct access, V. Bauer — "Does CR-032 deferral need formal steering ratification, or is the CCB decision sufficient?" Capture the answer in the Decision line.
+  - CR-033 support-hours start date: ping R. Singh — "For the minutes, what start date should we capture for the increased support hours?" Concrete date in the Action line.
+
+  None of these takes more than a few minutes; all three turn the draft from "incomplete meeting" to "complete record". The chapter's framing is direct: minutes that go out with TBDs signal incomplete meetings. They land worse than minutes that are delayed by another half-day.
+
+5. Send today with a brief caveat, and expand the distribution
+
+Five days is past the 24-48 hour window. You can't undo that, but you can address it head-on. Open with a single line at the top: "Apologies for the delay — minutes from last Wednesday's CCB; please review and flag any corrections by Friday." That treats the lateness as a fact rather than hiding it.
+
+Distribution list as drafted: L. Hassan, F. Demir, M. Rivera, V. Bauer, K. Olafsson, J. Park (you).
+
+Add: P. Nakamura (Compliance, was absent — should see decisions, especially CR-031), Y. Mbeki (Ops, was absent — should see CR-033), R. Singh (Vendor, was in the room and the decisions affect his contract).
+
+If you are unsure whether R. Singh should receive formal CCB minutes vs an extract, default to extract — send him the CR-031 and CR-033 entries directly. That's cleaner.
+
+BUILD INTO YOUR PROCESS GOING FORWARD
+
+6. Action tracker
+
+Don't rely on minutes to track actions. Minutes are the static record; the tracker is the living operational view. A simple spreadsheet or Notion page with columns (Action / Owner / Due Date / Status / Source Meeting) maintained across all CCB and other governance meetings. Before each CCB, you review the tracker. The first agenda item of the next CCB should be a thirty-second review of open actions — "Six actions open from last CCB; four on track, two overdue, here is who needs to update." That tiny ritual makes actions real instead of ceremonial.
+
+For overdue actions: chase privately first ("Quick check — vendor analysis due Tuesday, any blockers?"). Public reminders are for chronic cases or genuine escalation. The chapter's framing is that public reminders create a passive-aggressive dynamic that produces less work, not more.
+
+7. The correction posture, if anyone pushes back
+
+When the minutes go out, occasionally someone will say "I didn't say that" or "that's not what was decided." The right posture is neutral and evidence-based: "My notes from the meeting record this — what do you think should be corrected, and I'll compare against my notes and reach out to others if needed?" If your notes are wrong, correct them and reissue with a brief note ("Updated minutes — change to CR-X to reflect the actual discussion — apologies for the confusion"). What you do not do is silently revise to match someone's preference without a transparent correction note. CCB minutes are quasi-legal documents; silent revision is worse than initial error.
+
+8. Live capture next time
+
+Before next CCB, set up your note-taking with decisions and actions in separate columns from the start. Capture the decision line as it lands, the actions as they are agreed, and any necessary notes context. Resist the urge to capture discussion narrative — you can always reconstruct flavour, but only the decisions and actions need to be in the record. Live structured notes turn into clean minutes in about 15 minutes after the meeting; reconstruction takes hours and is more error-prone.
+
+Two things I am NOT sure on and want your read: (a) whether F. Demir or L. Hassan is the right owner for the R. Singh timeline follow-up — what was your read in the room? (b) whether the CR-031 security concerns are genuinely "manageable" or whether K. Olafsson wanted them logged as a formal risk with mitigation. Worth a quick check with K. Olafsson before sending — even a one-line confirmation makes the minutes more accurate.
+
+Once you have made the changes above, send me a revised version this afternoon — I will do one more read before it goes out.
+
+PC

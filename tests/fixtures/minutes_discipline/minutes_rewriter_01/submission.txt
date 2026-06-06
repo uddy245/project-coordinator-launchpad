@@ -1,0 +1,63 @@
+To: J. Park
+From: PC
+Subject: CCB minutes v2 — restructured, ready to send
+
+J,
+
+Thanks for the draft. Rather than walking you through line-by-line changes I have produced v2 below. I think you can send this directly today. I have applied the three-section format, tightened the actions, cleaned the attribution, and removed the editorialising. I have also made best-judgement calls on the TBDs based on what I think the conversation in the room was likely to have been — if I have any of these wrong, please flag.
+
+---
+
+CHANGE CONTROL BOARD — MINUTES (v2)
+
+Meeting: Change Control Board
+Date: 2026-05-27
+Attendees (present): L. Hassan (PM, Chair), F. Demir (Tech Lead), M. Rivera (Procurement), V. Bauer (CDO, Sponsor Representative), K. Olafsson (Security Lead), R. Singh (Vendor — Acme Payments)
+Attendees (absent): P. Nakamura (Compliance), Y. Mbeki (Operations)
+Minutes by: J. Park
+
+---
+
+CR-2024-031 — Add support for SEPA Instant
+
+Decision: Approved, subject to security risk being added to the programme risk register with a quarterly review cadence.
+Actions:
+- F. Demir to confirm SEPA Instant integration timeline with R. Singh by Friday 2026-06-05. Status: open.
+- F. Demir to add the SEPA Instant security risk to the programme risk register by Wednesday 2026-06-10. Status: open.
+Notes: K. Olafsson raised concerns regarding the secondary-channel exposure of the SEPA Instant flow; these have been considered manageable for the integration scope and will be tracked as a risk.
+
+CR-2024-032 — Defer multi-currency settlement to phase 2
+
+Decision: Deferred to phase 2. Formal ratification by steering committee required given budget impact.
+Actions:
+- V. Bauer to brief the CFO on the deferral and budget implications by Friday 2026-06-05. Status: open.
+- M. Rivera to confirm the multi-currency vendor's acceptance of the phase-2 timeline by Friday 2026-06-05. Status: open.
+- L. Hassan to add the deferral as a steering agenda item for the next session. Status: open.
+
+CR-2024-033 — Increase vendor support hours
+
+Decision: Approved by attendees. Vendor support hours increase from 200 to 300 monthly at an additional cost of £8k per month.
+Actions:
+- L. Hassan to issue the SOW amendment to Acme Payments by Friday 2026-06-05. Status: open.
+- R. Singh to confirm new hours effective from 2026-06-15. Status: open.
+- L. Hassan to circle back with Y. Mbeki for Ops perspective on the support-hours change by 2026-06-08. Status: open.
+
+---
+
+OTHER ITEMS
+
+P. Nakamura and Y. Mbeki to be circulated separately on CR-031 and CR-033 respectively.
+
+Next meeting: 2026-06-10, 14:00-14:45 (extended from 45 to 60 minutes given recent overrun).
+
+Distribution: L. Hassan, F. Demir, M. Rivera, V. Bauer, K. Olafsson, R. Singh, P. Nakamura, Y. Mbeki, J. Park, PC.
+
+---
+
+J — I would send the above today (with the 5-day-late caveat at the top). I have made judgement calls on the security-risk condition for CR-031, the steering-ratification for CR-032, and the start date for CR-033. If you can confirm any of these with L. Hassan or the relevant parties this morning, please update before sending; otherwise I think the v2 above is defensible and the leads can flag any corrections by reply.
+
+I have left the distribution as expanded (10 instead of 6) since CCB decisions affect their work.
+
+Happy to send on your behalf if you want me to.
+
+PC
