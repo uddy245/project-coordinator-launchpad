@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "ccb-minutes-audit-v1",
+  "expected_dimension_scores": {
+    "structural_correctness": { "score": 4, "tolerance": 1 },
+    "action_specificity": { "score": 4, "tolerance": 1 },
+    "attribution_and_register": { "score": 4, "tolerance": 1 },
+    "living_artifact_discipline": { "score": 3, "tolerance": 2 },
+    "correction_and_distribution_judgment": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 3.8,
+  "expected_pass": true,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Solid intermediate. Names the three-section format and proposes restructuring. Audits actions for owner/due/specificity and addresses both TBDs with concrete resolution moves. Catches both attribution issues (CR-031 'team agreed' vs K. Olafsson's concerns; CR-033 'everyone on board' vs absent Y. Mbeki) AND evaluative phrasing ('great discussion', 'really interesting', 'got quite heated'). Cuts the F. Demir aside with reasoning. Addresses timing with specific apology-line move, expands distribution to include absent attendees and vendor. Names correction posture. Living-artifact tolerance widened to 2 because the action-tracker discipline is named but lightly — proposes 'a single action tracker' but does not emphasise the pre-meeting review as the first agenda item or chase-privately discipline. Not hire-ready because the analysis is competent but the closing is bundled rather than tiered (immediate-now vs going-forward)."
+}

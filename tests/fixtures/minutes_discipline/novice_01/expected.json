@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "ccb-minutes-audit-v1",
+  "expected_dimension_scores": {
+    "structural_correctness": { "score": 1, "tolerance": 1 },
+    "action_specificity": { "score": 1, "tolerance": 1 },
+    "attribution_and_register": { "score": 1, "tolerance": 1 },
+    "living_artifact_discipline": { "score": 1, "tolerance": 1 },
+    "correction_and_distribution_judgment": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor submission. Endorses narrative style ('nice and gives readers a sense'), endorses the F. Demir aside as positive tone, dismisses TBDs as fine, accepts the vague 'someone will follow up' action, dismisses the 5-day delay as 'not a big deal', accepts the truncated distribution list, never addresses attribution or register issues. LinkedIn-speak in closing ('leverage clear stakeholder communication'). Every dim floors at 1 because the submission actively defends every named anti-pattern. This is the friendly-supportive coordinator who reads the document and confirms it is fine when it is not."
+}

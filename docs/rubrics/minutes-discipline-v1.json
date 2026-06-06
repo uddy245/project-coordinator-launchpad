@@ -1,0 +1,61 @@
+{
+  "rubric_id": "minutes-discipline-v1",
+  "rubric_version": "1.0.0",
+  "competency": "minutes_discipline",
+  "competency_label": "Minutes Discipline — Decisions, Actions, Attribution, and the Durable Record",
+  "lesson_ref": "minutes",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "structural_correctness",
+      "description": "Does the learner audit whether the draft separates Decisions / Actions / Notes cleanly, identify narrative prose that does not belong (the chapter's 'no The team discussed entries' rule), and propose the chapter's three-section format? Minutes are structured records, not transcripts; narrative paragraphs and rehashed discussion are the named anti-pattern.",
+      "anchors": {
+        "1": "Accepts narrative prose as fine. No three-section critique. Treats minutes as a meeting summary rather than a structured record.",
+        "3": "Identifies that decisions and actions are mixed with discussion. Names the three-section format or one of its components. Misses some embedded narrative or does not propose specific restructuring.",
+        "5": "Audits the draft against the three-section format (Decisions / Actions / Notes), identifies specific narrative paragraphs that should be cut, and proposes the structural change. References the chapter's framing of minutes-as-record-not-transcript."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "action_specificity",
+      "description": "Does the learner audit each action for the chapter's four properties — a specific verb-led description, exactly one named owner, a specific due date, and a tracked status? The chapter's contrast is explicit: 'The team will investigate' is not an action; 'Priya will investigate X and report back by May 15' is. Multi-owner actions, missing due dates, and TBDs are named failure modes.",
+      "anchors": {
+        "1": "Accepts vague actions ('the team will look into', 'someone will follow up') as fine. No owner / due-date / status audit.",
+        "3": "Flags one or two actions lacking owner or due date. Does not audit every action systematically or address the TBD entries.",
+        "5": "Audits every action against owner / due date / specificity / status. Proposes specific rewrites with named owners and concrete dates. Calls out the chapter's contrast (vague vs specific) and flags TBDs as incomplete-meeting signals to resolve before sending."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "attribution_and_register",
+      "description": "Does the learner catch loose attribution ('the team agreed' implying unanimity that did not exist; 'the sponsor approved' implying authority that was not exercised) AND evaluative or non-neutral phrasing that does not belong in formal minutes (editorialising, emotional language, character judgments)? The chapter's framing: minutes are formal documents read by people who were not in the room, sometimes months later; neutral phrasing holds up, evaluative phrasing does not.",
+      "anchors": {
+        "1": "Does not address attribution or register at all. Accepts 'the team agreed' / evaluative phrasing without flagging.",
+        "3": "Catches one of the two — flags either an attribution issue OR an evaluative-phrasing issue, but not both. May propose rewrites for one category.",
+        "5": "Catches both. Names specific instances of loose attribution (with the chapter's framing: 'the team agreed' = unanimous, etc.) and specific instances of evaluative phrasing. Proposes neutral rewrites. References that minutes are durable documents read out of context later."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "living_artifact_discipline",
+      "description": "Does the learner reference the chapter's action-tracker discipline — that minutes are not the end of the job; actions need a running tracker separate from minutes; the first item of standing meetings should be a 30-second review of last meeting's actions; chase overdue privately? Does the learner propose how unresolved questions in the draft (TBDs, ambiguous decisions) should be resolved before the minutes go out?",
+      "anchors": {
+        "1": "Treats the minutes as the deliverable, complete in themselves. No mention of action tracking, follow-up, or how to resolve the draft's TBDs.",
+        "3": "Names that actions need follow-up or that the TBDs should be resolved. Does not propose the running-tracker discipline or the pre-meeting review.",
+        "5": "Proposes a running action tracker separate from minutes, with the pre-meeting review as the first agenda item. Addresses how to resolve the draft's TBDs and ambiguous entries before sending (resolve with PM or relevant party, don't ship 'TBD'). References the chapter's chase-privately discipline."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "correction_and_distribution_judgment",
+      "description": "Does the learner address the chapter's distribution discipline — timing (same-day gold standard, 24-48h acceptable, anything later is a process warning), distribution list (right people, including absent attendees), formality scaling to meeting type (CCB minutes are formal, weekly team lighter), AND the transparent-correction posture (if someone challenges the record, neutral and evidence-based, never silent revision)?",
+      "anchors": {
+        "1": "No mention of timing, distribution, or correction posture. Accepts the 5-day-late status as fine.",
+        "3": "Raises one of the three — flags the timing problem OR the distribution OR the correction posture, but not all. May name the chapter's standard without applying it to this draft.",
+        "5": "Audits all three. Names that 5 days late is past the chapter's warning threshold and proposes how to handle (caveat-on-send, faster turnaround next time). Audits the distribution list against attendees and absent invitees. References the chapter's transparent-correction posture if anyone pushes back on the record. Connects formality to meeting type (CCB = formal, references-in-disputes-and-audits framing)."
+      },
+      "weight": 0.20
+    }
+  ]
+}

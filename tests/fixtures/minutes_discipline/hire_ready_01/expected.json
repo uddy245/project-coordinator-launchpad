@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "ccb-minutes-audit-v1",
+  "expected_dimension_scores": {
+    "structural_correctness": { "score": 5, "tolerance": 1 },
+    "action_specificity": { "score": 5, "tolerance": 1 },
+    "attribution_and_register": { "score": 5, "tolerance": 1 },
+    "living_artifact_discipline": { "score": 5, "tolerance": 1 },
+    "correction_and_distribution_judgment": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. Tiered into 'fix before sending' and 'build into process' — exactly the right shape. Three-section restructuring shown with concrete example for CR-031 including notes-context rationale. Every action audited with specific owner/date proposals; all three TBDs resolved with concrete one-Slack-message moves. Attribution analysis catches both CR-031 and CR-033 over-claims with chapter-aligned rewrites; evaluative phrasing called out across all three entries with specific instances. F. Demir aside cut with reasoning. Distribution audit expands to absent attendees AND vendor (with the smart extract-vs-full-minutes distinction for R. Singh). Living-artifact discipline covers full action tracker design, pre-meeting review as first agenda item, chase-privately framing. Correction posture is verbatim chapter framing. Live-capture move taught for next time. Closes with explicit humility on two specific uncertainties and offers to spot-check the revised version. This is what we want every learner producing."
+}

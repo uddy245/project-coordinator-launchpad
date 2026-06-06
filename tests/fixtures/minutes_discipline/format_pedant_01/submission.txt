@@ -1,0 +1,35 @@
+To: J. Park
+From: PC
+Subject: Re: CCB minutes — formatting feedback
+
+Hi J,
+
+Thanks for sharing. Specific formatting feedback below. I think with these structural improvements you will have a much tidier document.
+
+1. Section headings. Currently each CR is in its own paragraph block. I would propose using a consistent heading hierarchy:
+   - H2 for each CR
+   - H3 for sub-sections (Decision, Discussion Summary, Actions)
+   - Bold for the action owners
+
+2. Numbering and labels. The CR numbers are good. I would also add a "Status" column to the actions and use the standard verbs (open / in progress / completed).
+
+3. Layout. Move the attendees list into a structured table at the top with columns for Name / Role / Present-or-absent. Easier to scan.
+
+4. Date formatting. "Last Wednesday" should be the actual date — pick a standard (ISO 8601 is my preference: 2026-05-27).
+
+5. Distribution list at the bottom is good but should be formatted as a bulleted list rather than inline.
+
+6. The agenda items at the top could be cross-referenced to the section headings below (e.g. "Agenda item 1 → CR-2024-031").
+
+7. Add a meeting metadata block at the very top: meeting name, date, start/end time, location.
+
+8. Add a "Next meeting" line at the bottom that includes the actual date and time, not just "Same time fortnight."
+
+9. PDF / Word versioning. For CCB minutes I would recommend saving as PDF for distribution to lock the layout, plus keeping the Word source in the project SharePoint.
+
+10. I would also suggest using the standard CCB minutes template from the PMO library if there is one — saves the formatting work next time.
+
+With these structural changes the document will be in good shape to send. If you want I can mock up a template for you to use going forward. Otherwise feel free to send today once the layout is tidied up.
+
+Best,
+PC

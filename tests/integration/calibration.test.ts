@@ -90,6 +90,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/meeting-facilitation-v1.json",
     promptPath: "docs/prompts/grade-meetings-v1.md",
   },
+  {
+    competency: "minutes_discipline",
+    rubricPath: "docs/rubrics/minutes-discipline-v1.json",
+    promptPath: "docs/prompts/grade-minutes-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };
