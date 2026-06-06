@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "replatform-status-meeting-audit-v1",
+  "expected_dimension_scores": {
+    "meeting_purpose_clarity": { "score": 1, "tolerance": 1 },
+    "agenda_quality": { "score": 1, "tolerance": 1 },
+    "participant_and_preread_judgment": { "score": 1, "tolerance": 1 },
+    "facilitation_plan": { "score": 1, "tolerance": 1 },
+    "meeting_design_judgment": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Classic novice. Endorses the vendor-decision-bolted-onto-status as 'efficient' — the exact anti-pattern the chapter calls out. Defends 14 attendees ('better to have everyone in the loop'). Defends no-pre-read ('quick and pragmatic'). Generic facilitation ('run a tight meeting', 'good engagement'). Defends the status quo against any structural change ('changing it now mid-programme could be disruptive'). Endorses both V. Bauer and T. Adeyemi attendance with no analysis ('visibility is a positive thing'). No use of the chapter's three-part categorisation. Every dim floors at 1 — the submission is uniformly wrong, performing pragmatism while missing every named failure mode."
+}

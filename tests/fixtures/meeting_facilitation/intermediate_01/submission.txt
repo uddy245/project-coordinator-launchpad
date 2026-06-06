@@ -1,0 +1,19 @@
+To: L. Hassan
+From: PC
+Subject: Tomorrow's status meeting — observations and suggested adjustments
+
+L — quick read of the invite below. Five observations.
+
+1. The meeting is currently a status meeting (alignment type) but you have added a decision item to it (vendor selection). The chapter framing here is that decision meetings and alignment meetings have different participants, different durations, and different preparation. Bolting a decision onto a status meeting tends to produce either a meeting that balloons or a decision made poorly because the room is not set up to decide. Recommend: separate the vendor decision into a 30-minute decision meeting on Thursday, with only the people who need to be in the decision room (you, M. Wong, A. Singh, E. Volkov, V. Bauer if she wants to weigh in). Keep tomorrow as pure status.
+
+2. The agenda items are topic labels, not outcomes. "Status round-robin" is not an outcome. Rewrite each item as: "Confirm where each workstream is against this week's milestones (30 min, leads brief in turn, blockers raised for follow-up async)". "Vendor discussion" should be "Decide: Stripe or Adyen (in the separate Thursday decision meeting, not tomorrow)". "Q&A" and "AOB" do not need to be standing items; if questions come up, they come up.
+
+3. Invitees and pre-read. 14 attendees for a status meeting is too many. R. Silva has multitasked through three meetings and F. Chen has been declining — both signals that the meeting is not serving them. Recommend: trim to delivery leads who actually need cross-workstream awareness; let others receive minutes async. V. Bauer attending as observer is fine for visibility but I would not invite her to the vendor decision unless she wants to be in the room — sponsors in decision meetings usually move the meeting toward consultation rather than decision. T. Adeyemi attendance is your call but adds little. No pre-read has been sent; recommend reinstating the one-page-per-workstream pre-read 24 hours ahead. Without it, the first 15-20 minutes of every meeting becomes briefing.
+
+4. Facilitation plan for tomorrow. Start on time, state the goal in the first minute ("we are here to share status, surface cross-workstream blockers; the vendor decision is moved to a separate Thursday meeting"), redirect any drift into the vendor topic ("Thursday — let's hold that"), close in the last two minutes with the cross-workstream actions and owners. Respect the 30-minute envelope rather than the 60.
+
+5. Should it happen as designed? My recommendation is no. Specifically: shorten tomorrow's status to 30 minutes (the original cadence), reinstate the pre-read, trim attendance to delivery leads, split the vendor decision into a separate Thursday meeting. This is the design change I would propose if I were you — frame it to the team as "we're getting back to the original cadence and pulling the vendor call into a focused session."
+
+Happy to draft the Thursday vendor-decision invite if useful.
+
+PC

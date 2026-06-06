@@ -85,6 +85,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/schedule-literacy-v1.json",
     promptPath: "docs/prompts/grade-schedule-v1.md",
   },
+  {
+    competency: "meeting_facilitation",
+    rubricPath: "docs/rubrics/meeting-facilitation-v1.json",
+    promptPath: "docs/prompts/grade-meetings-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

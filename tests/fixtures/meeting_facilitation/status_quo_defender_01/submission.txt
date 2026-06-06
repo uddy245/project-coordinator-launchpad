@@ -1,0 +1,23 @@
+To: L. Hassan
+From: PC
+Subject: Re: tomorrow's status — quick observations
+
+L,
+
+I had a careful look at the invite. The meeting as set up reflects the cadence the team is used to and I think there are good reasons not to disturb that mid-programme.
+
+On the vendor decision being added: the chapter on meetings I have been reading suggests that combining decision and status content is suboptimal in theory, but in practice given that you have these leads in the room only once a week and the decision is time-sensitive, I think adding it is reasonable. The alternative — scheduling a separate meeting this week — would burn another hour of senior calendar time and the team is already feeling meeting-heavy. Sometimes the textbook move is not the right move.
+
+On the agenda: it is brief, which I think is a feature not a bug. The team knows the rhythm. Status round-robin is the established pattern and Q&A / AOB give space for genuinely flexible discussion. I would not over-engineer it with outcome statements and time budgets — that level of structure tends to make meetings more rigid without making them more productive.
+
+On invitees: 14 is at the upper end but every workstream lead has a legitimate reason to be in the room for cross-workstream awareness. R. Silva multitasking is a his-engagement issue, not a meeting-design issue; the answer there is a private conversation with him, not changing the meeting. V. Bauer attending occasionally is a positive — sponsor visibility builds trust. T. Adeyemi is your manager and attending is a professional courtesy worth maintaining.
+
+On pre-reads: ideally yes, but in practice the team has settled into a rhythm where the round-robin functions as the briefing. Reinstating a pre-read requirement now would be additional work for already-stretched leads and I am not sure the marginal benefit justifies the friction.
+
+For facilitation tomorrow, I would just suggest you keep the conversation moving and watch the clock. The team knows what to do.
+
+On the broader question of whether the meeting should change — my view is no, not now. We are four months in, the cadence works, attendance variance is within normal limits for a programme of this size, and changing the structure mid-stream risks more than it gains. If something is genuinely wrong it will surface and we can revisit. Until then, hold the line.
+
+Happy to discuss any of the above if you want my thinking in more depth.
+
+PC

@@ -1,0 +1,62 @@
+You are PC on an eight-month e-commerce platform replatform programme for a national grocery retailer. Sponsor is the Chief Digital Officer. Go-live target: end of Q3. You are at the end of month four.
+
+Your PM (L. Hassan) sent you the meeting invite below this morning with a Slack note: "Tomorrow's weekly status meeting — give it a look this afternoon. I'm going to be in back-to-backs all day so any quick observations welcome. Also: we need to make a call on the integration vendor (Stripe vs Adyen) and I figure we have everyone in the room anyway, so I am going to add that to the agenda. Should save us a separate meeting."
+
+The invite:
+
+---
+
+MEETING: Weekly Status — Replatform Programme
+WHEN: Tomorrow, 10:00–11:00 (60 minutes)
+LOCATION: Boardroom 4 + Zoom
+ORGANISER: L. Hassan
+
+AGENDA:
+1. Status round-robin
+2. Integration vendor discussion
+3. Q&A
+4. AOB
+
+INVITEES (14 total):
+- L. Hassan (PM)
+- PC (you)
+- M. Wong (Tech Lead)
+- S. Patel (Front-end Lead)
+- D. Rivera (Back-end Lead)
+- A. Singh (Data/Integrations Lead)
+- I. Hartman (QA Lead)
+- F. Chen (UX Lead)
+- R. Silva (DevOps Lead)
+- K. Olafsson (Security Lead)
+- Y. Mbeki (Operations Lead)
+- T. Adeyemi (Programme Director, L. Hassan's manager)
+- V. Bauer (CDO — sponsor, marked optional)
+- E. Volkov (Procurement, marked optional — added for the vendor decision)
+
+PRE-READ: None attached.
+
+---
+
+Background you have observed in the last four weeks:
+
+- The weekly status has been running 60–80 minutes for the last six weeks. Originally scheduled for 30. The round-robin has expanded as new workstream leads were added.
+- The pattern over the last three sessions: 35 minutes of round-robin status, 10 minutes of one or two side discussions, 5 minutes of Q&A that mostly recaps earlier points, no AOB items raised in the room.
+- Attendance has been drifting. S. Patel attended one of the last four. F. Chen has been declining recently with no comment. R. Silva (DevOps) attends but has visibly multitasked through the last three.
+- The integration vendor decision (Stripe vs Adyen) has been pending for three weeks. M. Wong and A. Singh have done the technical evaluation. E. Volkov has done procurement diligence. L. Hassan owns the call but has not yet made it. The decision is genuinely time-sensitive — procurement needs four weeks to onboard whichever vendor wins, and the integration sprint starts in five weeks.
+- V. Bauer (CDO / sponsor) attended one status meeting two months ago. Has not attended since. Has not asked to attend tomorrow but L. Hassan invited her as "good visibility ahead of the vendor decision."
+- T. Adeyemi (programme director) attends every other week. Adds little, but L. Hassan flags every meeting to her by default.
+- No pre-read has been sent for the weekly status in the last two months. The original cadence was a one-page status one-pager from each workstream lead 24 hours before the meeting; that practice lapsed.
+
+Your PM wants a review note — 500-800 words — that:
+
+1. Categorises the meeting by its three-part purpose type (decision / alignment / working) and identifies any type-conflation in the setup. Apply the chapter's framing: every useful meeting has one of three purposes and you should know which one you are in.
+
+2. Audits the agenda item-by-item. For each item, name whether it has an outcome, a time budget, and an owner. Propose specific rewrites where it does not. Reference the chapter's contrast (outcome-bearing agenda item vs topic label).
+
+3. Audits the invitee list and the pre-read situation. Who is on the list who probably should not be? Who is missing? Is there a pre-read; if not, what should one cover and how far in advance? Be specific.
+
+4. Proposes a facilitation plan for tomorrow's meeting using the chapter's specific moves (start on time, state the goal in the first minute, redirect drift, surface dissent, close with summary, respect the time budget). Tie each move to a specific risk in this meeting's setup.
+
+5. Comments on whether the meeting should happen as designed at all. Given attendance drift, the ballooned slot, the lapsed pre-read practice, and the genuinely time-sensitive vendor decision being bolted onto status — should the structure change? Propose a specific restructure if so, framed as a design change to land with L. Hassan, not as a critique.
+
+Do not rewrite the invite, agenda, or pre-read in full. Audit the setup. L. Hassan asked for observations before tomorrow — that is the deliverable.

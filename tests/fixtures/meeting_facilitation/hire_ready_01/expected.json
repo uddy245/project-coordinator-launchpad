@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "replatform-status-meeting-audit-v1",
+  "expected_dimension_scores": {
+    "meeting_purpose_clarity": { "score": 5, "tolerance": 1 },
+    "agenda_quality": { "score": 5, "tolerance": 1 },
+    "participant_and_preread_judgment": { "score": 5, "tolerance": 1 },
+    "facilitation_plan": { "score": 5, "tolerance": 1 },
+    "meeting_design_judgment": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. Names the alignment/decision type-conflation as the central problem with full chapter framing. Audits every agenda item against outcome / time / owner with specific rewrites — including dropping standing Q&A and AOB with explicit reasoning. Invitee analysis tiers attendees into KEEP / OPTIONAL / REMOVE with named reasons (S. Patel and F. Chen attendance drift, V. Bauer sponsor-in-decision-room caution, T. Adeyemi default-invite question). Pre-read analysis covers both the lapsed practice and the separate vendor-decision pre-read (48h, specific content). Facilitation plan names five of the chapter's six moves — start-on-time, goal-statement, redirect-drift, surface-dissent, closing-summary, respect-time-budget — and ties each to a specific risk in this setup (Silva multitasking → surface dissent; vendor topic → redirect). Structural redesign is tiered into immediate (tomorrow), this-week, and going-forward — exactly the right cadence. Closes with explicit humility about V. Bauer initiative and Thursday feasibility. This is what every learner should produce."
+}
