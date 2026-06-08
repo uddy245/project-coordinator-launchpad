@@ -95,6 +95,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/minutes-discipline-v1.json",
     promptPath: "docs/prompts/grade-minutes-v1.md",
   },
+  {
+    competency: "status_report_craft",
+    rubricPath: "docs/rubrics/status-report-craft-v1.json",
+    promptPath: "docs/prompts/grade-status-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

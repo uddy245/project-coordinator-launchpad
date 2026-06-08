@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "workforce-mgmt-status-report-audit-v1",
+  "expected_dimension_scores": {
+    "audience_segmentation": { "score": 4, "tolerance": 1 },
+    "structure_and_signal": { "score": 4, "tolerance": 1 },
+    "narrative_voice_discipline": { "score": 4, "tolerance": 1 },
+    "rag_courage_and_calibration": { "score": 4, "tolerance": 1 },
+    "preparation_and_workflow_judgment": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.0,
+  "expected_pass": true,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Solid intermediate, close to the hire-ready threshold. Names the three-audience framing and the misfit. Proposes a specific headline sentence and identifies the buried-lede failure. Catches three of four voice failures (euphemism, false precision, generic risk) with specific rewrites — partial credit on color washing because it's implicit in the RAG critique rather than named as a voice failure separately. Audits every workstream RAG against operational evidence with specific re-ratings. Names the amber-conversation move with PM. Workflow proposal is specific and chapter-aligned with the Monday-template / Thursday-send rhythm. Not yet hire-ready because: (a) the audience packaging move is named but not designed — does not propose what the COO version specifically contains, (b) the RAG conversation is framed competently but does not address the chapter's broader 'twelve weeks of green is a reported-not-real project' framing as a pattern S. should reflect on."
+}

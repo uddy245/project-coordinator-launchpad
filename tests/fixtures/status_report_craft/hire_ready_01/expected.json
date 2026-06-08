@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "workforce-mgmt-status-report-audit-v1",
+  "expected_dimension_scores": {
+    "audience_segmentation": { "score": 5, "tolerance": 1 },
+    "structure_and_signal": { "score": 5, "tolerance": 1 },
+    "narrative_voice_discipline": { "score": 5, "tolerance": 1 },
+    "rag_courage_and_calibration": { "score": 5, "tolerance": 1 },
+    "preparation_and_workflow_judgment": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. Names all three audiences and proposes a specific packaging move per audience including a verbatim five-line sponsor summary. Identifies the buried-lede failure with a concrete proposed headline sentence. Catches all four named voice failures (euphemism with chapter-aligned rewrites, false precision with the 50%-vs-67% specific instance, generic risk explicitly named as the chapter's anti-pattern, color washing connected to T. Adeyemi's corridor comment as the diagnostic). Audits RAG workstream-by-workstream against operational evidence with specific re-ratings including the workstream 2 GREEN→RED move. Frames the amber-conversation move with the chapter's 'what's your read' script. Workflow critique connects this week's product to the workflow that produced it AND proposes a specific weekend-recovery option AND the chapter's standard rhythm going forward. Closes with explicit humility on two specific uncertainties. References T. Adeyemi's 'I'm not sure what they're really telling us' as the diagnostic — the chapter's color-washing-trains-readers-to-not-believe pattern in action. This is what every learner should produce."
+}

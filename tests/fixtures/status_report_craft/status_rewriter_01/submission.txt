@@ -1,0 +1,58 @@
+To: S. Park
+From: PC
+Subject: Status report v2 — ready to send
+
+S — rather than walking through the issues line-by-line I have rewritten the report. v2 below. I think you can send this directly this afternoon. I have made the structural changes, restated the RAG honestly, and produced a five-line sponsor summary at the top. Where I had to fill gaps based on what I know operationally, I have flagged in italics; if any of my calls are wrong please correct before sending.
+
+---
+
+WEEKLY STATUS REPORT v2 — WORKFORCE MANAGEMENT MODERNISATION
+
+Reporting period: week of 27 May - 2 June. Author: S. Park, PM (revised by PC).
+
+HEADLINE (for COO and steering)
+
+Programme amber. Workstream 2 (vendor integration) at risk of slipping Q4 go-live following three missed vendor milestones and a scope-vs-design issue surfaced last week. Workstream 6 (data migration) operating with an unfilled vacancy (three weeks). Decisions needed at Monday steering: vendor scope authority; workstream 6 backfill approval; reporting-layer scope clarification.
+
+OVERALL RAG
+
+AMBER (downgraded from green this week). Workstream 2 going RED.
+
+WORKSTREAM STATUS
+
+WS-1 Core Platform Build — GREEN. Sprint week 7 phase 2 closed Wednesday; PO accepted all stories; next sprint Monday.
+
+WS-2 Time-and-Attendance Integration — RED (downgraded from green). Vendor has missed three milestones in three months. The vendor account manager confirmed last week that the originally-promised integration design is not technically achievable as scoped. Underlying progress closer to 50% than the reported 67%. Critical path workstream for Q4 go-live.
+
+WS-3 Mobile Rollout — AMBER (downgraded from green). Three sites onboarded as planned; the fourth-site rollout was declined by the regional operations manager citing training-package concerns. Change-management red flag.
+
+WS-4 Reporting Layer — AMBER (downgraded from green). Team has built four additional reports outside the signed-off scope without routing through change control. Undocumented scope creep being absorbed silently.
+
+WS-5 Change Management — GREEN. Training materials finalised; all-staff comms on track for mid-July.
+
+WS-6 Data Migration — AMBER. Key team member's "extended leave" is a three-week-old vacancy; no backfill yet. Migration test runs that were due last week are unscheduled.
+
+KEY DECISIONS / ASKS AT MONDAY STEERING
+
+1. Vendor scope authority on workstream 2 — proceed with constrained-scope integration vs renegotiate. Owner: V. Bauer.
+2. Workstream 6 backfill approval (FTE or contractor). Owner: V. Bauer.
+3. Reporting-layer scope clarification — formal CR on the four additional reports. Owner: PMO Lead.
+
+LIVE RISKS
+
+1. Workstream 2 vendor delivery — material risk to Q4 go-live.
+2. Workstream 6 vacancy — migration test runs slipping unscheduled.
+3. Workstream 4 undocumented scope — governance issue surfacing in audit.
+4. Workstream 3 change management — site refusals likely to recur if training is not fixed.
+
+UPCOMING
+
+Monday: steering committee. Wednesday: WS-1 sprint review. Thursday: vendor recovery meeting (proposed).
+
+---
+
+S — I think v2 above is sendable this afternoon. I have made best-judgement calls on the workstream 2 → RED move, the vendor recovery meeting, and the language around the "vacancy" framing for workstream 6. If any of those are wrong please correct before sending — otherwise I think this is defensible and the steering will appreciate the directness on Monday.
+
+If you want me to send it on your behalf I am happy to. Otherwise just forward when ready.
+
+PC

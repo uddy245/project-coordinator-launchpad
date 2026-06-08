@@ -1,0 +1,61 @@
+{
+  "rubric_id": "status-report-craft-v1",
+  "rubric_version": "1.0.0",
+  "competency": "status_report_craft",
+  "competency_label": "Status Report Craft — Audience, Structure, Voice, and the Courage to Go Amber",
+  "lesson_ref": "status-reports",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "audience_segmentation",
+      "description": "Does the learner identify whether the report is trying to serve one audience or several at once, and recognise the chapter's named anti-pattern of one-document-for-all-three audiences (delivery team / PM-and-stakeholders / sponsor-and-steering)? The chapter is explicit that operational detail overwhelms the sponsor, sponsor-level summary is too thin for the team, and the middle register fits neither end. The fix is one body of source material packaged three ways, not three documents written from scratch.",
+      "anchors": {
+        "1": "Treats 'the status report' as one document for one undifferentiated audience. No mention of the three-audience framing or the misfit.",
+        "3": "Names the three-audience framing or identifies that the current report misfits one audience. Does not propose the specific packaging move (one source, three cuts).",
+        "5": "Names all three audiences from the chapter, identifies which ones the current report is misfit for, and proposes the specific packaging move (one body of source material packaged three ways). Recommends what each audience's version should contain."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "structure_and_signal",
+      "description": "Does the learner audit the report against the six-section structure (Headline / Overall RAG / Workstream status / Key decisions and asks / Risks and issues / Upcoming) and catch buried-lede failures? The chapter is explicit that the order matters because readers scan from the top — the headline goes first. A report whose key signal is on page two after four paragraphs of context fails this dim.",
+      "anchors": {
+        "1": "No structural audit. Accepts the report's current ordering as fine.",
+        "3": "Names the six-section structure or one of its components. Catches one structural failure (buried lede OR missing section) without systematic audit.",
+        "5": "Audits against the full six-section structure. Identifies missing sections and out-of-order sections. Names the buried-lede failure where present and proposes a specific headline sentence. References the chapter's 'order matters because readers scan from the top' framing."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "narrative_voice_discipline",
+      "description": "Does the learner catch the named voice failures — euphemism ('navigating challenges'), false precision ('67% complete' rolled up from soft estimates), generic risks ('resource availability remains a risk'), and color washing (12 weeks of green) — and propose specific rewrites? The chapter's test for every sentence is: does this tell a reader something specific they did not already know?",
+      "anchors": {
+        "1": "Accepts euphemism, false precision, and generic risks as fine. No voice critique.",
+        "3": "Catches one or two voice failures with specific instances. Does not address all four named failures or propose systematic rewrites.",
+        "5": "Catches at least three of the four named voice failures (euphemism, false precision, generic risk, color washing) with specific quoted instances and proposes neutral, specific rewrites. References the 'does this tell a reader something specific' test."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "rag_courage_and_calibration",
+      "description": "Does the learner audit the RAG rating against the actual operational state, identify the color-washing pattern (persistent green when amber signals are visible), and address the chapter's 'courage to go amber' framing? Does the learner propose how to have the amber-conversation with the PM constructively ('I've put it at amber this week because of X — what's your read?')?",
+      "anchors": {
+        "1": "Accepts the RAG rating at face value. No audit against operational state. No mention of color washing or amber courage.",
+        "3": "Notes one workstream where the RAG looks soft. Does not connect to the broader color-washing pattern or propose the amber-conversation move.",
+        "5": "Audits the RAG systematically (overall and per-workstream) against operational evidence in the scenario. Names the persistent-green-as-color-washing pattern where present. Proposes the amber-conversation script with the PM and frames early-amber as the right move."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "preparation_and_workflow_judgment",
+      "description": "Does the learner address the report's production workflow — when inputs were gathered, how they were cross-checked against schedule / RAID / action tracker, whether the PM has reviewed before send, when the report is sent (Thursday is the chapter's anchor; Friday afternoon is late) — and propose specific moves for next week's report?",
+      "anchors": {
+        "1": "No workflow critique. Accepts the report as a finished artefact without questioning how it was produced.",
+        "3": "Raises one workflow question (timing OR PM sign-off OR input cross-checking) but does not propose a specific next-week workflow.",
+        "5": "Audits the production workflow against the chapter's Monday-template / Tuesday-inputs / Wednesday-consolidate-and-draft / Thursday-review-and-send rhythm. Catches the specific workflow failures in this report's production (late, no cross-check, etc.). Proposes a specific workflow for next week with named steps and timings."
+      },
+      "weight": 0.20
+    }
+  ]
+}

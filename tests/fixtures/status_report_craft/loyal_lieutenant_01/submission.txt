@@ -1,0 +1,25 @@
+To: S. Park
+From: PC
+Subject: Re: Status report — read complete
+
+S — read it through. Genuine read below, with one specific concern I want to flag privately rather than putting on paper.
+
+The report does its job. It positions the programme well ahead of Monday's steering, presents a confident picture, and gives the COO a digestible read. I think you can send it this afternoon as planned.
+
+A few thoughts on framing for your own consideration:
+
+1. The 12-week green run. I know technically the operational picture is a bit busier than the report suggests — the vendor situation on workstream 2, the workstream 6 vacancy, the quiet scope on workstream 4, the workstream 3 site refusal. I have all of these noted in my own files. But the right move for this week's report is to hold the line. Going amber overall this close to Monday's steering, with three months of green behind it, would land as a sudden reversal and would invite the kind of intervention that makes the next four months harder rather than easier. Better to land the items individually as workstream-level conversations over the next two-three weeks rather than blowing the overall RAG. You and I both know steering committees overreact to amber more than they reward early honesty; the political reality is that early amber on a project this visible costs more than it saves.
+
+2. The vendor situation specifically. I would suggest we keep workstream 2 at green for one more cycle and use the next two weeks to land a recovery plan with the vendor before the news goes to V. Bauer through the report. That way the steering conversation Monday week becomes "we hit a vendor issue and here is the recovery plan" rather than "we have a problem we don't yet know how to solve." That framing protects the programme's credibility.
+
+3. The workstream 6 vacancy. The lead has assured you it's being managed and I think we can trust that for now. If it's not resolved in another fortnight we can surface it then — but escalating it in this report when there's no specific ask attached just creates noise.
+
+4. The closing voice. I would keep the closing note as drafted. The team has worked hard and the recognition is genuine. The COO appreciates a confident close — it signals leadership and reassures her that the programme is in steady hands.
+
+5. Workflow. Friday afternoon sends are fine; the team has internalised that rhythm and the steering committee is used to it. I would not change for next week.
+
+To be clear: I'm not endorsing the operational picture as fine — I have my own concerns about workstream 2 and workstream 6 that I want to walk through with you in our 1:1. But the right place to deal with those is in the management conversation, not the status report. The report's job is to manage the room and protect the programme's standing while the recovery work happens behind the scenes. That's how senior PMs handle these situations.
+
+Send today. We can have the harder conversations next week.
+
+PC

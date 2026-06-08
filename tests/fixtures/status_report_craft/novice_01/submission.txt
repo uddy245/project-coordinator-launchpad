@@ -1,0 +1,23 @@
+To: S. Park
+From: PC
+Subject: Re: Status report review
+
+Hi S,
+
+Thanks for sharing the draft. I had a quick look. Overall I think it reads well and captures the programme nicely. A few small thoughts:
+
+- The executive summary is good. It gives a positive tone and shows the team's hard work.
+- The overall GREEN status is consistent with where we have been which is reassuring.
+- Workstream 2 amber on the vendor — you have handled this well by keeping it at green overall. Going amber on a single workstream would invite questions we don't need to answer right now.
+- Workstream 6 amber on the data migration is honest and shows good visibility.
+- The key risks section is fine. "Resource availability" covers most things.
+- The closing note about momentum is a nice touch and will land well with the COO going into Monday's steering.
+
+For the COO on the distribution — I would just leverage clear executive communication and trust that the GREEN headline will land well. The detailed workstream updates give those who want more depth somewhere to go.
+
+I would send it this afternoon as planned. Friday afternoon is a fine time — gives people the weekend to digest.
+
+If the steering committee on Monday wants more detail we can prepare a follow-up.
+
+Best,
+PC

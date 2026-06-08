@@ -1,0 +1,80 @@
+To: S. Park
+From: PC
+Subject: Status report audit — before noon as requested
+
+S — careful read of the draft. The headline finding is that this report is not ready to go Friday afternoon as drafted, and given the COO is on the distribution and Monday's steering is the first formal sponsor engagement in three months, the consequence of sending it as-is is larger than usual. Five sections below, ordered by what I think you should decide before sending.
+
+1. AUDIENCE — THE REPORT IS TRYING TO BE THREE REPORTS AND IS NONE OF THEM
+
+The current document misfits all three of the audiences the chapter names:
+
+- For the delivery team (12 people on distribution): the report is too narrative and too thin on operational detail. They need to know what changed this week, what is blocked, what is coming next — most of which is absent or buried.
+- For the workstream leads and immediate PM-extended team (6+4): the report is the right length but the wrong content. No decisions, no asks, no risks that they need to act on this week.
+- For the COO and steering audience (V. Bauer, T. Adeyemi, plus the Finance/HR/IT/Legal partners): the report is too long, the lede is buried under reassurance, and there is no honest signal about programme state. T. Adeyemi's corridor comment ("your status reports are nice but I'm not sure what they're really telling us") is the diagnostic.
+
+The chapter framing is one body of source material, three packagings. What I would propose for this week:
+
+- A one-page tactical report for the PM and workstream-lead distribution (restructured per section 2 below).
+- A five-line sponsor summary derived from the tactical report, going specifically to V. Bauer and Steering, NOT the full 4-page document. Something like:
+  "Programme amber. Workstream 2 (vendor integration) at risk of slipping Q4 go-live — three vendor milestones missed, scope-vs-design issue surfaced last week, recommended action is a scope conversation at Monday steering. Workstream 6 (data migration) operating with an unfilled vacancy three weeks running; backfill decision needed. Three other workstreams green-to-amber on specific items detailed in the tactical report. Decisions requested at Monday steering: vendor scope authority, workstream 6 backfill, reporting-layer scope clarification. PM: S. Park."
+- A separate two-paragraph team note from you to the delivery team distribution covering this week's operational detail (sprint review outcome, next sprint plan, the workstream 6 capacity question). They do not need to read the tactical or sponsor versions.
+
+2. STRUCTURE — THE LEDE IS ON PAGE THREE
+
+The chapter's six-section order is Headline / Overall RAG / Workstream status / Decisions and asks / Risks and issues / Upcoming. The current report opens with a half-page reassurance paragraph that does not name the state, then states GREEN without rationale, then buries the actual situation in the workstream details. A senior reader who reads only the first paragraph leaves with a confidently wrong picture.
+
+Proposed headline sentence: "Programme amber overall. Workstream 2 (vendor integration) at risk of slipping the Q4 go-live; workstream 6 (data migration) at reduced capacity; three other workstreams have specific items requiring attention. Decisions needed at Monday steering."
+
+That goes first. The rest of the structure follows the chapter format.
+
+Two specific structural omissions:
+
+- "Key decisions" section currently lists internal team activity (backlog refinement, etc.). It should list decisions you need from the readers. For Monday steering: (a) vendor scope authority — proceed with constrained-scope integration vs renegotiate, (b) workstream 6 backfill approval (FTE or contractor), (c) reporting-layer scope clarification (the four undisclosed reports). These are real asks.
+- "Risks" section has no live risks. "Resource availability remains a risk on the programme as ever" is the chapter's generic-risk anti-pattern. Replace with the live ones: vendor delivery (workstream 2), unfilled vacancy (workstream 6), undocumented scope creep (workstream 4), and the change-management red flag (workstream 3 site refusal).
+
+3. NARRATIVE VOICE — EUPHEMISM, FALSE PRECISION, GENERIC RISK, COLOR WASHING
+
+All four named voice failures appear:
+
+Euphemism. "Navigating some challenges with vendor delivery" → "Vendor has missed three milestones in three months; the integration design originally promised is not technically achievable as scoped." "The fourth site was deferred at the request of the regional operations manager but this is not expected to impact the overall plan" → "The regional operations manager declined the rollout citing training-package concerns; this is a change-management signal."
+
+False precision. "Making approximately 67% progress" — that number is rolled up from M. Reyes's optimistic estimate; my walk-through of underlying sub-tasks puts it closer to 50%. The chapter's framing: false precision is read by experienced readers as distrust-inducing. Either drop the precise number ("approximately half complete based on sub-task analysis") or remove progress percentages entirely until binary tracking can be substituted.
+
+Generic risk. "Resource availability remains a risk on the programme as ever" — this is the chapter's exact named pattern. Replace with the four live risks I listed under section 2.
+
+Color washing. Twelve consecutive weeks of GREEN with the operational picture I have is the most damaging failure in the draft. The chapter is explicit: a status report that is green for twelve weeks in a row is not a well-run project; it is a badly reported one. The cumulative effect is that T. Adeyemi already does not believe what the report is telling him. The COO has stopped asking questions. The corridor comment is the signal that the report has lost its function.
+
+Voice across the rest of the document needs cuts too. "Outstanding dedication", "excellent week", "momentum is strong", "the journey to successful Q4 go-live" — none of these tell a reader something specific they did not already know, which is the chapter's test. Cut the closing note entirely; status reports are not thank-you emails.
+
+4. RAG — THE COURAGE-TO-GO-AMBER MOVE
+
+By workstream:
+
+- Workstream 1 (Core Platform Build): GREEN is plausibly defensible — no red flags in my operational view. Keep.
+- Workstream 2 (Time-and-Attendance Integration): currently GREEN; should be RED. Three vendor milestones missed in three months plus a scope-vs-design issue surfaced last week is not amber, it is red — the workstream is not on track to meet its objectives with the current plan and a material change is needed (per the chapter's red definition).
+- Workstream 3 (Mobile Rollout): currently GREEN; should be AMBER. The site refusal is a change-management red flag that the report currently characterises as a scheduling preference. Not unrecoverable, but not green either.
+- Workstream 4 (Reporting Layer): currently GREEN; should be AMBER. The undocumented scope creep (four additional reports built outside change control) is a governance issue that will surface, and the workstream is taking on hidden scope that is not in the schedule or budget.
+- Workstream 5 (Change Management): GREEN is probably right. No flags in my view.
+- Workstream 6 (Data Migration): currently AMBER; should remain AMBER but the rationale needs correcting. The "extended leave" is a three-week-old vacancy; the migration test runs that were due last week are unscheduled. The amber is right but understated.
+
+Overall RAG: should be AMBER given workstream 2's red and the cumulative amber across 3, 4, 6. Possibly RED if the workstream 2 vendor situation is as serious as the account manager's comment suggests — that probably needs your read.
+
+For the RAG conversation with you: "S — I've worked through the workstream-by-workstream picture and I think this needs to be amber overall, with workstream 2 going red. The vendor situation alone is a red on its own definition, and the twelve-week-green pattern is part of why T. Adeyemi has stopped finding the report useful. What's your read?" Direct, not corrective. You may have context I don't on the vendor relationship that changes the read.
+
+5. WORKFLOW — THIS IS NOT A NORMAL WEEK'S PRODUCT AND THAT IS THE UNDERLYING ISSUE
+
+The chapter's preparation rhythm is Monday template → Tuesday inputs from leads → Wednesday consolidate-and-draft → Thursday review → Thursday afternoon send. This week's draft is a Thursday-night flight write-up with no lead input and a Friday-afternoon send. The artefact reflects the workflow that produced it.
+
+For this week specifically: I would recommend NOT sending Friday afternoon. Hold the send until Monday morning before steering. Between now (noon Friday) and 8am Monday, here is what I think makes the most difference:
+
+- I send the three-sentence template to the six workstream leads now, due end of day Friday. Even on a Friday, lead inputs will be more honest than a flight write-up.
+- I draft a tactical report Sunday afternoon against the inputs and the operational picture I have. You review Sunday evening or first thing Monday.
+- I produce a five-line sponsor summary derived from that. The sponsor version goes to V. Bauer and steering Monday morning 8am; the tactical version goes to leads at the same time; the team-facing note goes from you to the delivery team Monday 9am.
+
+If you do not want to do that, the alternative is sending the current draft this afternoon and walking into Monday's steering with a report the COO already does not trust. I think that is worse, but the call is yours.
+
+For next week and going forward: I propose the chapter's standard rhythm — Monday template (I send), Tuesday inputs due, Wednesday I consolidate and draft, Thursday morning you review, Thursday afternoon send. The chapter line is that a weekly status report should take two to three hours of your time, not a Thursday-night flight. The bottleneck the rhythm protects against is information-gathering under time pressure, which is what produced this week's draft.
+
+Two things I am not certain on and want your read: (a) whether the vendor account manager's comment about scope-vs-design is something you have already begun to address (in which case my workstream 2 red might be over-stated); (b) whether the COO has been briefed informally on the workstream 6 vacancy outside the formal status report (in which case it should be in the report not as new information but as a status update on the existing conversation).
+
+PC
