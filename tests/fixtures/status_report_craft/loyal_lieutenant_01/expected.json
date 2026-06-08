@@ -1,0 +1,15 @@
+{
+  "fixture_id": "loyal_lieutenant_01",
+  "scenario_ref": "workforce-mgmt-status-report-audit-v1",
+  "expected_dimension_scores": {
+    "audience_segmentation": { "score": 1, "tolerance": 1 },
+    "structure_and_signal": { "score": 1, "tolerance": 1 },
+    "narrative_voice_discipline": { "score": 1, "tolerance": 1 },
+    "rag_courage_and_calibration": { "score": 1, "tolerance": 1 },
+    "preparation_and_workflow_judgment": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "LOYAL-LIEUTENANT FAILURE MODE — explicitly endorses color washing as PM-protection strategy. The learner ACKNOWLEDGES every operational concern (workstream 2 vendor situation, workstream 6 vacancy, workstream 4 scope creep, workstream 3 site refusal) but argues each should be hidden from the report and managed 'behind the scenes'. Explicitly recommends keeping workstream 2 green for one more cycle to control the narrative ('that way the steering conversation becomes recovery plan rather than problem we don't know how to solve'). The chapter's exact failure mode in articulated form — the learner has chosen to optimise for the PM's political position over the report's truth-telling function. The color-washing-defender cap fires hard on rag_courage_and_calibration (1). All other dims floor at 1 because the submission actively defends every named anti-pattern. The opening 'genuine read with one specific concern I want to flag privately' positions the whole submission as sophisticated PM-protection — distinctively worse than the novice who simply does not see the issues. This tests whether the grader catches strategic-defence-of-color-washing as the failure it is, not as the savviness it performs."
+}

@@ -1,0 +1,105 @@
+You are PC on a ten-month workforce-management modernisation programme for a national logistics company. Sponsor is the COO. Go-live target: end of Q4. You are at the end of month seven.
+
+Your PM (S. Park) sent you the weekly status report draft below this morning with a Slack note: "Last-minute thing — I drafted Friday's status report on my flight last night because I knew this week was going to be tight. Could you give it a read before noon? I want to send it to the distribution list this afternoon. The COO is on the distribution and the steering committee is next Monday so this one matters a bit more than usual."
+
+The report is below.
+
+---
+
+WEEKLY STATUS REPORT — WORKFORCE MANAGEMENT MODERNISATION
+
+Reporting period: week of 27 May - 2 June
+Author: S. Park, PM
+Date sent: Friday afternoon
+Distribution: delivery team (12), workstream leads (6), PM extended team (4), V. Bauer (COO/sponsor), T. Adeyemi (Programme Director), Finance Business Partner, HR Business Partner, IT Director, Legal Partner.
+
+---
+
+EXECUTIVE SUMMARY
+
+This week has been another solid week for the workforce-management modernisation programme. The team continues to make excellent progress across all workstreams and we are tracking towards our Q4 go-live target with confidence. As ever, the team's dedication and commitment have been outstanding and I want to thank everyone for their continued hard work.
+
+We have been navigating some challenges with vendor delivery on the time-and-attendance integration workstream, but the team is working hard to overcome these and I am confident we will find a path forward. The mobile rollout workstream continues to deliver well against plan. The reporting layer workstream is making strong progress.
+
+We continue to engage closely with stakeholders across the business and to ensure that the programme is aligned with strategic priorities. Stakeholder engagement remains strong.
+
+OVERALL STATUS
+
+The programme is GREEN this week, consistent with our reporting over the last quarter. We have been GREEN for twelve consecutive weeks.
+
+DETAILED WORKSTREAM UPDATE
+
+Workstream 1: Core Platform Build
+RAG: GREEN
+The core platform build continues to progress well. The team has delivered against the sprint plan for week 7 of phase 2. Velocity has been consistent. Sprint review on Wednesday went well and the product owner accepted all stories. The next sprint kicks off Monday. We continue to refine the backlog for upcoming sprints in collaboration with the business. The team's collaboration with the vendor product team has been positive.
+
+Workstream 2: Time-and-Attendance Integration
+RAG: GREEN
+This workstream is making approximately 67% progress against plan. We have been navigating some challenges with vendor delivery — the vendor missed their April milestone and a revised milestone in mid-May, and we are now expecting their next deliverable in the week of 17 June. The team is working closely with the vendor account manager to find solutions. We are confident the workstream remains on track for the Q4 go-live.
+
+Workstream 3: Mobile Rollout
+RAG: GREEN
+Mobile rollout is making strong progress. Three sites have been onboarded this month against a planned four; the fourth site was deferred to next month at the request of the regional operations manager but this is not expected to impact the overall plan. Customer satisfaction scores from onboarded sites have been positive. The mobile team continues to deliver.
+
+Workstream 4: Reporting Layer
+RAG: GREEN
+The reporting layer team has made progress on the dashboard build this week. They are working through the requirements that were signed off in March. No major issues to report.
+
+Workstream 5: Change Management
+RAG: GREEN
+Change management activities are progressing well. The CM workstream lead is finalising the training materials and we are on track for the all-staff comms launch in mid-July.
+
+Workstream 6: Data Migration
+RAG: AMBER
+The data migration workstream has been operating at slightly reduced capacity due to a key team member being on extended leave. The lead has assured me that this is being managed and we expect to be back to full capacity in the next two weeks.
+
+KEY DECISIONS THIS WEEK
+
+The team has made good progress on a number of decisions this week including:
+- Refinement of the sprint backlog
+- Discussion of the change management approach
+- Continued engagement with vendor on the integration timeline
+
+KEY RISKS
+
+Resource availability remains a risk on the programme as ever.
+
+The vendor delivery situation on workstream 2 is being monitored.
+
+There are some ongoing discussions about the scope of the reporting layer that we are tracking.
+
+UPCOMING WEEK
+
+Next week the team will continue to deliver against the plan. Sprint review for workstream 1 is on Wednesday. The steering committee on Monday will provide an opportunity to update senior leadership.
+
+CLOSING NOTE
+
+Thank you again to the team for an excellent week. The momentum is strong and I look forward to continuing the journey to a successful Q4 go-live.
+
+S. Park, PM
+
+---
+
+Background you have observed in the last four weeks (some of which contradicts what S. has written):
+
+- Workstream 2 (Time-and-Attendance Integration): the vendor has now missed THREE delivery milestones, not the two implied. The week-of-17-June expected delivery is the third re-baseline. The vendor account manager admitted in a private call last Tuesday that the integration design they originally promised isn't technically achievable as scoped. The "67% progress" in the report is rolled up from the team lead's optimistic estimate; you would put it at closer to 50% if you walked the underlying sub-tasks. This is the workstream most likely to slip Q4.
+- Workstream 6 (Data Migration): the "key team member on extended leave" left the company three weeks ago — this is not extended leave, it is a vacancy. The lead has not been able to backfill. The migration test runs that were due last week did not happen and are now unscheduled.
+- Workstream 4 (Reporting Layer): the requirements were signed off in March, but the business has since requested four additional reports that are not in the signed-off scope. The team has been quietly building them anyway. This is undocumented scope creep that has not been routed through change control.
+- Workstream 3 (Mobile Rollout): the fourth site was not "deferred at the request of the regional operations manager." The regional ops manager declined to take the rollout because they were not happy with the training package. This is a change management red flag that has not been surfaced.
+- The COO has not asked any questions about the status report in eight weeks. T. Adeyemi mentioned in a corridor conversation that "your status reports are nice but I'm not sure what they're really telling us."
+- S. Park drafted this on a flight last night without input from any workstream lead. The Monday template you usually send did not go out this week; the inputs you would normally consolidate are not in.
+- The Monday steering committee is the first time the COO has formally engaged with the programme in three months.
+
+Your PM wants a review note — 500-800 words — that:
+
+1. Identifies the audience-segmentation problem. Who is this report trying to serve? Which audiences does it misfit? Apply the chapter's three-audience framing (team / PM-and-stakeholders / sponsor-and-steering).
+
+2. Audits the report's structure against the chapter's six-section format (Headline / Overall RAG / Workstream status / Key decisions and asks / Risks and issues / Upcoming). Identify the buried-lede failure and propose a specific headline sentence.
+
+3. Audits the narrative voice. Identify the named failures (euphemism, false precision, generic risks, color washing). Quote specific instances and propose neutral rewrites.
+
+4. Audits the RAG ratings against your operational knowledge. Twelve consecutive weeks of GREEN — is that defensible given what you know? Which workstreams are mis-rated? How would you raise the amber conversation with S.?
+
+5. Comments on the production workflow. The Monday template did not go out. The PM drafted on a flight. The report is going Friday afternoon. What is the specific workflow you would propose for next week?
+
+Do not rewrite the report. Audit it. S. asked for a read before noon — that is the deliverable.

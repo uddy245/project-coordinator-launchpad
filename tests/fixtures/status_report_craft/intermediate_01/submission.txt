@@ -1,0 +1,40 @@
+To: S. Park
+From: PC
+Subject: Status report draft — observations before noon
+
+S — read of the draft below. Five sections.
+
+1. Audience. The current report is trying to be three reports at once. The detail level is wrong for the delivery team (too much narrative, not enough operational), wrong for the workstream leads (no decisions or asks), and wrong for the COO and steering (too long, lede buried under reassurance). The chapter framing is one source of truth, three packagings. Worth at least considering a one-page sponsor version derived from the tactical report before Monday — the COO is on the distribution and Monday's steering is the first formal engagement in three months.
+
+2. Structure. The current order opens with an executive summary that does not actually summarise the state. The chapter's framing puts a one-sentence headline first. A proposed headline based on what I know: "Programme amber. Workstream 2 (vendor integration) at risk of slipping Q4 go-live; workstream 6 (data migration) operating with an unfilled vacancy. Decisions needed at Monday's steering." That sentence is what the COO needs to read.
+
+The "Key decisions this week" section currently lists internal team activity (backlog refinement, etc.) rather than decisions or asks of the readers. The chapter's framing is: what does the PM need from the readers? For Monday's steering this could be a real list — backfill approval for workstream 6, vendor escalation authority, scope question for the reporting layer.
+
+3. Voice. A few specific issues:
+
+- "Navigating some challenges with vendor delivery" → "The vendor has missed three milestones in three months; the integration design they originally promised is not technically achievable as scoped per their account manager."
+- "Making approximately 67% progress" → 67% is rolled up from M. Reyes's optimistic estimate; my walk-through of underlying sub-tasks puts it closer to 50%. Either drop the precise number ("approximately two-thirds based on team estimates, but the underlying sub-tasks suggest closer to half") or remove the number.
+- "Resource availability remains a risk on the programme as ever" — this is the chapter's generic-risk anti-pattern. Risk that is always true is a non-risk. Replace with the specific live ones: vendor capacity, the workstream 6 vacancy, the undisclosed workstream 4 scope creep.
+- "Excellent week", "outstanding dedication", "the momentum is strong" — this voice belongs in a thank-you email, not a status report. Cut.
+
+4. RAG. Twelve consecutive weeks of green is the color-washing pattern the chapter calls out. On the evidence:
+
+- Workstream 2 should be RED not GREEN. Three missed vendor milestones plus the technical-achievability concern is not green.
+- Workstream 6 should remain AMBER but the rationale needs correcting — the "extended leave" is actually a vacancy that has not been backfilled and migration test runs are now unscheduled. The current rationale understates the issue.
+- Workstream 4 should be AMBER not GREEN — undocumented scope creep through change control needs to surface.
+- Workstream 3 should be AMBER not GREEN — the fourth-site deferral was the regional ops manager refusing the rollout over training quality, not a scheduling preference.
+- Overall RAG should therefore be AMBER, not GREEN.
+
+For the conversation with you on the RAG move: I would frame it as "I think this needs to be amber overall because of vendor / vacancy / scope / training — what's your read?" Not as a correction.
+
+5. Workflow for next week. Monday template did not go out this week and the inputs were not consolidated. For next week's report:
+
+- Monday morning: send the three-sentence-per-workstream template (RAG / one sentence on what happened / one sentence on what's coming). Due end of Tuesday.
+- Tuesday: I consolidate inputs. Cross-check against schedule and RAID before writing. Where lead inputs disagree with my read, clarify.
+- Wednesday morning: I draft.
+- Wednesday afternoon: cut 20%. Sharpen risk and ask sections.
+- Thursday: you review. Send Thursday afternoon, not Friday.
+
+For this week — given the timing, I would suggest holding the send until Monday morning and using the weekend to fix the RAG and the structure rather than sending Friday afternoon. The COO is on Monday morning's steering anyway; honest status report Monday at 9am beats reassuring status report Friday at 5pm.
+
+PC

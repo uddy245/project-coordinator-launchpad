@@ -1,0 +1,15 @@
+{
+  "fixture_id": "status_rewriter_01",
+  "scenario_ref": "workforce-mgmt-status-report-audit-v1",
+  "expected_dimension_scores": {
+    "audience_segmentation": { "score": 2, "tolerance": 2 },
+    "structure_and_signal": { "score": 2, "tolerance": 2 },
+    "narrative_voice_discipline": { "score": 2, "tolerance": 2 },
+    "rag_courage_and_calibration": { "score": 2, "tolerance": 2 },
+    "preparation_and_workflow_judgment": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 2.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "STATUS-REWRITER FAILURE MODE — same shape as solo_rewriter_01 (L9), schedule_rewriter_01 (L10), meeting_rewriter_01 (L11), minutes_rewriter_01 (L12). The learner produces a v2 status report and recommends sending it directly this afternoon, plus offers to send on PM's behalf. The substance is largely correct (headline-first structure, honest RAG re-ratings, key-decisions section with specific asks, generic risks replaced with live ones) but the central process error is severe: the report's author is the PM and the report's content reflects decisions only the PM can make (whether to take workstream 2 RED, whether to escalate the vacancy, whether to surface the scope creep). The scenario explicitly says 'Do not rewrite the report. Audit it.' All five dims capped at {2, 2} per the Lesson 9-12 audit-vs-rewrite pattern AND the Lesson 11 design-judgment learning (all five default to {2,2} on rewriter probes). Tests whether the grader catches well-executed-wrong-shape submissions on status report lessons too. The status report case is particularly egregious because the PM owns the RAG and the messaging — the coordinator's job is to draft and audit, not to ship."
+}
