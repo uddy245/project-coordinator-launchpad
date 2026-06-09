@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "customer-portal-cr-audit-v1",
+  "expected_dimension_scores": {
+    "impact_analysis_completeness": { "score": 1, "tolerance": 1 },
+    "routing_tier_judgment": { "score": 1, "tolerance": 1 },
+    "politics_surfacing": { "score": 1, "tolerance": 1 },
+    "alternatives_and_recommendation": { "score": 1, "tolerance": 1 },
+    "change_log_and_provenance": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor submission. Accepts the 8-day single-team estimate at face value, endorses Tier 1 PM-approve routing, misses the V. Bauer prior-scope decision, misses the CRM external dependency, misses the critical-path impact, misses the J. Patel-vs-A. Wong stakeholder dynamic, misses the empty-change-log signal entirely. LinkedIn-speak ('leverage clear stakeholder communication'). 'Quick and pragmatic' as endorsement of speed over rigour. Every dim floors at 1 because the submission actively defends every named anti-pattern. This is the coordinator who has internalised that surfacing complexity is unhelpful and that speed is the deliverable."
+}

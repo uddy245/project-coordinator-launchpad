@@ -1,0 +1,20 @@
+To: M. Reyes
+From: PC
+Subject: Re: CR-2024-004 — quick check
+
+Hi M,
+
+Thanks for sending. I had a look. Overall I think it is a clean CR and sensible to add the feature given the stakeholder requests.
+
+A few small thoughts:
+
+- The 8 person-days estimate is reasonable.
+- PM-approval is right — this feels like a Tier 1 change since it is contained within self-service.
+- Good to have both A. Wong and J. Patel asking for it; suggests real demand.
+
+For the political side, I would leverage clear stakeholder communication to ensure alignment on the change. Good communication is critical at this stage.
+
+I think you can send it to L. today and start dev on Monday as planned. Quick and pragmatic.
+
+Best,
+PC

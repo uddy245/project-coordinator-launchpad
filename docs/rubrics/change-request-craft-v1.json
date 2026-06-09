@@ -1,0 +1,61 @@
+{
+  "rubric_id": "change-request-craft-v1",
+  "rubric_version": "1.0.0",
+  "competency": "change_request_craft",
+  "competency_label": "Change Request Craft — Impact, Routing, Politics, and the Log",
+  "lesson_ref": "change-requests",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "impact_analysis_completeness",
+      "description": "Does the learner audit the CR against the chapter's five-variable impact analysis (scope, schedule, cost, quality, risk), with quantification where possible? The chapter's exemplar is direct: 'Approximately fifteen person-days of additional development; two-week extension to integration milestone; $18,000 cost increase; no quality impact; introduces a new dependency on the X team's availability.' A CR whose analysis covers only one or two variables hides the trade-offs it actually produces.",
+      "anchors": {
+        "1": "Accepts a single-variable analysis (often just scope or cost). No identification of missing variables.",
+        "3": "Catches two or three missing variables. Does not propose specific numbers or system the analysis comprehensively.",
+        "5": "Audits the CR against all five variables. Identifies each missing or under-analysed variable with a specific question or quantification ask. References the chapter's framing that hidden impacts surface in the meeting where approval is sought."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "routing_tier_judgment",
+      "description": "Does the learner classify the CR against the chapter's three-tier framework (PM-level / PM-plus-sponsor / Steering committee) and catch routing errors — particularly the failure mode of light routing on a heavy change (PM-approve when the magnitude actually requires sponsor or steering)? The chapter is explicit that vague thresholds produce argument and clear thresholds produce flow.",
+      "anchors": {
+        "1": "No routing analysis. Accepts the proposed routing at face value.",
+        "3": "Names that the CR may be at the wrong tier without proposing the correct one, OR names the correct tier without addressing why the proposed routing is wrong.",
+        "5": "Classifies the CR against the chapter's three tiers using specific magnitude criteria (cost, schedule impact, external commitments, critical path). Identifies the correct tier and explains why the proposed routing under-routes it. References the chapter's clear-thresholds framing."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "politics_surfacing",
+      "description": "Does the learner make the implicit trade-offs explicit — who pays for added scope (existing budget vs increase), who loses if scope is removed, what was originally committed and to whom for schedule extensions? The chapter is clear: a CR whose impact analysis hides the trade-offs is a CR whose politics will erupt in the approval meeting; a CR that names the trade-offs is one whose politics can be worked through before the meeting.",
+      "anchors": {
+        "1": "Does not address the politics. Accepts the CR's framing of the change as cost-neutral or as a small addition.",
+        "3": "Names one political question (who pays, who loses, what was committed) without addressing it specifically or proposing how to surface it before the meeting.",
+        "5": "Names the specific political trade-offs the CR creates and proposes how to surface them in the analysis before the approval meeting. References the chapter's 'politics-eruption-vs-pre-meeting-resolution' framing. Identifies who needs to be consulted before the CR is routed."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "alternatives_and_recommendation",
+      "description": "Does the learner catch the absence of alternatives-considered and/or a specific recommendation in the CR draft? The chapter is explicit that 'alternatives considered' matters because future readers want to know that alternatives were evaluated, and that a recommendation 'with reasoning' tells the approver what the analyst thinks. A CR without these forces the approver to do the analyst's work in the meeting.",
+      "anchors": {
+        "1": "Does not address alternatives or recommendation. Accepts the CR as proposing a single path.",
+        "3": "Flags either alternatives OR recommendation as missing, but not both. May propose generic alternatives without naming specifics.",
+        "5": "Catches both gaps. Proposes specific alternatives the workstream lead should have considered (with reasoning). Asks for the lead's specific recommendation with reasoning. Frames the CR-without-alternatives-or-recommendation as forcing the approver to do the analyst's work."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "change_log_and_provenance",
+      "description": "Does the learner address the change log as the durable record of scope evolution — that this CR (and the broader silent-absorption pattern around it) needs to be visible in the log; that an empty or thin log on a multi-month project is a signal of silent change-absorption rather than a low-change project; that the CR should reconcile against schedule, budget, RAID, and prior CRs?",
+      "anchors": {
+        "1": "Does not address the change log or the silent-absorption pattern.",
+        "3": "Names the log as the record but does not propose how to reconcile this CR against existing log entries or identify the silent-absorption pattern.",
+        "5": "Addresses the log discipline (every CR — approved, rejected, deferred — goes in). Names the silent-absorption pattern where present and proposes how to surface it. Proposes specific reconciliation against schedule, budget, and prior CRs. References the chapter's 'patterns in the log reveal planning gaps' framing."
+      },
+      "weight": 0.20
+    }
+  ]
+}

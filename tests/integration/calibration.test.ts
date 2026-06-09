@@ -100,6 +100,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/status-report-craft-v1.json",
     promptPath: "docs/prompts/grade-status-v1.md",
   },
+  {
+    competency: "change_request_craft",
+    rubricPath: "docs/rubrics/change-request-craft-v1.json",
+    promptPath: "docs/prompts/grade-cr-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

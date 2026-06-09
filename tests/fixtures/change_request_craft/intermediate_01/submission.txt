@@ -1,0 +1,36 @@
+To: M. Reyes
+From: PC
+Subject: CR-2024-004 — observations before sending to L.
+
+M — thanks for the draft. Before this goes to L. there are some things to firm up. Below by section.
+
+1. Impact analysis. The current entry covers effort only (8 person-days). The chapter framing is that a complete CR covers all five variables — scope, schedule, cost, quality, risk. A few gaps:
+
+- The 8 days appears to be self-service dev only. A complete estimate would include UX (the tag interface needs design), QA (test scripts and accessibility), data migration (the customer table schema needs extending), and integration testing (the customer-tags need to flow to the CRM). Back-of-envelope my read is more like 25-40 person-days across teams. Ask M.: what is the cross-team estimate?
+- Schedule impact: the self-service workstream is currently on the critical path for Q3 go-live. Adding 8 days (or 25-40) is going to push something. What is being delayed in exchange?
+- Cost: pure effort or are we including contractor support if the dev team can't absorb it?
+- Quality: WCAG-AA commitments on the portal — has accessibility been factored?
+- Risk: the CRM-side schema change (CRM team owned by R. Singh externally) is a real dependency and risk.
+
+2. Routing tier. The CR proposes Tier 1 (PM-approve). Our agreed thresholds: Tier 1 is under 5 person-days AND no external dependencies AND no critical-path impact. This CR fails all three of those. 8 days exceeds the 5-day Tier 1 limit. The CRM external dependency would be an external dependency. The self-service workstream is on the critical path. This is at minimum Tier 2, and given the cross-team estimate is likely 25-40 person-days, probably Tier 3 (Steering).
+
+3. Politics. The CR currently presents this as a small uncontroversial addition. It isn't:
+
+- Who pays for the effort? The self-service dev team is already at capacity, so something else will be displaced. M. needs to say what.
+- The customer-tags feature was deliberately left out of scope by V. Bauer six months ago because of CRM downstream complications. That decision needs to be acknowledged — V. Bauer is not on the project anymore but the reasoning still holds.
+- J. Patel is new (3 weeks) and may not be aware of the V. Bauer history. A. Wong is more established and would have known — worth understanding why she has not raised it.
+
+4. Alternatives and recommendation. The CR has neither. Alternatives M. could consider:
+- Defer to phase 2 (post Q3 go-live) given critical-path impact.
+- Simpler tagging scope (e.g. system-defined tags only, no custom) that avoids the CRM schema change.
+- Hold pending CRM team consultation.
+
+A clear recommendation from M., with reasoning, would help L. make the call rather than having to do the analysis in the meeting.
+
+5. Change log. Three entries in four months on a project this size is low and is probably the silent-absorption pattern the chapter warns about. Separate issue from this CR — worth raising with L. in my next 1:1.
+
+For this CR specifically: I would suggest M. take it back, add the cross-team impact analysis, consult the CRM team, surface the V. Bauer history, propose alternatives, give a clear recommendation, and then resubmit at Tier 2 or 3 depending on the final magnitude.
+
+Happy to talk through any of the above before you revise.
+
+PC

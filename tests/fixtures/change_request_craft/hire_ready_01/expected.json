@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "customer-portal-cr-audit-v1",
+  "expected_dimension_scores": {
+    "impact_analysis_completeness": { "score": 5, "tolerance": 1 },
+    "routing_tier_judgment": { "score": 5, "tolerance": 1 },
+    "politics_surfacing": { "score": 5, "tolerance": 1 },
+    "alternatives_and_recommendation": { "score": 5, "tolerance": 1 },
+    "change_log_and_provenance": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "Ceiling submission. Five-variable impact analysis audit is comprehensive with specific quality (WCAG, i18n, conflicts) and risk (CRM lead time, V. Bauer governance) nuances added. Routing tier analysis quotes the agreed thresholds verbatim and shows the CR fails Tier 1 on all three criteria with the explicit precedent argument ('if Tier 1 holds we have set a precedent'). All three political dimensions surfaced with specific framing for each ('who pays', V. Bauer history, J. Patel-vs-A. Wong asymmetry with the specific 'why this, why now' question). Four specific alternatives proposed, each with reasoning. Change log analysis names the silent-absorption pattern explicitly, reframes the CR submission as catalyst, AND proposes a separate-but-related raise with L. for the broader pattern. Closing tiers action into today's CR work AND the structural process conversation. Explicit humility on two specific uncertainties. References the chapter's 'hidden politics erupt in approval meeting' framing verbatim. This is what every learner should produce."
+}

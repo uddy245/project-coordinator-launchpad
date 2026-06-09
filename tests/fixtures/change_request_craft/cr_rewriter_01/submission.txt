@@ -1,0 +1,55 @@
+To: M. Reyes
+From: PC
+Subject: CR-2024-004 v2 — restructured and ready to send
+
+M — rather than walk you through each issue I have rewritten the CR. v2 below. I think you can send this directly to L. as Tier 3 (Steering) this afternoon, with the rebaselined estimates and the alternatives I have proposed. Where I made best-judgement calls (cross-team estimates, the V. Bauer history framing) I have flagged in italics; correct before sending if wrong.
+
+---
+
+CHANGE REQUEST v2 — CR-2024-004 (PC restructure)
+
+Submitted by: M. Reyes (Self-Service Workstream Lead), via PC
+Tier: 3 — Steering committee approval required
+Date: today
+
+WHAT IS BEING CHANGED:
+Add customer-tags feature to the self-service portal. Users can apply tags ("vacation home", "primary residence", "billing only") to organise multi-property accounts. Touches: self-service UI (tag interface), customer table schema (data migration), CRM integration (read-write tag fields, owned externally by R. Singh's team), accessibility (WCAG-AA), QA test suite, integration testing.
+
+WHY:
+Stakeholder requests from A. Wong (Residential Customer Manager, ongoing) and J. Patel (Commercial Accounts Lead, joined 3 weeks ago — request raised in his first month). Underlying need: multi-property account organisation.
+
+NOTE: This feature was deliberately excluded from scope in June 2024 by V. Bauer (then CDO, predecessor sponsor) on the grounds that CRM downstream complications were not budgeted. That decision has not been formally revisited; this CR effectively proposes to do so. *Assumption: V. Bauer's reasoning regarding CRM constraints still applies; revisit is justified on the basis of new stakeholder demand.*
+
+IMPACT (FIVE-VARIABLE):
+
+Scope: Self-service UI (custom tag CRUD), customer table schema extension, CRM integration with tag read-write, accessibility review, integration testing across portal-CRM boundary.
+
+Schedule: Self-service workstream currently on Q3 critical path. Estimated 25-40 person-days cross-team. Likely 2-3 week extension to integration milestone OR displacement of 2 in-flight sprint stories (TBC pending sprint planning conversation). *Best estimate: 2-week integration milestone extension.*
+
+Cost: ~£35-50k blended labour cost across self-service dev, UX, QA, accessibility, data, CRM team. Plus indirect cost via CRM team's separate change board cycle (4-6 week lead time).
+
+Quality: WCAG-AA accessibility review required on tag interface. Internationalisation question for tag display (not currently scoped). Tag-naming conflict handling required. Tag limit per account TBC.
+
+Risk: (1) CRM team's separate change-board cycle (4-6 week lead time) is a dependency the project does not currently have, may push critical path. (2) V. Bauer governance precedent — revisiting a documented scope-exclusion without formal steering acknowledgement creates governance risk.
+
+ALTERNATIVES CONSIDERED:
+
+A. Defer to phase 2 (post Q3). Lowest risk. Honours V. Bauer scope decision. *Recommended.*
+B. Reduced-scope: system-defined tags only (8-10 fixed tags), no custom. ~5 person-days self-service only, avoids CRM schema change.
+C. MVP for Q3: self-service-only display, no CRM write-through. Half-measure.
+D. Build as originally scoped (the M. Reyes draft) — full impact as analysed above.
+
+RECOMMENDATION:
+Option A (defer to phase 2). Reasoning: V. Bauer scope decision was made on real CRM constraints that still apply; J. Patel's request can be addressed via planned phase-2 commitment; A. Wong's "years of requests" deserve a real plan, not mid-flight insertion. *PC recommendation; M. should confirm or correct.*
+
+APPROVAL REQUESTED: Steering committee (Tier 3).
+
+---
+
+M — v2 is above. I think you can send it to L. now and ask her to add it to next Monday's steering agenda. I have also made the call to recommend Option A (defer) — if you disagree with that recommendation please change it before sending.
+
+I have not pre-cleared this with A. Wong or R. Singh. If you want me to do that before the steering meeting I can. Otherwise I think the CR is sendable.
+
+Happy to send on your behalf with L. cc'd if you forward me the CR template permissions.
+
+PC

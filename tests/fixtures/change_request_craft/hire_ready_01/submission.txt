@@ -1,0 +1,87 @@
+To: M. Reyes
+From: PC
+Subject: CR-2024-004 audit — before you send to L.
+
+M — careful read of the draft. The headline finding is that the CR as written cannot responsibly go to L. today; it would either be approved on a partial picture (which is the worst outcome — silent scope absorption with PM cover) or sent back to you in front of L., which is worse for you than us catching it now. Below by section, with what I would ask you to do before resubmitting.
+
+1. IMPACT ANALYSIS — ONE VARIABLE COVERED, FOUR MISSING
+
+The current entry covers effort only (8 person-days). The chapter framing is direct: a CR's impact analysis covers scope, schedule, cost, quality, and risk. Five variables. Here is what is missing on each:
+
+- Scope: the customer-tags feature touches the customer table schema (data migration), the CRM integration (read-write tag fields, owned by R. Singh's team externally), the self-service UI (UX design), and accessibility (WCAG-AA portal commitment). A complete scope statement names all four, not just "customer-tags feature on the portal."
+
+- Schedule: the self-service workstream is currently on the critical path for Q3 go-live. Adding effort here without saying what slips in exchange isn't a complete schedule analysis. What is being deferred? When does the inserted work happen? Is the integration sprint affected?
+
+- Cost: 8 person-days at internal blended rate is some number. Are we including the CRM team's effort (they have their own change board and SOW)? Are we including UX, QA, accessibility consult? My back-of-envelope is more like 25-40 person-days total across teams, which at typical rates is meaningfully more than an 8-day estimate implies.
+
+- Quality: WCAG-AA is a commitment, not a nice-to-have. Tags interface needs accessibility review. Also: does the tag scheme need internationalisation? Tag-naming conflicts (two tags called the same thing)? Tag limits per account? These are quality questions that affect the build.
+
+- Risk: at minimum two new risks — the CRM team's separate change-board cycle (their typical lead time is 4-6 weeks) is a dependency the project does not currently have, and the V. Bauer prior-scope decision creates a governance risk if it isn't acknowledged.
+
+Ask for M.: cross-team estimate from UX/QA/data/CRM; explicit named displacement in the sprint plan; current CRM schedule for schema changes; accessibility consultation status.
+
+2. ROUTING TIER — THIS IS NOT TIER 1
+
+Our agreed thresholds (which you and L. documented two months ago):
+- Tier 1: under 5 person-days AND no external dependencies AND no critical-path impact.
+- Tier 2: under 15 person-days OR modest external dependencies.
+- Tier 3: anything beyond, anything touching external commitments, anything affecting critical path.
+
+CR-2024-004 as drafted fails Tier 1 on all three criteria: the 8-day single-team estimate alone exceeds the 5-day Tier 1 cap; the CRM team is an external dependency (different change board, different SOW); the self-service workstream is on the critical path.
+
+The 8-day single-team estimate puts it at Tier 2 minimum. The realistic 25-40-day cross-team estimate plus the external CRM dependency plus critical-path impact moves it firmly into Tier 3 (Steering committee). The chapter's framing: vague thresholds produce argument, clear thresholds produce flow. Our thresholds are clear and this CR is at the wrong tier.
+
+If this goes Tier 1 and L. approves it, we have set a precedent that the documented thresholds are negotiable, which makes the next CR harder to route correctly. Worth saying that explicitly.
+
+3. POLITICS — THREE THINGS THIS CR HIDES
+
+The CR currently presents the change as cost-neutral ("contained within the existing portal codebase and does not affect other workstreams"). This is untrue and the politics will erupt in the approval meeting if it isn't surfaced first.
+
+(a) Who pays for the effort? The self-service dev team is at full capacity. 8 days (or 25-40) has to come from somewhere — either deferral of existing sprint commitments, overtime (which we have a programme commitment against), or contractor support (which is unbudgeted). M. should name what specifically gets displaced and by how much. The CR is much stronger as "we're proposing to defer story X and Y by N days to absorb this" than as "no impact."
+
+(b) V. Bauer's prior scope decision. Six months ago V. Bauer (then CDO, now off the project) deliberately excluded customer-tags because of CRM downstream complications. That decision was made on the record. Bringing it back without acknowledging that history reads as either ignorance (which makes us look unprepared) or selective memory (which makes L. look like she's overturning a prior governance decision quietly). Better to address it: "The 2024-06 scope decision excluded tags pending CRM resolution. Since then [what has changed?]; we propose revisiting because [why?]."
+
+(c) Stakeholder asymmetry. J. Patel is 3 weeks in and called this "really nice-to-have." A. Wong has been on the project from the start and would have known the V. Bauer history but did not raise it. There is a question worth asking A. Wong directly before the CR is finalised: why this, why now, and is "nice-to-have" the right framing if the V. Bauer reasoning still holds? J. Patel's request is well-intentioned but he is operating without history.
+
+These three are not optional. The chapter is clear: hidden politics erupt in the approval meeting; surfaced politics get worked through before it.
+
+4. ALTERNATIVES AND RECOMMENDATION — BOTH MISSING
+
+The CR currently proposes a single path (build it as scoped) without showing the alternatives M. considered. The chapter's framing: future readers want to know alternatives were evaluated, not just that one was chosen. Specific alternatives M. should evaluate and document:
+
+(a) Defer to phase 2 (post Q3 go-live). Lowest risk; honours the V. Bauer scope decision; addresses A. Wong's "years of requests" via a planned phase 2 commitment rather than mid-flight insertion.
+
+(b) Reduced-scope version: system-defined tags only (e.g. a fixed set of 8-10 tags users can apply), no custom tags. Avoids the CRM schema change because the tag set is predefined. Could be ~5 person-days self-service only.
+
+(c) MVP version for Q3 (self-service-only display, no CRM write-through) with the full CRM integration deferred to phase 2. Half-measure but functional for some of A. Wong's use cases.
+
+(d) Build as scoped, accept the impact transparently. The current proposal but with honest costs and routing.
+
+M. should evaluate each, recommend one with reasoning, and let L. (or Steering, if Tier 3) make the call. A CR without alternatives is a CR whose approver has to do the analyst's work in the meeting; that is M.'s work to do.
+
+5. CHANGE LOG — THE BROADER PATTERN
+
+Three entries in four months on a project of this scope is not "few changes happened." It is silent absorption. The chapter is explicit: "typical projects see ten to twenty percent scope growth through changes." We are at four months on a nine-month project; expect roughly eight to twelve entries by now if changes are visible.
+
+This CR is itself a useful catalyst: M. submitting it through the process — rather than mentioning to L. in a hallway and just doing it — is the behaviour we want to reinforce. Worth thanking him for that even while sending the audit back.
+
+The broader silent-absorption pattern is something I should raise with L. separately. My read is that the process feels heavy and people work around it; the chapter's fix is tiering and clear thresholds (which we have) plus visible follow-through (which we don't — three entries in four months means people don't see the log working, which means they default to off-log absorption). Worth a 15-min conversation with L. in my next 1:1 about whether we ask each workstream lead at the next standing to do a back-fill of any changes that have been informally absorbed.
+
+CLOSING — WHAT I'D PROPOSE FOR YOU TO DO TODAY
+
+Not "don't send the CR." Send a revised one. Specifically:
+
+1. Take the CR back today (do not send to L. as-is).
+2. Get the cross-team estimate from UX, QA, data, CRM. Even rough numbers — call the leads, hour each.
+3. Talk to A. Wong about the V. Bauer history before resubmitting.
+4. Consult R. Singh's team on CRM-side feasibility and lead time.
+5. Add the four alternatives and your recommendation with reasoning.
+6. Resubmit at Tier 2 or Tier 3 depending on final magnitude.
+
+That is probably half a day to a day of your time. Worth it — the CR comes out the other side actually fundable and the approval meeting takes 20 minutes instead of 90.
+
+Two things I'm not certain on and would value your read on: (a) whether the V. Bauer scope decision was formally minuted or just an informal call — if formal, this is a steering-revisit by definition; (b) whether A. Wong has visibility on the V. Bauer history at all, or only on the request side.
+
+Send me a revised version when ready — I can do one more pass before it goes to L.
+
+PC
