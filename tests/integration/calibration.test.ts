@@ -167,8 +167,8 @@ describeIf("calibration corpus [hits Anthropic API]", () => {
         // Skipped: Claude consistently returns apology_hygiene=5 with empty
         // quote on this ceiling fixture (no apologies present is hard to
         // quote), failing the validator's score>=3-requires-quote refine.
-        // 3rd+ recurrence across PRs #80 / #81 / #83. Follow-up: bump
-        // grade-voice prompt to v2 with explicit always-quote demand.
+        // 3rd+ recurrence across PRs #80 / #81 / #83. Follow-up issue #84:
+        // bump grade-voice prompt to v2 with explicit always-quote demand.
         const skipFixture =
           competency === "professional_communication" && fx.slug === "hire_ready_01";
         const testFn = skipFixture ? it.skip : it;
