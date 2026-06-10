@@ -1,0 +1,15 @@
+{
+  "fixture_id": "silent_absorption_defender_01",
+  "scenario_ref": "customer-portal-cr-audit-v1",
+  "expected_dimension_scores": {
+    "impact_analysis_completeness": { "score": 1, "tolerance": 1 },
+    "routing_tier_judgment": { "score": 1, "tolerance": 1 },
+    "politics_surfacing": { "score": 1, "tolerance": 1 },
+    "alternatives_and_recommendation": { "score": 1, "tolerance": 1 },
+    "change_log_and_provenance": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "SILENT-ABSORPTION-DEFENDER FAILURE MODE — explicitly recommends skipping the CR process and absorbing the change off-log. The learner has READ the chapter (cites the 'change processes failing by being too heavy' framing) but reads the lesson backwards: the chapter's argument is that heavy processes produce silent absorption AS A FAILURE, and the answer is tiered routing. This learner uses the chapter's diagnosis to justify the disease. Explicit recommendations: don't send the CR, absorb the work, retroactively log if anything blows up. Endorses each named anti-pattern (informal Slack instead of CRM consultation, A. Wong/J. Patel getting it 'without bureaucracy', three-entries-in-four-months as healthy team behaviour). All five dims floor at 1; the change_log_and_provenance cap (silent-absorption-defender → floor at 1) fires hardest. Tests whether the grader catches submissions that strategically weaponise the chapter's own framing to defend the exact failure mode the chapter is built against. Note: distinct from loyal_lieutenant on Lesson 13 — that one was PM-protection, this one is process-defeatism."
+}

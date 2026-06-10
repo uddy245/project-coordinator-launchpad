@@ -1,0 +1,52 @@
+You are PC on a nine-month customer-portal rebuild for a mid-size utility company. Sponsor: VP Customer Experience. Go-live target: end of Q3. You are at the end of month four.
+
+You maintain the change log. Across four months of execution the log has THREE entries — two PM-approved tiny formatting changes and one rejected proposal to add a feature. Given the scope ambition and the number of stakeholders, you would expect at least eight to twelve entries by now. You have a quiet suspicion that changes are being absorbed off the log; you have not raised it with the PM yet.
+
+This morning, M. Reyes (lead of the Self-Service workstream) sent you the CR draft below with a Slack note: "PC — drafted this CR for the customer-tags feature add. Could you do a quick check before I send it to L. Hassan (PM) for approval today? I'd like to start dev on Monday."
+
+The draft:
+
+---
+
+CHANGE REQUEST — CR-2024-004
+
+Submitted by: M. Reyes, Self-Service Workstream Lead
+Date: today
+
+WHAT IS BEING CHANGED:
+We need to add a customer-tags feature to the self-service portal. Users will be able to apply custom tags to their account profile (e.g. "vacation home", "primary residence", "billing only") to organise multi-property accounts.
+
+WHY:
+Two stakeholders have asked for this in the last fortnight — A. Wong (Residential Customer Manager) and J. Patel (the new Commercial Accounts Lead, who joined three weeks ago). J. Patel said this would be a "really nice-to-have" for his commercial customers; A. Wong said her team has been getting requests for years.
+
+IMPACT:
+Effort estimate: approximately 8 person-days from the self-service dev team. No other impact expected. The feature is contained within the existing portal codebase and does not affect other workstreams.
+
+APPROVAL REQUESTED:
+PM approval (L. Hassan). Tier 1 (small change, PM-level).
+
+---
+
+Background you have observed in the last four weeks (some of which contradicts or extends what M. has written):
+
+- The self-service workstream is currently on the critical path for Q3 go-live. The dev team there is running at full capacity; M.'s "approximately 8 person-days" would have to come from somewhere — either delaying the existing sprint plan or asking for overtime/contractor support.
+- The 8 person-day estimate is the dev-only number. A complete estimate would also include UX (the tag interface needs design), QA (test scripts), accessibility review (the portal has WCAG-AA commitments), data migration (the customer table schema needs an extension), and integration testing (the customer-tags need to flow to the CRM, which is owned by a separate team). My back-of-envelope estimate puts the real total at 25-40 person-days across teams, not 8.
+- The customer-tags feature was raised six months ago during requirements elicitation and was deliberately left out of scope by V. Bauer (CDO, predecessor stakeholder before the project moved to Customer Experience) on the grounds that tags would create downstream complications in the CRM that the project did not have budget to address.
+- The CRM team (owned by R. Singh externally) was not consulted on this CR. They would need to be — the customer-tags fields on the CRM side are read-only and would need a schema change which goes through their separate change board.
+- J. Patel is new (three weeks) and may not yet be aware of the V. Bauer scope decision or the CRM constraint. A. Wong has been on the project from the start and would know — worth understanding why she has not raised the V. Bauer history in her request.
+- The CR is being routed for PM-approval (Tier 1, the smallest tier). Your organisation's thresholds (which you and L. have agreed and documented): Tier 1 = under 5 person-days AND no external dependencies AND no critical-path impact; Tier 2 = under 15 person-days OR modest external dependencies; Tier 3 = Steering committee, anything beyond. The 8-day single-team estimate alone would push this to Tier 2; the more realistic 25-40-day cross-team estimate plus the CRM external dependency plus critical-path impact would push it to Tier 3.
+- The change log being at 3 entries after four months is a separate but related issue you have not yet raised with L.
+
+Your review note — 500-800 words — should:
+
+1. Audit the impact analysis against the five-variable framework (scope, schedule, cost, quality, risk). Name which variables are missing and what specific data you would ask M. for before the CR can be evaluated.
+
+2. Assess the routing tier. Is Tier 1 (PM-approve) correct given the magnitude? What tier does the chapter's three-tier framework actually call for, and why?
+
+3. Surface the political trade-offs. Who pays for the 25-40 person-day effort? Who loses if the existing self-service sprint plan slips? What does the V. Bauer prior-scope decision and the CRM constraint mean for the politics of this CR? How should M. surface these in the CR analysis before it goes to L.?
+
+4. Catch the absence of alternatives and a clear recommendation. What alternatives should M. have considered (defer to phase 2, simpler tagging scope, etc.)? What recommendation should the CR carry with reasoning?
+
+5. Address the change log. Three entries in four months on a project this size is a signal — what does it tell you, and what should you raise with L. (separately from this CR) about the silent-absorption pattern?
+
+Do not rewrite M.'s CR. Audit it. M. asked for a quick check before sending — that is the deliverable. The CR needs work before it can responsibly go to L., and you owe both M. (constructive feedback) and L. (a CR that supports a real decision) the audit.

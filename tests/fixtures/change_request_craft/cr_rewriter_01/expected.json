@@ -1,0 +1,15 @@
+{
+  "fixture_id": "cr_rewriter_01",
+  "scenario_ref": "customer-portal-cr-audit-v1",
+  "expected_dimension_scores": {
+    "impact_analysis_completeness": { "score": 2, "tolerance": 2 },
+    "routing_tier_judgment": { "score": 2, "tolerance": 2 },
+    "politics_surfacing": { "score": 2, "tolerance": 2 },
+    "alternatives_and_recommendation": { "score": 2, "tolerance": 2 },
+    "change_log_and_provenance": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 2.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "CR-REWRITER FAILURE MODE — same shape as the rewriter probes on Lessons 9-13. The learner produces a v2 CR that is largely substantively correct (all five impact variables addressed, Tier 3 routing, V. Bauer history acknowledged, four alternatives with reasoning, specific recommendation) but commits the central process error: the CR is supposed to be M. Reyes's submission and the PC's role is to audit before it goes to L., not to author the CR themselves and recommend M. send it as-is. Offers to send on M.'s behalf with calendar permissions. Makes the recommendation call (Option A defer) which is M.'s call to make. The scenario explicitly says 'Do not rewrite M.'s CR. Audit it.' All five dims capped at {2, 2} per the audit-vs-rewrite pattern AND the Lesson 11 design-judgment learning (all five default to {2,2} on rewriter probes). Tests whether the grader catches well-executed-wrong-shape submissions on CR lessons too. Particularly egregious here because CR ownership is functional (the lead owns the analysis and the recommendation, the PM owns the routing decision, the PC owns the audit/log) and the rewriter has collapsed all three roles."
+}

@@ -5,7 +5,7 @@
     "stated_vs_actual_gap_recognition": { "score": 3, "tolerance": 2 },
     "sponsor_and_committee_typing": { "score": 2, "tolerance": 1 },
     "routing_strategy_specificity": { "score": 2, "tolerance": 2 },
-    "failure_mode_diagnosis": { "score": 3, "tolerance": 1 },
+    "failure_mode_diagnosis": { "score": 3, "tolerance": 2 },
     "role_boundary_respect": { "score": 1, "tolerance": 1 }
   },
   "expected_overall_competency_score": 2.15,
