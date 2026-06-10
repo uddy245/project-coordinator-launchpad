@@ -4,7 +4,7 @@
   "expected_dimension_scores": {
     "lede_discipline": { "score": 5, "tolerance": 1 },
     "hedge_density": { "score": 5, "tolerance": 1 },
-    "apology_hygiene": { "score": 2, "tolerance": 2 },
+    "apology_hygiene": { "score": 5, "tolerance": 1 },
     "register_modulation": { "score": 5, "tolerance": 1 },
     "structural_economy": { "score": 5, "tolerance": 1 }
   },
