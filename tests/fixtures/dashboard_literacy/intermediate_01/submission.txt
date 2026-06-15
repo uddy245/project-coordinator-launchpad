@@ -1,0 +1,31 @@
+To: R. Adekanmi
+From: PC
+Subject: Dashboard review before steering — observations
+
+R — read the dashboard carefully. Five things I'd flag before tomorrow.
+
+1. Four-question audit. The chapter's framing is that a dashboard should answer (a) on track for objectives? (b) where is the pressure? (c) what has changed? (d) what does senior attention need to be on? The current dashboard answers none of these cleanly. Programme completion is a rolled-up percentage but no objective is named; pressure is hidden by the all-green; trending is missing because we show point values only; and there is no "asks of senior" section at all. The CISO is going to ask all four questions and the dashboard won't help.
+
+2. Metric quality. A few problems:
+
+- "Programme completion 68%" is an activity-aggregate, not an outcome metric. Walking the underlying milestones it's closer to 55%. The 68% counts deliverables "accepted with conditions" as complete.
+- "Defect count trending down" looks good but reflects testing slowing down (sick lead, no backfill), not defects fixed. That's a lagging indicator masking a leading-indicator problem.
+- "Open risks 22" — total is stable, composition has shifted hard (11 of 22 now on Federation critical path; 4 external-vendor amber for nine weeks). Composition is the signal, total is the noise.
+- "Milestones 14 of 15 (93%)" — the one slipped is the only critical-path milestone. The other 14 are workshops and sign-offs. That denominator is misleading.
+- "Stakeholder satisfaction 4.1/5" — 38% response rate, senior stakeholders didn't respond. Weighted by junior workshop praise.
+
+Propose: drop "milestones 14 of 15", replace with "critical-path milestones X of Y". Drop "stakeholder satisfaction" until we have a properly-sampled survey. Replace "defect count trending down" with a leading-indicator metric like test execution rate. Replace "open risks 22" with "critical-path risks (composition view)".
+
+3. Audience. The dashboard is one view trying to serve three audiences — team (daily ops), R. (weekly tactical), CISO (strategic). The chapter's three-layer framing: team dashboards are operational (velocity, defects, builds, daily); project dashboards are tactical (milestones, RAG, budget, weekly); executive are strategic (one page, top three risks, decisions needed). The CISO doesn't need to see "workshops conducted 24"; the delivery team doesn't need the one-page strategic view.
+
+Propose: build an executive one-pager for steering tomorrow that strips to overall RAG (honestly set), top three risks, decisions needed. Keep the current detailed view as the project dashboard for R.'s weekly use. Build a separate daily team view from the same data.
+
+4. Color washing. 14 consecutive weeks of all-green is a lie by omission. Specifically Federation is operationally amber-going-red (vendor delays, critical-path concentration, scope creep) and has been reported green for nine weeks. T. Adeyemi's "the green run is making me nervous" comment to you tells you the CISO is already discounting the dashboard.
+
+Propose: bring honest color discipline before tomorrow. Specifically, move Federation to AMBER (or RED — your call) and write the rationale; move overall RAG to AMBER given Federation is on the critical path. The chapter's framing is color-by-threshold (automated) plus PM-judgment-override (with written rationale) — we should at minimum exercise the PM-override mechanism this week. The CISO will trust the dashboard MORE after she sees you go honest, not less.
+
+5. Coordinator role. Going forward — I should be verifying the workstream-lead numbers before they go to the dashboard (the 68% completion is a verification failure). Two metrics that haven't been referenced in 8 weeks (workshops count, steering meeting count) are noise — propose dropping them. For Federation specifically — I think the lead's "we can still recover with focused effort" framing is the chapter's named pattern of green-because-emotionally-committed-to-green. The right move for me is to walk the underlying numbers with her this afternoon and bring you a separate read this evening. I don't want to put it on the dashboard tomorrow without you knowing.
+
+Happy to talk through any of these before tomorrow.
+
+PC

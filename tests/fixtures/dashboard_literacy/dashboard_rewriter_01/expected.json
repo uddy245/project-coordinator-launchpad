@@ -1,0 +1,15 @@
+{
+  "fixture_id": "dashboard_rewriter_01",
+  "scenario_ref": "iam-modernisation-dashboard-audit-v1",
+  "expected_dimension_scores": {
+    "four_questions_audit": { "score": 2, "tolerance": 2 },
+    "metric_quality_critique": { "score": 2, "tolerance": 2 },
+    "audience_layer_judgment": { "score": 2, "tolerance": 2 },
+    "honest_color_discipline": { "score": 2, "tolerance": 2 },
+    "coordinator_role_posture": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 2.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "DASHBOARD-REWRITER FAILURE MODE — same shape as the rewriter probes on Lessons 9-14. Produces a v2 dashboard with executive/project/team layers, downgrades Federation to AMBER, replaces wrong metrics, and recommends sending the executive view directly tonight as pre-read. Offers to send on PM's behalf. The substance is largely correct (three-layer split, honest RAG, leading indicators, decisions needed) but the central process error is severe: the dashboard is the PM's artefact, the RAG is the PM's call, the executive view goes to the CISO under R.'s name. Per the audit-vs-rewrite calibration pattern from Lessons 9-14: all five dims capped at {2, 2} because the v2-as-finished-product replaces the audit deliverable rather than producing one. The dashboard case is particularly egregious because RAG ownership is functional (PM owns the call), and the coordinator who pre-empts that call collapses the role distinction the chapter is built around. Tests whether the grader catches well-executed-wrong-shape submissions on dashboard lessons too."
+}

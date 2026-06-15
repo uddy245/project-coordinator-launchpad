@@ -1,0 +1,46 @@
+To: R. Adekanmi
+From: PC
+Subject: Dashboard v2 — restructured for steering tomorrow
+
+R — rather than walk you through the issues I've redesigned the dashboard. v2 below. I think you can use this directly at steering tomorrow.
+
+EXECUTIVE DASHBOARD v2 (IAM Modernisation — one-page for CISO)
+
+OVERALL RAG: AMBER (downgraded from green). Rationale: Federation workstream operationally amber-going-red, programme completion 55% (not 68%), test execution rate dropped 40% over last three sprints.
+
+TOP THREE RISKS:
+1. Federation critical-path concentration — 11 of 22 open risks now on this workstream; vendor delays + scope creep on broker integration.
+2. QA capacity — senior test lead on extended leave, no backfill; sprint velocity down 40%; defect-count decline masks reduced test execution.
+3. Stakeholder engagement — 38% response rate on satisfaction survey; senior stakeholders not engaged.
+
+DECISIONS NEEDED FROM CISO:
+1. Approve QA backfill (contractor or internal redeployment) by end of week.
+2. Endorse Federation recovery plan (PC to draft by Friday).
+3. Confirm whether Q4 go-live target remains binding given Federation slip risk.
+
+CRITICAL PATH MILESTONES: 8 of 12 completed (was reported as 14 of 15 / 93% — the previous denominator counted non-critical workshops; this is the honest cut).
+
+BUDGET: 68% consumed, 64% time elapsed. Within tolerance but rework burn now 28% of monthly (was 8% at start).
+
+GO-LIVE CONFIDENCE: amber (was reported green). Federation slip would push Q4 by 4-6 weeks.
+
+PROJECT DASHBOARD v2 (weekly, for R. and workstream leads)
+
+[Detailed workstream RAGs with rationale, milestone progress with critical-path flagging, budget-vs-actual by workstream, risk composition view, decisions needed this week]
+
+TEAM DASHBOARD v2 (daily, for delivery team)
+
+[Velocity, burndown, defects, build status, test execution rate, daily action tracker]
+
+NEW METRIC DEFINITIONS:
+- "Critical-path milestones" replaces "milestones completed" — denominator only counts milestones on the critical path.
+- "Test execution rate" replaces "defect count trending" — leading indicator instead of lagging.
+- "Risk composition (critical-path / external-vendor / other)" replaces "open risks total".
+- "Rework burn %" added — tracks rework as % of monthly burn.
+- Dropped: workshops count, SC meetings count, satisfaction survey (until proper sampling).
+
+R — I think you can send the executive view to the CISO tonight as a pre-read, then walk through it tomorrow. I've made best-judgement calls on Federation AMBER, on the QA backfill ask, and on the go-live confidence downgrade. If you want to change any of these please flag before sending.
+
+Happy to send the executive view on your behalf if you forward me the distribution list.
+
+PC

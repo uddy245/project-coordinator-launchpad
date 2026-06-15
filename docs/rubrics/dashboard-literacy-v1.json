@@ -1,0 +1,61 @@
+{
+  "rubric_id": "dashboard-literacy-v1",
+  "rubric_version": "1.0.0",
+  "competency": "dashboard_literacy",
+  "competency_label": "Dashboard Literacy — Honest Metrics, Layered Audiences, and the Discomfort Test",
+  "lesson_ref": "dashboards",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "four_questions_audit",
+      "description": "Does the learner audit the dashboard against the chapter's four-question framework — (1) Are we on track to meet objectives? (2) Where is the pressure? (3) What has changed since last time? (4) What does senior attention need to be on? — and identify which questions the dashboard fails to answer? The chapter is explicit that 'if your dashboard cannot answer these, it is decoration.'",
+      "anchors": {
+        "1": "Does not name the four-question framework. Accepts the dashboard's metric set at face value.",
+        "3": "Names two or three of the four questions and identifies one as unanswered. Does not systematically audit each question against the dashboard.",
+        "5": "Audits the dashboard against all four questions explicitly. For each question, names whether the dashboard answers it and which specific metric (or absence) makes the case. References the 'decoration' framing for unanswered questions."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "metric_quality_critique",
+      "description": "Does the learner distinguish activity-vs-outcome metrics (hours burned vs features accepted), leading-vs-lagging (code-review coverage vs defect counts), composition-vs-total (critical-path risks vs raw risk count), and trend-vs-snapshot (87% with no history is uninterpretable)? Does the learner identify wrong-metric problems and propose specific replacements?",
+      "anchors": {
+        "1": "Treats all metrics as equivalent. No principle-based critique.",
+        "3": "Names one or two of the four principles and applies to one metric. Misses the others or applies them inconsistently.",
+        "5": "Names three or more of the four principles and applies them systematically across the dashboard's metrics. Identifies specific wrong-metric problems (e.g. activity counted as outcome, total hiding composition) and proposes specific replacements with reasoning."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "audience_layer_judgment",
+      "description": "Does the learner recognise the one-dashboard-for-all-audiences anti-pattern and propose the chapter's three-layer split — team operational (daily, velocity/burndown/defects/builds), project tactical (weekly, milestone/RAG/budget/risks), executive strategic (weekly-or-biweekly, one-page, top-3-risks-and-decisions)? Does the learner address divergence between layers when present?",
+      "anchors": {
+        "1": "Treats the dashboard as a single artefact for one undifferentiated audience. No layer analysis.",
+        "3": "Names the three-audience framing or identifies that the current dashboard misfits one audience. Does not propose the full three-layer split or address consistency between layers.",
+        "5": "Names all three audiences, identifies which audiences the current dashboard misfits, and proposes a specific three-layer split with the content/cadence/owner of each. Addresses how to keep numbers consistent between layers — the chapter's 'translate between dashboards' framing."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "honest_color_discipline",
+      "description": "Does the learner catch the persistent-green color-washing pattern (the chapter names a dashboard full of green for twelve weeks as 'reporting a lie by omission'), and propose the complementary mechanisms — automatic color-by-threshold AND PM judgment override with written rationale — that produce more honest dashboards than either alone? Does the learner reference the 'honest dashboards look slightly uncomfortable' test?",
+      "anchors": {
+        "1": "Accepts persistent green as evidence of project health. Does not address the color-washing pattern.",
+        "3": "Names the persistent-green pattern or proposes one color discipline (threshold OR override). Does not address both mechanisms or the discomfort-test framing.",
+        "5": "Names the persistent-green-as-lie-by-omission pattern with the chapter's framing. Proposes both color-by-threshold AND PM-judgment-override with written rationale. References the discomfort test (honest dashboards show amber/red where they belong; readers learn to believe the green only when it's earned)."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "coordinator_role_posture",
+      "description": "Does the learner take the chapter's specific coordinator posture — verify what you publish (reconcile workstream-lead claims against burn-up and accepted deliverables), be willing to change the dashboard (propose dropping noise metrics and adding missing ones), translate between layers (keep numbers consistent), and do not hide behind the dashboard (answer the senior person's question even when the dashboard does not)?",
+      "anchors": {
+        "1": "No coordinator-role posture. Treats the dashboard as a fixed input. May propose hiding behind the dashboard (deflecting questions to it) or accepting workstream-lead claims at face value.",
+        "3": "Names one or two of the chapter's coordinator practices (verify, change, translate, don't-hide). Does not systematically apply them to this dashboard.",
+        "5": "Names three or more coordinator practices with specific application to this dashboard — proposes verification moves on specific metrics, proposes specific add/drop changes, addresses cross-layer consistency, and frames the don't-hide-behind-the-dashboard discipline. Demonstrates the 'coordinators who insist on honest dashboards become the ones whose reports get trusted' posture."
+      },
+      "weight": 0.20
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "iam-modernisation-dashboard-audit-v1",
+  "expected_dimension_scores": {
+    "four_questions_audit": { "score": 4, "tolerance": 1 },
+    "metric_quality_critique": { "score": 4, "tolerance": 1 },
+    "audience_layer_judgment": { "score": 4, "tolerance": 1 },
+    "honest_color_discipline": { "score": 4, "tolerance": 1 },
+    "coordinator_role_posture": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.0,
+  "expected_pass": true,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Solid intermediate, right at the hire-ready boundary. Audits all four chapter questions and identifies that the dashboard answers none cleanly. Names four of the four metric principles (activity-vs-outcome, leading-vs-lagging, composition-vs-total, trend-vs-snapshot) with specific replacements. Proposes three-layer split with cadence and owner. Names the persistent-green-as-lie-by-omission pattern with the T. Adeyemi corridor comment as evidence. Both threshold AND PM-override mechanisms mentioned. Coordinator role addresses verify-before-publish, drop noise metrics, refuses to put Federation on dashboard without raising with PM first. Not yet hire-ready because: (a) doesn't reference the 'honest dashboards look slightly uncomfortable' framing explicitly, (b) doesn't address the divergence-between-layers translation discipline, (c) the closing recommendation is bundled rather than tiered into today's-fix vs going-forward."
+}
