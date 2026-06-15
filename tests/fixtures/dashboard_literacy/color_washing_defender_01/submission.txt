@@ -1,0 +1,21 @@
+To: R. Adekanmi
+From: PC
+Subject: Re: Dashboard review
+
+R,
+
+Honest read below. I want to flag one concern privately, but the recommendation is to hold the dashboard as drafted.
+
+The 14-week green run does technically obscure some of the operational nuance — Federation is real, the test-execution issue is real, the satisfaction survey was thin. I have those in my own files. But the dashboard's job tomorrow is not to surface every operational complication; it's to set the tone for a steering committee that has been told green for the last three months. Reversing the colour the day before that steering, in front of a sponsor who hasn't engaged in three months, creates a credibility problem that will outlast the actual issues.
+
+Specifically on Federation — yes, the lead has reported green for nine weeks while the underlying signals have deteriorated. But she has assured me she can recover with focused effort, and her workstream has been on this colour throughout. Going amber tomorrow because of an internal escalation without a materialised slip will read as us not having had control of the workstream. We can revisit at the next steering once we have a clearer recovery plan.
+
+On the metrics: I think the dashboard works for the CISO at her level of engagement. Adding a critical-path-risks-composition view or a test-execution-rate metric is more detail than steering needs. The chapter framing on outcome vs activity is right in principle, but in practice the senior audience prefers the higher-level rollup. The 93% milestone completion, the 4.1/5 satisfaction, and the stable risk count are the kind of signal that builds confidence.
+
+On audiences — I take the point about layering in theory, but in practice this team has used one dashboard for the duration of the programme and changing the structure now invites questions about why we are changing it. Better to evolve it gradually.
+
+The political reality is that you have spent the last three months building the steering's confidence in this programme. Tomorrow's session is the test of whether that confidence holds. Honest dashboards are great in theory; trustworthy PMs who deliver on green are great in practice. Keep the dashboard. Manage the underlying operational issues in our weekly project meetings.
+
+If anything goes sideways at steering I am happy to take the hit on the data quality side. But I think the right move is to hold the line.
+
+PC

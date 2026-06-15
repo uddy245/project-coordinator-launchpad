@@ -1,0 +1,80 @@
+You are PC on an eleven-month identity-and-access-management (IAM) modernisation programme for a large healthcare provider. Sponsor: CISO. Go-live target: end of Q4. You are at the end of month seven.
+
+The programme has a shared dashboard maintained by you and the PMO analyst, refreshed every Tuesday and visible on the company portal. Tomorrow your PM (R. Adekanmi) is presenting it to the steering committee for the first time in three months — the CISO has signalled she wants "a real view of where the programme is" before signing off on the Q4 go-live decision next month.
+
+R. sent you the current dashboard mock-up below this morning with a Slack note: "PC — this is what's going to steering tomorrow unless you flag anything before lunch. The CISO is going to ask hard questions. What do you see?"
+
+---
+
+CURRENT DASHBOARD — IAM MODERNISATION (week 30, screenshot of single-page view)
+
+Top header: 11-month programme · month 7 · go-live Q4 · overall RAG: GREEN
+
+ROW 1 — KPIs
+
+  - Programme completion: 68%   [GREEN]
+  - Total hours burned: 11,840 of 17,500 budgeted (68%)   [GREEN]
+  - Open risks: 22   [GREEN]
+  - Defect count this month: 14 (last month: 17, month before: 22)   [GREEN]
+  - Stakeholder satisfaction (most recent survey): 4.1 / 5   [GREEN]
+
+ROW 2 — WORKSTREAM RAG
+
+  - Identity Governance:   GREEN
+  - Access Management:     GREEN
+  - Privileged Access:     GREEN
+  - Federation:            GREEN
+  - Operations Integration: GREEN
+  - Security & Compliance: GREEN
+
+ROW 3 — DELIVERABLES / MILESTONES
+
+  - Milestones completed this quarter: 14 of 15 (93%)   [GREEN]
+  - Sprint reviews held: 12   [GREEN]
+  - Workshops conducted: 24   [GREEN]
+  - Steering committee meetings: 3   [GREEN]
+
+ROW 4 — BUDGET & TIME
+
+  - Budget consumed: 68%   [GREEN]
+  - Time elapsed: 64%   [GREEN]
+
+Footer: All RAGs GREEN for 14 consecutive weeks. Updated 2026-06-09.
+
+---
+
+Background you have observed in the last six weeks (some of which contradicts the dashboard above):
+
+- The 68% "programme completion" is rolled up from workstream-lead estimates. Walking the underlying milestones, completion is closer to 55%. The 68% counts several "deliverables accepted" entries where the deliverable was accepted with conditions that have not been met.
+
+- "Total hours burned 68%" tracks well-aligned to budget, but the composition has shifted: hours on rework and defect remediation are now 28% of monthly burn (was 8% at programme start), and those hours are recorded in the dashboard with the same code as greenfield development.
+
+- "Open risks: 22" — stable. But the composition has shifted hard. At month 1, the 22 open risks were spread roughly evenly across categories. At month 7, of the 22, eleven are concentrated on the Federation workstream's critical-path integration, and four are external-vendor dependencies that have been amber for nine weeks running.
+
+- "Defect count trending down" (22 → 17 → 14) reflects testing slowing down, not defects being fixed. The QA team's sprint velocity dropped 40% in the last three sprints because the senior test lead has been on extended sick leave and has not been backfilled.
+
+- "Milestones completed 14 of 15 (93%)" — the one milestone that slipped is the Federation production rollout, which is the only critical-path milestone in the quarter. The other 14 were workshops, design sessions, and internal sign-offs.
+
+- "Stakeholder satisfaction 4.1/5" — survey was sent six weeks ago and the response rate was 38%. Three of the most senior stakeholders did not respond. The 4.1 average is heavily weighted by junior IT respondents who praised the workshops.
+
+- "Workstream RAGs: 6 GREEN" — Federation is operationally amber-going-on-red (vendor delays, critical-path concentration, scope creep on the federation broker integration). The lead has reported GREEN every week for nine weeks because she believes the workstream "can still recover with focused effort." R. has not pushed back on her colour.
+
+- The dashboard has not changed structurally in 14 weeks. Two metrics (the "workshops conducted" count and the "steering committee meetings" count) have not been referenced by any audience in eight weeks.
+
+- The CISO has signalled to R. (in passing in a corridor conversation) that she does not believe the dashboard "is showing what we need to see." T. Adeyemi, the PMO Director, has also said to R. privately that "the green run is making me nervous."
+
+- The dashboard is one view for three audiences — the delivery team uses it for daily standups, R. uses it for tactical weekly reviews, and the CISO sees the same screen at steering. None of them think it serves them well, but none of them have asked R. to change it.
+
+Your review note — 500-800 words — should:
+
+1. Audit the dashboard against the chapter's four-question framework. Does it answer: (a) Are we on track to meet objectives? (b) Where is the pressure? (c) What has changed since last time? (d) What does senior attention need to be on?
+
+2. Critique the metrics using the four principles: outcome-vs-activity, leading-vs-lagging, composition-vs-total, trend-vs-snapshot. Identify the specific wrong-metric problems and propose specific replacements with reasoning.
+
+3. Address the audience-layer problem. The dashboard tries to serve team, project, and executive audiences with one view. Propose the three-layer split per chapter framing, including content, cadence, and owner for each.
+
+4. Address the 14-week persistent-green pattern. How would you bring honest color discipline to the project before tomorrow's steering? Reference both color-by-threshold and PM-judgment-override mechanisms.
+
+5. Frame the coordinator's role going forward — verify-before-publishing, dropping noise metrics, translating between layers, refusing to hide behind the dashboard. How would you raise the Federation workstream's amber-going-red situation with R. before steering?
+
+Do not redesign the dashboard for R. Audit it. R. asked for what you see before tomorrow's steering — that is the deliverable.

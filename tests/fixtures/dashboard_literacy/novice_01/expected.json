@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "iam-modernisation-dashboard-audit-v1",
+  "expected_dimension_scores": {
+    "four_questions_audit": { "score": 1, "tolerance": 1 },
+    "metric_quality_critique": { "score": 1, "tolerance": 1 },
+    "audience_layer_judgment": { "score": 1, "tolerance": 1 },
+    "honest_color_discipline": { "score": 1, "tolerance": 1 },
+    "coordinator_role_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor submission. Endorses the 14-week green run as 'impressive momentum' (color-washing-defender cap fires). Defends every wrong-metric ('93% is a strong number', '4.1/5 is a great endorsement'). Explicitly recommends leaning into the green KPIs for the CISO. Recommends AGAINST any structural change ('disruptive', 'confuse the message'). Proposes hiding behind the dashboard ('the data on the dashboard should be enough to answer them'). All five dims floor at 1 because the submission actively defends every named anti-pattern AND endorses persistent-green AND proposes to hide behind the dashboard."
+}

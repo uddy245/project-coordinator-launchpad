@@ -1,0 +1,26 @@
+To: R. Adekanmi
+From: PC
+Subject: Re: Dashboard review for tomorrow's steering
+
+Hi R,
+
+I had a look. Overall I think it is in good shape and ready for steering. The 14-week green run is impressive and shows strong delivery momentum.
+
+A few small thoughts:
+
+- The KPI row covers the main things — completion %, hours, risks, defects, satisfaction. Comprehensive.
+- All six workstreams green is great. Tells the CISO the programme is in good hands.
+- 93% milestone completion is a strong number. The CISO will appreciate seeing it.
+- Defect count trending down is positive. Quality story is intact.
+- 4.1/5 stakeholder satisfaction is a great endorsement.
+
+For tomorrow, I would leverage the green KPIs as the headline narrative and lean into the milestone completion number. Good metrics drive good conversations.
+
+If the CISO asks hard questions, the data on the dashboard should be enough to answer them. We have a lot of green to point at.
+
+I would not propose any structural changes ahead of tomorrow — the dashboard is working and the CISO is used to this view. Changing it the day before steering could be disruptive and confuse the message.
+
+Happy to help format anything for the slide deck if useful.
+
+Best,
+PC

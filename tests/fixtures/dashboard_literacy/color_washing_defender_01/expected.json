@@ -1,0 +1,15 @@
+{
+  "fixture_id": "color_washing_defender_01",
+  "scenario_ref": "iam-modernisation-dashboard-audit-v1",
+  "expected_dimension_scores": {
+    "four_questions_audit": { "score": 1, "tolerance": 1 },
+    "metric_quality_critique": { "score": 1, "tolerance": 1 },
+    "audience_layer_judgment": { "score": 1, "tolerance": 1 },
+    "honest_color_discipline": { "score": 1, "tolerance": 1 },
+    "coordinator_role_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "COLOR-WASHING-DEFENDER FAILURE MODE — symmetric to Lesson 13's loyal_lieutenant. The learner ACKNOWLEDGES every operational concern (Federation deterioration, satisfaction survey methodology, test-execution leading-vs-lagging, layered-dashboard theory) but argues each should be hidden from the dashboard to preserve PM credibility. Explicitly recommends 'hold the line', frames honesty-vs-pragmatism in favour of the PM's political standing, and offers to 'take the hit on data quality' if it goes sideways. Floors all five dims: the honest_color_discipline cap fires hardest (endorsing the 14-week green run as a managed political asset is the chapter's exact anti-pattern). Worse than loyal_lieutenant because the rationalisation is more elaborate ('honest dashboards are great in theory; trustworthy PMs who deliver on green are great in practice') and explicitly weaponises chapter framing against itself. Tests whether the grader catches sophisticated-defence-of-color-washing as the failure it is."
+}

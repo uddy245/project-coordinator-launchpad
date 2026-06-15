@@ -1,0 +1,66 @@
+To: R. Adekanmi
+From: PC
+Subject: Dashboard audit — before tomorrow's steering
+
+R — careful read of the dashboard. The headline: as drafted, it tells a story neither the CISO nor T. Adeyemi believes any more. The 14-week green run, the corridor comments, and the actual workstream state all point the same way. Below by section, with what I think you should change before tomorrow vs going forward.
+
+1. FOUR-QUESTION FRAMEWORK — DASHBOARD ANSWERS NONE OF THEM CLEANLY
+
+The chapter's four questions: (a) on track for objectives? (b) where is the pressure? (c) what has changed? (d) what does senior attention need to be on?
+
+- (a) Programme completion 68% is rolled up from soft estimates; walking the underlying it's closer to 55%. Doesn't answer the actual objective (go-live Q4).
+- (b) Pressure is hidden — Federation is the source of nearly all the real pressure but reads GREEN.
+- (c) No trending — every metric is a point value. The CISO can't tell if Federation has been amber-for-nine-weeks or just turned that way.
+- (d) No "decisions needed" or "asks of senior" section at all.
+
+If the CISO asks any of these tomorrow, the dashboard won't help. The framing "if your dashboard cannot answer these, it is decoration" applies.
+
+2. METRIC PRINCIPLES — FOUR PROBLEMS, FOUR FIXES
+
+- Activity-as-outcome: "Programme completion 68%", "Milestones 14 of 15 (93%)", "Workshops 24", "SC meetings 3", "Hours burned" — all activity. None answer "are we going to ship Q4?" Replace milestone count with "critical-path milestones X of Y". Replace hours burned with "burn against critical-path scope". Drop workshops + SC counts entirely.
+- Lagging hiding leading: "Defect count trending down (22→17→14)" looks good but the test lead is on extended sick leave, sprint velocity dropped 40%, so we're finding fewer because we're running fewer. The leading indicator is test execution rate — that would show the real story. Replace.
+- Composition hidden by total: "Open risks 22" — 11 of 22 are now concentrated on Federation critical path, 4 are external-vendor amber-for-nine-weeks. Total is the noise, composition is the signal. Replace with "critical-path risks (composition view): N high, N medium, age-of-amber per item".
+- Snapshot without trend: every metric is one point. Add 12-week trend lines for everything that stays. Without trending, no one can interpret 68% or 4.1.
+
+Survey: the 4.1/5 satisfaction is methodologically broken — 38% response rate, senior stakeholders didn't respond, weighted by junior workshop praise. Drop the metric until we have a sample we can defend.
+
+3. AUDIENCE LAYERS — ONE DASHBOARD CANNOT SERVE THREE
+
+The current dashboard is one screen for delivery team, you, and the CISO. None of them think it serves them; none has told you. Per the chapter, three layers:
+
+- Team operational (daily): velocity, burndown, defects, build status, test execution rate, action tracker. Owned by team leads, refreshed daily.
+- Project tactical (weekly, YOU): milestone progress, workstream RAGs with rationale, budget-vs-actual by workstream, top risks composition view, upcoming decisions, trending. Owned by you and PMO analyst.
+- Executive strategic (weekly or biweekly, CISO + SC): one page. Overall RAG with rationale (honest), top three risks, sponsor decisions needed, go-live confidence. Owned by R., reviewed by PMO Director.
+
+For tomorrow specifically — propose to R. that we build a one-page executive cut tonight, derived from the project view. Same source data; different package per audience. The chapter line: 'translate between dashboards' — divergence between layers erodes trust, but a properly layered view does not.
+
+4. HONEST COLOR — THE 14-WEEK GREEN RUN IS A LIE BY OMISSION
+
+T. Adeyemi's "the green run is making me nervous" and the CISO's "real view of where the programme is" are both already discounting the dashboard. The chapter is direct: a dashboard full of green for twelve weeks is reporting a lie by omission; readers learn to discount everything it says.
+
+Specifically Federation is amber-going-red on every operational signal — vendor delays, 11-risks-on-critical-path concentration, scope creep on the broker integration, lead reporting GREEN for nine weeks because she's emotionally committed to recovery. That's the named pattern: green-because-PM-wants-it-to-be.
+
+Both mechanisms — automatic color-by-threshold AND PM-judgment-override with written rationale. We need both, but tomorrow the override mechanism matters more. Specifically I'd recommend:
+- Federation: move to AMBER (or RED — see below) with rationale citing vendor, critical-path-concentration, broker scope.
+- Overall RAG: move to AMBER given Federation is on critical path and we are 4 months from go-live.
+- Add a "color rationale" column to every workstream so readers can see why the colour is what it is.
+
+The chapter's discomfort test: honest dashboards look slightly uncomfortable. Readers who see a dashboard that reflects real variation and occasional bad news learn to believe the green when it appears. Going honest tomorrow rebuilds trust the dashboard has lost.
+
+On Federation specifically — I'm not sure whether the right call is AMBER or RED. I'd like to walk the underlying numbers with the lead this afternoon and bring you a separate read this evening. RED implies a material change is needed (per Ch 13's definition); AMBER implies exposure with senior awareness appropriate. My instinct is RED but I want the conversation with her first. Either way, you have the final call.
+
+5. COORDINATOR ROLE — WHAT I'M COMMITTING TO
+
+Verify before publishing. Going forward I'll reconcile each workstream lead's reported % against the underlying burn-up and accepted deliverables BEFORE the dashboard refreshes. The 68% vs 55% gap is on me — I refreshed without verifying. That's a process fix I can make this week.
+
+Drop noise, add signal. "Workshops conducted" and "SC meetings" have not been referenced by any audience in 8 weeks. Drop. Add: critical-path-milestones, test execution rate, critical-path risk composition, trending for everything.
+
+Translate between layers. When we build the three-layer split, my job is to keep the source data consistent — if the executive view says X, the project view's underlying numbers reconcile to X. Divergence between layers erodes trust faster than amber/red ever does.
+
+Don't hide behind the dashboard. When the CISO asks tomorrow "what's the real risk?" — the answer is Federation, and that's an answer I should be able to give even if the dashboard doesn't have a chart for it. Pointing at the dashboard instead of answering would be the failure.
+
+On Federation specifically — I want to surface what I'm seeing to you before steering. I won't put Federation on AMBER/RED on the dashboard tomorrow without your sign-off, but the conversation needs to happen tonight, not in steering. Worst case: you and the lead disagree with my read, we hold GREEN, and the CISO surfaces it herself (which she will). Best case: you go in tomorrow having already made the call, with rationale, and the steering becomes a focused recovery conversation rather than a discovery one.
+
+Two things I am NOT certain on and want your read: (a) Federation AMBER vs RED — my walk-through with the lead this afternoon will inform; (b) whether to brief T. Adeyemi separately before steering, given her own concern signal — your relationship with her, your call.
+
+PC
