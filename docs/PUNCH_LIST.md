@@ -4,13 +4,14 @@ Live tracker for what's left to ship the app. **Claude reads this at the
 start of every session before doing anything else.** Tick a box when the
 work lands on `main`. Add new items as we discover them.
 
-Last reviewed: 2026-06-09 (Lesson 14 Change Requests grading pipeline shipped; Lessons 1–14 fully gradable on main)
+Last reviewed: 2026-06-12 (Lesson 15 Dashboards grading pipeline shipped; Lessons 1–15 + canonical Lesson 20 fully gradable on main; Part III complete)
 
 ---
 
 ## Content — grading pipelines (Claude can author next)
 
-- [ ] **Lessons 15–19** — handbook covers Chapters 16–25 (dashboards, escalation, push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs reading-only. Part III of the handbook (Chapters 9–16) is the procedural-artifacts heart of the curriculum and likely needs the most grading-pipeline coverage.
+- [x] **Lesson 15 — Dashboards (Ch 16)** — PR #86 merged 2026-06-12. Closes Part III (Lessons 8–15 + canonical Lesson 20 all fully gradable).
+- [ ] **Lessons 16–19** — handbook covers Chapters 17–25 (escalation, push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs reading-only.
 
 ## Content — blocked on user (recording / authoring)
 
@@ -41,6 +42,7 @@ _All known engine items shipped._
 
 ## Recently shipped
 
+- 2026-06-12 — **PR #86** merged: Lesson 15 (dashboards / Ch 16) grading pipeline. First try green calibration. Closes Part III (Lessons 8–15 + canonical Lesson 20). Migration includes FULL prompt body with placeholders per the 2026-06-10 bug learning.
 - 2026-06-09 — **PR #83** merged: Lesson 14 (change-requests / Ch 15) grading pipeline. Two known flakes both hit 3rd occurrence and resolved: org_navigation widened to tol 2, professional_communication skipped pending follow-up issue #84. Calibration retry blocked on Anthropic credits, then green.
 - 2026-06-08 — **PR #82** merged: Lesson 13 (Status Reports — Three Audiences, Three Reports / Ch 13) grading pipeline. 5 fixtures (novice_01 / intermediate_01 / hire_ready_01 / loyal_lieutenant_01 / status_rewriter_01). All `status_report_craft` cells held first calibration run — `loyal_lieutenant_01` (new color-washing-defender failure-mode shape, `rag_courage_and_calibration` floored at 1 by prompt cap) held without widening; `status_rewriter_01` audit-vs-rewrite caps held as predicted from Lessons 9–12 (all 5 dims pre-set at {2, ±2}). CI calibration 31m0s under the 45-min cap (corpus now 90 fixtures across 14 competencies). Lessons 1–13 now fully gradable end-to-end.
 - 2026-06-06 — **PR #81** merged: Lesson 12 (Minutes, Actions, Decisions / Ch 12) grading pipeline. 5 fixtures (novice_01 / intermediate_01 / hire_ready_01 / format_pedant_01 / minutes_rewriter_01). All `minutes_discipline` cells held first calibration run — `format_pedant_01` (new cosmetic-thoroughness-while-missing-substance failure-mode shape) held without widening; `minutes_rewriter_01` audit-vs-rewrite caps held as predicted from the Lesson 9–11 learning (all 5 dims pre-set at {2, ±2}). Both pre-existing known flakes hit again (`professional_communication/hire_ready_01` score≥3-without-quote + `organisational_navigation/wrong_escalation_01/failure_mode_diagnosis`), green on rerun — 2nd recurrence each, not yet at the 3rd-occurrence widen threshold. CI calibration 36m47s under the 45-min cap (corpus now 85 fixtures across 13 competencies). Lessons 1–12 now fully gradable end-to-end.
