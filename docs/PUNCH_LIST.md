@@ -36,7 +36,7 @@ Last reviewed: 2026-06-12 (Lesson 15 Dashboards grading pipeline shipped; Lesson
 
 ## Engine work (Claude can do solo)
 
-_All known engine items shipped._
+- [ ] **Read-tab content duplication (low priority, deferred)** — each lesson's Read tab is a hand-maintained `docs/lessons/<slug>.md` adapted from its handbook chapter (`content/project_coordinator_handbook.md`); `read-panel.tsx` loads it via `readFileSync`. Handbook edits do NOT propagate to the Read tab. Acceptable while the handbook is finished and we're shipping lessons. If it ever bites, the cheap fix is a CI check that flags when a chapter's text changes but its lesson `.md` didn't — NOT a slice-from-handbook refactor (the lesson↔chapter mapping is irregular and the Read `.md` is an intentional editorial adaptation, not a verbatim copy).
 
 ---
 

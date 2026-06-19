@@ -1,0 +1,35 @@
+You are PC on the eleven-month identity-and-access-management (IAM) modernisation programme for a large healthcare provider. Sponsor: CISO. Go-live target: end of Q4. You are now at the start of month eight — a few weeks after the steering committee where the dashboard was finally made honest and Federation was moved to AMBER.
+
+Federation is the workstream everyone is watching. Its critical-path item — the federation broker integration — is delivered by an external vendor, Vantage. The Federation production-rollout milestone is the only critical-path milestone left before the CISO's Q4 go-live sign-off decision, which is three weeks away.
+
+Here is what you have observed over the last seven weeks:
+
+- Vantage's weekly progress reports have said "on track" or "recovering to plan" every week. Actual delivery does not match. Of the last four weekly integration deliverables, three were missed outright; the two before that were delivered partial and failed your acceptance checks (the broker token-exchange flow does not pass the conformance tests).
+
+- At current pace, Vantage's remaining scope cannot credibly land by the milestone baseline date, which is two weeks away. Your honest read is that the milestone slips three to four weeks. If it does, the Q4 go-live decision the CISO makes in three weeks is being made on a milestone that will already be red.
+
+- You raised this to your PM, R. Adekanmi, twice. In week 3 of the pattern you flagged the divergence between Vantage's reports and actual delivery. In week 5 you re-raised it with the specific list of missed deliverables. Both times R. said a version of "it's on my radar, I'm tracking it with the Federation lead." You have seen no visible change since — Vantage still reports green, still misses.
+
+- R. is genuinely overloaded; she is running a second programme in parallel this quarter. Your honest sense is that the Federation item is drifting on her list rather than being actively worked — not because she does not care, but because she is underwater.
+
+- The Federation workstream lead frames it as "we can still recover with focused effort." She has been emotionally committed to the recovery story for weeks.
+
+- T. Adeyemi, the PMO Director, mentioned to you informally last week, "let me know if Federation needs a push." You have the CISO's and T. Adeyemi's email addresses. You could write to them directly, cc R., and force movement before the sign-off decision. You are tempted.
+
+- You are equally tempted to do nothing further. R. said she is tracking it. You do not want to be the coordinator who panics, and you do not want to damage your relationship with R. or with the Federation lead by going around them or making noise.
+
+R. messaged you this morning: "PC — give me your honest read on Federation and what you think we should do about it. Steering sign-off is in three weeks and I want to walk in with a plan. What's your recommendation?"
+
+Your note back to R. — 500 to 800 words — should:
+
+1. Apply the chapter's three tests (appropriateness, channels, proportion) to decide whether escalation is warranted here, and name the two failure modes you are steering between (over-escalating around R., and under-escalating into passivity).
+
+2. Select the right rung on the escalation ladder and justify it as the lowest rung that will actually work. Be explicit about routing through R. rather than around her.
+
+3. Draft the information packet R. can use to escalate — situation (facts and dates), impact, what has been tried, the specific ask, and the options with trade-offs.
+
+4. Keep the tone crisp, not dramatic — no catastrophising language, no personal blame of Vantage's PM or the Federation lead. Write the packet as if it will be forwarded to the people named in it.
+
+5. Frame the coordinator posture going forward — escalation up versus across handled through R. with no surprises, not re-raising the same issue to the same level without new content, and following up to close the record (RAID and status).
+
+Do not send anything to the CISO or T. Adeyemi yourself. R. owns the escalation; your job is to equip her. R. asked for your read and a recommendation — that is the deliverable.

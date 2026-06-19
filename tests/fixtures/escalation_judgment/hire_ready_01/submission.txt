@@ -1,0 +1,33 @@
+To: R. Adekanmi
+From: PC
+Subject: Federation — my read, and a packet you can take to the sponsor
+
+R — here's my honest read and a recommendation. Short version: I think this now warrants escalation to the sponsor, but it should go from you, and I've built the packet so you can do it without spending the time you don't have.
+
+Why escalate now — the three tests.
+
+Appropriateness: the current level has had its chance. I raised the report-vs-delivery gap with you in week 3 and the missed-deliverable list in week 5, and we've worked it with the Federation lead. Seven weeks in, Vantage still reports green and still misses. That's no longer "give the current level more time" — the lower rungs have been exhausted. Channels: the right path is you engaging the sponsor (and/or Vantage's exec sponsor), not me going around you. Proportion: a three-to-four-week slip on the only critical-path milestone, landing right before the CISO's sign-off, is genuinely sponsor-level — not something to keep at workstream level, and not something to take past you either.
+
+I want to be honest about the two ways I could get this wrong. One is over-escalating — firing something at the CISO or T. Adeyemi myself to force movement. That would undercut you and damage trust even if the facts are right. The other is under-escalating — telling myself you're tracking it and staying quiet, which is exactly how a fixable problem becomes an unfixable one. This note is me trying to land between them: push hard on the substance, route it cleanly through you.
+
+The right rung is the sponsor, reached through you — the lowest rung that will actually move Vantage. Direct conversation and the Federation lead haven't shifted it; another round at our level won't either. The sponsor (or Vantage's exec sponsor, via the CISO) is the level with the leverage. PMO/legal is a rung too far for now.
+
+Here's the packet — half a page, ready to forward:
+
+Situation: Vantage has missed three of the last four weekly broker-integration deliverables (due 5, 12, 19 May; the 28 Apr and 21 Apr items were delivered partial and failed token-exchange conformance). Reports have read "on track" each week.
+
+Impact: at current pace the remaining scope does not land by the 2-week baseline; realistic finish is 3-4 weeks late. That puts the Federation production-rollout milestone red before the Q4 go-live sign-off on [date].
+
+What's been tried: weekly acceptance testing and two escalations to the workstream lead; the lead's recovery plan has not changed the delivery curve.
+
+The ask: your intervention with Vantage's executive sponsor to secure a credible, staffed recovery commitment — or a decision — by end of next week.
+
+Options, with trade-offs: (a) hold the date and require Vantage to staff up — lowest cost, but we've had recovery promises before; (b) engage the backup integration vendor in parallel — adds cost and onboarding time but de-risks the milestone; (c) renegotiate the milestone and the go-live date now, on our terms, rather than discovering the slip at steering.
+
+On tone: I've kept this to performance against commitments, not people. It says "Vantage is behind plan on three of four deliverables," not anything about their PM personally, and nothing about the Federation lead — I've written every line assuming it gets forwarded to both of them, because it probably will.
+
+On how I'll carry myself: this is your escalation, not mine. I won't write to the CISO or T. Adeyemi — even though T. offered to help, I'd rather you decide whether and how to use that, and I'll only ever approach across-hierarchy with you knowing first. I'm also not going to just re-send you the same flag a third time; this packet is the new content. Once you've acted, I'll confirm what was decided, update the Federation entries in the RAID log and reflect the new milestone status in this week's report, and thank whoever helps.
+
+Two things I'm genuinely unsure on and would value your call: whether to open with option (b) or hold it in reserve, and whether the milestone renegotiation is a this-week move or a wait-for-the-sponsor's-response move. Happy to talk it through before you go in.
+
+PC
