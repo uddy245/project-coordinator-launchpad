@@ -110,6 +110,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/dashboard-literacy-v1.json",
     promptPath: "docs/prompts/grade-dashboards-v1.md",
   },
+  {
+    competency: "escalation_judgment",
+    rubricPath: "docs/rubrics/escalation-judgment-v1.json",
+    promptPath: "docs/prompts/grade-escalation-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

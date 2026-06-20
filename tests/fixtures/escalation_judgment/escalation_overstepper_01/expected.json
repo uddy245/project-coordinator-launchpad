@@ -1,0 +1,15 @@
+{
+  "fixture_id": "escalation_overstepper_01",
+  "scenario_ref": "iam-modernisation-federation-escalation-v1",
+  "expected_dimension_scores": {
+    "three_tests_diagnosis": { "score": 2, "tolerance": 2 },
+    "escalation_ladder_selection": { "score": 2, "tolerance": 2 },
+    "information_packet_quality": { "score": 2, "tolerance": 2 },
+    "escalation_tone_discipline": { "score": 2, "tolerance": 2 },
+    "channel_and_followthrough_posture": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 2.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "ESCALATION-OVERSTEPPER FAILURE MODE — same family as the audit-vs-rewrite / rewriter probes on Lessons 9-15. The substance is largely correct: a well-structured information packet (situation with dates, impact, what's been tried, specific ask, options) in a measured, blame-free register. That quality is the trap. The central process error is severe and dispositive: PC writes the finished escalation addressed to the CISO and T. Adeyemi, offers to send it directly, treats the cc to R. as notification, and threatens to send it unilaterally if R. doesn't respond by end of day ('if I don't hear back by end of day I'll send it'). This is exactly the year-two channels violation the chapter is built around — the escalation is R.'s to make, to the sponsor, under R.'s name. Per the audit-vs-rewrite calibration pattern (Lessons 9-15): producing-and-sending the finished artefact rather than equipping the PM caps ALL FIVE dims at {2, 2}. The escalation case is particularly egregious because routing is the entire competency — a coordinator who pre-empts the PM's escalation collapses the role distinction the chapter is about, no matter how good the packet is. Tests whether the grader catches well-executed-wrong-shape on escalation lessons too. Expect all five to land 2-3; tolerance 2 absorbs the variance while the cap holds it off pass."
+}

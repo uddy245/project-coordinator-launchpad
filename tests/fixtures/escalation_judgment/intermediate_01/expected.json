@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "iam-modernisation-federation-escalation-v1",
+  "expected_dimension_scores": {
+    "three_tests_diagnosis": { "score": 4, "tolerance": 1 },
+    "escalation_ladder_selection": { "score": 4, "tolerance": 1 },
+    "information_packet_quality": { "score": 4, "tolerance": 1 },
+    "escalation_tone_discipline": { "score": 4, "tolerance": 1 },
+    "channel_and_followthrough_posture": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.0,
+  "expected_pass": true,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Solid intermediate, right at the hire-ready boundary. three_tests: applies all three to the facts and flags the over-escalation temptation, but names only one failure mode (over-escalating) — does not explicitly name the under-escalation/passivity failure — so short of the 5-anchor. ladder: selects sponsor-through-R and justifies routing, but the lowest-rung-that-works reasoning is lighter than ceiling. packet: situation/impact/tried/ask all present and specific, but the options-with-trade-offs element is absent (gives the ask but no menu of paths forward) — keeps it at 4. tone: measured and addresses blame-avoidance, but does not explicitly invoke the forward test. channel_and_followthrough: declines the direct path, routes T. Adeyemi through R., commits to chasing the outcome — but does not name the don't-re-escalate-the-same-thing discipline or the record close-out (RAID + status update). Not yet hire-ready because each dimension lands one specific 5-anchor indicator short."
+}

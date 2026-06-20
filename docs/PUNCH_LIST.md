@@ -4,14 +4,15 @@ Live tracker for what's left to ship the app. **Claude reads this at the
 start of every session before doing anything else.** Tick a box when the
 work lands on `main`. Add new items as we discover them.
 
-Last reviewed: 2026-06-12 (Lesson 15 Dashboards grading pipeline shipped; Lessons 1–15 + canonical Lesson 20 fully gradable on main; Part III complete)
+Last reviewed: 2026-06-20 (Lesson 16 Escalation grading pipeline shipped; Lessons 1–16 + canonical Lesson 20 fully gradable on main; Part IV opened)
 
 ---
 
 ## Content — grading pipelines (Claude can author next)
 
 - [x] **Lesson 15 — Dashboards (Ch 16)** — PR #86 merged 2026-06-12. Closes Part III (Lessons 8–15 + canonical Lesson 20 all fully gradable).
-- [ ] **Lessons 16–19** — handbook covers Chapters 17–25 (escalation, push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs reading-only.
+- [x] **Lesson 16 — Escalation (Ch 17)** — committed 2026-06-20 on `lesson-16-escalation`. Opens Part IV. 5 dims, 5 fixtures, 101/101 calibration green first try (incl. overstepper held at {2,2} without widening). Pending: migration to prod + E2E smoke.
+- [ ] **Lessons 17–19** — handbook covers Chapters 18–25 (push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs reading-only.
 
 ## Content — blocked on user (recording / authoring)
 
@@ -36,12 +37,13 @@ Last reviewed: 2026-06-12 (Lesson 15 Dashboards grading pipeline shipped; Lesson
 
 ## Engine work (Claude can do solo)
 
-_All known engine items shipped._
+- [ ] **Read-tab content duplication (low priority, deferred)** — each lesson's Read tab is a hand-maintained `docs/lessons/<slug>.md` adapted from its handbook chapter (`content/project_coordinator_handbook.md`); `read-panel.tsx` loads it via `readFileSync`. Handbook edits do NOT propagate to the Read tab. Acceptable while the handbook is finished and we're shipping lessons. If it ever bites, the cheap fix is a CI check that flags when a chapter's text changes but its lesson `.md` didn't — NOT a slice-from-handbook refactor (the lesson↔chapter mapping is irregular and the Read `.md` is an intentional editorial adaptation, not a verbatim copy).
 
 ---
 
 ## Recently shipped
 
+- 2026-06-20 — **Lesson 16** committed (`lesson-16-escalation`): escalation_judgment grading pipeline (Ch 17). 5 dims (three_tests_diagnosis, escalation_ladder_selection, information_packet_quality, escalation_tone_discipline, channel_and_followthrough_posture). 5 fixtures including overstepper (held {2,2} without widening) and under_escalation_defender. 101/101 calibration green first try. Opens Part IV. Migration to prod + E2E smoke pending.
 - 2026-06-12 — **PR #86** merged: Lesson 15 (dashboards / Ch 16) grading pipeline. First try green calibration. Closes Part III (Lessons 8–15 + canonical Lesson 20). Migration includes FULL prompt body with placeholders per the 2026-06-10 bug learning.
 - 2026-06-09 — **PR #83** merged: Lesson 14 (change-requests / Ch 15) grading pipeline. Two known flakes both hit 3rd occurrence and resolved: org_navigation widened to tol 2, professional_communication skipped pending follow-up issue #84. Calibration retry blocked on Anthropic credits, then green.
 - 2026-06-08 — **PR #82** merged: Lesson 13 (Status Reports — Three Audiences, Three Reports / Ch 13) grading pipeline. 5 fixtures (novice_01 / intermediate_01 / hire_ready_01 / loyal_lieutenant_01 / status_rewriter_01). All `status_report_craft` cells held first calibration run — `loyal_lieutenant_01` (new color-washing-defender failure-mode shape, `rag_courage_and_calibration` floored at 1 by prompt cap) held without widening; `status_rewriter_01` audit-vs-rewrite caps held as predicted from Lessons 9–12 (all 5 dims pre-set at {2, ±2}). CI calibration 31m0s under the 45-min cap (corpus now 90 fixtures across 14 competencies). Lessons 1–13 now fully gradable end-to-end.
@@ -65,7 +67,7 @@ _All known engine items shipped._
 - 2026-05-05 — **PR #74** merged: Lesson 6 (governance / Ch 6) grading pipeline with overstep + blame-narrative probes. 4 calibration cycles + quote-cap bump (750→1500) to settle.
 - 2026-05-05 — **PR #75** merged: Lesson 7 (variables / Ch 7) grading pipeline with iron-triangle-zealot + quality-blindspot probes. Calibration green first try (post-rebase).
 
-**Part-I grading pipelines complete + Lessons 8–14 shipped. Lessons 1–14 are fully gradable end-to-end via the AI grading service. Calibration corpus is 95 fixtures across 15 competencies (35 risk_identification + 5 each for the other 14), with 1 cell skipped pending grade-voice v2 (issue #84).**
+**Parts I–III complete + Lesson 16 (Part IV, escalation) shipped. Lessons 1–16 are fully gradable end-to-end. Calibration corpus is 101 fixtures across 16 competencies (35 risk_identification + 5 each for the other 15), with 1 cell skipped pending grade-voice v2 (issue #84).**
 
 ---
 

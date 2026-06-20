@@ -1,0 +1,61 @@
+{
+  "rubric_id": "escalation-judgment-v1",
+  "rubric_version": "1.0.0",
+  "competency": "escalation_judgment",
+  "competency_label": "Escalation Judgment — The Three Tests, the Ladder, the Packet, and Not Burning Bridges",
+  "lesson_ref": "escalation",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "three_tests_diagnosis",
+      "description": "Does the learner apply the chapter's three tests before escalating — appropriateness (has the current level actually been given the chance to act, and can it still resolve this?), channels (does the person being escalated to know, and is this the right path?), and proportion (is the seriousness matched to the level?) — and conclude correctly that escalation is now warranted? Does the learner name the two real failure modes the case sits between: over-escalating around the PM (the channels violation) and under-escalating into passivity (appropriateness applied in reverse)?",
+      "anchors": {
+        "1": "No diagnostic reasoning. Reflexively escalates or reflexively stays silent with no test applied. Or invents facts not in the scenario.",
+        "3": "Names one or two of the three tests and applies them to the facts. Concludes escalation is warranted but does not work all three, or names only one of the two failure modes.",
+        "5": "Applies all three tests explicitly to the facts (R. has been given two chances and the item is still drifting; the right channel is through R., not around; the milestone-at-risk is proportionate to sponsor-level engagement). Concludes escalation is warranted, and names both failure modes — over-escalating around R. and under-escalating into passivity — and why this case sits between them."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "escalation_ladder_selection",
+      "description": "Does the learner reason about the chapter's escalation ladder (direct conversation → their manager / workstream lead → your PM → sponsor / steering → formal PMO/legal/compliance routes) and select the lowest rung that will actually work — here, R. engaging the sponsor or Vantage's executive sponsor with PC's support — rather than racing to the top? Is the learner explicit that the route runs through R., not around her?",
+      "anchors": {
+        "1": "No ladder reasoning. Jumps straight to the CISO/PMO, or names no level at all, or routes around the PM.",
+        "3": "Identifies a level to escalate to but does not justify it as the lowest workable rung, or is vague about routing through R. versus around her.",
+        "5": "Names the ladder, selects the right rung (R. engages the sponsor and/or Vantage's executive sponsor, with PC supplying the evidence and support), justifies it as the lowest rung that will actually move the situation, and is explicit that the route runs through R. — not a direct approach to the CISO or PMO."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "information_packet_quality",
+      "description": "Does the learner build the chapter's information packet — situation (what is happening, factually, with dates and specifics), impact (what it means for objectives/timeline), what has been tried (the actions already taken at lower levels), what is being asked (the specific decision or intervention requested), and the options (the paths forward with trade-offs)? Is it crisp — roughly half a page — rather than a vague 'the vendor is being difficult'?",
+      "anchors": {
+        "1": "Vague or unstructured. 'Vantage is being difficult', 'we need help' — no facts, dates, impact, specific ask, or options.",
+        "3": "Includes two or three of the five packet elements with some specifics, but is missing the impact, the specific ask, or the options-with-trade-offs.",
+        "5": "All five elements present and specific: factual situation with the missed-deliverable dates, impact on the milestone and the Q4 sign-off, what has already been tried at lower levels, a single specific ask, and options with trade-offs (e.g. renegotiate the milestone / engage the backup vendor at cost / descope). Crisp — about half a page."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "escalation_tone_discipline",
+      "description": "Is the escalation language crisp but not dramatic? Does the learner use the chapter's measured register ('at risk', 'behind plan', 'material exposure', 'needs intervention') and avoid the temperature-raising words ('catastrophic', 'disaster', 'unacceptable', 'crisis', 'failing')? Does the learner avoid attributing blame to named individuals (Vantage's PM, the Federation lead) unless blame is actually necessary and accurate? Does the learner apply the forward test — writing as if the text will be forwarded to the people named in it?",
+      "anchors": {
+        "1": "Dramatic or catastrophising language and/or personal blame of a named individual ('the Vantage PM is incompetent', 'the Federation lead has been lying').",
+        "3": "Mostly measured, but slips into one dramatic phrase or one blame attribution, or does not address the forward test.",
+        "5": "Crisp, fact-based register throughout; avoids catastrophising vocabulary and personal blame (describes performance against commitments, not character); explicitly applies the forward test — writes the packet as if it is certain to be forwarded to Vantage and the Federation lead."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "channel_and_followthrough_posture",
+      "description": "Does the learner take the chapter's coordinator posture — escalation up versus across handled through the PM with no surprises (never an email to the sponsor or PMO that R. did not know was coming); not re-raising the same issue to the same level without new content (if one escalation did not work, the next goes higher, brings new information, or takes a different form); and following up to close the record (confirm what was decided, update the RAID log and status report, thank the person who helped)? Does the learner decline the direct-to-CISO/T. Adeyemi temptation?",
+      "anchors": {
+        "1": "Goes around or over R. (writes to the CISO or T. Adeyemi directly, treating the cc to R. as notification), surprises R., or proposes simply re-sending the same message a third time. No follow-up or record discipline.",
+        "3": "Keeps R. informed and names a follow-up or the record update, but misses the don't-re-escalate-the-same-thing discipline, or the up-versus-across sensitivity, or declines the direct-to-sponsor temptation only implicitly.",
+        "5": "Routes up-versus-across through R. with no surprises and explicitly declines the direct-to-CISO/T. Adeyemi path; commits to not re-raising the same issue to R. without new content (this note IS the new content — a structured packet, not a third nag); and closes the loop — confirm the decision, update RAID and the status report, thank whoever helps. Acknowledges the T. Adeyemi offer but routes it through R."
+      },
+      "weight": 0.20
+    }
+  ]
+}

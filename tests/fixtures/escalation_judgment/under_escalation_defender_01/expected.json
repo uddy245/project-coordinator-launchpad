@@ -1,0 +1,15 @@
+{
+  "fixture_id": "under_escalation_defender_01",
+  "scenario_ref": "iam-modernisation-federation-escalation-v1",
+  "expected_dimension_scores": {
+    "three_tests_diagnosis": { "score": 1, "tolerance": 1 },
+    "escalation_ladder_selection": { "score": 1, "tolerance": 1 },
+    "information_packet_quality": { "score": 1, "tolerance": 1 },
+    "escalation_tone_discipline": { "score": 2, "tolerance": 1 },
+    "channel_and_followthrough_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "UNDER-ESCALATION-DEFENDER FAILURE MODE — symmetric to the dashboards color_washing_defender and Lesson 13's loyal_lieutenant. The learner ACKNOWLEDGES the situation (report-vs-delivery gap, the slipping milestone) but argues for NOT escalating and rationalises passivity as virtue — 'I trust that', 'the worst thing I could do is start making noise', 'let's not borrow trouble'. This is the year-six anti-pattern the chapter is built to prevent, dressed up as discipline and relationship-protection. The under-escalation cap fires: three_tests_diagnosis floors at 1 (recommends staying passive despite the facts indicating escalation is warranted; never actually applies appropriateness/channels/proportion) and channel_and_followthrough_posture floors at 1. ladder floors at 1 (argues against using the ladder at all). packet floors at 1 (no packet — the whole note is an argument not to build one). tone may land 1-2 — measured in register but weaponises 'patience' and 'standing' against action; allow 2 with tol 1. Tests whether the grader catches sophisticated-defence-of-passivity as the failure it is, not as prudence."
+}

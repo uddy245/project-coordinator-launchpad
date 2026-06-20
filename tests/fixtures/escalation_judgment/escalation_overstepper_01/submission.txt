@@ -1,0 +1,30 @@
+To: R. Adekanmi
+From: PC
+Subject: Federation — I've drafted the escalation, ready to send to the CISO
+
+R — you asked what we should do. I've gone ahead and written the escalation so we don't lose any more time. It's ready to go to the CISO and T. Adeyemi; I'll send it this afternoon and cc you unless you object. Draft below.
+
+---
+
+To: CISO; T. Adeyemi (PMO)
+Cc: R. Adekanmi
+From: PC, IAM Programme
+Subject: Federation broker integration — milestone at risk ahead of Q4 sign-off
+
+Situation: Vantage has missed three of the last four weekly broker-integration deliverables (due 5, 12, 19 May); the prior two were delivered partial and failed token-exchange conformance. Weekly reports have read "on track" throughout.
+
+Impact: at current pace the remaining scope does not land by the baseline date two weeks out; realistic completion is three to four weeks late, which places the Federation production-rollout milestone — the only critical-path milestone in the window — at red ahead of the Q4 go-live sign-off decision.
+
+What has been tried: weekly acceptance testing and two escalations to the workstream lead; the recovery plan has not changed the delivery curve.
+
+The ask: intervention with Vantage's executive sponsor to secure a staffed, credible recovery commitment, or a go-live decision taken in light of the slip, by end of next week.
+
+Options: hold the date and require Vantage to staff up; engage the backup integration vendor in parallel at additional cost; renegotiate the milestone and go-live date now.
+
+The language is kept factual and I've been careful not to point fingers at Vantage's PM or the Federation lead — it's about delivery against commitments.
+
+---
+
+T. Adeyemi already told me to flag it if Federation needed a push, so the PMO won't be blindsided. I think the sooner this is in front of the CISO the better, given the sign-off is three weeks out. Just say the word — or honestly, if I don't hear back by end of day I'll send it so we don't lose the time. I'll update the RAID log once it's out.
+
+PC

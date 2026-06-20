@@ -1,0 +1,27 @@
+To: R. Adekanmi
+From: PC
+Subject: Federation — my read and recommendation
+
+R — honest read below, plus what I'd suggest we do.
+
+I think we're past the point where keeping this at our level is the right call, and it's worth applying the three tests to be sure. Appropriateness: we've raised it twice and worked it with the Federation lead, and seven weeks on Vantage is still reporting green and still missing — the lower levels have had their go and it hasn't moved. Channels: the right route is you taking it up, not me going around you. Proportion: a multi-week slip on the only critical-path milestone, right before the CISO's sign-off, is serious enough to warrant sponsor attention. So my recommendation is that we escalate — and I want to be clear I'm not suggesting I do anything directly. The temptation is for me to fire something at the CISO or T. Adeyemi to force it, and that would be a mistake; it has to come from you.
+
+On the level: I'd take this to the sponsor, through you. We've exhausted the direct conversation and the workstream lead, and another round at our level won't change Vantage's behaviour. The sponsor is the level with the leverage to get Vantage's executive sponsor engaged.
+
+Here's what I'd put in front of them:
+
+Situation: Vantage has missed three of the last four weekly broker-integration deliverables, and the two before that were partial and failed our conformance tests, while reporting "on track" each week.
+
+Impact: at the current pace the milestone slips three to four weeks, which means the Federation production rollout is red going into the Q4 sign-off decision.
+
+What we've tried: weekly acceptance testing and two rounds of raising it with the Federation lead, whose recovery plan hasn't changed the actual delivery.
+
+The ask: your intervention with Vantage's executive sponsor to get a real, staffed recovery commitment before the sign-off.
+
+I'd keep the language factual — "behind plan", "at risk" — and steer clear of anything that reads as blaming Vantage's PM or the Federation lead, since this is about delivery against commitments, not people.
+
+On how I'd handle it: I won't approach the CISO or T. Adeyemi myself, even though T. offered — I'll leave that to you and keep you in front of it. Happy to sit in or supply any of the underlying numbers when you go in, and I'll chase the outcome afterward so it doesn't drift again.
+
+Let me know if you want me to tighten any of this before you take it up.
+
+PC

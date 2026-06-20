@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "iam-modernisation-federation-escalation-v1",
+  "expected_dimension_scores": {
+    "three_tests_diagnosis": { "score": 1, "tolerance": 1 },
+    "escalation_ladder_selection": { "score": 1, "tolerance": 1 },
+    "information_packet_quality": { "score": 1, "tolerance": 1 },
+    "escalation_tone_discipline": { "score": 1, "tolerance": 1 },
+    "channel_and_followthrough_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor submission — the over-escalation novice. Trips nearly every cap at once. No three tests applied (three_tests cap → 2, but floors lower because it is pure reflex). Jumps straight to the CISO and T. Adeyemi AND routes around R. (ladder cap → 2, channel cap → 1). No structured packet — vague accusation, no dates/impact/ask/options (packet cap → 2). Catastrophising language throughout ('disaster', 'catastrophe', 'unacceptable', 'crisis', 'failing') AND personal blame of named individuals ('Vantage's PM has been lying', 'the Federation lead has been covering for him') — tone cap → 1 (both present). Proposes to send the email directly to the PMO/sponsor treating the cc to R. as notification, and weaponises the T. Adeyemi offer as a direct channel — channel_and_followthrough floors at 1. All five dims floor at 1."
+}
