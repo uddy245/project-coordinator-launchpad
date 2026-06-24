@@ -48,7 +48,9 @@ describe.skipIf(!SUPABASE_RUNNING)("portfolio gate count trigger", () => {
   }
 
   beforeAll(async () => {
-    admin = createClient(URL, SERVICE, { auth: { autoRefreshToken: false, persistSession: false } });
+    admin = createClient(URL, SERVICE, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
 
     const { data: lessons } = await admin
       .from("lessons")

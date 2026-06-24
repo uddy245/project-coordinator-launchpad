@@ -1,0 +1,7 @@
+# Generated / heavy artifacts — regenerable from each lesson's segments.py.
+# Slides (small, on-brand PNGs) and narration text ARE committed so the unit
+# test can verify the 1:1 slide mapping and the script stays readable.
+__pycache__/
+lessons/*/.work/
+lessons/*/audio/
+lessons/*/*.mp4

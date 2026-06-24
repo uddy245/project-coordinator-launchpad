@@ -1,0 +1,127 @@
+[
+  {
+    "id": 1,
+    "mode": "title",
+    "has_narration": false
+  },
+  {
+    "id": 2,
+    "mode": "story",
+    "has_narration": true
+  },
+  {
+    "id": 3,
+    "mode": "story",
+    "has_narration": true
+  },
+  {
+    "id": 4,
+    "mode": "story",
+    "has_narration": true
+  },
+  {
+    "id": 5,
+    "mode": "title",
+    "has_narration": true
+  },
+  {
+    "id": 6,
+    "mode": "def",
+    "has_narration": true
+  },
+  {
+    "id": 7,
+    "mode": "def",
+    "has_narration": true
+  },
+  {
+    "id": 8,
+    "mode": "def",
+    "has_narration": true
+  },
+  {
+    "id": 9,
+    "mode": "def",
+    "has_narration": true
+  },
+  {
+    "id": 10,
+    "mode": "example",
+    "has_narration": true
+  },
+  {
+    "id": 11,
+    "mode": "example",
+    "has_narration": true
+  },
+  {
+    "id": 12,
+    "mode": "list",
+    "has_narration": true
+  },
+  {
+    "id": 13,
+    "mode": "story",
+    "has_narration": true
+  },
+  {
+    "id": 14,
+    "mode": "list",
+    "has_narration": true
+  },
+  {
+    "id": 15,
+    "mode": "story",
+    "has_narration": true
+  },
+  {
+    "id": 16,
+    "mode": "story",
+    "has_narration": true
+  },
+  {
+    "id": 17,
+    "mode": "example",
+    "has_narration": true
+  },
+  {
+    "id": 18,
+    "mode": "story",
+    "has_narration": true
+  },
+  {
+    "id": 19,
+    "mode": "def",
+    "has_narration": true
+  },
+  {
+    "id": 20,
+    "mode": "example",
+    "has_narration": true
+  },
+  {
+    "id": 21,
+    "mode": "list",
+    "has_narration": true
+  },
+  {
+    "id": 22,
+    "mode": "list",
+    "has_narration": true
+  },
+  {
+    "id": 23,
+    "mode": "def",
+    "has_narration": true
+  },
+  {
+    "id": 24,
+    "mode": "story",
+    "has_narration": true
+  },
+  {
+    "id": 25,
+    "mode": "end",
+    "has_narration": false
+  }
+]

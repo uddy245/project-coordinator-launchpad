@@ -1,0 +1,1 @@
+RAID stands for four things: Risks, Assumptions, Issues, Dependencies. Four categories of thing that might move your project, tracked in one log.

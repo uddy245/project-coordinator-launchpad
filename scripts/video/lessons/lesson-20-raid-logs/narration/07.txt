@@ -1,0 +1,1 @@
+An issue is something that has happened and is affecting the project now. Issues require action, not monitoring. This distinction matters more than it sounds. When people log issues as risks, the project fails to act on things that have already happened. When people log risks as issues, the project panics over things that may never occur.

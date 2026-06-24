@@ -44,7 +44,9 @@ export const TEST_EMAIL = "e2e+gate-status@projectcoordinator.test";
 const FOUNDATION_SLUGS = ["coordinator-role", "project-lifecycle", "written-voice", "mindset"];
 
 export function admin(): SupabaseClient {
-  return createClient(URL, SERVICE_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
+  return createClient(URL, SERVICE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }
 
 /** Create (or fetch) the dedicated test user. Returns its id. */
@@ -74,7 +76,11 @@ export type GateSeed = {
 };
 
 /** Flip a user's gate inputs to a known state. Idempotent. */
-export async function seedGateState(db: SupabaseClient, userId: string, seed: GateSeed): Promise<void> {
+export async function seedGateState(
+  db: SupabaseClient,
+  userId: string,
+  seed: GateSeed
+): Promise<void> {
   const target = seed.portfolioTarget ?? 7;
 
   await db.from("gate_status").upsert({
@@ -85,7 +91,10 @@ export async function seedGateState(db: SupabaseClient, userId: string, seed: Ga
     foundation_complete: seed.foundationComplete,
   });
 
-  const { data: foundation } = await db.from("lessons").select("id, slug").in("slug", FOUNDATION_SLUGS);
+  const { data: foundation } = await db
+    .from("lessons")
+    .select("id, slug")
+    .in("slug", FOUNDATION_SLUGS);
   if (foundation?.length) {
     await db.from("lesson_progress").upsert(
       foundation.map((l) => ({

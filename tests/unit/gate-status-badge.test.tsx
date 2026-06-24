@@ -21,7 +21,11 @@ describe("GateStatusBadge", () => {
   for (const { status, label, pip } of CASES) {
     it(`renders "${label}" with pip data-status="${pip}" for ${status}`, () => {
       const { container } = render(
-        <GateStatusBadge name="Gate 2 · Portfolio" status={status} detail="3 of 7 graded artifacts submitted." />
+        <GateStatusBadge
+          name="Gate 2 · Portfolio"
+          status={status}
+          detail="3 of 7 graded artifacts submitted."
+        />
       );
       expect(screen.getByRole("heading", { name: "Gate 2 · Portfolio" })).toBeInTheDocument();
       const badge = container.querySelector(".pip");
@@ -32,12 +36,20 @@ describe("GateStatusBadge", () => {
   }
 
   it("renders the optional detail line when provided", () => {
-    render(<GateStatusBadge name="Gate 1 · Foundations" status="complete" detail="All 4 foundation modules complete." />);
+    render(
+      <GateStatusBadge
+        name="Gate 1 · Foundations"
+        status="complete"
+        detail="All 4 foundation modules complete."
+      />
+    );
     expect(screen.getByText("All 4 foundation modules complete.")).toBeInTheDocument();
   });
 
   it("omits the detail line when not provided", () => {
-    const { container } = render(<GateStatusBadge name="Gate 4 · Industry capstone" status="coming_soon" />);
+    const { container } = render(
+      <GateStatusBadge name="Gate 4 · Industry capstone" status="coming_soon" />
+    );
     expect(container.querySelector("p")).toBeNull();
   });
 });

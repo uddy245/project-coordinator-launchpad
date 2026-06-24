@@ -1,0 +1,1 @@
+Here's what most junior coordinators write when they add a risk: "Resource availability remains a risk." This sentence is useless. It's true on every project ever run. It gives the reader no information about what to actually do. If the worst risk you can articulate is this, you haven't thought about your project hard enough.
