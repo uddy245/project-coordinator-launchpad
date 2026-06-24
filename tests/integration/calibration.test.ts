@@ -115,6 +115,11 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/escalation-judgment-v1.json",
     promptPath: "docs/prompts/grade-escalation-v1.md",
   },
+  {
+    competency: "pushback_judgment",
+    rubricPath: "docs/rubrics/pushback-judgment-v1.json",
+    promptPath: "docs/prompts/grade-pushback-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

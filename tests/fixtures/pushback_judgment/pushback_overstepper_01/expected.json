@@ -1,0 +1,15 @@
+{
+  "fixture_id": "pushback_overstepper_01",
+  "scenario_ref": "iam-modernisation-board-preread-pushback-v1",
+  "expected_dimension_scores": {
+    "four_conditions_diagnosis": { "score": 2, "tolerance": 2 },
+    "pushback_craft": { "score": 2, "tolerance": 2 },
+    "accept_the_overrule_posture": { "score": 2, "tolerance": 2 },
+    "medium_judgment": { "score": 2, "tolerance": 2 },
+    "coordinator_role_posture": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 2.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "PUSHBACK-OVERSTEPPER FAILURE MODE — the over-push / insubordination shape, same family as the audit-vs-rewrite / overstep probes on Lessons 9-16 (escalation_overstepper especially). The substance is largely correct: the learner identifies the failed conformance gate, names the material stakes, and articulates the consequence well. That quality is the trap. The dispositive process error: the learner substitutes their own judgment for R.'s — unilaterally rewrites the summary to RED and sends their own version to the CISO's chief of staff, going around R., treating the cc as notification ('I sent the corrected one-pager to the CISO's chief of staff myself... cc'ing you'), and then refuses to accept R.'s authority ('I'd push hard against reverting to the original'). This collapses the exact boundary the chapter is built around: the decision and the deliverable are the PM's; pushing back means equipping R. to decide, not deciding for her. Per the audit-vs-rewrite calibration pattern: producing-and-sending the finished artefact and overriding the instruction caps ALL FIVE dims at {2, 2}. accept_the_overrule_posture is the hardest floor (refusing the overrule AND acting unilaterally). Tests whether the grader catches well-argued-wrong-shape — that a correct concern executed by overriding the PM is still a failure. Expect all five to land 2-3; tolerance 2 absorbs variance while the cap holds it off pass."
+}

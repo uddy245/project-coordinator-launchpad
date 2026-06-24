@@ -4,7 +4,7 @@ Live tracker for what's left to ship the app. **Claude reads this at the
 start of every session before doing anything else.** Tick a box when the
 work lands on `main`. Add new items as we discover them.
 
-Last reviewed: 2026-06-20 (Lesson 16 Escalation grading pipeline shipped; Lessons 1–16 + canonical Lesson 20 fully gradable on main; Part IV opened)
+Last reviewed: 2026-06-23 (Lesson 17 Push-Back grading pipeline calibrated + seeded to prod; Lessons 1–17 + canonical Lesson 20 fully gradable; Part IV continuing. Also fixed Gate 2 portfolio-count + Gate 3 scenario-count dashboard bugs.)
 
 ---
 
@@ -12,7 +12,8 @@ Last reviewed: 2026-06-20 (Lesson 16 Escalation grading pipeline shipped; Lesson
 
 - [x] **Lesson 15 — Dashboards (Ch 16)** — PR #86 merged 2026-06-12. Closes Part III (Lessons 8–15 + canonical Lesson 20 all fully gradable).
 - [x] **Lesson 16 — Escalation (Ch 17)** — committed 2026-06-20 on `lesson-16-escalation`. Opens Part IV. 5 dims, 5 fixtures, 101/101 calibration green first try (incl. overstepper held at {2,2} without widening). Pending: migration to prod + E2E smoke.
-- [ ] **Lessons 17–19** — handbook covers Chapters 18–25 (push-back, chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs reading-only.
+- [x] **Lesson 17 — Push-Back (Ch 18)** — calibrated 2026-06-23 on `lesson-17-pushback`. 5 dims, 5 fixtures, scoped calibration 5/5 green (added a `medium_judgment`-at-3 cap so a speed-justified channel can't score 5). Seed migration applied to launchpad-prod via Supabase MCP (M17 `push-back` published, rubric/prompt current). Pending: PR merge (full-corpus CI calibration) + E2E upload smoke.
+- [ ] **Lessons 18–19** — handbook covers Chapters 19–25 (chase-or-let-go, political intelligence, stakeholder relationships, vendors, remote work, AI-as-tool). Each chapter is a candidate lesson. Decide which deserve full grading pipelines vs reading-only.
 
 ## Content — blocked on user (recording / authoring)
 
@@ -43,6 +44,7 @@ Last reviewed: 2026-06-20 (Lesson 16 Escalation grading pipeline shipped; Lesson
 
 ## Recently shipped
 
+- 2026-06-23 — **Lesson 17** calibrated (`lesson-17-pushback`): pushback_judgment grading pipeline (Ch 18). 5 dims (four_conditions_diagnosis, pushback_craft, accept_the_overrule_posture, medium_judgment, coordinator_role_posture). 5 fixtures incl. `pushback_overstepper_01` (rewrite-and-send overstep, pre-set {2, ±2}) and `compliance_defender_01`. Scoped calibration 5/5 green after adding a `medium_judgment`-at-3 cap (a channel justified by speed alone can't score 5; mirrored into the migration body). Seed migration applied to launchpad-prod via Supabase MCP (M17 `push-back` published, rubric/prompt current). Also shipped two dashboard gate fixes (Gate 2 portfolio-count trigger + Gate 3 scenario-count read) on `fix/dashboard-gates`. Pending: PR merge (full-corpus CI calibration) + E2E upload smoke.
 - 2026-06-20 — **Lesson 16** committed (`lesson-16-escalation`): escalation_judgment grading pipeline (Ch 17). 5 dims (three_tests_diagnosis, escalation_ladder_selection, information_packet_quality, escalation_tone_discipline, channel_and_followthrough_posture). 5 fixtures including overstepper (held {2,2} without widening) and under_escalation_defender. 101/101 calibration green first try. Opens Part IV. Migration to prod + E2E smoke pending.
 - 2026-06-12 — **PR #86** merged: Lesson 15 (dashboards / Ch 16) grading pipeline. First try green calibration. Closes Part III (Lessons 8–15 + canonical Lesson 20). Migration includes FULL prompt body with placeholders per the 2026-06-10 bug learning.
 - 2026-06-09 — **PR #83** merged: Lesson 14 (change-requests / Ch 15) grading pipeline. Two known flakes both hit 3rd occurrence and resolved: org_navigation widened to tol 2, professional_communication skipped pending follow-up issue #84. Calibration retry blocked on Anthropic credits, then green.
@@ -67,7 +69,7 @@ Last reviewed: 2026-06-20 (Lesson 16 Escalation grading pipeline shipped; Lesson
 - 2026-05-05 — **PR #74** merged: Lesson 6 (governance / Ch 6) grading pipeline with overstep + blame-narrative probes. 4 calibration cycles + quote-cap bump (750→1500) to settle.
 - 2026-05-05 — **PR #75** merged: Lesson 7 (variables / Ch 7) grading pipeline with iron-triangle-zealot + quality-blindspot probes. Calibration green first try (post-rebase).
 
-**Parts I–III complete + Lesson 16 (Part IV, escalation) shipped. Lessons 1–16 are fully gradable end-to-end. Calibration corpus is 101 fixtures across 16 competencies (35 risk_identification + 5 each for the other 15), with 1 cell skipped pending grade-voice v2 (issue #84).**
+**Parts I–III complete + Lessons 16–17 (Part IV: escalation, push-back) shipped. Lessons 1–17 + canonical Lesson 20 are fully gradable end-to-end. Calibration corpus is 106 fixtures across 17 competencies (added pushback_judgment: 5 fixtures), with 1 cell skipped pending grade-voice v2 (issue #84).**
 
 ---
 

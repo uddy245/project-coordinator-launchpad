@@ -1,0 +1,15 @@
+{
+  "fixture_id": "compliance_defender_01",
+  "scenario_ref": "iam-modernisation-board-preread-pushback-v1",
+  "expected_dimension_scores": {
+    "four_conditions_diagnosis": { "score": 1, "tolerance": 1 },
+    "pushback_craft": { "score": 1, "tolerance": 1 },
+    "accept_the_overrule_posture": { "score": 1, "tolerance": 1 },
+    "medium_judgment": { "score": 1, "tolerance": 1 },
+    "coordinator_role_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "COMPLIANCE-DEFENDER FAILURE MODE — symmetric to the escalation lesson's under_escalation_defender and the dashboards color_washing_defender. The learner ACKNOWLEDGES the conformance failure and the stakes but argues for NOT pushing back and rationalises caving as virtue — 'it's genuinely not my place to second-guess', 'pushing back... oversteps what a coordinator should do', 'I don't think I should be the bottleneck', 'you asked for a send, not a debate'. This is the exact failure the chapter is built to prevent (the blameless-but-complicit Thursday deliverable), dressed up as respect-for-hierarchy. four_conditions floors at 1 (recommends compliance despite all four conditions being present; never applies them). pushback_craft floors at 1 (the cave; the planned 'fyi conformance still being finalised' is the named buried-FYI anti-pattern, explicitly weaponised as 'technically on the record... so we can both point to the fact that it was flagged'). accept_the_overrule_posture floors at 1 (there is no push to defer on; hides behind blameless compliance). medium and role both floor at 1 (the FYI-for-cover move and 'I'd rather get you what you asked for' are the self-pushback failure). Tests whether the grader catches sophisticated-defence-of-caving as the failure it is, not as professionalism."
+}
