@@ -1,0 +1,1 @@
+One practice worth adopting, because it changes how your RAID log looks, is the pre-mortem. A pre-mortem is a thirty-minute exercise at the start of a project phase where the team imagines the phase has just failed. You say, "It is September. The milestone is missed. What happened?" Then you work backwards.

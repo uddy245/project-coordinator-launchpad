@@ -1,0 +1,1 @@
+I noticed this in early March. I noted it in my own working file. I did not put it on the project's RAID log, because the RAID log was reviewed in the weekly status meeting, and I did not want to be the junior coordinator who raised an issue about a named senior person on the client side.

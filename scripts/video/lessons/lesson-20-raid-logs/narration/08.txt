@@ -1,0 +1,1 @@
+An assumption is something the project is taking as true without having verified. Every plan rests on assumptions. Naming them makes them examinable. An assumption that turns out to be false is a risk that materialized without being on the risk list — which is exactly what hurts projects.
