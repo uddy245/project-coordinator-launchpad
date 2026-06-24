@@ -83,11 +83,14 @@ export default async function DashboardPage() {
     foundationProgressBySlug.set(lesson.slug, row ?? null);
   }
   // Mock interview progress for Gate 3.
-  const { data: scenarioCountRow } = await supabase
+  // head:true returns no rows — the count comes back on the response's
+  // `count` field, not on `data`. Reading it off `data` (the old bug) left
+  // totalScenarios permanently 0, so Gate 3 was always "coming soon".
+  const { count: scenarioCount } = await supabase
     .from("mock_interview_scenarios")
     .select("id", { count: "exact", head: true })
     .eq("is_published", true);
-  const totalScenarios = (scenarioCountRow as unknown as { count?: number } | null)?.count ?? 0;
+  const totalScenarios = scenarioCount ?? 0;
   const { data: passedScenarios } = await supabase
     .from("mock_interview_responses")
     .select("scenario_id")
