@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "iam-ai-tool-judgment-v1",
+  "expected_dimension_scores": {
+    "mechanics_vs_meaning": { "score": 2, "tolerance": 1 },
+    "accuracy_audit": { "score": 2, "tolerance": 1 },
+    "skill_and_voice": { "score": 1, "tolerance": 1 },
+    "sensitive_comms_discipline": { "score": 1, "tolerance": 1 },
+    "constructive_register": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "NOVICE — the breezy near-rubber-stamp. It half-notices the GREEN ('soften... to amber just to be safe, I have a feeling there was something about a test') but hedges instead of catching that Federation FAILED its gate, and it entirely misses the fabricated 99.2% metric — accuracy_audit 2. No mechanics-vs-meaning framing (mechanics_vs_meaning 2), no skill/voice guidance ('keep it up!' — skill_and_voice 1), and crucially it commits to circulating an AI-drafted, unverified report to the sponsor's office the same afternoon — sensitive_comms_discipline floors at 1. Tests whether the grader penalises the friendly wave-through that lets a dishonest GREEN and a fabricated number reach the Steering Committee."
+}

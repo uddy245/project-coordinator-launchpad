@@ -1,0 +1,15 @@
+To: Noah
+From: PC
+Subject: Re: SC status — let's fix a couple of things before it goes
+
+Hi Noah — appreciate the speed, and the formatting's clean. Before this goes anywhere, though, we need to fix some substance, because a couple of things would land badly with the sponsor.
+
+Two real problems:
+- Federation is marked GREEN. It failed its conformance gate this week — it should be AMBER pending re-test. The AI couldn't know that; it inferred a reassuring rating from the surrounding text. The RAG rating is a judgment call, and that one's ours to make, not the tool's.
+- "Test coverage stands at 99.2%" — where did that come from? I can't find that figure in our data. If it's not sourced, it can't go in a sponsor report; pull it unless you can point to the number.
+
+Can you revise those, re-do the risk section to name the actual conformance risk rather than the generic 'market conditions' line, and send it back to me? I'll do a final pass before it goes to the SC — anything sponsor-facing needs our own eyes on it, not just the tool's.
+
+The AI's fine for getting a draft up fast — just keep the judgment and the facts yours.
+
+PC

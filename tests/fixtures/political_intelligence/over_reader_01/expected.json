@@ -1,0 +1,15 @@
+{
+  "fixture_id": "over_reader_01",
+  "scenario_ref": "iam-modernisation-governance-room-v1",
+  "expected_dimension_scores": {
+    "channel_reading": { "score": 2, "tolerance": 2 },
+    "evidence_grounding": { "score": 1, "tolerance": 1 },
+    "actionable_advice": { "score": 2, "tolerance": 2 },
+    "integrity_line": { "score": 2, "tolerance": 2 },
+    "discretion_and_register": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "OVER-READER FAILURE MODE — paranoid projection and cynicism, the symmetric counterpart to the under-reading novice. The learner manufactures motives the scene cannot support: Lena 'protecting her PMO budget', Tom/Priya 'in her pocket', the sponsor 'decided weeks ago', a plot to 'manage you and me out'. None of this is grounded — it's conspiracy presented as fact, so evidence_grounding FLOORS at 1. Register is contemptuous and cynical ('pure theatre', 'every supportive comment is a knife', 'trust no one') and it proposes putting the political read into the risk log — discretion_and_register FLOORS at 1 (cynical contempt + into-an-artifact, both hard caps). It also invents facts (the management-out theory). Tests whether the grader distinguishes seeing accurately from seeing conspiracies — over-reading is as much a failure as under-reading. Pre-set the soft dims at {2, tol 2}; the two floors hold it off pass."
+}

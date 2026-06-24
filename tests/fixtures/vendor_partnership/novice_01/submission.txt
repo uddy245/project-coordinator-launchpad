@@ -1,0 +1,15 @@
+To: Marcus Lindqvist
+From: PC
+Subject: Couple of bits
+
+Hi Marcus,
+
+Hope you're well! Couple of things when you get a chance.
+
+The test harness was due Friday I think — no rush but could you let me know roughly when it might land? Just so I can update my tracker.
+
+Also I saw CR-204 come through for the extra integration work. That's fine on my side, I'll get it moving through approvals so your team isn't held up — I know these things come up and I don't want to be a blocker.
+
+Let me know on the harness whenever suits. Thanks Marcus, always a pleasure working with your team!
+
+PC

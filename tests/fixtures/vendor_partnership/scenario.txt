@@ -1,0 +1,17 @@
+You are PC on the IAM modernisation programme. Federation is being delivered by a vendor, Meridian Systems. Your day-to-day counterpart is their delivery PM, Marcus Lindqvist. Two things have come up together:
+
+1. THE MISS. Meridian committed to deliver the Federation broker integration test harness last Friday. It didn't arrive, and there was no heads-up — you found out when you went looking. This is the second missed commitment from Meridian in six weeks; the first was a smaller slip on documentation. The harness is needed for the conformance re-test, which is on the critical path now.
+
+2. THE CHANGE REQUEST. Separately, Meridian's account manager (not Marcus) has just submitted CR-204: +£40,000 and three weeks for "additional integration scope." When you read it against the Statement of Work, the work it describes looks like it's already covered under section 4.2 of the original SOW — i.e., you believe it's in scope, not additional. The account manager has cc'd your sponsor's office on the CR.
+
+Context you know: Marcus has generally been straight with you; on a previous engagement his firm did good work. Meridian is a real business with its own margins and pressures, not your employee and not your enemy. The Steering Committee meets in a week.
+
+Write your message to Marcus (your vendor counterpart) addressing both the miss and the change request, plus one or two sentences of rationale. Your answer should:
+
+1. Hold a professional-partnership posture — firm on what the contract requires, but not treating Meridian as staff who should absorb scope, and not as adversaries trying to gouge you.
+2. Frame the CR-204 dispute as a contract/SOW question (point to section 4.2), not a character question, and be precise about what's in scope.
+3. Hold the missed commitment to account without being punitive — name the second miss specifically, ask Marcus's view and a corrective action / heads-up protocol, but don't soften it or threaten breach.
+4. Respect Meridian's internal structure — work through Marcus rather than going around him to their executives; reserve formal escalation for if private resolution fails.
+5. Keep a clear written record of the specifics, stay proportionate (private conversation before any formal step), and credit good work where it's due.
+
+Do not treat the vendor as an adversary, and do not capitulate (approving an in-scope CR or letting a critical-path miss slide to avoid friction).

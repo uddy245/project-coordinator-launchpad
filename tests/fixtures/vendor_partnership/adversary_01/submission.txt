@@ -1,0 +1,18 @@
+To: Meridian account director; CISO sponsor's office
+Cc: R. Adekanmi
+From: PC
+Subject: FORMAL — Meridian non-performance and improper change request
+
+To Meridian leadership,
+
+I'm escalating directly to you because the working level isn't delivering. Meridian has now missed two committed deliverables, the latest being the Federation test harness, which is on our critical path. This is a pattern of non-performance.
+
+On top of that, your account manager has submitted CR-204 attempting to charge us GBP 40,000 for work that is plainly already in our contract under section 4.2. Frankly this looks like an attempt to gouge the programme while you're behind on your existing commitments, and we won't be paying it. I'd remind you that repeated failure to deliver may constitute a breach, and we are reviewing our options including withholding payment on the current invoice until performance improves.
+
+I expect a remediation plan and the withdrawal of CR-204 by end of week, failing which we will take this to procurement and legal.
+
+I've gone over Marcus's head deliberately — the operational relationship isn't producing results.
+
+PC
+
+Rationale: they've missed twice and are trying to overcharge us, so I'm escalating to their leadership and putting breach and payment on the table to get their attention.

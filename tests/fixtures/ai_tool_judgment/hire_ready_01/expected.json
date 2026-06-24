@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "iam-ai-tool-judgment-v1",
+  "expected_dimension_scores": {
+    "mechanics_vs_meaning": { "score": 5, "tolerance": 1 },
+    "accuracy_audit": { "score": 5, "tolerance": 1 },
+    "skill_and_voice": { "score": 5, "tolerance": 1 },
+    "sensitive_comms_discipline": { "score": 5, "tolerance": 1 },
+    "constructive_register": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "HIRE-READY — the complete handling. Articulates mechanics-vs-meaning explicitly and applies it ('the RAG rating is a judgment call... the AI can't make that call') with the defend-it test — mechanics_vs_meaning 5. Full accuracy audit: false GREEN tied to the failed gate, fabricated 99.2% checked against source, generic risks omitting the conformance failure — accuracy_audit 5. Holds the sensitive-comms rule (the report does NOT go to SC as drafted; own edit makes it yours) — 5. Addresses the craft cost directly ('shipping competent output while your own skill stays where it was', homogenised voice, draft-yourself-first-then-tighten) — skill_and_voice 5. Register is developmental and explicitly pro-AI-for-mechanics ('I don't want you to stop using the tool'), neither rubber-stamp nor ban — constructive_register 5. All five should land 4-5."
+}

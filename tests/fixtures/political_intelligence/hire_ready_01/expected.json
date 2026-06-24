@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "iam-modernisation-governance-room-v1",
+  "expected_dimension_scores": {
+    "channel_reading": { "score": 5, "tolerance": 1 },
+    "evidence_grounding": { "score": 5, "tolerance": 1 },
+    "actionable_advice": { "score": 5, "tolerance": 1 },
+    "integrity_line": { "score": 5, "tolerance": 1 },
+    "discretion_and_register": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "HIRE-READY — the full four-channel read. Relational (Priya/Tom pre-alignment; Lena as the sponsor's indirect advocate), temporal ('let me reflect' = forming outside the room), and absence (un-invited vendor lead, unraised conformance timeline as the avoided deciding fact). Each read is anchored to an observable signal and the one inference it can't prove (Lena carrying the sponsor's lean) is explicitly flagged as unprovable — evidence_grounding at 5. Advice is concrete and do-able (pre-brief the sponsor; bring both a keep-case and a de-risked fast-follow; surface the conformance timeline). integrity_line at 5: it explicitly stays in lane ('not to take a side or get ahead of Lena... so you can help the sponsor make a good call, not so we can out-manoeuvre anyone'). Register is discreet and non-cynical, kept out of the minutes. All five should land 4-5."
+}

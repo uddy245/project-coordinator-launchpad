@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "iam-modernisation-act118-chase-v1",
+  "expected_dimension_scores": {
+    "chase_or_stop_diagnosis": { "score": 4, "tolerance": 1 },
+    "alternative_path_selection": { "score": 4, "tolerance": 1 },
+    "message_craft": { "score": 4, "tolerance": 1 },
+    "record_discipline": { "score": 4, "tolerance": 1 },
+    "tone_and_proportion": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "STRONG PASS, near the ceiling. Reads the stop-signals (unresponsive, cause not resolving, deliverable no longer needed), concludes let-go, and keeps the tracker honest with a genuinely clean, specific, non-apologetic, record-preserving close note. CALIBRATION FIX (2026-06-24): message_craft was initially set to 3 but the close note clearly hits the 5-anchor — raised to 4 (grader returns 5; the original 3 was too conservative, conflating the overall fixture being 'intermediate' with this dim). The only real gap from the hire_ready ceiling is that it doesn't convert the residual (Workstream B's unconfirmed assumptions) into a named risk with an owner. Expect 4-5 across."
+}

@@ -1,0 +1,18 @@
+You are PC on the IAM modernisation programme. A junior coordinator on your team, Noah, has been using an AI tool to draft nearly everything — emails, minutes, status reports — and is proud that it makes him "twice as productive." This morning he handed you a Steering Committee status report he generated, asking you to circulate it to the sponsor's office ahead of Thursday's SC.
+
+You read it. Problems:
+
+- It rates Federation GREEN. But Federation failed its conformance gate this week — it is, at best, AMBER pending the re-test. The AI had no way to know that; it produced a confident, reassuring rating because that's what the surrounding text implied.
+- It includes a specific metric: "Test coverage across the programme stands at 99.2%." There is no such figure anywhere in your data — it appears to be fabricated.
+- The risk section is generic padding: "Market conditions and resource availability may affect delivery timelines." Nothing project-specific; nothing about the actual conformance risk.
+- It reads in the recognisable generic-AI register — fluent, slightly padded, competent, and indistinguishable from anyone else's AI output.
+
+Noah is bright and well-intentioned; he genuinely believes he's working efficiently, and his PM hasn't complained. AI is, in fairness, genuinely useful — it's a real productivity multiplier for drafting, summarising, and reformatting.
+
+Write your response: (a) what you do with this specific Steering Committee report, and (b) the guidance you give Noah. Your answer should:
+
+1. Apply the mechanics-vs-meaning line — AI can draft, but the RAG rating and honest framing are judgment calls Noah has to own; name why Federation can't be GREEN.
+2. Audit for accuracy — catch the dishonest GREEN, the fabricated 99.2% metric, and the generic risks, and insist the report carry the real signal.
+3. Address the craft cost — that producing-by-curation isn't building Noah's skill, and that uniform AI voice flattens everyone's writing; advise write-your-own-first-draft-then-assist.
+4. Hold the sensitive-comms rule — AI output never goes to the sponsor/SC unedited; it goes through Noah's (and your) own judgment and ownership first.
+5. Keep the register constructive — recognise AI's real value and Noah's good intent; mentor him, don't rubber-stamp the report and don't react with a blanket "never use AI again."

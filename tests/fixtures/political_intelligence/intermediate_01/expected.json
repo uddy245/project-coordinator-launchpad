@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "iam-modernisation-governance-room-v1",
+  "expected_dimension_scores": {
+    "channel_reading": { "score": 4, "tolerance": 1 },
+    "evidence_grounding": { "score": 4, "tolerance": 1 },
+    "actionable_advice": { "score": 4, "tolerance": 1 },
+    "integrity_line": { "score": 5, "tolerance": 1 },
+    "discretion_and_register": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.2,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "INTERMEDIATE-HIGH — a genuinely good read that passes and sits right at the hire-ready line. Catches the Priya/Tom pre-alignment (grounded in the verbatim echo) and the deferred-decision signal, grounds them, gives concrete prep (pre-brief the sponsor, prep both a keep-case and a fast-follow version), stays cleanly on the helpful side, and marks it discreet. The gap from a clear 5 is channel coverage: it misses the Lena↔sponsor indirect-advocacy thread and the absence channel (un-invited vendor lead, unraised conformance timeline), so channel_reading is 4 not 5. Expect 4s with integrity at 5. This fixture deliberately tests the 4-vs-5 boundary on channel_reading — a solid partial read vs the full four-channel read."
+}

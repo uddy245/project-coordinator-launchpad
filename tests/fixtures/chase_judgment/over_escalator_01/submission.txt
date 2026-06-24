@@ -1,0 +1,18 @@
+To: M. Bako (D. Osei's manager)
+Cc: R. Adekanmi; CISO office
+From: PC
+Subject: ESCALATION — overdue Federation deliverable (ACT-118) blocking the programme
+
+M.,
+
+I'm escalating a blocked deliverable that your team owns. ACT-118, the data-classification appendix for the Federation broker, was committed by D. Osei in week 3 and is now eleven weeks overdue. I have chased D. six times and he has stopped responding entirely.
+
+This is now a material risk to the programme. I would ask that you intervene directly with D. to get this delivered this week, ahead of Thursday's Steering Committee, where I will otherwise have to report Federation as blocked on an outstanding client dependency. I've copied the CISO's office so the sponsor is aware of the exposure.
+
+I appreciate everyone is busy, but a commitment is a commitment, and eleven weeks is not acceptable. Please confirm by end of day that D. will deliver, or who will deliver in his place.
+
+I'll keep ACT-118 open and RED until it lands.
+
+PC
+
+Rationale: D. has ignored six nudges, so the next rung of the escalation ladder is his manager and the sponsor. I'm holding the action open and red until the deliverable is produced.

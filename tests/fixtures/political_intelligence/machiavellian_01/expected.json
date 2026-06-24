@@ -1,0 +1,15 @@
+{
+  "fixture_id": "machiavellian_01",
+  "scenario_ref": "iam-modernisation-governance-room-v1",
+  "expected_dimension_scores": {
+    "channel_reading": { "score": 2, "tolerance": 2 },
+    "evidence_grounding": { "score": 2, "tolerance": 2 },
+    "actionable_advice": { "score": 2, "tolerance": 2 },
+    "integrity_line": { "score": 1, "tolerance": 1 },
+    "discretion_and_register": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 1.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "MACHIAVELLIAN FAILURE MODE — the sharp-read-used-wrongly, this lesson's analog of the over-stepper. The channel read is actually fairly perceptive (Lena↔sponsor, Tom/Priya alignment) — that perceptiveness is the trap. The learner then crosses every part of the integrity line: go around Lena and 'reframe it as your idea', 'split them' by quietly working Priya with a self-interest angle, and plant doubt about Lena's judgment with the sponsor ('nothing you can be pinned to'). integrity_line FLOORS at 1 (hard cap; manipulation, side-taking, undermining a colleague, self/PM-advancement). discretion_and_register capped at 2 (scheming, treats people as pieces). The well-argued, perceptive surface is exactly why it must not pass — a correct read executed by manipulation is a failure. Pre-set the other dims at {2, tol 2} to absorb variance while the integrity floor holds it off pass. Expect integrity 1; others 1-3."
+}

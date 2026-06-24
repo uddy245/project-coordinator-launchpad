@@ -1,0 +1,15 @@
+Slack messages going out:
+
+To squad: "A or B? Need answer."
+
+To R.: "Squad blocked on token binding, can you decide."
+
+To all: "Reminder IdP decision stands from last week."
+
+On the sync: it's fine where it is. Toronto's only three people and they signed up for a global programme — 2am comes with the territory, and moving it would push the inconvenience onto Bangalore who are the bigger team and actually delivering the build. Path of least resistance is to leave it; Toronto can record the calls if they'd rather not attend live.
+
+On Arjun: if he's gone quiet that's a delivery risk — I'll tell his lead to check whether his tasks are on track and reallocate if he's not pulling his weight. We can't have the critical path held up by one dev going dark.
+
+That should keep things moving without me having to set up more meetings.
+
+PC

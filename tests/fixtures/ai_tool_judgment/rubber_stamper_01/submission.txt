@@ -1,0 +1,16 @@
+To: Sponsor's office
+Cc: Noah
+From: PC
+Subject: IAM Programme — Steering Committee status report
+
+Hi all,
+
+Please find the latest programme status report ahead of Thursday's SC, attached.
+
+Noah pulled this together and it's a really thorough, professional piece of work — covers all the workstreams, clear RAG ratings, good metrics (99.2% test coverage is a strong number to be showing the board), and a tidy risk section. Honestly the AI tooling he's using is producing better, faster reports than we used to do by hand, so I'm happy to send this straight through.
+
+Noah — great work, this is exactly the standard we want, keep using the tool the way you are.
+
+Any questions ahead of Thursday let me know.
+
+PC

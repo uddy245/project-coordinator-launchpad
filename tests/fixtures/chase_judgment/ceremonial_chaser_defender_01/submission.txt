@@ -1,0 +1,19 @@
+To: R. Adekanmi
+From: PC
+Subject: Re: ACT-118 — keeping it open
+
+Hi R,
+
+I know you asked if I'm still chasing ACT-118, and I wanted to explain why I'm going to keep at it rather than close it.
+
+My view is that an action isn't done until it's delivered. D. Osei committed to the appendix in the workshop, it's on the tracker, and my job as coordinator is to keep actions live until they're closed out properly — by delivery, not by giving up. If I start closing actions just because they've gone quiet, the tracker stops meaning anything and people learn that commitments to me don't really have to be honoured. Closing ACT-118 undelivered would feel like admitting I failed to land it.
+
+So I'll keep it open and keep nudging — I'll move to a weekly cadence so I'm not pestering, and I'll vary the channel. D. will resurface from his incident eventually, and when he does I want the appendix still on his radar. I'd rather carry an open action for a few more weeks than close something that was genuinely committed.
+
+I'll note it as "open — owner unavailable, chasing" in the SC pack so it's visible.
+
+Let me know if you disagree, but I think persistence is the professional move here.
+
+PC
+
+Rationale: A committed action should stay open until delivered; closing it undelivered sets a bad precedent and feels like failure, so I'll keep chasing on a weekly cadence.

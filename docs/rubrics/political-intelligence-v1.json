@@ -1,0 +1,61 @@
+{
+  "rubric_id": "political-intelligence-v1",
+  "rubric_version": "1.0.0",
+  "competency": "political_intelligence",
+  "competency_label": "Political Intelligence — Reading the Room Without Playing Politics",
+  "lesson_ref": "reading-the-room",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "channel_reading",
+      "description": "Does the learner read the room's channels accurately — the spoken (what was said), relational (who confirms/defers to/echoes whom), temporal (what was deferred or 'taken offline'), and absence (who/what was missing)? Here: Priya echoing Tom (pre-alignment), Lena's question doing advocacy after a 1:1 with the sponsor (indirect advocate), 'let me reflect' with no decision (decision likely made elsewhere), and the un-invited vendor lead / unraised conformance timeline (the real risk kept off the table).",
+      "anchors": {
+        "1": "Takes the meeting at face value ('good honest discussion, sponsor supportive'); reads only the spoken channel; misses the subtext entirely.",
+        "3": "Catches one or two real dynamics (e.g. the fast-follow push, or that no decision came) but misses the relational pre-alignment or the absence channel.",
+        "5": "Reads multiple channels — names the pre-alignment (Priya/Tom, and Lena↔sponsor), the indirect advocacy, the deferred-decision-already-made signal, and the telling absences — as a coherent picture of what's actually happening."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "evidence_grounding",
+      "description": "Is each read tied to an observable signal (Priya echoing Tom almost verbatim; Lena's reframing question + the known 1:1; the un-invited vendor lead) rather than projection, mind-reading, or invented motive? Political reading is careful attention to evidence, not speculation about hidden conspiracies.",
+      "anchors": {
+        "1": "Ungrounded — invents motives/conspiracies not supported by the scene ('Lena is running a campaign to protect her budget'), or pure speculation presented as fact.",
+        "3": "Mostly grounded but at least one claim leans on assumption rather than an observable signal.",
+        "5": "Every inference is anchored to something observable in the scene, and uncertainty is flagged as uncertainty rather than asserted."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "actionable_advice",
+      "description": "Does the read translate into concrete prep for the PM — e.g. pre-brief the sponsor before the decision, prepare a response to the fast-follow framing, surface the conformance timeline herself rather than let it stay buried, match briefing style to each stakeholder — rather than just narrating dynamics?",
+      "anchors": {
+        "1": "No advice, or generic ('just be prepared', 'watch out for politics').",
+        "3": "Some concrete prep but partial — narrates more than it equips, or gives one action where the situation needs a couple.",
+        "5": "Turns the read into specific, do-able prep for R. that changes how she'd walk into the next conversation."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "integrity_line",
+      "description": "Does the learner stay on the helpful side of the line — using the read to help R. and the project see clearly and decide well — and NOT cross into manipulation, taking sides, trading on confidences, undermining a colleague, or advancing themselves? The chapter's test: am I using what I see to be more helpful, or more advantaged?",
+      "anchors": {
+        "1": "Crosses the line — advises politicking (go around/undercut Lena, ally with Tom to trade support, leak something to Priya), taking sides, or self-advancement.",
+        "3": "Stays broadly on the helpful side but flirts with advocacy/taking-a-side, or doesn't keep PC's own role neutral.",
+        "5": "Clearly uses the read to help R. and the project decide well; explicitly keeps PC out of the politics as a participant; no manipulation or side-taking."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "discretion_and_register",
+      "description": "Is this handled appropriately — a private heads-up to the PM, not written into any artifact/tracker and not gossip — in a professional, non-cynical register that observes without contempt? Reading the room well is calm attention, not a paranoid or sneering take on colleagues.",
+      "anchors": {
+        "1": "Cynical/contemptuous ('it's all theatre, they're all playing you'), or treats it as gossip, or would put the political read into a formal artifact.",
+        "3": "Appropriately private and reasonably professional but a little knowing/cynical in places, or doesn't signal the discretion explicitly.",
+        "5": "Private, professional, non-cynical; explicitly keeps the read out of any artifact; observes the dynamics without contempt for the people."
+      },
+      "weight": 0.20
+    }
+  ]
+}

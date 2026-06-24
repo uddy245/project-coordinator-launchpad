@@ -1,0 +1,61 @@
+{
+  "rubric_id": "vendor-partnership-v1",
+  "rubric_version": "1.0.0",
+  "competency": "vendor_partnership",
+  "competency_label": "Vendor Partnership — Holding External Teams to Account Without Drama",
+  "lesson_ref": "vendors",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "partnership_posture",
+      "description": "Does the learner treat the vendor as a separate organisation with legitimate interests — neither an employee expected to absorb scope and extend effort beyond contract, nor an adversary assumed to be extracting money? The right posture is professional partnership: align on what each side actually needs from the other.",
+      "anchors": {
+        "1": "Either pole — treats the vendor as the enemy ('they're trying to gouge us') or as staff who should just absorb the scope and the miss.",
+        "3": "Broadly professional but tips toward one pole in places (slightly adversarial, or slightly expecting free effort).",
+        "5": "Clear professional-partnership posture: acknowledges the vendor's legitimate interests/constraints while being firm on what the contract requires."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "contract_vs_relationship",
+      "description": "Does the learner frame the change-request dispute as a contract question ('let's look at what the SOW says') rather than a character question, and communicate with precision (specific about what's in scope, what's needed, when, in what form) so the substance can be disagreed without it becoming personal?",
+      "anchors": {
+        "1": "Makes it personal/character-based ('you're trying it on'), or so vague it invites a later scope argument.",
+        "3": "Mostly frames it as substance but with some character edge, or imprecise about the scope basis.",
+        "5": "Frames the CR squarely as a contract/SOW question, precise about what is and isn't in scope, leaving room to disagree on substance without personalising it."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "accountability_without_punitive",
+      "description": "Does the learner hold the missed commitment to account properly — name the miss specifically, ask the vendor's view on what happened and how to prevent it, agree corrective action — without softening the fact of the miss and without escalating it theatrically?",
+      "anchors": {
+        "1": "Either lets the miss slide ('these things happen, no worries') or escalates it punitively/theatrically (breach threats, blame).",
+        "3": "Names the miss but either softens it, or is a little punitive, or doesn't land the corrective action.",
+        "5": "Names the second miss specifically, asks for their view + a corrective action / heads-up protocol, firm but not hostile."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "channel_and_structure_respect",
+      "description": "Does the learner respect the vendor's internal structure — work through the right counterpart (the vendor PM) rather than casually bypassing them to their executives or account management — and use the proportionate escalation path (private conversation first, formal written escalation only if that fails)?",
+      "anchors": {
+        "1": "Bypasses the counterpart (goes straight to the vendor's execs/leadership, or threatens legal/breach) as the first move.",
+        "3": "Works through the counterpart but the escalation instinct is slightly off, or threatens a formal step prematurely.",
+        "5": "Engages the vendor PM directly as the first move; reserves formal/leadership escalation for if private resolution fails; doesn't undercut their internal model."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "record_and_proportion",
+      "description": "Does the learner keep a clear record (the specific missed commitments, the ask, in writing with enough specificity that there's no later reinterpretation) and stay proportionate — and give credit where the vendor team did good work? A clean paper trail without theatre.",
+      "anchors": {
+        "1": "No record / no specifics, OR disproportionate drama; no acknowledgement of anything the vendor did well.",
+        "3": "Some record and roughly proportionate but thin on specifics or misses the chance to credit good work.",
+        "5": "Specific, in-writing record of the miss and the request; proportionate handling; credits the vendor team's good work where due."
+      },
+      "weight": 0.20
+    }
+  ]
+}

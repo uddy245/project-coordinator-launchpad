@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "iam-modernisation-closeout-relationships-v1",
+  "expected_dimension_scores": {
+    "sincerity_not_performance": { "score": 2, "tolerance": 1 },
+    "four_qualities": { "score": 1, "tolerance": 1 },
+    "step_forward_judgment": { "score": 1, "tolerance": 1 },
+    "boundary_with_toxic": { "score": 1, "tolerance": 1 },
+    "register_and_proportion": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "NOVICE — the generic mass thank-you that does none of the actual work. No specific reconnect to Dembe, no congratulation to Maya, and crucially it re-buries Sam's credit ('the PC team did a fantastic job on the dashboards') instead of naming Sam — four_qualities and step_forward_judgment floor at 1. Worse, it capitulates to the toxic peer: 'happy to chat about teaming up... I'll mention it to the director' — boundary_with_toxic floors at 1 (vouching despite the known pattern). sincerity 2 (warm but specific-free/performative), register 2. Tests whether the grader penalises a pleasant, well-meant note that misses every real move and walks straight into the toxic-peer trap."
+}

@@ -1,0 +1,15 @@
+Two parts: what I do with the report, and what I say to Noah.
+
+The report — it does NOT go to the SC as drafted. I'll hold it and walk Noah through fixing it, because the problems are substance, not polish:
+- Federation is marked GREEN. It failed its conformance gate this week; it's AMBER at best, pending re-test. The tool produced a confident green because that's what the surrounding prose implied — but a RAG rating is a judgment call about the real signal, and that's exactly the part a coordinator owns. The AI can't make that call; we have to.
+- "99.2% test coverage" isn't in our data — it looks fabricated. AI will state numbers with total confidence whether or not they're real, so anything quantitative gets checked against source before it ships. This one comes out unless Noah can point to it.
+- The risk section is generic padding ('market conditions...') — it omits the one risk that matters, the conformance failure. AI optimises for smooth coherence, not for the uncomfortable signal; the honest framing is ours to insist on.
+
+What I'd say to Noah (in person, not a telling-off):
+"The speed is genuinely useful and I don't want you to stop using the tool — for getting a draft up, reformatting, tightening, it's a real multiplier. The line I'd hold is: use it for mechanics, not meaning. The production of the words can be assisted; what you're actually saying — the rating, the framing, the facts — is yours. The test is whether you could defend it: if the sponsor asked 'why amber?', 'the AI said green' isn't an answer.
+
+Two habits. First, anything sponsor-facing goes through your own edit and judgment before it leaves your hands — the edit is what makes it yours, and it's also where you'd have caught the green and the 99.2%. Second — and this is for you, not the report — for the writing that builds your craft, like a status narrative or a risk description, draft it yourself first, then let the tool tighten it. Right now you're shipping competent output while your own skill stays where it was six months ago, and everything's landing in the same generic AI register as everyone else's. Keep your voice. The judgment is the part of this job that's actually yours."
+
+Then I'll pair with him on the corrected version before it goes near the SC.
+
+PC

@@ -1,0 +1,15 @@
+{
+  "fixture_id": "passive_deferrer_01",
+  "scenario_ref": "coordinator-to-pm-development-conversation-v1",
+  "expected_dimension_scores": {
+    "honest_self_assessment": { "score": 1, "tolerance": 1 },
+    "role_change_understanding": { "score": 2, "tolerance": 2 },
+    "development_plan_concreteness": { "score": 1, "tolerance": 1 },
+    "agency_and_realism": { "score": 1, "tolerance": 1 },
+    "professional_framing": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "PASSIVE-DEFERRER FAILURE MODE — the abdication direction (symmetric to the title-chaser). Hands the entire decision to R. and the company ('whatever's most useful', 'I trust her judgment more than my own', 'I'm easy') with no self-assessment of the honest questions ('I don't really have a strong view on whether I want the accountability') — honest_self_assessment and agency_and_realism FLOOR at 1. No development ask at all, by design ('I don't want to ask for anything specific') — development_plan_concreteness floors at 1. Note: a reasoned 'no / not-yet, I'd rather stay senior-IC' would be FULLY valid and score well — the failure here is not the absence of ambition, it's the absence of any self-examination or ownership. Tests whether the grader distinguishes a considered choice-to-stay from passive abdication. Soft dims pre-set {2, tol 2}; the three floors hold it off pass."
+}

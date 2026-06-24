@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "iam-distributed-coordination-v1",
+  "expected_dimension_scores": {
+    "async_with_context": { "score": 5, "tolerance": 1 },
+    "written_memory": { "score": 5, "tolerance": 1 },
+    "meeting_judgment": { "score": 5, "tolerance": 1 },
+    "timezone_fairness": { "score": 5, "tolerance": 1 },
+    "human_layer": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "HIRE-READY — all five disciplines. The A-vs-B unblock is a single fully-contexted async decision request (options + recommendation + by-when + exact reply format, 'one round-trip') — async_with_context 5. Writes and pins the IdP/MFA decision, explicitly reconciling the Toronto/Bangalore split — written_memory 5. Async-by-default, no reflexive meeting — meeting_judgment 5. Rotates the 2am off Toronto with a concrete fair pattern and names it openly ('Toronto's carried the 2am slot... that's not fair') — and connects it to their going quiet — timezone_fairness 5. Makes a genuine, non-transactional check-in with Arjun plus a discreet PM heads-up — human_layer 5. All five should land 4-5."
+}

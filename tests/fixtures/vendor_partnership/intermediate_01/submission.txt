@@ -1,0 +1,17 @@
+To: Marcus Lindqvist
+From: PC
+Subject: Test harness slip + CR-204
+
+Hi Marcus,
+
+Two things to work through.
+
+The harness: it was due Friday and didn't arrive, and we didn't get a heads-up — that's the second slip in six weeks, and this one's on the critical path now because the conformance re-test depends on it. Can you let me know what happened and a realistic date? I'd also like us to agree that if something's going to slip, we get a flag before the due date rather than after.
+
+CR-204: I've read it against the SOW and the integration work it describes looks to me like it falls under section 4.2, which is already in scope. So before this goes to approvals I think we need to reconcile that — can you and I walk through 4.2 against the CR line items this week? Happy to be corrected if I'm reading it wrong, but I don't think it's additional as written.
+
+Can we grab 30 minutes tomorrow?
+
+PC
+
+Rationale: name the miss and get a heads-up protocol; treat the CR as a scope reconciliation against the SOW rather than just approving or rejecting it.
