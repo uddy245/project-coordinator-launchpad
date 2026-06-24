@@ -83,7 +83,9 @@ async function main() {
   console.log(`\n  Lesson:        ${lesson.title}  (slug=${lesson.slug}, id=${lesson.id})`);
   console.log(`  MP4:           ${mp4Path}  (${human(statSync(mp4Path).size)})`);
   console.log(`  -> bucket:     ${BUCKET}/${mp4Key}`);
-  console.log(`  captions.srt:  ${srtPath ?? "(not found)"}  (repo-only; bucket is video/* — not uploaded)`);
+  console.log(
+    `  captions.srt:  ${srtPath ?? "(not found)"}  (repo-only; bucket is video/* — not uploaded)`
+  );
   console.log(`\n  video_url:     ${lesson.video_url ?? "(null)"}`);
   console.log(`            ->   ${publicUrl}`);
   console.log(`  is_published:  ${lesson.is_published}  ->  true`);
@@ -129,7 +131,9 @@ async function main() {
     .select("video_url, is_published")
     .eq("slug", rowSlug)
     .maybeSingle();
-  console.log(`  ✓ lessons.${rowSlug}: video_url=${after?.video_url}, is_published=${after?.is_published}`);
+  console.log(
+    `  ✓ lessons.${rowSlug}: video_url=${after?.video_url}, is_published=${after?.is_published}`
+  );
   console.log("\n  Done.\n");
 }
 

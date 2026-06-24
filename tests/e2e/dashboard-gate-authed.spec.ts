@@ -48,7 +48,9 @@ test.describe("dashboard career-milestone gates (authed)", () => {
 
     await expect(pip(page, "Gate 1 · Foundations")).toHaveText(/complete/i);
     await expect(pip(page, "Gate 2 · Portfolio")).toHaveText(/in progress/i);
-    await expect(page.locator(".bg-paper", { hasText: "Gate 2 · Portfolio" })).toContainText("3 of 7");
+    await expect(page.locator(".bg-paper", { hasText: "Gate 2 · Portfolio" })).toContainText(
+      "3 of 7"
+    );
     await expect(pip(page, "Gate 3 · Mock interviews")).toHaveText(/in progress/i);
     await expect(pip(page, "Gate 4 · Industry capstone")).toHaveText(/coming soon/i);
   });
@@ -62,6 +64,8 @@ test.describe("dashboard career-milestone gates (authed)", () => {
     await loginAs(page, db!, baseURL!);
 
     await expect(pip(page, "Gate 2 · Portfolio")).toHaveText(/complete/i);
-    await expect(page.locator(".bg-paper", { hasText: "Gate 2 · Portfolio" })).toContainText("7 of 7");
+    await expect(page.locator(".bg-paper", { hasText: "Gate 2 · Portfolio" })).toContainText(
+      "7 of 7"
+    );
   });
 });

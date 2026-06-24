@@ -24,7 +24,7 @@ const LESSONS = ["lesson-20-raid-logs"];
 describe.each(LESSONS)("video segments: %s", (slug) => {
   const lessonDir = resolve(LESSONS_DIR, slug);
   const segments = JSON.parse(
-    readFileSync(resolve(lessonDir, "segments.json"), "utf8"),
+    readFileSync(resolve(lessonDir, "segments.json"), "utf8")
   ) as Segment[];
 
   it("has at least one segment", () => {
