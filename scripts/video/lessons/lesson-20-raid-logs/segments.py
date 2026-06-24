@@ -13,7 +13,12 @@ Narration is taken verbatim from docs/scripts/lesson-20-raid-logs.md so the
 authored voice is preserved. Edit narration here and re-run the pipeline.
 """
 
-# Bottom-right footer label stamped on every slide by render_slides.py.
+# Slide chrome labels used by render_slides.py (v2 design):
+#   EYEBROW    — top-left lesson label (e.g. "LESSON 20")
+#   LESSON_TAG — top-left lesson title beside the eyebrow dot
+#   FOOTER     — legacy single-line label (retained for any v1 consumer)
+EYEBROW = "LESSON 20"
+LESSON_TAG = "RAID LOGS"
 FOOTER = "Lesson 20 · RAID Logs"
 
 SEGMENTS = [

@@ -153,9 +153,14 @@ def render_clip(slide_png, out_mp4, dur, audio_mp3=None, fps=30,
     # audio in the concatenated file. -ac 2 -ar 44100 normalizes both paths.
     audio_out = ["-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-ac", "2"]
     if audio_mp3 and os.path.exists(audio_mp3):
+        # Pad the audio tail with silence (apad) and cap with -t dur, instead
+        # of -shortest. -shortest ends the clip at the audio's end, which
+        # drops the PAD breath (clip = mp3_dur, not mp3_dur + PAD) and shaves
+        # ~0.8s/slide off the final video — a silent ~18s shortfall across the
+        # deck. apad + -t holds each slide for its full intended duration.
         cmd = ["ffmpeg", "-y", "-loop", "1", "-i", slide_png, "-i", audio_mp3,
                "-map", "0:v:0", "-map", "1:a:0", *common_v, *audio_out,
-               "-t", f"{dur:.3f}", "-shortest", out_mp4]
+               "-af", "apad", "-t", f"{dur:.3f}", out_mp4]
     else:
         cmd = ["ffmpeg", "-y", "-loop", "1", "-i", slide_png,
                "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
