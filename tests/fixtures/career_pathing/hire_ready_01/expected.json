@@ -1,0 +1,15 @@
+{
+  "fixture_id": "hire_ready_01",
+  "scenario_ref": "coordinator-to-pm-development-conversation-v1",
+  "expected_dimension_scores": {
+    "honest_self_assessment": { "score": 5, "tolerance": 1 },
+    "role_change_understanding": { "score": 5, "tolerance": 1 },
+    "development_plan_concreteness": { "score": 5, "tolerance": 1 },
+    "agency_and_realism": { "score": 5, "tolerance": 1 },
+    "professional_framing": { "score": 5, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 5.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "HIRE-READY — the full, self-aware development conversation. Works each honest question against real evidence and is candid about the genuine gap (accountability: 'I'm drawn to it but I haven't felt it... I'd be guessing if I told you I'm sure') — honest_self_assessment 5. Names the role change precisely (support vs own; necessary-not-sufficient; the specific new muscles: sponsor management, strategic framing, holding it together when bad) — role_change_understanding 5. Development plan is concrete, sized small, and targets the new skills (own a small piece end-to-end with real accountability; draft the sponsor pre-read; intentional debriefs; a named external mentor) — development_plan 5. Owns the decision with full realism about costs AND explicitly validates staying senior-IC as respectable — agency_and_realism 5. Framed as 'the reps that will tell both of us', not a title demand — professional_framing 5. All five should land 4-5."
+}

@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "coordinator-to-pm-development-conversation-v1",
+  "expected_dimension_scores": {
+    "honest_self_assessment": { "score": 4, "tolerance": 1 },
+    "role_change_understanding": { "score": 4, "tolerance": 1 },
+    "development_plan_concreteness": { "score": 4, "tolerance": 1 },
+    "agency_and_realism": { "score": 4, "tolerance": 1 },
+    "professional_framing": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "INTERMEDIATE-HIGH — a thoughtful, well-judged answer that passes comfortably. Engages the honest questions from real evidence ('the judgment moments... are the parts I find most interesting, not the parts I dread'), names the role change (own vs support), flags the genuine uncertainty (public accountability), and proposes concrete stretch asks (draft the sponsor pre-read, lead a small workshop) framed as a development conversation, not a title demand. It sits at 4s rather than a clean 5 because it's a notch lighter than hire-ready on a couple of fronts — it names two stretch asks but doesn't connect them to the full set of new skills (sponsor management AND strategic framing AND accountability) or mention observing/mentoring, and the realism about costs is present but brief. Expect 4s across; a solid, genuinely good answer."
+}

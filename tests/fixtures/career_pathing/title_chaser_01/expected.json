@@ -1,0 +1,15 @@
+{
+  "fixture_id": "title_chaser_01",
+  "scenario_ref": "coordinator-to-pm-development-conversation-v1",
+  "expected_dimension_scores": {
+    "honest_self_assessment": { "score": 1, "tolerance": 1 },
+    "role_change_understanding": { "score": 1, "tolerance": 1 },
+    "development_plan_concreteness": { "score": 2, "tolerance": 2 },
+    "agency_and_realism": { "score": 2, "tolerance": 2 },
+    "professional_framing": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 1.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "TITLE-CHASER FAILURE MODE — the entitlement direction. Wants the title and pay as an earned reward ('I've earned the step up', 'tired of doing the work without the seniority or comp', 'others I started with have already made PM') with zero honest self-assessment — honest_self_assessment FLOORS at 1. Explicitly treats PM as a promotion and assumes observation equals readiness ('I don't think I need a load of development... I've watched how it's done') — role_change_understanding FLOORS at 1 (the necessary-but-not-sufficient error in its purest form). No real development plan (development_plan 2), agency present but as entitlement/ultimatum not ownership of costs (agency 2), and the framing is a demand-with-threat not a development conversation (professional_framing 2). Tests whether the grader catches title-chasing as the failure the chapter warns about — wanting the rung, not the role. Soft dims pre-set {2, tol 2}; the two floors hold it off pass."
+}

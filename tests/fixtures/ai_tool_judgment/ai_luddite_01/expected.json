@@ -1,0 +1,15 @@
+{
+  "fixture_id": "ai_luddite_01",
+  "scenario_ref": "iam-ai-tool-judgment-v1",
+  "expected_dimension_scores": {
+    "mechanics_vs_meaning": { "score": 2, "tolerance": 2 },
+    "accuracy_audit": { "score": 3, "tolerance": 2 },
+    "skill_and_voice": { "score": 2, "tolerance": 2 },
+    "sensitive_comms_discipline": { "score": 3, "tolerance": 2 },
+    "constructive_register": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 2.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "ANTI-AI-BAN FAILURE MODE — the over-restrictive over-correction (symmetric to the rubber-stamper). It DOES catch that the report is wrong (so accuracy isn't zero, ~3), but the response is a blanket ban delivered with contempt: 'stop using AI for anything... write everything yourself, by hand', 'a liability and a shortcut for people who don't want to do the work', plus a threat to escalate and a swipe at Noah ('spend less time looking for shortcuts'). constructive_register FLOORS at 1 (contemptuous, threatening, humiliating a well-intentioned junior). mechanics_vs_meaning capped at 2 (rejects AI wholesale, missing that it's genuinely useful for mechanics — the chapter's central nuance). skill_and_voice 2 ('learn to do the job properly' is not development guidance). Tests whether the grader catches that throwing out AI entirely, with contempt, is also a failure — correct diagnosis, wrong and corrosive response. Soft dims pre-set {2-3, tol 2}; the register floor holds it off pass."
+}

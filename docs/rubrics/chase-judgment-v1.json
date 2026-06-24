@@ -1,0 +1,61 @@
+{
+  "rubric_id": "chase-judgment-v1",
+  "rubric_version": "1.0.0",
+  "competency": "chase_judgment",
+  "competency_label": "Chase Judgment — When to Chase, When to Escalate, When to Let Go",
+  "lesson_ref": "chasing",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "chase_or_stop_diagnosis",
+      "description": "Does the learner read the signals and conclude correctly whether the chase is still useful or dead? The chapter's stop-signals: the person has gone unresponsive across multiple nudges, circumstances changed, the deliverable is no longer needed, chasing produces no movement. Here all point to STOP (six nudges, last three ignored; downstream already worked around it). A strong answer names the live-vs-dead test explicitly rather than reflexively nudging again.",
+      "anchors": {
+        "1": "No diagnosis. Reflexively sends another nudge (treats closing actions as the goal), or invents facts. Concludes 'keep chasing' despite the stop-signals.",
+        "3": "Recognises the chase has stalled and concludes it should stop, but works only one or two signals or does not weigh whether the deliverable is still needed.",
+        "5": "Explicitly applies the live-vs-dead signals to the facts (unresponsive across nudges; downstream already proceeded; deliverable now largely unneeded) and concludes the chase is dead — not a seventh nudge."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "alternative_path_selection",
+      "description": "Having decided to stop chasing, does the learner pick the right next move from the chapter's three paths — escalate (still needed + person not producing), reclassify (convert the underlying need into a risk/issue with a mitigation), or let go (no longer needed, close cleanly) — and justify it for THIS situation? Here the proportionate move is let-go / reclassify to a low-confidence note, not a heavy escalation.",
+      "anchors": {
+        "1": "No alternative considered (just keeps chasing), or no path chosen.",
+        "3": "Chooses a defensible path but with thin rationale, or slightly mismatches the situation (e.g. escalates a soft, no-longer-needed dependency).",
+        "5": "Chooses let-go / reclassify-with-mitigation as fits the facts, justified against need and proportion; reserves escalation for when the deliverable is still needed and the person is not producing it."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "message_craft",
+      "description": "Is the artifact the learner writes (a chase, a close/reclassification note, or an escalation) well made per the chapter — specific (not 'following up'), polite but not apologetic, easy to respond to / act on (offers options, a clear ask), and where a chase is warranted, offers help and considers varying channel? A close note should be concrete and preserve the record.",
+      "anchors": {
+        "1": "Vague or absent ('just following up'), or grovelling/apologetic ('so sorry to bother you, I know you're busy').",
+        "3": "Reasonably specific and actionable but missing one of {polite-not-apologetic, easy-to-respond/clear-ask, offer-of-help-or-channel-judgment}.",
+        "5": "Specific, polite-not-apologetic, easy to act on, with a clear ask or a concrete close-note that preserves the record; if chasing, offers help and shows channel judgment."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "record_discipline",
+      "description": "Does the learner keep the tracker honest — close the dead action with a note (dropped, or converted to a risk/issue with a named mitigation) rather than leaving a nominally-open ceremonial item? The chapter: a tracker full of open items nobody expects to close is the real failure; closing an undelivered action is accurate record-keeping, not admitting failure.",
+      "anchors": {
+        "1": "Leaves the dead action open (or implies endless re-nudging) with no close, no reclassification, no note.",
+        "3": "Closes or reclassifies the action but the note is thin — missing the why, or the mitigation/owner for the converted risk.",
+        "5": "Closes the action with a clear note, or converts the need to a risk/issue with a concrete mitigation and owner; the tracker reflects reality and the record is preserved."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "tone_and_proportion",
+      "description": "Patient professionalism and proportion: not annoyed, not apologetic, and the response is sized to the item's actual importance — no ceremonial chasing of a dead loop, and no nuclear escalation of a soft, off-critical-path dependency. Briefing the PM proportionately (a one-liner) rather than over- or under-reacting.",
+      "anchors": {
+        "1": "Annoyed/passive-aggressive OR ceremonial (keeps chasing for the sake of closing) OR disproportionate (escalates a soft, no-longer-needed item to senior management).",
+        "3": "Reasonable tone and roughly proportionate, but slightly over- or under-weights the item, or misses the proportionate PM heads-up.",
+        "5": "Calm, patient, non-apologetic; response sized to the item — lets a now-unneeded soft dependency go, gives the PM a proportionate one-line heads-up, escalates only when warranted."
+      },
+      "weight": 0.20
+    }
+  ]
+}

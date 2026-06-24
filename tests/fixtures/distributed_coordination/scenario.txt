@@ -1,0 +1,17 @@
+You are PC on the IAM modernisation programme, now running with a distributed team: you and your PM R. in London (GMT); the Federation integration squad in Bangalore (IST, +5.5h); and the security architects in Toronto (EST, -5h). Four things are on your plate this week:
+
+1. THE STALLED DECISION. The Bangalore squad needs a ruling on whether to use token-binding approach A or B before they can proceed. The question has bounced for three days: someone asks a one-line question at the end of their day, and the answer comes ~24 hours later, so nothing resolves. You actually have enough to make a recommendation: A is simpler and meets the conformance requirement; B is more future-proof but adds two weeks. R. can make the call but needs it teed up.
+
+2. THE UNWRITTEN DECISION. Last week, on a call, the team verbally agreed "we'll go with the existing IdP for phase 1." It was never written down. You've since realised Bangalore and Toronto have different understandings of what that included — Toronto thinks it covers MFA, Bangalore thinks MFA is phase 2.
+
+3. THE MEETING BURDEN. The weekly sync has run at 7:00am London / 12:30pm Bangalore / 2:00am Toronto for two months. Toronto always takes the 2am hit. Nobody has raised it, but you've noticed the Toronto architects are increasingly quiet in those calls.
+
+4. THE QUIET TEAMMATE. Arjun, a strong developer in Bangalore, has gone noticeably quiet over the last two weeks — terse one-line messages, and he missed Monday's stand-up without a word. It's unlike him.
+
+Write the coordination moves you'd make this week. Your answer should:
+
+1. Collapse the A-vs-B decision loop with a single, fully-contexted asynchronous message — context, the two options, your recommendation, and a clear by-when and reply format — rather than scheduling another hard-to-align call or firing one more one-line question.
+2. Write down the verbal IdP decision and circulate it to reconcile the differing MFA understandings.
+3. Choose async vs meeting deliberately — don't default to "let's all hop on a call."
+4. Fix the time-zone fairness — rotate the 2am burden off Toronto (or propose a fair pattern) and acknowledge it.
+5. Make a light-touch human check on Arjun — the remote equivalent of stopping by his desk — not an output/performance interrogation.

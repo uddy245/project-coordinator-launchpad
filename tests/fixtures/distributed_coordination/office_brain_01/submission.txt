@@ -1,0 +1,15 @@
+To: Whole team
+From: PC
+Subject: Daily calls to get us moving
+
+Team — we've got too much getting stuck in writing, so I'm going to put in a daily 30-minute all-hands call so we can talk things through properly like we would in an office. I'll keep the existing 7:00am London slot since that's what everyone's used to.
+
+On the call tomorrow we'll settle A vs B by talking it out, and I'll clear up the IdP/MFA thing verbally so everyone hears the same answer at the same time. I find things just move faster when we're all on a call rather than typing back and forth.
+
+I won't bother writing the IdP decision up — if everyone's on the call they'll hear it, and we can always re-confirm verbally if anyone's unsure later.
+
+Let's get everyone dialled in at 7am London / 2am Toronto as usual. Toronto, I know it's early your end but it's the only slot that's stuck so far, so let's keep it for consistency.
+
+See you all on the call.
+
+PC

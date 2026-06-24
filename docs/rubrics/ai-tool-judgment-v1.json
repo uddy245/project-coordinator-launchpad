@@ -1,0 +1,61 @@
+{
+  "rubric_id": "ai-tool-judgment-v1",
+  "rubric_version": "1.0.0",
+  "competency": "ai_tool_judgment",
+  "competency_label": "AI Tool Judgment — Using AI for Mechanics, Not Meaning",
+  "lesson_ref": "using-ai",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "mechanics_vs_meaning",
+      "description": "Does the learner draw the chapter's line — use AI for mechanics (drafting, formatting, rephrasing at volume) but own the meaning (the judgment call, the framing, the specific signal)? Concretely: does it recognise that the RAG rating is a meaning/judgment call AI should never have made, and that Federation cannot be GREEN the morning after the conformance gate failed?",
+      "anchors": {
+        "1": "No distinction; treats the AI's whole output (including the GREEN judgment) as acceptable, or rejects AI for everything including mechanics.",
+        "3": "Gestures at the line but applies it loosely — flags the report is off without locating the problem as AI making a judgment/meaning call.",
+        "5": "Names the mechanics-vs-meaning line and applies it: AI may draft, but the RAG rating and honest framing are the coordinator's judgment; calls the GREEN wrong given the failed gate."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "accuracy_audit",
+      "description": "Does the learner audit the AI output for accuracy — catching the dishonest GREEN, the fabricated metric (the unfounded coverage figure), and the generic/padded risk entries — and insist on the honest framing AI optimises away from? AI confidently produces wrong facts and cheerful green; the coordinator has to check everything consequential.",
+      "anchors": {
+        "1": "Accepts the output's specifics at face value; misses the false GREEN and/or the fabricated metric.",
+        "3": "Catches one problem (e.g. the GREEN) but misses another (the fabricated number or the generic risks).",
+        "5": "Catches the dishonest GREEN, the fabricated metric, and the generic risks, and insists the report reflect the real (failed-gate) signal."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "skill_and_voice",
+      "description": "Does the learner address the craft cost — that producing-by-curation isn't building the junior's skill, and that uniform AI register makes everyone's writing read the same — and advise the right pattern (write your own first draft, then use AI to tighten; keep your own voice)?",
+      "anchors": {
+        "1": "Ignores the development/voice dimension entirely (only fixes this one report), or tells the junior to keep outsourcing wholesale.",
+        "3": "Mentions the skill/voice point but thinly, without the write-first-then-assist guidance.",
+        "5": "Names the craft cost (skill not being built; homogenised AI voice) and advises write-first-then-assist / own-voice as the development pattern."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "sensitive_comms_discipline",
+      "description": "Does the learner hold the rule that AI output never goes straight into a sensitive communication (a sponsor/Steering Committee status) without the coordinator's own edit and accountability — and apply it to THIS sponsor-facing report — with disclosure where appropriate?",
+      "anchors": {
+        "1": "Would let AI-drafted content go to the SC/sponsor unedited, or doesn't treat the sponsor-facing status as needing the coordinator's own ownership.",
+        "3": "Says it should be reviewed but doesn't clearly insist on the coordinator's own edit/ownership before it goes to the SC.",
+        "5": "Insists the SC status goes through the coordinator's own edit and judgement (the edit makes it theirs); checks specifics before it goes out."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "constructive_register",
+      "description": "Does the learner deliver the guidance as helpful mentoring — recognising AI's genuine usefulness for mechanics and the junior's good intent (productivity) — rather than rubber-stamping it OR reacting with a blanket anti-AI ban and contempt? Proportionate and developmental.",
+      "anchors": {
+        "1": "Either rubber-stamps ('looks great, ship it') OR bans AI outright with contempt ('AI is slop, never use it'); not constructive.",
+        "3": "Broadly constructive but tips toward either over-permissive or over-restrictive, or is a bit harsh on the junior.",
+        "5": "Affirms AI's real value for mechanics and the junior's intent, while correcting the misuse — developmental, proportionate, neither rubber-stamp nor ban."
+      },
+      "weight": 0.20
+    }
+  ]
+}

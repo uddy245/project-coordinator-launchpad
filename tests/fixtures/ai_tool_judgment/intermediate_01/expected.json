@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "iam-ai-tool-judgment-v1",
+  "expected_dimension_scores": {
+    "mechanics_vs_meaning": { "score": 4, "tolerance": 1 },
+    "accuracy_audit": { "score": 5, "tolerance": 1 },
+    "sensitive_comms_discipline": { "score": 4, "tolerance": 1 },
+    "skill_and_voice": { "score": 3, "tolerance": 1 },
+    "constructive_register": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "INTERMEDIATE-HIGH — catches the substance and passes. Nails the accuracy audit (the false GREEN tied to the failed gate, the fabricated 99.2%, the generic risk line) — accuracy_audit 5 — names the RAG rating as the coordinator's judgment not the tool's (mechanics_vs_meaning 4), and holds the sensitive-comms rule (own final pass before SC) at 4. Stays constructive ('the AI's fine for getting a draft up fast'). The gap from a clean 5 is skill_and_voice (3): it tells Noah to keep the judgment and facts his own, but doesn't address the development cost — that drafting-by-curation isn't building his craft, or the homogenised-voice point, or advise write-first-then-assist. Expect 4s with accuracy at 5 and skill_and_voice at 3 — the 'fixes the report well, lighter on the development coaching' profile."
+}

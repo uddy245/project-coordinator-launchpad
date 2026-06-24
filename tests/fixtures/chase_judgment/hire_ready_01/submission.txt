@@ -1,0 +1,19 @@
+To: R. Adekanmi
+From: PC
+Subject: ACT-118 — closing the chase, converting to a tracked assumption
+
+R — before the SC pack goes out Thursday, here's what I'm doing with ACT-118 (D. Osei's data-classification appendix) and why.
+
+The read. I've nudged D. six times; the last three over four weeks got no reply, and he's now on an incident and effectively out for several weeks. So the owner is unresponsive and the cause isn't resolving. More decisively: Workstream B couldn't wait, proceeded six weeks ago on its own documented classification assumptions, and is ~two-thirds done — the appendix would now mostly confirm what's already built. By the chapter's test, this chase is dead: no responsiveness, no movement, and the deliverable is no longer materially needed. A seventh nudge would be ceremonial.
+
+What I'm doing. I'm closing ACT-118 as "not delivered — no longer required," and rather than just dropping it I'm converting the one real residue into a tracked item:
+
+  RISK R-too: "Workstream B access-policy design rests on B's own data-classification assumptions, never confirmed against D. Osei's appendix. Likelihood low, impact moderate if assumptions are wrong. Mitigation: WS-B lead to spot-check the three highest-sensitivity classifications against existing policy before design freeze. Owner: WS-B lead."
+
+That keeps the record honest — the action is closed, but the unconfirmed assumption is visible and owned instead of buried.
+
+What I'm NOT doing. I'm not escalating to D.'s manager or flagging it to the sponsor. It's a soft, off-critical-path dependency that's now redundant; escalating it would spend senior attention and goodwill on a non-issue.
+
+Nothing needed from you — just flagging so you're not surprised if it comes up. If you'd rather I keep chasing for completeness, say so, but my recommendation is to let the chase go and carry the assumption as the risk above.
+
+PC

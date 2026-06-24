@@ -1,0 +1,15 @@
+Five moves this week, mostly async.
+
+1) Unblock A vs B — one written decision request (Slack + email so it survives both inboxes), to R., cc squad:
+"DECISION NEEDED by 12:00 GMT tomorrow. Token-binding: A or B. A — simpler, meets the conformance requirement, ready now. B — more future-proof, adds ~2 weeks. My recommendation: A for phase 1, log B as a phase-2 option. R., reply 'A', 'B', or 'call me'. Bangalore: a confirmed A unblocks your Thursday start." One round-trip, everything R. needs to decide, clear by-when and reply format. No meeting.
+
+2) Write down the IdP decision and reconcile the MFA split — short note to all three sites:
+"Confirming last week's call: Phase 1 = existing IdP. MFA is PHASE 2, not phase 1. Flagging explicitly because Toronto read it as phase-1 and Bangalore as phase-2 — phase-2 is correct. Shout now if anyone disagrees; otherwise this is the record." Pinned in the channel so it's the shared memory.
+
+3) Async by default — both of the above are async; I'm not calling a meeting for either. The only thing I'd hold for the live sync is anything that genuinely needs back-and-forth.
+
+4) Fix the meeting time — Toronto has taken 2am for two months, which is almost certainly why they've gone quiet on those calls. I'll propose we rotate: move the sync to 2:00pm GMT / 7:30pm IST / 9:00am EST, which is humane for Toronto and only mildly late for Bangalore, and going forward rotate the unsocial slot quarterly so no single zone always eats it. I'll name it openly: "Toronto's carried the 2am slot since we started — that's not fair, let's rotate."
+
+5) Check on Arjun — separately and privately, a short human note, not about output: "Hey Arjun — noticed you've been a bit quiet the last couple of weeks and missed Monday's stand-up, which isn't like you. No agenda — just checking in, everything ok? Happy to talk or not, whatever's useful." If something's off I'll give R. a quiet heads-up; if it's nothing, no harm done.
+
+PC

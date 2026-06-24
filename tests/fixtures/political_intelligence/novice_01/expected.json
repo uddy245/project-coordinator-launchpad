@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "iam-modernisation-governance-room-v1",
+  "expected_dimension_scores": {
+    "channel_reading": { "score": 1, "tolerance": 1 },
+    "evidence_grounding": { "score": 2, "tolerance": 1 },
+    "actionable_advice": { "score": 1, "tolerance": 1 },
+    "integrity_line": { "score": 4, "tolerance": 1 },
+    "discretion_and_register": { "score": 3, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 2.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "NOVICE — face value. Reads only the spoken channel, takes the meeting at the surface ('went really well... positive and collaborative'), explicitly dismisses the fast-follow push as 'normal brainstorming', and misses every real signal (Priya echoing Tom, Lena's 1:1 + reframing question, the deferred decision, the absences). channel_reading and actionable_advice floor at 1 ('just sit tight and wait') — that's what makes it a failing novice. CALIBRATION FIX (2026-06-24): integrity_line raised 3 -> 4 — the dimension measures whether you cross into manipulation/side-taking, and a harmless, blind recap doesn't cross anything, so it genuinely sits high there (grader returns 5). The miss is in seeing, not in integrity. evidence_grounding 2; discretion 3. Tests whether the grader penalises a polite, agreeable miss on the dims that matter — being pleasant is not the same as reading the room."
+}

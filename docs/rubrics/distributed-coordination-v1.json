@@ -1,0 +1,61 @@
+{
+  "rubric_id": "distributed-coordination-v1",
+  "rubric_version": "1.0.0",
+  "competency": "distributed_coordination",
+  "competency_label": "Distributed Coordination — Remote, Hybrid, and Cross-Time-Zone Discipline",
+  "lesson_ref": "remote-hybrid",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "async_with_context",
+      "description": "Does the learner collapse the stalled cross-time-zone decision loop with a single fully-contexted asynchronous message — context + the options + a recommendation + a clear by-when and reply format — assuming the next response is ~24h away, rather than firing a context-light one-line question (which keeps the loop spinning) or defaulting to yet another hard-to-align call?",
+      "anchors": {
+        "1": "Defaults to 'let's all get on a call' for the decision, or sends another bare one-line question that won't collapse the 24h loop.",
+        "3": "Moves it to async but the message is thin — missing the recommendation, the by-when, or a clear reply format, so the loop may persist.",
+        "5": "Sends one async message carrying full context + options + a recommendation + a clear by-when and reply format, designed to resolve in a single round-trip."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "written_memory",
+      "description": "Does the learner write down and circulate the verbally-agreed decision (the IdP-for-phase-1 call) so the distributed team shares one record — replacing the ambient memory a co-located team would hold collectively — rather than leaving a consequential decision living only in someone's recollection of a call?",
+      "anchors": {
+        "1": "Leaves the verbal decision unwritten, or adds no written confirmation of consequential agreements.",
+        "3": "Writes something down but partially — doesn't circulate it, or doesn't resolve the conflicting understandings.",
+        "5": "Writes the decision down clearly and circulates it to both sites to reconcile the differing understandings, creating shared memory."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "meeting_judgment",
+      "description": "Does the learner choose async vs meeting deliberately — reserving real-time meetings for what genuinely needs them, and, where a meeting is warranted, giving it a tight agenda and structure for distributed attention — rather than reflexively scheduling calls?",
+      "anchors": {
+        "1": "Reflexively schedules meetings for things that could be async; no structure.",
+        "3": "Roughly the right instinct on async-vs-meeting but applied loosely, or a meeting without distributed-attention structure.",
+        "5": "Deliberately routes the decision and recap to async; reserves/structures any meeting that genuinely needs real-time, with a tight agenda."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "timezone_fairness",
+      "description": "Does the learner notice and fix the burden that has fallen on one zone (Toronto taking the 2am sync for two months) — rotate it, or otherwise share the inconvenience, and acknowledge accommodations — rather than ignoring it or offloading the pain onto the distant team?",
+      "anchors": {
+        "1": "Ignores the rotation problem, or actively keeps/dumps the unsocial hour on one zone ('they'll cope').",
+        "3": "Notices the fairness issue but the fix is vague or only half-addresses it.",
+        "5": "Rotates the unsocial slot (or proposes a concrete fair pattern) and explicitly acknowledges who's been carrying the accommodation."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "human_layer",
+      "description": "Does the learner make the light-touch human move that a shared office would produce automatically — a short, non-transactional check-in with the teammate who has gone quiet (Arjun) — replacing the ambient awareness remote work loses, without being heavy-handed or making it a performance issue?",
+      "anchors": {
+        "1": "Ignores the quiet teammate entirely, or treats it only as a performance/output problem.",
+        "3": "Notes the teammate but the response is perfunctory or framed mainly around their deliverables.",
+        "5": "Makes a genuine, light-touch personal check-in with the quiet teammate (and/or a discreet flag to the PM), human-first not output-first."
+      },
+      "weight": 0.20
+    }
+  ]
+}

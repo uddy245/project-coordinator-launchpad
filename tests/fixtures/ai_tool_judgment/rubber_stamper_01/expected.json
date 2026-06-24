@@ -1,0 +1,15 @@
+{
+  "fixture_id": "rubber_stamper_01",
+  "scenario_ref": "iam-ai-tool-judgment-v1",
+  "expected_dimension_scores": {
+    "mechanics_vs_meaning": { "score": 1, "tolerance": 1 },
+    "accuracy_audit": { "score": 1, "tolerance": 1 },
+    "skill_and_voice": { "score": 1, "tolerance": 1 },
+    "sensitive_comms_discipline": { "score": 1, "tolerance": 1 },
+    "constructive_register": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "RUBBER-STAMPER FAILURE MODE — the over-permissive direction. Forwards the AI-drafted report straight to the sponsor's office UNEDITED, actively praising the fabricated metric ('99.2% test coverage is a strong number to be showing the board') and the dishonest framing, and tells Noah to keep outsourcing wholesale. accuracy_audit FLOORS at 1 (not only misses the false GREEN and fabricated number — it amplifies them to the board), sensitive_comms_discipline FLOORS at 1 (AI output to the SC unedited), mechanics_vs_meaning and skill_and_voice at 1. constructive_register 2 (warm, but the warmth is the problem). Tests whether the grader catches that uncritical enthusiasm for polished AI output is a serious failure — it ships a dishonest GREEN and a fabricated figure to the Steering Committee. Soft dim pre-set {2, tol 2}; the floors hold it well off pass."
+}

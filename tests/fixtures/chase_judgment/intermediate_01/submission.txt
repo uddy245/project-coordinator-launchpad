@@ -1,0 +1,15 @@
+To: R. Adekanmi
+From: PC
+Subject: Closing ACT-118 (data-classification appendix)
+
+R — quick note on ACT-118, the data-classification appendix from D. Osei.
+
+I've nudged D. six times and the last three have gone unanswered, and I gather he's been pulled onto an incident for the next few weeks. More to the point, Workstream B couldn't wait on it — they proceeded on their own documented assumptions six weeks ago and are about two-thirds done, so the appendix would mostly just confirm what they've already built. So the deliverable isn't really needed anymore.
+
+Given that, I don't think a seventh nudge makes sense. I'm going to close ACT-118 as not delivered / no longer required, with a note to that effect on the tracker, so the SC pack reflects reality rather than a stale open item.
+
+Let me know if you'd rather I keep it open for any reason, but my read is we let it go.
+
+PC
+
+Rationale: Owner unresponsive and the downstream work has moved on, so chasing is a dead loop — close the action rather than keep nudging.

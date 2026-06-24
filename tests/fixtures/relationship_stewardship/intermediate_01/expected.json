@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "iam-modernisation-closeout-relationships-v1",
+  "expected_dimension_scores": {
+    "sincerity_not_performance": { "score": 4, "tolerance": 1 },
+    "four_qualities": { "score": 5, "tolerance": 1 },
+    "step_forward_judgment": { "score": 4, "tolerance": 1 },
+    "boundary_with_toxic": { "score": 3, "tolerance": 1 },
+    "register_and_proportion": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.0,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "INTERMEDIATE-HIGH — does the substantive work well and passes. Specific sincere Dembe note (real reference: the access-matrix), correctly fixes Sam's credit to the people who matter (four_qualities 5), and a no-ask congratulation to Maya. The gap is boundary_with_toxic (3): declining Victor with 'I'm tied up' is the right direction but it's an avoidant brush-off rather than a clear, conscious let-it-thin — it doesn't register the pattern or hold the boundary deliberately, just dodges. That keeps it from a clean 5 overall. Expect 4s with four_qualities at 5 and boundary at 3 — the 'right moves, soft boundary' profile."
+}

@@ -1,0 +1,20 @@
+To: London / Bangalore / Toronto team
+From: PC
+Subject: Let's get aligned
+
+Hi all,
+
+A few things have been a bit tangled this week, so I think the best thing is to get everyone on a call to sort it all out together.
+
+Can we find a 30-minute slot where everyone can make it? I'll send a poll. On the call we can:
+- Decide A vs B for the token binding
+- Clear up the IdP / MFA confusion
+- Catch up generally
+
+Once we've talked it through I'll have a clearer picture and can update the plan. I think a good old-fashioned conversation will cut through the back-and-forth.
+
+Let me know your availability and I'll lock something in for the soonest time that works for all three locations.
+
+Thanks!
+
+PC

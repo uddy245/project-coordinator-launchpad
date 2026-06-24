@@ -1,0 +1,61 @@
+{
+  "rubric_id": "relationship-stewardship-v1",
+  "rubric_version": "1.0.0",
+  "competency": "relationship_stewardship",
+  "competency_label": "Relationship Stewardship — Building Professional Relationships That Last",
+  "lesson_ref": "stakeholder-relationships",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "sincerity_not_performance",
+      "description": "Are the relationship moves sincere and specific — referencing something real and treating people as people — rather than strategic, transactional, or performative networking? The chapter's line: relationships that last are built through decent, consistent behaviour, not the cultivation of the useful. A reconnect note should reference a real shared specific, not read like LinkedIn outreach with an angle.",
+      "anchors": {
+        "1": "Transactional/strategic ('worth staying close — she could send us work') or generic/performative ('great working with everyone, let's keep in touch') with no real specifics.",
+        "3": "Warm and mostly genuine but at least one move is generic or carries a faint angle/ask.",
+        "5": "Each move is sincere and specific, references real shared work, and is offered for its own sake — no transactional framing, no performance."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "four_qualities",
+      "description": "Do the moves reflect the qualities people remember — reliability, respect (to junior as well as senior), integrity (honest, doesn't take or misattribute credit), and generosity (shares credit/help)? Concretely here: correcting the vague credit so the junior gets named for their work is respect + integrity + generosity in one move.",
+      "anchors": {
+        "1": "Self-serving or careless with others' credit (lets the junior's work stay misattributed, or claims it), or disrespectful to juniors.",
+        "3": "Shows some of the qualities but misses one clearly (e.g. doesn't fix the junior's credit, or is warm to seniors but neglects the junior).",
+        "5": "Visibly reliable, respectful up and down, honest about credit (names the junior to the people who matter), and generous with help/credit."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "step_forward_judgment",
+      "description": "Does the learner take the disproportionate-difference moments — crediting the junior, reconnecting sincerely, congratulating a real achievement — because they are right, not because they are useful? And without being asked. The chapter: when someone could be helped at modest cost, help; helpfully, not as an investment.",
+      "anchors": {
+        "1": "Skips the moments (no credit, no congratulation, no reconnect), or only acts where there's a payoff.",
+        "3": "Takes some of the moments but misses one, or frames the help slightly as an investment.",
+        "5": "Takes the moments unprompted and unconditionally — credits the junior, reconnects, congratulates — clearly because it's the right thing, not for return."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "boundary_with_toxic",
+      "description": "Does the learner handle the toxic-pattern peer correctly — distinguish a consistent toxic pattern (repeated credit-taking, throwing others under the bus) from one-off difficulty, then let the relationship thin: stay professional when contacted, decline to invest, NOT burn the bridge? The right outcome is a fade, not a confrontation and not a capitulation.",
+      "anchors": {
+        "1": "Either capitulates (teams up / vouches for the toxic peer despite the pattern) OR burns the bridge (a cutting call-out, public confrontation, dramatic cut-off).",
+        "3": "Roughly right instinct (keeps distance) but over- or under-does it — a bit confrontational, or still half-invests, or doesn't separate pattern from one-off.",
+        "5": "Names the pattern privately to self, declines the ask courteously, stays professional, stops investing, and lets it fade without a burned bridge."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "register_and_proportion",
+      "description": "Is the tone warm-but-not-gushing, professional, and proportionate — light maintenance, not over-engineered cultivation; brief sincere notes, not effusive performances; appropriate to each relationship's actual closeness?",
+      "anchors": {
+        "1": "Over-the-top/effusive or stiff/transactional; mis-sized to the relationship (gushing to a near-stranger, or cold to a close colleague).",
+        "3": "Generally appropriate but one move is mis-pitched in warmth or length.",
+        "5": "Each note is sized right — brief, sincere, warm without performance — and matched to the actual relationship."
+      },
+      "weight": 0.20
+    }
+  ]
+}

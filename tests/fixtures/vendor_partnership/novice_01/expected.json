@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "iam-modernisation-meridian-vendor-v1",
+  "expected_dimension_scores": {
+    "partnership_posture": { "score": 2, "tolerance": 1 },
+    "contract_vs_relationship": { "score": 1, "tolerance": 1 },
+    "accountability_without_punitive": { "score": 1, "tolerance": 1 },
+    "channel_and_structure_respect": { "score": 3, "tolerance": 1 },
+    "record_and_proportion": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "NOVICE — the conflict-avoidant pushover. Soft-pedals a second, critical-path miss ('no rush... roughly when it might land') and capitulates outright on CR-204 ('that's fine on my side, I'll get it moving through approvals') despite it being in-scope under SOW 4.2 — accountability_without_punitive and record_and_proportion floor at 1, partnership_posture capped at 2 (treats the vendor as someone to keep happy by absorbing cost). contract_vs_relationship floors at 1 (no SOW framing at all). It scores 3 on channel_respect only because it does (accidentally) go through Marcus. Tests whether the grader penalises the friendly capitulation that quietly costs the project GBP 40k and a critical-path slip."
+}

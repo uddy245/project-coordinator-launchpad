@@ -115,6 +115,46 @@ const COMPETENCIES: Array<{
     rubricPath: "docs/rubrics/escalation-judgment-v1.json",
     promptPath: "docs/prompts/grade-escalation-v1.md",
   },
+  {
+    competency: "pushback_judgment",
+    rubricPath: "docs/rubrics/pushback-judgment-v1.json",
+    promptPath: "docs/prompts/grade-pushback-v1.md",
+  },
+  {
+    competency: "chase_judgment",
+    rubricPath: "docs/rubrics/chase-judgment-v1.json",
+    promptPath: "docs/prompts/grade-chasing-v1.md",
+  },
+  {
+    competency: "political_intelligence",
+    rubricPath: "docs/rubrics/political-intelligence-v1.json",
+    promptPath: "docs/prompts/grade-political-v1.md",
+  },
+  {
+    competency: "relationship_stewardship",
+    rubricPath: "docs/rubrics/relationship-stewardship-v1.json",
+    promptPath: "docs/prompts/grade-relationships-v1.md",
+  },
+  {
+    competency: "vendor_partnership",
+    rubricPath: "docs/rubrics/vendor-partnership-v1.json",
+    promptPath: "docs/prompts/grade-vendors-v1.md",
+  },
+  {
+    competency: "distributed_coordination",
+    rubricPath: "docs/rubrics/distributed-coordination-v1.json",
+    promptPath: "docs/prompts/grade-remote-v1.md",
+  },
+  {
+    competency: "ai_tool_judgment",
+    rubricPath: "docs/rubrics/ai-tool-judgment-v1.json",
+    promptPath: "docs/prompts/grade-ai-v1.md",
+  },
+  {
+    competency: "career_pathing",
+    rubricPath: "docs/rubrics/career-pathing-v1.json",
+    promptPath: "docs/prompts/grade-career-v1.md",
+  },
 ];
 
 type ExpectedDimensionScore = { score: number; tolerance: number };

@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "iam-modernisation-act118-chase-v1",
+  "expected_dimension_scores": {
+    "chase_or_stop_diagnosis": { "score": 1, "tolerance": 1 },
+    "alternative_path_selection": { "score": 1, "tolerance": 1 },
+    "message_craft": { "score": 2, "tolerance": 1 },
+    "record_discipline": { "score": 1, "tolerance": 1 },
+    "tone_and_proportion": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "NOVICE — the reflexive seventh-nudge. No live-vs-dead diagnosis at all; fires another chase precisely when the signals say stop (owner unresponsive across nudges, deliverable no longer needed). Explicitly leaves the action OPEN and commits to weekly nudging — record_discipline floors at 1. Tone is the apologetic/grovelling anti-pattern ('so sorry to keep bothering you... I know you are completely swamped'), capping message_craft at 2 and dragging tone_and_proportion to 2 (ceremonial chasing of a dead loop). No alternative path considered. Tests whether the grader catches the diligent-looking-but-judgment-free chase as the failure the chapter is built to prevent."
+}

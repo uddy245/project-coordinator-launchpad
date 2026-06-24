@@ -1,0 +1,17 @@
+To: Marcus Lindqvist
+From: PC
+Subject: Federation — harness slip + CR-204, let's reconcile before SC
+
+Marcus — two things, and I'd rather work both through directly with you before the SC next week.
+
+1) The test harness. It was due Friday and didn't land, and we didn't get a heads-up — I went looking for it. I'm flagging it plainly because it's the second slip in six weeks and this one sits on the critical path: the conformance re-test can't start without it. I'm not looking to make a drama of it — your team did genuinely good work on the broker build and I've said so to R. What I need is two things: your read on what happened, and an agreement that anything at risk of slipping gets a flag from your side before the due date, not after. If we have that, I can manage the rest around it.
+
+2) CR-204. I've read it against the SOW and the integration scope it describes reads to me as already covered under section 4.2 — so as written I don't think it's additional, and I don't want to send an in-scope change to approvals. I know your account manager raised it and cc'd the sponsor's office; I'd suggest you and I reconcile the CR line items against 4.2 first, between us, and then put a corrected position to the sponsor jointly rather than have it argued out in the SC. If, going through it, there's genuinely new scope in there, I'll back the delta — I just want it to be the actual delta.
+
+For the record I'm logging both items with specifics (harness due-date and the missed flag; CR-204 vs SOW 4.2) on the issues log so we're working off the same facts, not so anyone's building a case.
+
+Can we take 30-45 minutes tomorrow, just the two of us, before this hardens? I'd like us to walk into the SC aligned.
+
+PC
+
+Rationale: hold Meridian to the contract firmly but as a partner — name the miss and get a heads-up protocol, treat the CR as a scope reconciliation against the SOW, keep it between counterparts and on the record, and reserve any formal escalation for if this doesn't resolve.

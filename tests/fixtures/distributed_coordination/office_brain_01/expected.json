@@ -1,0 +1,15 @@
+{
+  "fixture_id": "office_brain_01",
+  "scenario_ref": "iam-distributed-coordination-v1",
+  "expected_dimension_scores": {
+    "async_with_context": { "score": 1, "tolerance": 1 },
+    "written_memory": { "score": 1, "tolerance": 1 },
+    "meeting_judgment": { "score": 1, "tolerance": 1 },
+    "timezone_fairness": { "score": 1, "tolerance": 1 },
+    "human_layer": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "OFFICE-BRAIN FAILURE MODE — coordinating a distributed team as if it were co-located. Adds a DAILY all-hands call ('talk things through properly like we would in an office'), settles the decision and the IdP/MFA scope verbally, and explicitly refuses to write the decision down ('I won't bother writing the IdP decision up'). async_with_context, meeting_judgment, and written_memory all floor at 1. And it consciously keeps the 2am slot on Toronto 'for consistency' — timezone_fairness floors at 1 — even acknowledging it's early for them and doing it anyway. human_layer 2 (a throwaway 'I know it's early your end', but no real attention; Arjun unmentioned). Tests whether the grader catches the confident-but-wrong co-located approach as the failure it is for a three-zone team."
+}

@@ -1,0 +1,22 @@
+You are PC on the eleven-month IAM modernisation programme (healthcare provider, CISO sponsor). One action on your tracker has been open for eleven weeks:
+
+ACT-118 — "Data-classification appendix for the Federation broker" — owner: D. Osei, a senior SME on the client security team. He committed to it in a workshop in week 3.
+
+What has happened since:
+- You have nudged D. six times — three emails, then two Slacks, then one more email. The first three got "sorry, still on it" replies. The last three (over the past four weeks) got no response at all.
+- ACT-118 was a SOFT dependency for Workstream B (access-policy design). It is NOT on the critical path. Workstream B could not wait, so six weeks ago they proceeded using their own documented assumptions about the classification. They are now about two-thirds done; the appendix, if it arrived, would mostly confirm what they already assumed and would change little.
+- D. has, you heard informally, been pulled onto a different incident and is effectively unavailable for the next several weeks.
+- Your PM, R. Adekanmi, said in passing last week: "Still chasing that one?"
+- The Steering Committee pack goes out Thursday. ACT-118 still shows OPEN on the tracker.
+
+You are aware of the temptation in both directions. You could fire off a seventh nudge (you have done six; a habit has formed). You could over-rotate the other way — escalate ACT-118 to D.'s manager or flag it to the sponsor as a blocker, treating a soft, now-redundant dependency as a crisis. Or you could leave it sitting OPEN because "closing an action that wasn't delivered feels like admitting failure."
+
+Decide what to do with ACT-118 and write the artifact your decision calls for — the actual chase message, OR the close / reclassification note for the tracker, OR the escalation — plus one or two sentences of rationale. Your answer should:
+
+1. Decide whether chasing is still useful, applying the live-vs-dead signals (is D. responsive? has the cause resolved? is the deliverable still needed? is nudging producing movement?). Conclude correctly and say why.
+2. Choose the right next move — keep chasing, escalate, reclassify to a risk/issue, or let go — matched to the signals and to the item's actual (low) importance.
+3. Write the artifact well: specific, polite but not apologetic, easy to act on; if you close or reclassify, leave a concrete note that preserves the record (and a mitigation/owner if you convert it to a risk).
+4. Keep the tracker honest — do not leave a dead action nominally open.
+5. Keep the tone patient and proportionate — no ceremonial seventh nudge, no nuclear escalation of a soft dependency; give R. a proportionate one-line heads-up.
+
+Do not reflexively send another nudge, and do not treat closing an undelivered-but-no-longer-needed action as a failure. The skill is matching the move to the signals.

@@ -1,0 +1,15 @@
+{
+  "fixture_id": "ceremonial_chaser_defender_01",
+  "scenario_ref": "iam-modernisation-act118-chase-v1",
+  "expected_dimension_scores": {
+    "chase_or_stop_diagnosis": { "score": 1, "tolerance": 1 },
+    "alternative_path_selection": { "score": 1, "tolerance": 1 },
+    "message_craft": { "score": 2, "tolerance": 1 },
+    "record_discipline": { "score": 1, "tolerance": 1 },
+    "tone_and_proportion": { "score": 2, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.4,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "CEREMONIAL-CHASER DEFENDER FAILURE MODE — symmetric to the pushback compliance_defender and the escalation under_escalation_defender. The learner ACKNOWLEDGES the situation (owner unavailable, gone quiet) but rationalises continued chasing of a dead loop as virtue — 'an action isn't done until it's delivered', 'closing ACT-118 undelivered would feel like admitting I failed', 'persistence is the professional move'. This is the exact trap the chapter names (the seventeen-nudge ceremonial chase; closing-as-failure). chase_or_stop_diagnosis floors at 1 (concludes keep chasing despite every stop-signal; never weighs that the deliverable is no longer needed). alternative_path_selection floors at 1 (explicitly rejects close/reclassify/let-go). record_discipline floors at 1 (keeps the dead action OPEN and will report it open in the SC pack). tone_and_proportion at 2 (ceremonial; polite but disproportionate). message_craft at 2 (the planned weekly-cadence/vary-channel nudge is competently worded but in service of the wrong action). Tests whether the grader catches sophisticated-defence-of-ceremonial-chasing as the failure it is, not as diligence."
+}

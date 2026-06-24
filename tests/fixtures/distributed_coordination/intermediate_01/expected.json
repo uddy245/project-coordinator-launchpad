@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "iam-distributed-coordination-v1",
+  "expected_dimension_scores": {
+    "async_with_context": { "score": 5, "tolerance": 1 },
+    "written_memory": { "score": 5, "tolerance": 1 },
+    "meeting_judgment": { "score": 4, "tolerance": 1 },
+    "timezone_fairness": { "score": 1, "tolerance": 1 },
+    "human_layer": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 3.2,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "INTERMEDIATE — nails the artefact disciplines but FAILS the human/fairness half, so it does NOT pass (a dim below 3). The async decision message is excellent (context + options + recommendation + by-when + reply ask) — async_with_context 5 — and it writes and circulates the IdP/MFA decision well — written_memory 5, meeting_judgment 4. But it completely ignores the two-month 2am burden on Toronto (timezone_fairness 1) and never addresses Arjun (human_layer 1). This is the deliberate 'great at the mechanics, blind to the people' profile: strong overall average pulled below pass by the two floored dims. Tests whether the grader holds the per-dim pass bar rather than rewarding a high average — distributed coordination is the human layer too, not just clean async."
+}

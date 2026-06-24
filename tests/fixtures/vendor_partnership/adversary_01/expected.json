@@ -1,0 +1,15 @@
+{
+  "fixture_id": "adversary_01",
+  "scenario_ref": "iam-modernisation-meridian-vendor-v1",
+  "expected_dimension_scores": {
+    "partnership_posture": { "score": 2, "tolerance": 2 },
+    "contract_vs_relationship": { "score": 2, "tolerance": 2 },
+    "accountability_without_punitive": { "score": 2, "tolerance": 2 },
+    "channel_and_structure_respect": { "score": 1, "tolerance": 1 },
+    "record_and_proportion": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 1.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "ADVERSARY FAILURE MODE — the over-rotation, treating the vendor as the enemy. The underlying facts are real (a second miss; an in-scope CR), but the response is hostile and disproportionate as a FIRST move: bypasses Marcus straight to Meridian leadership and the sponsor's office ('I've gone over Marcus's head deliberately') — channel_and_structure_respect FLOORS at 1 (hard cap). Frames the CR as bad faith ('an attempt to gouge') rather than a SOW question — caps partnership_posture and contract_vs_relationship at 2. Threatens breach and withholding payment up front — caps accountability_without_punitive and record_and_proportion at 2 (theatrical/punitive). Tests whether the grader catches that a justified grievance executed by nuking the relationship and bypassing the counterpart is a failure. Pre-set the soft dims at {2, tol 2}; the channel floor holds it off pass."
+}

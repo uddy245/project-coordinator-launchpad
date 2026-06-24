@@ -1,0 +1,61 @@
+{
+  "rubric_id": "career-pathing-v1",
+  "rubric_version": "1.0.0",
+  "competency": "career_pathing",
+  "competency_label": "Career Pathing — The Coordinator-to-PM Decision and the Development Conversation",
+  "lesson_ref": "coordinator-to-pm",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "honest_self_assessment",
+      "description": "Does the learner engage the chapter's honest questions genuinely — do I want the accountability? the political exposure? to spend less time on artifacts and more on people? to be wrong publicly? — and reason from their own evidence (what has energised or drained them), rather than chasing the title or avoiding the question? A defensible 'yes', 'no', or 'not yet' are all fine; an un-examined answer is not.",
+      "anchors": {
+        "1": "No real self-assessment — wants the title because it's the next rung / a pay bump (title-chasing), or abdicates ('whatever the company wants').",
+        "3": "Engages some of the honest questions but partially, or asserts a direction without grounding it in their own evidence.",
+        "5": "Works the honest questions against their own experience (what's energised vs drained them) and reaches a reasoned, self-aware position — yes, no, or not-yet."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "role_change_understanding",
+      "description": "Does the learner understand that PM is a role CHANGE, not a bigger version of coordinator — a coordinator supports, a PM owns (accountable to the sponsor for the outcome) — and that some skills must be built new (sponsor management, strategic framing, accountability under pressure), so 'I do the coordinator job well' is necessary but not sufficient?",
+      "anchors": {
+        "1": "Treats PM as a promotion/reward for good coordination ('I've earned it'); assumes doing coordinator well makes them a good PM automatically.",
+        "3": "Acknowledges PM is different but vaguely; doesn't name the specific new skills the coordinator role doesn't exercise.",
+        "5": "Frames PM as a distinct role (support vs own), names specific skills to build new (sponsor management, accountability, strategic framing), and that coordinator excellence is necessary-not-sufficient."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "development_plan_concreteness",
+      "description": "Does the learner propose concrete, well-judged development steps that build the RIGHT (new) skills — ask for stretch responsibilities (a sponsor briefing, a small workshop, a vendor conversation), own something small end-to-end, find a mentor, observe the PM intentionally — sized appropriately, rather than a vague aspiration?",
+      "anchors": {
+        "1": "No development steps, or only the demand for a title/role with no plan to build toward it.",
+        "3": "Some development intent but generic ('get more experience', 'do training') or not targeted at the new skills.",
+        "5": "Specific, appropriately-sized stretch asks targeted at the skills the coordinator role doesn't exercise (own a small piece end-to-end, draft a sponsor briefing, a named mentor)."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "agency_and_realism",
+      "description": "Does the learner own the decision with agency and realism — making a defensible choice (PM path, senior-IC/specialist, or not-yet) and accepting the real costs of whichever they choose — rather than abdicating the decision to others or assuming entitlement to the next rung?",
+      "anchors": {
+        "1": "Abdicates ('I'll do whatever they decide') OR assumes entitlement to the promotion; no ownership of the choice or its costs.",
+        "3": "Takes a position but glosses the real costs/trade-offs of the path chosen, or hedges without committing.",
+        "5": "Owns a defensible choice and is clear-eyed about its costs (e.g. accepts the accountability/political weight of PM, or the trade-offs of staying senior-IC); either path is valid."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "professional_framing",
+      "description": "Is the development conversation framed professionally with the PM — thoughtful, specific, and appropriately pitched (a request and a reflection, not a demand or an apology) — the kind of conversation a PM would respond to generously?",
+      "anchors": {
+        "1": "Entitled/demanding ('I want the PM role') OR apologetic/passive; not a professional development conversation.",
+        "3": "Reasonable and professional but a little flat — the ask or the reflection is underdeveloped or mis-pitched.",
+        "5": "Pitched as a thoughtful development conversation — honest reflection plus a specific, reasonable ask — that a PM would engage with seriously."
+      },
+      "weight": 0.20
+    }
+  ]
+}

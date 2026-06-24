@@ -1,0 +1,15 @@
+{
+  "fixture_id": "networker_01",
+  "scenario_ref": "iam-modernisation-closeout-relationships-v1",
+  "expected_dimension_scores": {
+    "sincerity_not_performance": { "score": 1, "tolerance": 1 },
+    "four_qualities": { "score": 2, "tolerance": 2 },
+    "step_forward_judgment": { "score": 2, "tolerance": 2 },
+    "boundary_with_toxic": { "score": 1, "tolerance": 1 },
+    "register_and_proportion": { "score": 2, "tolerance": 2 }
+  },
+  "expected_overall_competency_score": 1.6,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "NETWORKER FAILURE MODE — the transactional/strategic operator, the over-rotation this lesson warns against. Every relationship is framed as ROI ('worth keeping warm... could be a referrer', 'directors hire; worth the investment', a 'running list of contacts by usefulness'). sincerity_not_performance FLOORS at 1 (the chapter's exact anti-pattern: cultivating the useful). It also self-credits Sam's work ('the PC team I lead... I developed Sam') — caps four_qualities and step_forward. And it CAPITULATES to the toxic peer for advantage ('having Victor onside is more useful... put in the good word') — boundary_with_toxic FLOORS at 1. Tests whether the grader catches that competent, strategic-sounding relationship-management is the failure when it's transactional and vouches for a toxic actor. Soft dims pre-set {2, tol 2}; the two floors hold it off pass."
+}

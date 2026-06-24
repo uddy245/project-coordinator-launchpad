@@ -1,0 +1,15 @@
+{
+  "fixture_id": "burden_dumper_01",
+  "scenario_ref": "iam-distributed-coordination-v1",
+  "expected_dimension_scores": {
+    "async_with_context": { "score": 2, "tolerance": 2 },
+    "written_memory": { "score": 2, "tolerance": 2 },
+    "meeting_judgment": { "score": 3, "tolerance": 2 },
+    "timezone_fairness": { "score": 1, "tolerance": 1 },
+    "human_layer": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "BURDEN-DUMPER / COLD-ASYNC FAILURE MODE — the over-correction away from meetings into cold proceduralism. It IS async (so meeting_judgment isn't terrible, ~3) but the pings are context-free one-liners ('A or B? Need answer.') that won't collapse the 24h loop — async_with_context capped at 2 — and it doesn't write/reconcile the IdP-MFA decision, just 'reminder it stands' (written_memory 2). The defining failures: it consciously dumps the 2am permanently on Toronto with a rationalisation ('2am comes with the territory... leave it') — timezone_fairness FLOORS at 1 — and treats the quiet teammate purely as a delivery risk to be policed and reallocated ('check whether his tasks are on track... if he's not pulling his weight') — human_layer FLOORS at 1. Tests whether the grader catches that being async/efficient while being unfair and treating people as ticket-runners is its own failure. Soft dims pre-set {2-3, tol 2}; the two floors hold it off pass."
+}

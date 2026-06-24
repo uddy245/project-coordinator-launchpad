@@ -1,0 +1,15 @@
+{
+  "fixture_id": "intermediate_01",
+  "scenario_ref": "iam-modernisation-meridian-vendor-v1",
+  "expected_dimension_scores": {
+    "partnership_posture": { "score": 4, "tolerance": 1 },
+    "contract_vs_relationship": { "score": 5, "tolerance": 1 },
+    "accountability_without_punitive": { "score": 4, "tolerance": 1 },
+    "channel_and_structure_respect": { "score": 4, "tolerance": 1 },
+    "record_and_proportion": { "score": 4, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 4.2,
+  "expected_pass": true,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "INTERMEDIATE-HIGH / strong pass. Frames CR-204 squarely as a SOW-4.2 reconciliation ('happy to be corrected if I'm reading it wrong') — contract_vs_relationship at 5 — and names the second miss with a heads-up protocol, firm-not-hostile, through Marcus. CALIBRATION FIX (2026-06-24): record_and_proportion raised 3 -> 4 — the message IS a specific, in-writing, proportionate record of both the miss and the SOW issue; only 'credit the vendor's good work' is missing, so it's a genuine 4-5 not a 3 (grader returns 5). The only thing keeping it off a clean ceiling is the missing credit-where-due move. Expect 4-5 across with contract framing at 5."
+}

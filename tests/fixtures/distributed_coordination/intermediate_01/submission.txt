@@ -1,0 +1,11 @@
+Coordination moves this week:
+
+1) A vs B — I'll send R. and the squad a written note now, not wait for another loop: "Decision needed: token-binding A or B. A is simpler and meets the conformance requirement; B is more future-proof but adds ~2 weeks. My recommendation: A for phase 1, revisit B for phase 2. R. — can you confirm or override by 12:00 GMT tomorrow? Bangalore, this unblocks you for Thursday." That gives R. everything to decide in one pass and Bangalore a clear answer.
+
+2) IdP decision — I'll write up last week's call decision properly and send it round: "Phase 1 uses the existing IdP. MFA is PHASE 2, not phase 1 — flagging because Toronto and Bangalore had different reads." That puts the MFA scope beyond doubt and reconciles the two understandings. I'll ask both leads to thumbs-up so I know it's landed.
+
+3) I'll keep both of the above async rather than calling a meeting — neither needs real-time.
+
+Anything else can wait for the regular sync.
+
+PC

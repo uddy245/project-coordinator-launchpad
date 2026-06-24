@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "coordinator-to-pm-development-conversation-v1",
+  "expected_dimension_scores": {
+    "honest_self_assessment": { "score": 1, "tolerance": 1 },
+    "role_change_understanding": { "score": 1, "tolerance": 1 },
+    "development_plan_concreteness": { "score": 2, "tolerance": 1 },
+    "agency_and_realism": { "score": 2, "tolerance": 1 },
+    "professional_framing": { "score": 3, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.8,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "NOVICE — well-meaning but shallow, and treats PM as the automatic next rung. No engagement with any of the honest questions (accountability, political exposure, public wrongness) — honest_self_assessment floors at 1 — and the explicit assumption that 'if I keep doing well as a coordinator it should naturally lead to a PM role' is exactly the necessary-but-not-sufficient error — role_change_understanding floors at 1. The 'plan' is a vague PMP/training gesture not targeted at the new skills (development_plan 2), and it frames the conversation as 'how do I get promoted... what's the timeline' rather than a reflective development discussion (agency 2; professional_framing 3 — polite but a promotion ask). Tests whether the grader penalises the earnest but un-examined 'I'm ready for the next step' answer."
+}
