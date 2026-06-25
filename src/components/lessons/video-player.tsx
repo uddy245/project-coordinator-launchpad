@@ -145,13 +145,28 @@ function NativeVideo({
     };
   }, [lessonSlug, initialSeconds]);
 
+  // Captions live next to the video at the same key with a .vtt extension
+  // (<slug>/<slug>.mp4 → <slug>/<slug>.vtt). crossOrigin lets the cross-origin
+  // <track> load from Supabase storage; the CC control toggles it (off by
+  // default).
+  const captionsUrl = src.replace(/\.mp4(\?.*)?$/, ".vtt$1");
+
   return (
     <div className="space-y-3">
       <div className="overflow-hidden rounded-lg border bg-black">
-        <video ref={videoRef} src={src} controls className="h-full w-full" preload="metadata" />
+        <video
+          ref={videoRef}
+          src={src}
+          controls
+          crossOrigin="anonymous"
+          className="h-full w-full"
+          preload="metadata"
+        >
+          <track kind="subtitles" src={captionsUrl} srcLang="en" label="English" />
+        </video>
       </div>
       <p className="text-xs text-muted-foreground">
-        Your progress is saved every 10 seconds while you watch.
+        Your progress is saved every 10 seconds while you watch. Captions: use the CC control.
       </p>
     </div>
   );

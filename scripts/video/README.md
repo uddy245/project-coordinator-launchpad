@@ -12,8 +12,9 @@ scripts/video/
   build_common.py     Shared ffmpeg/timing helpers + lesson path resolution
   render_slides.py    segments.py -> lessons/<slug>/slides/NN.png  (Pillow)
   generate_audio.py   ← spends ElevenLabs credits: narration -> audio/NN.mp3
-  build_video.py      slides + audio -> <slug>.mp4 (+ captions.srt)
+  build_video.py      slides + audio -> <slug>.mp4 (+ captions.srt + captions.vtt)
   make_preview.py     Silent estimated-timing preview (review aid, no credits)
+  make_vtt.py         Backfill captions.vtt from existing captions.srt files
   lessons/
     lesson-20-raid-logs/
       segments.py     SINGLE SOURCE OF TRUTH: ordered slides + verbatim narration
@@ -59,6 +60,22 @@ progress telemetry and the 90%-watched gate for free. Upload + set `video_url`:
 node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs
 # Apply: uploads the MP4 to the lesson-videos bucket and sets video_url + is_published.
 node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs --apply
+```
+
+### Captions
+
+`build_video.py` now also writes `captions.vtt` (sentence-level) alongside `captions.srt`
+(slide-level). For a backfill of existing lessons:
+
+```bash
+# Regenerate captions.vtt from existing captions.srt — all lessons:
+python3 scripts/video/make_vtt.py
+# Single lesson:
+python3 scripts/video/make_vtt.py lesson-20-raid-logs
+
+# Upload all 25 VTT files to the lesson-videos bucket (dry run first):
+node --env-file=.env.local scripts/upload-captions.mjs
+node --env-file=.env.local scripts/upload-captions.mjs --apply
 ```
 
 ## Reusing for a new lesson

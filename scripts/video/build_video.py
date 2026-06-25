@@ -59,6 +59,7 @@ def main():
     out = lesson.out_mp4()
     bc.concat(clips, out, lesson.work)
     bc.write_srt(lesson, durs)
+    bc.write_vtt(lesson)
 
     expected = sum(durs)
     actual = bc.mp3_dur(out)

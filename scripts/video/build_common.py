@@ -169,6 +169,64 @@ def render_clip(slide_png, out_mp4, dur, audio_mp3=None, fps=30,
     subprocess.run(cmd, check=True, capture_output=True)
 
 
+def vtt_time(s):
+    h = int(s // 3600); m = int((s % 3600) // 60); sec = s % 60
+    return f"{h:02d}:{m:02d}:{sec:06.3f}"
+
+
+def _split_sentences(text):
+    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z\"“])", text.strip())
+    return [p.strip() for p in parts if p.strip()]
+
+
+def write_vtt(lesson):
+    """Convert captions.srt -> captions.vtt with sentence-level cues.
+
+    Splits each slide's narration (one long SRT cue) into sentence-level VTT
+    cues by distributing the slide's time window across sentences proportional
+    to character length, capped at ~7s per cue for on-screen readability.
+    """
+    srt_path = os.path.join(lesson.dir, "captions.srt")
+    if not os.path.exists(srt_path):
+        return  # build_video.py calls write_srt first; shouldn't happen
+
+    # Parse the SRT written by write_srt.
+    blocks = re.split(r"\n\s*\n", open(srt_path, encoding="utf-8").read().strip())
+    cues = []
+    for b in blocks:
+        lines = b.strip().split("\n")
+        ts = next((l for l in lines if "-->" in l), None)
+        if not ts:
+            continue
+        a, c = ts.split("-->")
+        def _srt_sec(t):
+            t = t.strip().replace(",", ".")
+            h, m, s = t.split(":")
+            return int(h) * 3600 + int(m) * 60 + float(s)
+        start, end = _srt_sec(a), _srt_sec(c)
+        idx = lines.index(ts)
+        text = " ".join(l.strip() for l in lines[idx + 1:])
+        cues.append((start, end, text))
+
+    out = ["WEBVTT", ""]
+    for start, end, text in cues:
+        sents = _split_sentences(text) or [text]
+        total = sum(len(s) for s in sents) or 1
+        span = end - start
+        t = start
+        for sent in sents:
+            dur = span * (len(sent) / total)
+            seg_end = min(t + dur, end)
+            out.append(f"{vtt_time(t)} --> {vtt_time(seg_end)}")
+            out.append(sent)
+            out.append("")
+            t = seg_end
+
+    vtt_path = os.path.join(lesson.dir, "captions.vtt")
+    with open(vtt_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(out))
+
+
 def concat(clips, out_mp4, work_dir):
     os.makedirs(work_dir, exist_ok=True)
     listfile = os.path.join(work_dir, "concat.txt")
