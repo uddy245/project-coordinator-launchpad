@@ -1,15 +1,17 @@
 /**
  * Idempotent production seed: publish a narrated-slides lesson video.
  *
- * Uploads the lesson MP4 (and, where the bucket allows it, captions.srt) to the
- * public `lesson-videos` Supabase Storage bucket, then sets lessons.video_url +
- * is_published for the lesson slug. Safe to re-run: storage uploads upsert and
- * the row update is a fixed target.
+ * Uploads the lesson MP4 to the public `lesson-videos` Supabase Storage bucket
+ * (nested key `<slug>/<slug>.mp4`, so any prior root-key object is preserved as
+ * rollback), then repoints lessons.video_url. is_published is left untouched
+ * unless --publish is passed. Safe to re-run: storage upserts, row is a fixed target.
  *
  *   # Dry run (default): connect, print current -> target, change NOTHING.
  *   node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs
- *   # Apply for real:
- *   node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs --apply
+ *   # Apply (repoint video_url only; leave is_published as-is):
+ *   node --env-file=.env.local scripts/seed-production-video.mjs lesson-01-coordinator-role --apply
+ *   # Apply and also publish the lesson:
+ *   node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs --apply --publish
  *
  * Slug mapping: the pipeline folder is `lesson-20-raid-logs`; the lessons row
  * slug is `raid-logs`. Pass the pipeline slug; LESSON_SLUG maps it to the row.
@@ -24,10 +26,16 @@ const REPO = resolve(__dirname, "..");
 
 const BUCKET = "lesson-videos";
 // Pipeline folder slug -> lessons table slug.
-const LESSON_SLUG = { "lesson-20-raid-logs": "raid-logs" };
+const LESSON_SLUG = {
+  "lesson-20-raid-logs": "raid-logs",
+  "lesson-01-coordinator-role": "coordinator-role",
+};
 
 const args = process.argv.slice(2);
 const apply = args.includes("--apply");
+// is_published is left untouched unless --publish is passed, so re-seeding a
+// video never silently flips a lesson's published state in either direction.
+const publish = args.includes("--publish");
 const pipelineSlug = args.find((a) => !a.startsWith("-")) ?? "lesson-20-raid-logs";
 const rowSlug = LESSON_SLUG[pipelineSlug] ?? pipelineSlug;
 
@@ -86,11 +94,15 @@ async function main() {
   console.log(
     `  captions.srt:  ${srtPath ?? "(not found)"}  (repo-only; bucket is video/* — not uploaded)`
   );
+  const targetPublished = publish ? true : lesson.is_published;
   console.log(`\n  video_url:     ${lesson.video_url ?? "(null)"}`);
   console.log(`            ->   ${publicUrl}`);
-  console.log(`  is_published:  ${lesson.is_published}  ->  true`);
+  console.log(
+    `  is_published:  ${lesson.is_published}  ->  ${targetPublished}` +
+      (publish ? "  (--publish)" : "  (unchanged)")
+  );
 
-  if (lesson.video_url === publicUrl && lesson.is_published === true) {
+  if (lesson.video_url === publicUrl && lesson.is_published === targetPublished) {
     console.log("\n  Already at target. (Storage upload still upserts on --apply.)");
   }
 
@@ -116,11 +128,9 @@ async function main() {
   // allows video/* only, and nothing in the player consumes an SRT yet. It
   // stays committed in the repo for when a <track> element is wired up.
 
-  // 2. Publish the row.
-  const upd = await admin
-    .from("lessons")
-    .update({ video_url: publicUrl, is_published: true })
-    .eq("slug", rowSlug);
+  // 2. Update the row. video_url always; is_published only with --publish.
+  const patch = publish ? { video_url: publicUrl, is_published: true } : { video_url: publicUrl };
+  const upd = await admin.from("lessons").update(patch).eq("slug", rowSlug);
   if (upd.error) {
     console.error("  Row update failed:", upd.error.message);
     process.exit(1);
