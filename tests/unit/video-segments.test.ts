@@ -19,7 +19,7 @@ type Segment = { id: number; mode: string; has_narration: boolean };
 // The load-bearing invariant is the reverse: every content slide is narrated.
 const CARD_MODES = new Set(["title", "end"]);
 
-const LESSONS = ["lesson-20-raid-logs"];
+const LESSONS = ["lesson-20-raid-logs", "lesson-01-coordinator-role"];
 
 describe.each(LESSONS)("video segments: %s", (slug) => {
   const lessonDir = resolve(LESSONS_DIR, slug);
