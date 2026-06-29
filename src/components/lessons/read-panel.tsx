@@ -1,6 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import ReactMarkdown from "react-markdown";
+import { getLessonReading } from "@/lib/lessons/reading";
 
 /**
  * Read tab — editorial reading experience.
@@ -40,14 +39,7 @@ function stripFirstH1(body: string): string {
 }
 
 export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
-  const path = join(process.cwd(), "docs", "lessons", `${lessonSlug}.md`);
-
-  let body: string | null = null;
-  try {
-    body = readFileSync(path, "utf8");
-  } catch {
-    body = null;
-  }
+  const body = getLessonReading(lessonSlug);
 
   if (!body) {
     return (

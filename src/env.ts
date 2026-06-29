@@ -34,6 +34,9 @@ export const env = createEnv({
     ANTHROPIC_API_KEY: z.string().min(1),
     ANTHROPIC_MODEL: z.string().default("claude-sonnet-4-5"),
     ANTHROPIC_SPEND_CAP_USD: z.coerce.number().default(100),
+    TUTOR_MODEL: z.string().default("claude-sonnet-4-5"),
+    TUTOR_DAILY_MESSAGE_CAP: z.coerce.number().int().default(40),
+    TUTOR_MAX_TOKENS: z.coerce.number().int().default(4096),
 
     // Stripe
     STRIPE_SECRET_KEY: z.string().min(1),
@@ -81,6 +84,9 @@ export const env = createEnv({
     ANTHROPIC_API_KEY: E("ANTHROPIC_API_KEY"),
     ANTHROPIC_MODEL: E("ANTHROPIC_MODEL"),
     ANTHROPIC_SPEND_CAP_USD: E("ANTHROPIC_SPEND_CAP_USD"),
+    TUTOR_MODEL: E("TUTOR_MODEL"),
+    TUTOR_DAILY_MESSAGE_CAP: E("TUTOR_DAILY_MESSAGE_CAP"),
+    TUTOR_MAX_TOKENS: E("TUTOR_MAX_TOKENS"),
     STRIPE_SECRET_KEY: E("STRIPE_SECRET_KEY"),
     STRIPE_WEBHOOK_SECRET: E("STRIPE_WEBHOOK_SECRET"),
     STRIPE_PRICE_ID: E("STRIPE_PRICE_ID"),

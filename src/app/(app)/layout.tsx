@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PrimaryNav } from "@/components/nav/primary-nav";
 import { requireUser } from "@/lib/auth/require-user";
 import { createClient } from "@/lib/supabase/server";
+import { TutorShell } from "@/components/tutor/tutor-shell";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   await requireUser();
@@ -13,7 +14,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const { data: isAdmin } = await supabase.rpc("is_admin");
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <TutorShell>
       <header className="relative border-b border-rule bg-paper">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <Link href="/dashboard" className="flex items-baseline gap-3">
@@ -33,6 +34,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <span className="kicker">PROG·PC·25 · A working PM&apos;s guide</span>
         </div>
       </footer>
-    </div>
+    </TutorShell>
   );
 }

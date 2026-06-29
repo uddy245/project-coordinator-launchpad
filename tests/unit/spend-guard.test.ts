@@ -14,11 +14,20 @@ import { checkSpendCap } from "@/lib/grading/spend-guard";
 type Row = { model: string; input_tokens: number; output_tokens: number };
 
 function fakeSupabase(rows: Row[]) {
+  // rubric_scores: .gte() resolves directly (no .eq chain)
   const gteMock = vi.fn(async (_col: string, _val: string) => ({ data: rows, error: null }));
+  // tutor_messages: .gte() must return something with .eq() (the role filter)
+  // Always returns empty so existing tests are unaffected by the new query.
+  const tutorGteMock = vi.fn((_col: string, _val: string) => ({
+    eq: vi.fn(async () => ({ data: [] as Row[], error: null })),
+  }));
   return {
-    from: (_table: string) => ({
-      select: (_cols: string) => ({ gte: gteMock }),
-    }),
+    from: (table: string) => {
+      if (table === "tutor_messages") {
+        return { select: (_cols: string) => ({ gte: tutorGteMock }) };
+      }
+      return { select: (_cols: string) => ({ gte: gteMock }) };
+    },
     _gteMock: gteMock,
   } as unknown as Parameters<typeof checkSpendCap>[0] & { _gteMock: typeof gteMock };
 }
