@@ -11,7 +11,7 @@ type Status = "graded_pending" | "grading" | "graded" | "grading_failed" | null;
 export function MockInterviewForm({
   scenarioId,
   initialResponse,
-  currentStatus,
+  currentStatus: _currentStatus,
   currentScore,
   currentPass,
   currentFeedback,

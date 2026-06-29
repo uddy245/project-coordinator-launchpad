@@ -11,8 +11,6 @@ import type { RubricScoreRow } from "@/components/grading/rubric-score-card";
 import { sendEmail } from "@/lib/email/send";
 import { renderAuditDecision } from "@/lib/email/templates/audit-decision";
 
-type AdminClient = ReturnType<typeof createAdminClient>;
-
 export type AuditNotifyArgs = {
   queueId: string;
   decision: "approved" | "overridden";

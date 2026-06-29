@@ -24,7 +24,7 @@ export function LessonTabs({ active }: { active: LessonTabKey }) {
 
   return (
     <nav className="border-b border-rule" aria-label="Lesson sections">
-      <ul className="-mb-px flex gap-10">
+      <ul className="-mb-px flex gap-5 overflow-x-auto sm:gap-10">
         {TABS.map((t) => {
           const isActive = t.key === active;
           return (
@@ -33,7 +33,7 @@ export function LessonTabs({ active }: { active: LessonTabKey }) {
                 href={hrefFor(t.key)}
                 scroll={false}
                 className={
-                  "mono-link inline-flex border-b-[2px] px-1 py-4 transition-colors " +
+                  "mono-link inline-flex whitespace-nowrap border-b-[2px] px-1 py-4 transition-colors " +
                   (isActive
                     ? "border-[hsl(var(--accent))] text-ink"
                     : "border-transparent hover:border-rule")

@@ -14,7 +14,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
-const SERVICE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!SUPABASE_URL || !SERVICE_KEY) {
   console.error("Set NEXT_PUBLIC_SUPABASE_URL (or SUPABASE_URL) and SUPABASE_SERVICE_ROLE_KEY");
@@ -63,10 +63,7 @@ async function main() {
 
   for (const slug of LESSONS) {
     const url = `${BASE}/${slug}/${slug}.mp4`;
-    const { error } = await supabase
-      .from("lessons")
-      .update({ video_url: url })
-      .eq("slug", slug);
+    const { error } = await supabase.from("lessons").update({ video_url: url }).eq("slug", slug);
 
     if (error) {
       console.error(`FAIL  ${slug}  ${error.message}`);
@@ -85,7 +82,10 @@ async function main() {
     .select("slug, video_url")
     .in("slug", LESSONS);
 
-  if (verifyErr) { console.error("Verify query failed:", verifyErr.message); process.exit(1); }
+  if (verifyErr) {
+    console.error("Verify query failed:", verifyErr.message);
+    process.exit(1);
+  }
 
   const misses = (data ?? []).filter(
     (r) => !r.video_url?.includes(`/lesson-videos/${r.slug}/${r.slug}.mp4`)

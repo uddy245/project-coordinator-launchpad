@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif, Lora } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -45,6 +45,13 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Project Coordinator Launchpad",
   description: "AI-powered training from zero to hire-ready Project Coordinator",
+};
+
+// Without this, mobile browsers assume a ~980px desktop layout and zoom out,
+// so every responsive breakpoint never triggers on a phone.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

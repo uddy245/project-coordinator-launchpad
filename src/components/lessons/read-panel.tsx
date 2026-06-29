@@ -68,7 +68,7 @@ export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
   return (
     <div className="read-paper overflow-hidden border border-[#d9dde4] bg-white">
       {/* Course-handout header */}
-      <header className="border-b border-[#d9dde4] px-8 pb-6 pt-10 sm:px-14 sm:pb-8 sm:pt-12 lg:px-20">
+      <header className="border-b border-[#d9dde4] px-5 pb-6 pt-10 sm:px-14 sm:pb-8 sm:pt-12 lg:px-20">
         <div className="flex items-center justify-between gap-4">
           <span className="read-masthead">{chapterLabel} · Reading</span>
           <span className="read-masthead">{minutes} min</span>
@@ -79,9 +79,21 @@ export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
       </header>
 
       {/* Article body — textbook reading measure */}
-      <article className="px-8 pb-16 pt-8 sm:px-14 sm:pt-10 lg:px-20">
+      <article className="px-5 pb-16 pt-8 sm:px-14 sm:pt-10 lg:px-20">
         <div className="read-prose mx-auto max-w-[68ch]">
-          <ReactMarkdown>{article}</ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              // Let wide lesson tables scroll horizontally on small screens
+              // instead of forcing the page to overflow.
+              table: (props) => (
+                <div className="overflow-x-auto">
+                  <table {...props} />
+                </div>
+              ),
+            }}
+          >
+            {article}
+          </ReactMarkdown>
           <div className="read-end-mark">End of reading · Companion to {chapterLabel}</div>
         </div>
       </article>

@@ -114,7 +114,6 @@ export default async function DashboardPage() {
       (p.video_watched || p.quiz_passed || p.artifact_submitted) &&
       !(p.video_watched && p.quiz_passed && p.artifact_submitted)
   ).length;
-  const publishedCount = lessons?.length ?? 0;
   const completionPct = Math.round((completedCount / TOTAL_PROGRAMME) * 100);
 
   // Daily streak (server-side RPC).

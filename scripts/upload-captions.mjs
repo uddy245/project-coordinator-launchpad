@@ -63,7 +63,7 @@ for (const e of entries) {
   if (!e.hasVtt) missing++;
   const slugNote = e.folderSlug !== e.dbSlug ? ` (folder:${e.folderSlug})` : "";
   console.log(
-    ` ${String(e.number).padStart(2)} ${e.dbSlug.padEnd(27)} ${mark} ${e.key}${slugNote}`,
+    ` ${String(e.number).padStart(2)} ${e.dbSlug.padEnd(27)} ${mark} ${e.key}${slugNote}`
   );
 }
 
