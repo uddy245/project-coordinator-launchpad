@@ -66,6 +66,21 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
     return { ok: false, error: error.message, code: "UNKNOWN" };
   }
 
+  // Supabase's anti-enumeration behaviour: signing up with an email that
+  // already has a confirmed account "succeeds" but returns a user with no
+  // identities and sends no email. Surface that honestly instead of showing
+  // a "check your email" screen that will never arrive.
+  const isRepeatedSignup =
+    !data.session && data.user != null && (data.user.identities?.length ?? 0) === 0;
+  if (isRepeatedSignup) {
+    return {
+      ok: false,
+      error:
+        "That email already has an account. Log in instead — or use “Forgot password?” if you don't know the password.",
+      code: "EMAIL_IN_USE",
+    };
+  }
+
   // Welcome email — fire-and-forget. Silent so a Resend hiccup never breaks
   // signup itself; the welcome is a nice-to-have, not a blocker.
   const firstName = parsed.data.fullName?.split(/\s+/)[0]?.trim() || null;
@@ -142,6 +157,101 @@ export async function sendMagicLink(input: MagicLinkInput): Promise<ActionResult
   });
 
   if (error) {
+    return { ok: false, error: error.message, code: "UNKNOWN" };
+  }
+
+  return { ok: true, data: undefined };
+}
+
+const PasswordResetRequestSchema = z.object({
+  email: z
+    .string()
+    .email("Enter a valid email address")
+    .transform((v) => v.toLowerCase().trim()),
+});
+
+export type PasswordResetRequestInput = z.input<typeof PasswordResetRequestSchema>;
+
+/**
+ * Send a password-recovery email. The link in the email lands on
+ * /auth/callback (which exchanges the recovery code for a session) and
+ * then forwards to /reset-password, where the user chooses a new password.
+ *
+ * Note: Supabase deliberately does NOT reveal whether the email has an
+ * account (anti-enumeration), so the form always shows a neutral
+ * "if an account exists, we sent a link" state on success.
+ */
+export async function sendPasswordReset(input: PasswordResetRequestInput): Promise<ActionResult> {
+  const parsed = PasswordResetRequestSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
+  }
+
+  const redirectTo = `${env.NEXT_PUBLIC_APP_URL}/auth/callback?redirect=${encodeURIComponent("/reset-password")}`;
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
+    redirectTo,
+  });
+
+  if (error) {
+    const msg = error.message.toLowerCase();
+    if (msg.includes("rate limit") || msg.includes("security purposes")) {
+      return {
+        ok: false,
+        error: "Too many requests — wait a minute and try again.",
+        code: "RATE_LIMITED",
+      };
+    }
+    return { ok: false, error: error.message, code: "UNKNOWN" };
+  }
+
+  return { ok: true, data: undefined };
+}
+
+const UpdatePasswordSchema = z.object({
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+export type UpdatePasswordInput = z.input<typeof UpdatePasswordSchema>;
+
+/**
+ * Set a new password for the currently signed-in user. Reached from
+ * /reset-password after the recovery link has established a session.
+ */
+export async function updatePassword(input: UpdatePasswordInput): Promise<ActionResult> {
+  const parsed = UpdatePasswordSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      ok: false,
+      error: "Your reset link has expired. Request a new one from the login page.",
+      code: "NOT_AUTHENTICATED",
+    };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+
+  if (error) {
+    const msg = error.message.toLowerCase();
+    if (msg.includes("different from the old")) {
+      return {
+        ok: false,
+        error: "New password must be different from your old one.",
+        code: "SAME_PASSWORD",
+      };
+    }
+    if (msg.includes("password")) {
+      return { ok: false, error: error.message, code: "WEAK_PASSWORD" };
+    }
     return { ok: false, error: error.message, code: "UNKNOWN" };
   }
 

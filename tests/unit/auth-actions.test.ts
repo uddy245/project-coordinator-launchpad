@@ -3,6 +3,9 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const signUpMock = vi.fn();
 const signInMock = vi.fn();
 const signOutMock = vi.fn();
+const resetPasswordForEmailMock = vi.fn();
+const getUserMock = vi.fn();
+const updateUserMock = vi.fn();
 const redirectMock = vi.fn((_path: string) => {
   throw new Error(`REDIRECT:${_path}`);
 });
@@ -13,6 +16,9 @@ vi.mock("@/lib/supabase/server", () => ({
       signUp: signUpMock,
       signInWithPassword: signInMock,
       signOut: signOutMock,
+      resetPasswordForEmail: resetPasswordForEmailMock,
+      getUser: getUserMock,
+      updateUser: updateUserMock,
     },
   }),
 }));
@@ -21,12 +27,15 @@ vi.mock("next/navigation", () => ({
   redirect: (path: string) => redirectMock(path),
 }));
 
-import { signUp, signIn } from "@/actions/auth";
+import { signUp, signIn, sendPasswordReset, updatePassword } from "@/actions/auth";
 
 beforeEach(() => {
   signUpMock.mockReset();
   signInMock.mockReset();
   signOutMock.mockReset();
+  resetPasswordForEmailMock.mockReset();
+  getUserMock.mockReset();
+  updateUserMock.mockReset();
   redirectMock.mockClear();
 });
 
@@ -124,5 +133,79 @@ describe("signIn action", () => {
     signInMock.mockResolvedValue({ error: null });
     const result = await signIn({ email: "u@x.com", password: "password1" });
     expect(result.ok).toBe(true);
+  });
+});
+
+describe("sendPasswordReset action", () => {
+  it("rejects invalid email", async () => {
+    const result = await sendPasswordReset({ email: "not-an-email" });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.code).toBe("INVALID_INPUT");
+    expect(resetPasswordForEmailMock).not.toHaveBeenCalled();
+  });
+
+  it("lowercases email and passes an /auth/callback redirect", async () => {
+    resetPasswordForEmailMock.mockResolvedValue({ error: null });
+    const result = await sendPasswordReset({ email: "UseR@Example.COM" });
+    expect(result.ok).toBe(true);
+    expect(resetPasswordForEmailMock).toHaveBeenCalledWith(
+      "user@example.com",
+      expect.objectContaining({
+        redirectTo: expect.stringContaining("/auth/callback?redirect="),
+      })
+    );
+  });
+
+  it("maps rate-limit errors to RATE_LIMITED", async () => {
+    resetPasswordForEmailMock.mockResolvedValue({
+      error: { message: "Email rate limit exceeded" },
+    });
+    const result = await sendPasswordReset({ email: "u@x.com" });
+    expect(result).toEqual({
+      ok: false,
+      error: expect.any(String),
+      code: "RATE_LIMITED",
+    });
+  });
+});
+
+describe("updatePassword action", () => {
+  it("rejects short password", async () => {
+    const result = await updatePassword({ password: "short" });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.code).toBe("INVALID_INPUT");
+    expect(getUserMock).not.toHaveBeenCalled();
+  });
+
+  it("returns NOT_AUTHENTICATED when there is no session", async () => {
+    getUserMock.mockResolvedValue({ data: { user: null } });
+    const result = await updatePassword({ password: "password1" });
+    expect(result).toEqual({
+      ok: false,
+      error: expect.any(String),
+      code: "NOT_AUTHENTICATED",
+    });
+    expect(updateUserMock).not.toHaveBeenCalled();
+  });
+
+  it("maps 'different from the old' to SAME_PASSWORD", async () => {
+    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
+    updateUserMock.mockResolvedValue({
+      error: { message: "New password should be different from the old password." },
+    });
+    const result = await updatePassword({ password: "password1" });
+    expect(result).toEqual({
+      ok: false,
+      error: expect.any(String),
+      code: "SAME_PASSWORD",
+    });
+  });
+
+  it("returns ok on success", async () => {
+    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
+    updateUserMock.mockResolvedValue({ error: null });
+    const result = await updatePassword({ password: "password1" });
+    expect(result.ok).toBe(true);
+    expect(updateUserMock).toHaveBeenCalledWith({ password: "password1" });
   });
 });
