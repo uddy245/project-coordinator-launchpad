@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,7 +23,6 @@ const ResetPasswordSchema = z
 type ResetPasswordValues = z.infer<typeof ResetPasswordSchema>;
 
 export function ResetPasswordForm() {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
 
@@ -41,14 +39,17 @@ export function ResetPasswordForm() {
     setSubmitting(true);
     startTransition(async () => {
       const result = await updatePassword({ password: values.password });
-      setSubmitting(false);
       if (!result.ok) {
+        setSubmitting(false);
         toast.error(result.error);
         return;
       }
       toast.success("Password updated — you're all set.");
-      router.push("/dashboard");
-      router.refresh();
+      // Full-page navigation (not router.push): Safari does not reliably
+      // attach cookies set by the server action to the immediate client-side
+      // RSC navigation. A hard navigation always sends the fresh session
+      // cookies.
+      window.location.assign("/dashboard");
     });
   }
 

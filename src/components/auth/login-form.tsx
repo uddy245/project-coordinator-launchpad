@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,7 +19,6 @@ const LoginSchema = z.object({
 type LoginValues = z.infer<typeof LoginSchema>;
 
 export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }) {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
   const [magicLinkSentTo, setMagicLinkSentTo] = useState<string | null>(null);
@@ -39,13 +37,16 @@ export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }
     setSubmitting(true);
     startTransition(async () => {
       const result = await signIn(values);
-      setSubmitting(false);
       if (!result.ok) {
+        setSubmitting(false);
         toast.error(result.error);
         return;
       }
-      router.push(redirectTo);
-      router.refresh();
+      // Full-page navigation (not router.push): Safari does not reliably
+      // attach cookies set by the server action to the immediate client-side
+      // RSC navigation, so a soft navigation bounces back to /login. A hard
+      // navigation always sends the fresh session cookies.
+      window.location.assign(redirectTo);
     });
   }
 
