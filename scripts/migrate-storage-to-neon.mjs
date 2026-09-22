@@ -22,6 +22,13 @@
  *   node --env-file=.env.local scripts/migrate-storage-to-neon.mjs --apply         # copy objects
  *   node --env-file=.env.local scripts/migrate-storage-to-neon.mjs --apply --rewrite-urls
  *   … --zip <path>   (default: the 2026-09-22 archive in ~/backups)
+ *   … --all          copy every archived object, not just DB-referenced ones
+ *
+ * Default copy set = objects the DB references: lessons.video_url /
+ * lesson_templates.file_url targets, submissions.storage_path,
+ * capstone_artifacts.file_path, plus each referenced video's caption
+ * (<same path>.vtt — the player derives it). Unreferenced files (e.g. old
+ * rollback videos) stay in the zip.
  *
  * Dry run (default): lists files, totals vs the 5 GB free-plan limit, checks
  * DB references against the archive and prints before→after URLs. Writes
@@ -52,6 +59,8 @@ const run = promisify(execFile);
 const args = process.argv.slice(2);
 const apply = args.includes("--apply");
 const rewrite = args.includes("--rewrite-urls");
+// Default: copy only objects the DB references (plus their captions).
+const copyAll = args.includes("--all");
 const zipArg = args.indexOf("--zip");
 const ZIP =
   zipArg !== -1
@@ -136,36 +145,6 @@ async function main() {
     else unmapped.push(e.name);
   }
 
-  const byBucket = Object.fromEntries(BUCKETS.map((b) => [b, { count: 0, bytes: 0 }]));
-  for (const o of objects) {
-    byBucket[o.bucket].count++;
-    byBucket[o.bucket].bytes += o.size;
-  }
-  const total = objects.reduce((n, o) => n + o.size, 0);
-
-  console.log(`\nObjects: ${objects.length}   (zip entries: ${entries.length})`);
-  for (const b of BUCKETS) {
-    const access = PUBLIC_BUCKETS.includes(b) ? "public_read" : "private";
-    console.log(
-      `  ${b.padEnd(20)} ${access.padEnd(12)} ${String(byBucket[b].count).padStart(5)} files  ${human(byBucket[b].bytes).padStart(10)}`
-    );
-  }
-  const pct = ((total / FREE_PLAN_BYTES) * 100).toFixed(1);
-  console.log(
-    `  ${"TOTAL".padEnd(33)} ${String(objects.length).padStart(5)} files  ${human(total).padStart(10)}`
-  );
-  console.log(
-    `\n5 GB free-plan limit: ${pct}% used by this copy${total > FREE_PLAN_BYTES ? "  ⚠ OVER LIMIT" : ""}`
-  );
-  if (unmapped.length) {
-    console.log(`\n⚠ ${unmapped.length} entries are not under a known bucket folder (skipped):`);
-    for (const n of unmapped.slice(0, 20)) console.log(`    ${n}`);
-  }
-  if (args.includes("--list")) {
-    console.log("\nFiles:");
-    for (const o of objects) console.log(`  ${o.bucket}/${o.path}  ${human(o.size)}`);
-  }
-
   const inZip = new Set(objects.map((o) => `${o.bucket}/${o.path}`));
 
   // ── 2. DB references ────────────────────────────────────────────────────
@@ -181,7 +160,7 @@ async function main() {
   for (const r of urlRows) {
     const m = decodeURIComponent(r.url).match(SUPABASE_PUBLIC);
     if (!m || !PUBLIC_BUCKETS.includes(m[1])) {
-      missing.push(`${r.tbl}.${r.col} ${r.id}: not a public bucket URL — left alone (${r.url})`);
+      missing.push(`${r.tbl}.${r.col} ${r.id}: not a public bucket URL — left alone`);
       continue;
     }
     const [, bucket, path] = m;
@@ -201,6 +180,68 @@ async function main() {
     select 'capstone-artifacts', file_path from public.capstone_artifacts`);
   const missingKeys = keyRows.filter((r) => !inZip.has(`${r.bucket}/${r.path}`));
 
+  // ── 3. Choose what to copy ──────────────────────────────────────────────
+  // Referenced = DB URL targets + bucket-relative keys + the caption file the
+  // video player derives from each video URL (<same path>.vtt).
+  const referenced = new Set();
+  const captions = new Set();
+  for (const r of rewrites) {
+    referenced.add(`${r.bucket}/${r.path}`);
+    const vtt = `${r.bucket}/${r.path.replace(/\.mp4$/i, ".vtt")}`;
+    if (vtt !== `${r.bucket}/${r.path}` && inZip.has(vtt)) {
+      referenced.add(vtt);
+      captions.add(vtt);
+    }
+  }
+  for (const r of keyRows) referenced.add(`${r.bucket}/${r.path}`);
+  const selected = copyAll
+    ? objects
+    : objects.filter((o) => referenced.has(`${o.bucket}/${o.path}`));
+  const unreferenced = objects.filter((o) => !referenced.has(`${o.bucket}/${o.path}`));
+
+  const sum = (list) => list.reduce((n, o) => n + o.size, 0);
+  const total = sum(selected);
+  const archiveTotal = sum(objects);
+
+  console.log(`
+Archive: ${objects.length} objects, ${human(archiveTotal)}   (zip entries: ${entries.length})`);
+  console.log(
+    `
+Copy plan (${copyAll ? "--all" : "referenced only — default"}): ${selected.length} files`
+  );
+  for (const b of BUCKETS) {
+    const inB = selected.filter((o) => o.bucket === b);
+    const access = PUBLIC_BUCKETS.includes(b) ? "public_read" : "private";
+    console.log(
+      `  ${b.padEnd(20)} ${access.padEnd(12)} ${String(inB.length).padStart(5)} files  ${human(sum(inB)).padStart(10)}`
+    );
+  }
+  console.log(
+    `  ${"TOTAL".padEnd(33)} ${String(selected.length).padStart(5)} files  ${human(total).padStart(10)}`
+  );
+  if (!copyAll) {
+    console.log(
+      `  (includes ${captions.size} caption .vtt files derived from video URLs; ` +
+        `skips ${unreferenced.length} unreferenced files, ${human(sum(unreferenced))} — they stay in the zip)`
+    );
+  }
+  const pct = ((total / FREE_PLAN_BYTES) * 100).toFixed(1);
+  console.log(
+    `\n5 GB free-plan limit: ${pct}% used by this copy${total > FREE_PLAN_BYTES ? "  ⚠ OVER LIMIT" : ""}`
+  );
+  if (unmapped.length) {
+    console.log(`\n⚠ ${unmapped.length} entries are not under a known bucket folder (skipped):`);
+    for (const n of unmapped.slice(0, 20)) console.log(`    ${n}`);
+  }
+  if (args.includes("--list")) {
+    console.log("\nFiles to copy:");
+    for (const o of selected) console.log(`  ${o.bucket}/${o.path}  ${human(o.size)}`);
+    if (!copyAll && unreferenced.length) {
+      console.log("\nSkipped (unreferenced):");
+      for (const o of unreferenced) console.log(`  ${o.bucket}/${o.path}  ${human(o.size)}`);
+    }
+  }
+
   console.log(`\nDB URL rewrites (${rewrites.length}):`);
   for (const r of rewrites)
     console.log(`  ${r.tbl}.${r.col} ${r.id}\n      ${r.url}\n   -> ${r.next}`);
@@ -217,15 +258,15 @@ async function main() {
     return;
   }
 
-  // ── 3. Copy ─────────────────────────────────────────────────────────────
+  // ── 4. Copy ─────────────────────────────────────────────────────────────
   if (total > FREE_PLAN_BYTES) {
-    console.error("\nAbort: archive exceeds the 5 GB free-plan limit.");
+    console.error("\nAbort: copy exceeds the 5 GB free-plan limit.");
     process.exit(1);
   }
   let copied = 0;
   let skipped = 0;
   const failed = [];
-  for (const o of objects) {
+  for (const o of selected) {
     try {
       const existing = await headObject(o.bucket, o.path);
       if (existing && existing.size === o.size) {
@@ -244,7 +285,7 @@ async function main() {
   }
   console.log(`\nCopied ${copied}, already present ${skipped}, failed ${failed.length}.`);
 
-  // ── 4. Rewrite URLs ─────────────────────────────────────────────────────
+  // ── 5. Rewrite URLs ─────────────────────────────────────────────────────
   if (!rewrite) return;
   if (failed.length) {
     console.error("Not rewriting URLs: some copies failed. Re-run --apply first.");
