@@ -11,7 +11,7 @@ import { db } from "@/db";                       // server-only Drizzle client (
 import { lessons, submissions /* … */ } from "@/db/schema";
 import { getAppUser, isAdmin, hasAccess } from "@/lib/auth/session";
 import { requireUser, requireAdmin } from "@/lib/auth/require-user"; // pages/layouts only
-import { uploadObject, removeObjects, createSignedUrl, publicUrl } from "@/lib/storage/r2";
+import { uploadObject, removeObjects, createSignedUrl, publicUrl } from "@/lib/storage/object-storage";
 ```
 
 Schema exports (TS props are camelCase, DB columns snake_case):
@@ -46,7 +46,7 @@ used it must now filter explicitly.** `createAdminClient()` queries map 1:1
 | Table | Rule to enforce in code (was RLS) |
 |---|---|
 | profiles | read own row (`id = user.id`); users may update ONLY `full_name` (+ `weekly_digest_opt_in` where the old code did); admins all |
-| lessons | learners: `is_published = true` AND `hasAccess(user.id)`; admins see all |
+| lessons | `canViewLesson()` / `visibleLessonsFilter()` (`src/lib/lessons/access.ts`): published free previews (`is_preview`) for everyone signed in, other published lessons need `has_access`, admins see all |
 | rubrics | `is_current = true` AND `hasAccess`; admins all |
 | prompts, quiz_items (full row), audit_queue | server/admin only. Never send `quiz_items.correct` / `distractor_rationale` to a learner |
 | quiz_items_public (view) | query `quizItems` with an explicit projection WITHOUT `correct`/`distractor_rationale`, and require `hasAccess` |
@@ -85,10 +85,11 @@ const lesson = rows[0] ?? null;          // replaces .maybeSingle()
   old code handled `error` and returned an `ActionResult`, wrap in try/catch
   and return the same `code` (actions must not throw — CLAUDE.md rule 7).
 
-## Storage → R2
+## Storage → Neon Object Storage
 
-Same bucket names, now key prefixes in one private R2 bucket:
-`uploadObject(bucket, path, buffer, contentType)`, `removeObjects(bucket, [path])`,
-`createSignedUrl(bucket, path, seconds)`, `publicUrl(bucket, path)` (only
-`lesson-videos` / `lesson-templates`). All return `{ error }` or `null` like
-Supabase — no throws.
+Same bucket names and object paths as Supabase, now real Neon buckets
+(`lesson-templates`, `lesson-videos` public_read; `capstone-artifacts`,
+`submissions` private): `uploadObject(bucket, path, buffer, contentType)`,
+`removeObjects(bucket, [path])`, `createSignedUrl(bucket, path, seconds)`,
+`publicUrl(bucket, path)` (public buckets only; direct storage URL). All
+return `{ error }` or `null` like Supabase — no throws.

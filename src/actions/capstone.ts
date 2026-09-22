@@ -6,7 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { capstoneArtifacts, capstoneAttempts, capstoneScenarios } from "@/db/schema";
 import { getAppUser, hasAccess } from "@/lib/auth/session";
-import { createSignedUrl, removeObjects, uploadObject } from "@/lib/storage/r2";
+import { createSignedUrl, removeObjects, uploadObject } from "@/lib/storage/object-storage";
 import type { ActionResult } from "@/lib/types";
 
 const ARTIFACT_BUCKET = "capstone-artifacts";

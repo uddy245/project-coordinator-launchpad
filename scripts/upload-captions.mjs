@@ -1,22 +1,22 @@
 /**
- * Upload WebVTT caption files to R2 under the public lesson-videos/ prefix.
+ * Upload WebVTT caption files to the public_read lesson-videos Neon bucket.
  *
  * For each video-production/lesson-NN-<slug>/ folder: uploads captions.vtt
  * at key lesson-videos/<dbSlug>/<dbSlug>.vtt, so the video-player's caption URL
- * derivation (<videoUrl>.mp4 -> .vtt) resolves to the same object via /api/files.
+ * derivation (<videoUrl>.mp4 -> .vtt) resolves to the same object (bucket sends CORS *, so <track crossOrigin> works).
  *
  *   # Dry run (default): print the 25-row plan, change NOTHING.
  *   node --env-file=.env.local scripts/upload-captions.mjs
  *   # Apply:
  *   node --env-file=.env.local scripts/upload-captions.mjs --apply
  *
- * Env (--apply only): R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY /
- * R2_BUCKET. R2 has no per-prefix MIME allow-list, so no bucket migration is needed.
+ * Env (--apply only): AWS_ENDPOINT_URL_S3 / AWS_ACCESS_KEY_ID /
+ * AWS_SECRET_ACCESS_KEY (Neon storage). No per-bucket MIME allow-list to migrate.
  */
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { objectKey, putObject, requireEnv } from "./lib/neon-r2.mjs";
+import { objectKey, putObject, requireEnv } from "./lib/neon-storage.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(__dirname, "..");
@@ -31,7 +31,7 @@ const apply = process.argv.includes("--apply");
 
 if (apply) {
   requireEnv(
-    ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"],
+    ["AWS_ENDPOINT_URL_S3", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"],
     "Run with: node --env-file=.env.local scripts/upload-captions.mjs --apply"
   );
 }
@@ -51,7 +51,7 @@ const entries = folders.map((f) => {
 });
 
 console.log(`\n${apply ? "APPLY" : "DRY RUN"} — ${entries.length} captions.vtt files\n`);
-console.log(" n  dbSlug                      vtt   R2 key");
+console.log(" n  dbSlug                      vtt   storage key");
 console.log(" -  ------                      ---   ------");
 
 let missing = 0;

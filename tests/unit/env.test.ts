@@ -8,7 +8,8 @@ describe("env validation", () => {
     expect(typeof env.DATABASE_URL).toBe("string");
     expect(typeof env.NEON_AUTH_BASE_URL).toBe("string");
     expect(env.NEON_AUTH_COOKIE_SECRET.length).toBeGreaterThanOrEqual(32);
-    expect(typeof env.R2_BUCKET).toBe("string");
+    expect(env.AWS_ENDPOINT_URL_S3).toMatch(/^https:\/\//);
+    expect(env.AWS_REGION).toBe("us-east-1");
   });
 
   it("defaults ANTHROPIC_SPEND_CAP_USD to 100 when unset", () => {
@@ -22,7 +23,7 @@ describe("env validation", () => {
   it("exposes no database or auth secrets as NEXT_PUBLIC_ variables", () => {
     const publicKeys = Object.keys(env).filter((k) => k.startsWith("NEXT_PUBLIC_"));
     for (const k of publicKeys) {
-      expect(k).not.toMatch(/DATABASE|SUPABASE|NEON|R2_|SECRET/);
+      expect(k).not.toMatch(/DATABASE|SUPABASE|NEON|AWS_|SECRET/);
     }
   });
 });

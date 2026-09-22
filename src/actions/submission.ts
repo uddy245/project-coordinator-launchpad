@@ -7,7 +7,7 @@ import { db } from "@/db";
 import { lessons, submissions } from "@/db/schema";
 import { getAppUser } from "@/lib/auth/session";
 import { canViewLesson } from "@/lib/lessons/access";
-import { uploadObject } from "@/lib/storage/r2";
+import { uploadObject } from "@/lib/storage/object-storage";
 import { extractText, SUPPORTED_MIME_TYPES } from "@/lib/grading/parsers";
 import { gradeSubmission } from "@/lib/grading/service";
 import { MAX_UPLOAD_BYTES } from "@/lib/submission/constants";

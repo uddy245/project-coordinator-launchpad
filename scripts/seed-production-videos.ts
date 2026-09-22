@@ -2,27 +2,27 @@
 /**
  * Idempotent seed: sets video_url for all 25 published lessons.
  *
- * R2 layout:   lesson-videos/<slug>/<slug>.mp4  (key prefix in R2_BUCKET)
- * Stored URL:  ${NEXT_PUBLIC_APP_URL}/api/files/lesson-videos/<slug>/<slug>.mp4
+ * Storage:     lesson-videos bucket, key <slug>/<slug>.mp4
+ * Stored URL:  ${AWS_ENDPOINT_URL_S3}/lesson-videos/<slug>/<slug>.mp4
  * Special case: folder lesson-17-pushback → DB slug "push-back"
  *
  * Only repoints DB rows — it does not upload anything (see
  * seed-all-lesson-videos.mjs for upload + repoint).
  *
  * Usage:
- *   DATABASE_URL=postgres://... NEXT_PUBLIC_APP_URL=https://... tsx scripts/seed-production-videos.ts
+ *   DATABASE_URL=postgres://... AWS_ENDPOINT_URL_S3=https://br-….storage… tsx scripts/seed-production-videos.ts
  *   (DIRECT_URL is preferred over DATABASE_URL when set.)
  *
  * Safe to re-run — plain UPDATE constrained to the slug list.
  */
 
-import { closeDb, db, publicUrl, requireEnv } from "./lib/neon-r2.mjs";
+import { closeDb, db, publicUrl, requireEnv } from "./lib/neon-storage.mjs";
 
 if (!process.env.DIRECT_URL && !process.env.DATABASE_URL) {
-  console.error("Set DIRECT_URL or DATABASE_URL, and NEXT_PUBLIC_APP_URL");
+  console.error("Set DIRECT_URL or DATABASE_URL, and AWS_ENDPOINT_URL_S3");
   process.exit(1);
 }
-requireEnv(["NEXT_PUBLIC_APP_URL"]);
+requireEnv(["AWS_ENDPOINT_URL_S3"]);
 
 // All 25 lessons: DB slug → bucket key (identical except push-back which
 // maps from folder lesson-17-pushback but the DB slug is "push-back").

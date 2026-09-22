@@ -30,7 +30,7 @@ vi.mock("@/lib/auth/session", async (orig) => {
 });
 vi.mock("@/lib/auth/neon", () => ({ neonAuth: () => ({}) }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
-vi.mock("@/lib/storage/r2", () => ({
+vi.mock("@/lib/storage/object-storage", () => ({
   uploadObject: vi.fn(async () => ({ error: null })),
   removeObjects: vi.fn(async () => ({ error: null })),
   createSignedUrl: vi.fn(async () => null),

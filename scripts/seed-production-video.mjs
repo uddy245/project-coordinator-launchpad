@@ -1,15 +1,15 @@
 /**
  * Idempotent production seed: publish a narrated-slides lesson video.
  *
- * Uploads the lesson MP4 to R2 under the public `lesson-videos/` prefix
+ * Uploads the lesson MP4 to the public_read `lesson-videos` Neon bucket
  * (nested key `lesson-videos/<slug>/<slug>.mp4`, so any prior root-key object is
  * preserved as rollback), then repoints lessons.video_url to the app URL
- * `${NEXT_PUBLIC_APP_URL}/api/files/lesson-videos/<slug>/<slug>.mp4`.
+ * `${AWS_ENDPOINT_URL_S3}/lesson-videos/<slug>/<slug>.mp4`.
  * is_published is left untouched unless --publish is passed. Safe to re-run:
- * the R2 put overwrites, row is a fixed target.
+ * the storage put overwrites, row is a fixed target.
  *
- * Env: DIRECT_URL or DATABASE_URL (Neon), NEXT_PUBLIC_APP_URL; on --apply also
- * R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_BUCKET.
+ * Env: DIRECT_URL or DATABASE_URL (Neon), AWS_ENDPOINT_URL_S3; on --apply also
+ * AWS_ENDPOINT_URL_S3 / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY (Neon storage).
  *
  *   # Dry run (default): connect, print current -> target, change NOTHING.
  *   node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs
@@ -31,7 +31,7 @@ import {
   publicUrl as appUrl,
   putObject,
   requireEnv,
-} from "./lib/neon-r2.mjs";
+} from "./lib/neon-storage.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(__dirname, "..");
@@ -57,9 +57,9 @@ if (!process.env.DIRECT_URL && !process.env.DATABASE_URL) {
   console.error(HINT);
   process.exit(1);
 }
-requireEnv(["NEXT_PUBLIC_APP_URL"], HINT);
+requireEnv(["AWS_ENDPOINT_URL_S3"], HINT);
 if (apply) {
-  requireEnv(["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"], HINT);
+  requireEnv(["AWS_ENDPOINT_URL_S3", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"], HINT);
 }
 
 // Resolve artifacts: prefer the in-repo pipeline output, fall back to the
@@ -105,7 +105,7 @@ async function main() {
 
   console.log(`\n  Lesson:        ${lesson.title}  (slug=${lesson.slug}, id=${lesson.id})`);
   console.log(`  MP4:           ${mp4Path}  (${human(statSync(mp4Path).size)})`);
-  console.log(`  -> R2 key:     ${objectKey(BUCKET, mp4Key)}`);
+  console.log(`  -> storage:     ${objectKey(BUCKET, mp4Key)}`);
   console.log(`  captions.srt:  ${srtPath ?? "(not found)"}  (repo-only — not uploaded)`);
   const targetPublished = publish ? true : lesson.is_published;
   console.log(`\n  video_url:     ${lesson.video_url ?? "(null)"}`);
@@ -126,7 +126,7 @@ async function main() {
 
   console.log("\n  Applying...");
 
-  // 1. Upload MP4 (R2 put overwrites).
+  // 1. Upload MP4 (storage put overwrites).
   try {
     await putObject(BUCKET, mp4Key, readFileSync(mp4Path), "video/mp4");
   } catch (error) {

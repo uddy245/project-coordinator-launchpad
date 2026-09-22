@@ -14,7 +14,7 @@ An AI-powered training platform that takes learners from zero to hire-ready as a
 | Styling | Tailwind CSS, shadcn/ui |
 | Database | Neon Postgres via Drizzle ORM (no RLS — access control in server code) |
 | Auth | Neon Auth (managed Better Auth) |
-| File storage | Cloudflare R2 |
+| File storage | Neon Object Storage (S3-compatible) |
 | AI Grading | Anthropic Claude API (`claude-sonnet-4-5`, pinned) |
 | Payments | Stripe Checkout |
 | Hosting | Vercel |
@@ -45,7 +45,7 @@ pnpm install
 cp .env.example .env.local
 
 # 3. Point DATABASE_URL/DIRECT_URL at a Neon dev branch and fill in the
-#    Neon Auth + R2 values (see .env.example)
+#    Neon Auth + Neon storage values (see .env.example)
 
 # 4. Start the dev server
 pnpm dev
@@ -61,7 +61,7 @@ All env vars are validated at startup via `src/env.ts`. See `.env.example` for t
 DATABASE_URL                 # Neon pooled connection string
 NEON_AUTH_BASE_URL           # Neon console → Auth
 NEON_AUTH_COOKIE_SECRET      # openssl rand -base64 32
-R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_BUCKET
+AWS_ENDPOINT_URL_S3 / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY   # Neon storage
 ANTHROPIC_API_KEY
 ```
 

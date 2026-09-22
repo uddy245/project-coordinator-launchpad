@@ -35,11 +35,12 @@ export const env = createEnv({
     NEON_AUTH_BASE_URL: z.string().url(),
     NEON_AUTH_COOKIE_SECRET: z.string().min(32),
 
-    // Cloudflare R2 (S3-compatible) — replaces Supabase Storage.
-    R2_ACCOUNT_ID: z.string().min(1),
-    R2_ACCESS_KEY_ID: z.string().min(1),
-    R2_SECRET_ACCESS_KEY: z.string().min(1),
-    R2_BUCKET: z.string().min(1),
+    // Neon Object Storage (S3-compatible) — replaces Supabase Storage.
+    // Names per Neon's docs. Endpoint = the branch storage host.
+    AWS_ENDPOINT_URL_S3: z.string().url(),
+    AWS_REGION: z.string().min(1).default("us-east-1"),
+    AWS_ACCESS_KEY_ID: z.string().min(1),
+    AWS_SECRET_ACCESS_KEY: z.string().min(1),
 
     // Vercel Cron bearer secret (weekly digest + tutor retention).
     CRON_SECRET: z.string().min(16).optional(),
@@ -93,10 +94,10 @@ export const env = createEnv({
     DATABASE_URL: E("DATABASE_URL"),
     NEON_AUTH_BASE_URL: E("NEON_AUTH_BASE_URL"),
     NEON_AUTH_COOKIE_SECRET: E("NEON_AUTH_COOKIE_SECRET"),
-    R2_ACCOUNT_ID: E("R2_ACCOUNT_ID"),
-    R2_ACCESS_KEY_ID: E("R2_ACCESS_KEY_ID"),
-    R2_SECRET_ACCESS_KEY: E("R2_SECRET_ACCESS_KEY"),
-    R2_BUCKET: E("R2_BUCKET"),
+    AWS_ENDPOINT_URL_S3: E("AWS_ENDPOINT_URL_S3"),
+    AWS_REGION: E("AWS_REGION"),
+    AWS_ACCESS_KEY_ID: E("AWS_ACCESS_KEY_ID"),
+    AWS_SECRET_ACCESS_KEY: E("AWS_SECRET_ACCESS_KEY"),
     CRON_SECRET: E("CRON_SECRET"),
     ANTHROPIC_API_KEY: E("ANTHROPIC_API_KEY"),
     ANTHROPIC_MODEL: E("ANTHROPIC_MODEL"),

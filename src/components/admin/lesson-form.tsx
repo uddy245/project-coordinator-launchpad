@@ -214,13 +214,13 @@ export function LessonForm({
 
         <Field
           label="Video URL"
-          hint="Public video URL (/api/files/lesson-videos/…) — paste manually, or upload below to auto-fill"
+          hint="Public video URL (Neon storage lesson-videos bucket) — paste manually, or upload below to auto-fill"
         >
           <Input
             type="url"
             value={values.video_url}
             onChange={(e) => set("video_url", e.target.value)}
-            placeholder="https://<app-url>/api/files/lesson-videos/lesson-XX-name.mp4"
+            placeholder="https://br-….storage.c-11.us-east-1.aws.neon.tech/lesson-videos/lesson-XX-name.mp4"
           />
         </Field>
 

@@ -1,10 +1,10 @@
 /**
  * Batch: publish all narrated-slides lesson videos.
  *
- * For each video-production/lesson-NN-<slug>/ folder: uploads the MP4 to R2 at
+ * For each video-production/lesson-NN-<slug>/ folder: uploads the MP4 to Neon storage at
  * the nested key lesson-videos/<dbSlug>/<dbSlug>.mp4 (preserving any existing
  * root-key video as rollback) and repoints lessons.video_url to the app URL
- * ${NEXT_PUBLIC_APP_URL}/api/files/lesson-videos/<dbSlug>/<dbSlug>.mp4. Does NOT
+ * ${AWS_ENDPOINT_URL_S3}/lesson-videos/<dbSlug>/<dbSlug>.mp4. Does NOT
  * change is_published. If a lesson row is missing, it is NOT silently created —
  * the script reports it so the row can be seeded deliberately (with grading).
  *
@@ -13,13 +13,13 @@
  *   # Apply:
  *   node --env-file=.env.local scripts/seed-all-lesson-videos.mjs --apply
  *
- * Env: DIRECT_URL or DATABASE_URL (Neon), NEXT_PUBLIC_APP_URL; on --apply also
- * R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_BUCKET.
+ * Env: DIRECT_URL or DATABASE_URL (Neon), AWS_ENDPOINT_URL_S3; on --apply also
+ * AWS_ENDPOINT_URL_S3 / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY (Neon storage).
  */
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { closeDb, db, publicUrl as appUrl, putObject, requireEnv } from "./lib/neon-r2.mjs";
+import { closeDb, db, publicUrl as appUrl, putObject, requireEnv } from "./lib/neon-storage.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(__dirname, "..");
@@ -35,8 +35,8 @@ if (!process.env.DIRECT_URL && !process.env.DATABASE_URL) {
   console.error("Missing DIRECT_URL / DATABASE_URL.");
   process.exit(1);
 }
-requireEnv(["NEXT_PUBLIC_APP_URL"]);
-if (apply) requireEnv(["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"]);
+requireEnv(["AWS_ENDPOINT_URL_S3"]);
+if (apply) requireEnv(["AWS_ENDPOINT_URL_S3", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]);
 
 const tail = (u) => (u ? (u.split("/lesson-videos/")[1] ?? u) : "(null)");
 

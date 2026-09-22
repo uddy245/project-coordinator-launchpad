@@ -14,7 +14,7 @@ moment work lands on `main`.
 - Next.js 16 (App Router) with TypeScript — note: Next.js 16 renamed `middleware.ts` → `src/proxy.ts` with a named export `proxy` (not `middleware`)
 - Neon Postgres via Drizzle ORM (`src/db`, schema pulled from the DB — never pushed)
 - Neon Auth (managed Better Auth) via `@neondatabase/auth` (`src/lib/auth`)
-- Cloudflare R2 for file storage (`src/lib/storage/r2.ts`)
+- Neon Object Storage (S3 API) for files (`src/lib/storage/object-storage.ts`)
 - Tailwind + shadcn/ui
 - Anthropic Claude API (Sonnet 4.5 for grading, pinned model version)
 - Stripe Checkout for payments

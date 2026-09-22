@@ -6,7 +6,12 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { lessons, lessonTemplates, quizItems } from "@/db/schema";
 import { getAppUser, isAdmin } from "@/lib/auth/session";
-import { publicUrl, removeObjects, uploadObject } from "@/lib/storage/r2";
+import {
+  pathFromPublicUrl,
+  publicUrl,
+  removeObjects,
+  uploadObject,
+} from "@/lib/storage/object-storage";
 import type { ActionResult } from "@/lib/types";
 import { QuizItemSchema } from "@/lib/quiz/schema";
 
@@ -213,7 +218,7 @@ export async function replaceQuizItems(
 }
 
 // ──────────────────────────────────────────────────────────────────────
-// Lesson templates — upload an XLSX/PDF/CSV to R2 storage and
+// Lesson templates — upload an XLSX/PDF/CSV to Neon Object Storage and
 // register it in the lesson_templates table.
 // ──────────────────────────────────────────────────────────────────────
 
@@ -357,23 +362,11 @@ export async function deleteLessonTemplate(
     };
   }
 
-  // Best-effort delete of the underlying object. Handles both the current
-  // `/api/files/lesson-templates/<path>` URLs and legacy Supabase Storage
-  // URLs (objects were migrated to R2 under the same path).
+  // Best-effort delete of the underlying object. Handles Neon Object Storage
+  // URLs and legacy Supabase Storage URLs (objects copied under the same path).
   try {
-    const url = new URL(row.file_url);
-    const prefixes = [
-      `/api/files/${TEMPLATE_BUCKET}/`,
-      `/storage/v1/object/public/${TEMPLATE_BUCKET}/`,
-    ];
-    for (const pathPrefix of prefixes) {
-      const idx = url.pathname.indexOf(pathPrefix);
-      if (idx >= 0) {
-        const objectPath = decodeURIComponent(url.pathname.slice(idx + pathPrefix.length));
-        await removeObjects(TEMPLATE_BUCKET, [objectPath]);
-        break;
-      }
-    }
+    const objectPath = pathFromPublicUrl(TEMPLATE_BUCKET, row.file_url);
+    if (objectPath) await removeObjects(TEMPLATE_BUCKET, [objectPath]);
   } catch {
     /* swallow — orphaned blob is acceptable */
   }

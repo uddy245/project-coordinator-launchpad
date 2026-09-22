@@ -20,7 +20,7 @@ vi.mock("@/lib/auth/session", () => ({
   getAppUser: getAppUserMock,
 }));
 vi.mock("@/lib/lessons/access", () => ({ canViewLesson: canViewLessonMock }));
-vi.mock("@/lib/storage/r2", () => ({
+vi.mock("@/lib/storage/object-storage", () => ({
   uploadObject: uploadObjectMock,
   removeObjects: vi.fn(async () => ({ error: null })),
   createSignedUrl: vi.fn(async () => null),
