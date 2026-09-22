@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { ArtifactUploader } from "@/components/grading/artifact-uploader";
 import { SubmissionHistory } from "@/components/grading/submission-history";
 import { WorkbookScenarioCard } from "@/components/lessons/workbook-scenario-card";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { lessons } from "@/db/schema";
-import { getAppUser, hasAccess, isAdmin } from "@/lib/auth/session";
+import { getAppUser } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import { templatesFor, templatesForAsync, type Template } from "@/lib/lessons/templates";
 import { getCurrentAssignment } from "@/lib/workbook/select";
 
@@ -18,21 +19,16 @@ export async function WorkbookPanel({
 }) {
   const user = await getAppUser();
 
-  // lessons (was RLS): learners need has_access and only see published
-  // rows; admins see all.
-  const [admin, access] = user
-    ? await Promise.all([isAdmin(user.id), hasAccess(user.id)])
-    : [false, false];
-  const [lesson] =
-    user && access
-      ? await db
-          .select({ id: lessons.id })
-          .from(lessons)
-          .where(
-            and(eq(lessons.slug, lessonSlug), admin ? undefined : eq(lessons.isPublished, true))
-          )
-          .limit(1)
-      : [];
+  // lessons (was RLS): free preview lessons for everyone signed in, other
+  // published lessons need has_access, admins see all.
+  const [row] = user
+    ? await db
+        .select({ id: lessons.id, isPublished: lessons.isPublished, isPreview: lessons.isPreview })
+        .from(lessons)
+        .where(eq(lessons.slug, lessonSlug))
+        .limit(1)
+    : [];
+  const lesson = user && row && (await canViewLesson(user.id, row)) ? row : null;
 
   // DB-backed templates are joined through lessons, which RLS used to
   // hide without access — fall back to the static catalog in that case.

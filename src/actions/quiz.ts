@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { and, eq, inArray } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { lessonProgress, lessons, quizAttempts, quizItems as quizItemsTable } from "@/db/schema";
-import { getAppUser, hasAccess } from "@/lib/auth/session";
+import { getAppUser } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import { gradeQuizAttempt, type QuizItem } from "@/lib/grading/quiz";
 import { selectQuizItemsForUser, resetSeenHistory, type ServedQuizItem } from "@/lib/quiz/select";
 import type { ActionResult } from "@/lib/types";
@@ -29,8 +30,8 @@ function dbMessage(err: unknown): string {
 type LessonRow = { id: string; title: string; summary: string | null; competency: string };
 
 /**
- * Published lesson by slug, visible to this learner only if they have
- * access (was RLS on lessons; hasAccess is true for admins).
+ * Lesson by slug if this learner may use it (was RLS on lessons): free
+ * preview lessons for anyone signed in, else has_access; admins see all.
  */
 async function findAccessibleLesson(userId: string, slug: string): Promise<LessonRow | null> {
   const [lesson] = await db
@@ -39,12 +40,14 @@ async function findAccessibleLesson(userId: string, slug: string): Promise<Lesso
       title: lessons.title,
       summary: lessons.summary,
       competency: lessons.competency,
+      isPublished: lessons.isPublished,
+      isPreview: lessons.isPreview,
     })
     .from(lessons)
-    .where(and(eq(lessons.slug, slug), eq(lessons.isPublished, true)))
+    .where(eq(lessons.slug, slug))
     .limit(1);
   if (!lesson) return null;
-  return (await hasAccess(userId)) ? lesson : null;
+  return (await canViewLesson(userId, lesson)) ? lesson : null;
 }
 
 export type SubmitQuizInput = z.input<typeof SubmitSchema>;
@@ -263,7 +266,7 @@ export async function resetQuizHistory(
   let result: { deleted: number };
   try {
     const [lesson] = await db
-      .select({ id: lessons.id })
+      .select({ id: lessons.id, isPublished: lessons.isPublished, isPreview: lessons.isPreview })
       .from(lessons)
       .where(eq(lessons.slug, parsed.data.lessonSlug))
       .limit(1);

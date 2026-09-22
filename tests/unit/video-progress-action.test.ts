@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { getAppUserMock, hasAccessMock, revalidatePathMock } = vi.hoisted(() => ({
+const { getAppUserMock, canViewLessonMock, revalidatePathMock } = vi.hoisted(() => ({
   getAppUserMock: vi.fn(),
-  hasAccessMock: vi.fn(),
+  canViewLessonMock: vi.fn(),
   revalidatePathMock: vi.fn(),
 }));
 const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
@@ -10,8 +10,8 @@ const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db"))
 vi.mock("@/db", () => ({ db: fakeDb.db }));
 vi.mock("@/lib/auth/session", () => ({
   getAppUser: getAppUserMock,
-  hasAccess: hasAccessMock,
 }));
+vi.mock("@/lib/lessons/access", () => ({ canViewLesson: canViewLessonMock }));
 vi.mock("next/cache", () => ({ revalidatePath: revalidatePathMock }));
 
 import { updateVideoProgress } from "@/actions/video-progress";
@@ -31,7 +31,7 @@ function withDb(lesson: { id: string } | null, upsert: unknown = []) {
 
 beforeEach(() => {
   getAppUserMock.mockReset();
-  hasAccessMock.mockReset().mockResolvedValue(true);
+  canViewLessonMock.mockReset().mockResolvedValue(true);
   revalidatePathMock.mockReset();
   withDb({ id: "lesson-1" });
 });
@@ -54,10 +54,10 @@ describe("updateVideoProgress", () => {
 
   it("returns NOT_FOUND when the user has no access (was RLS)", async () => {
     getAppUserMock.mockResolvedValue(user());
-    hasAccessMock.mockResolvedValue(false);
+    canViewLessonMock.mockResolvedValue(false);
     const result = await updateVideoProgress({ lessonSlug: "raid-logs", seconds: 10 });
     expect(result).toMatchObject({ ok: false, code: "NOT_FOUND" });
-    expect(hasAccessMock).toHaveBeenCalledWith("u1");
+    expect(canViewLessonMock).toHaveBeenCalledWith("u1", expect.anything());
     expect(fakeDb.callsFor("insert")).toHaveLength(0);
   });
 

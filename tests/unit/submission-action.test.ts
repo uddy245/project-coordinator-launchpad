@@ -1,20 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { getAppUserMock, hasAccessMock, uploadObjectMock, gradeSubmissionMock, extractTextMock } =
-  vi.hoisted(() => ({
-    getAppUserMock: vi.fn(),
-    hasAccessMock: vi.fn(),
-    uploadObjectMock: vi.fn(),
-    gradeSubmissionMock: vi.fn(),
-    extractTextMock: vi.fn(),
-  }));
+const {
+  getAppUserMock,
+  canViewLessonMock,
+  uploadObjectMock,
+  gradeSubmissionMock,
+  extractTextMock,
+} = vi.hoisted(() => ({
+  getAppUserMock: vi.fn(),
+  canViewLessonMock: vi.fn(),
+  uploadObjectMock: vi.fn(),
+  gradeSubmissionMock: vi.fn(),
+  extractTextMock: vi.fn(),
+}));
 const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
 
 vi.mock("@/db", () => ({ db: fakeDb.db }));
 vi.mock("@/lib/auth/session", () => ({
   getAppUser: getAppUserMock,
-  hasAccess: hasAccessMock,
 }));
+vi.mock("@/lib/lessons/access", () => ({ canViewLesson: canViewLessonMock }));
 vi.mock("@/lib/storage/r2", () => ({
   uploadObject: uploadObjectMock,
   removeObjects: vi.fn(async () => ({ error: null })),
@@ -66,7 +71,7 @@ function withDb(opts: {
 
 beforeEach(() => {
   getAppUserMock.mockReset();
-  hasAccessMock.mockReset().mockResolvedValue(true);
+  canViewLessonMock.mockReset().mockResolvedValue(true);
   uploadObjectMock.mockReset();
   gradeSubmissionMock.mockReset();
   extractTextMock.mockReset();
@@ -108,7 +113,7 @@ describe("createSubmission", () => {
 
   it("rejects a lesson the user has no access to (was RLS)", async () => {
     getAppUserMock.mockResolvedValue(user());
-    hasAccessMock.mockResolvedValue(false);
+    canViewLessonMock.mockResolvedValue(false);
     const result = await createSubmission({
       lessonSlug: "raid-logs",
       filename: "x.xlsx",
@@ -116,7 +121,7 @@ describe("createSubmission", () => {
       fileBase64: SMALL_BASE64,
     });
     expect(result).toMatchObject({ ok: false, code: "NOT_FOUND" });
-    expect(hasAccessMock).toHaveBeenCalledWith("u1");
+    expect(canViewLessonMock).toHaveBeenCalledWith("u1", expect.anything());
     expect(fakeDb.callsFor("insert")).toHaveLength(0);
   });
 

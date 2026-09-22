@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/require-user";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { lessons } from "@/db/schema";
-import { hasAccess } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import { LessonHeader } from "@/components/lessons/lesson-header";
 import { LessonTabs, type LessonTabKey } from "@/components/lessons/tabs";
 import { WorkbookPanel } from "@/components/lessons/workbook-panel";
@@ -34,24 +34,25 @@ export default async function LessonPage({
   const user = await requireUser();
   const [{ slug }, { tab }] = await Promise.all([params, searchParams]);
 
-  // lessons (was RLS): published AND has_access (admins count as having
-  // access). The query already required is_published for everyone.
-  const [lesson] = (await hasAccess(user.id))
-    ? await db
-        .select({
-          number: lessons.number,
-          title: lessons.title,
-          summary: lessons.summary,
-          estimated_minutes: lessons.estimatedMinutes,
-        })
-        .from(lessons)
-        .where(and(eq(lessons.slug, slug), eq(lessons.isPublished, true)))
-        .limit(1)
-    : [];
+  // lessons (was RLS): free preview lessons for everyone signed in, other
+  // published lessons need has_access, admins see all (incl. drafts).
+  const [row] = await db
+    .select({
+      number: lessons.number,
+      title: lessons.title,
+      summary: lessons.summary,
+      estimated_minutes: lessons.estimatedMinutes,
+      isPublished: lessons.isPublished,
+      isPreview: lessons.isPreview,
+    })
+    .from(lessons)
+    .where(eq(lessons.slug, slug))
+    .limit(1);
+  const lesson = row && (await canViewLesson(user.id, row)) ? row : undefined;
   const lessonTitle = lesson?.title ?? "";
 
   if (!lesson) {
-    // Either the slug doesn't exist or the user lacks access (has_access=false).
+    // Either the slug doesn't exist or the user may not view it.
     // 404 in both cases — we don't leak which.
     notFound();
   }

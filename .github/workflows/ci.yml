@@ -109,3 +109,4 @@ jobs:
           tests/integration/neon-smoke.test.ts
           tests/integration/auth-identity-mapping.test.ts
           tests/integration/portfolio-gate-trigger.test.ts
+          tests/integration/preview-access.test.ts

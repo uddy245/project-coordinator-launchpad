@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { lessons } from "@/db/schema";
-import { getAppUser, hasAccess } from "@/lib/auth/session";
+import { getAppUser } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import { rotateAssignment, type WorkbookAssignment } from "@/lib/workbook/select";
 import type { ActionResult } from "@/lib/types";
 
@@ -42,12 +43,14 @@ export async function refreshWorkbookAssignment(
         title: lessons.title,
         summary: lessons.summary,
         competency: lessons.competency,
+        isPublished: lessons.isPublished,
+        isPreview: lessons.isPreview,
       })
       .from(lessons)
-      .where(and(eq(lessons.slug, parsed.data.lessonSlug), eq(lessons.isPublished, true)))
+      .where(eq(lessons.slug, parsed.data.lessonSlug))
       .limit(1);
-    // lessons: published AND has_access (hasAccess is true for admins).
-    if (row && (await hasAccess(user.id))) lesson = row;
+    // lessons (was RLS): free previews for anyone, else has_access; admins all.
+    if (row && (await canViewLesson(user.id, row))) lesson = row;
   } catch {
     lesson = null;
   }

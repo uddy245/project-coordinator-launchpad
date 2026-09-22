@@ -1,37 +1,32 @@
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { lessons } from "@/db/schema";
-import { getAppUser, hasAccess, isAdmin } from "@/lib/auth/session";
+import { getAppUser } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import { getCurrentQuizItems } from "@/lib/quiz/select";
 import { QuizPlayer, type QuizItemPublic } from "./quiz-player";
 
 export async function QuizPanel({ lessonSlug }: { lessonSlug: string }) {
   const user = await getAppUser();
 
-  // The quiz is paid content: the old quiz_items_public view (and lessons
-  // RLS) only returned rows for signed-in users with has_access. Admins
-  // count as having access and could also see unpublished lessons.
-  const [admin, access] = user
-    ? await Promise.all([isAdmin(user.id), hasAccess(user.id)])
-    : [false, false];
-
   // The lesson's id + metadata is needed for the selector and any
-  // fallback Claude generation.
-  const [lesson] =
-    user && access
-      ? await db
-          .select({
-            id: lessons.id,
-            title: lessons.title,
-            summary: lessons.summary,
-            competency: lessons.competency,
-          })
-          .from(lessons)
-          .where(
-            and(eq(lessons.slug, lessonSlug), admin ? undefined : eq(lessons.isPublished, true))
-          )
-          .limit(1)
-      : [];
+  // fallback Claude generation. Access (was RLS): free preview lessons for
+  // everyone signed in, other lessons need has_access, admins see all.
+  const [row] = user
+    ? await db
+        .select({
+          id: lessons.id,
+          title: lessons.title,
+          summary: lessons.summary,
+          competency: lessons.competency,
+          isPublished: lessons.isPublished,
+          isPreview: lessons.isPreview,
+        })
+        .from(lessons)
+        .where(eq(lessons.slug, lessonSlug))
+        .limit(1)
+    : [];
+  const lesson = user && row && (await canViewLesson(user.id, row)) ? row : null;
 
   if (!user || !lesson) {
     return (

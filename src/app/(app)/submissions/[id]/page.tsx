@@ -5,6 +5,7 @@ import { and, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { auditQueue, auditRecords, lessons, rubricScores, rubrics, submissions } from "@/db/schema";
 import { hasAccess, isAdmin } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import { parseRubric } from "@/lib/grading/rubric";
 import { applyOverrides, type OverrideEntry } from "@/lib/grading/apply-overrides";
 import { RubricScoreCard, type RubricScoreRow } from "@/components/grading/rubric-score-card";
@@ -45,20 +46,19 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
 
   if (!submission) notFound();
 
-  // Breadcrumb back to the lesson. lessons (was RLS): learners need
-  // has_access and only see published rows; admins see all.
-  const [lesson] = access
-    ? await db
-        .select({ slug: lessons.slug, title: lessons.title })
-        .from(lessons)
-        .where(
-          and(
-            eq(lessons.id, submission.lesson_id),
-            admin ? undefined : eq(lessons.isPublished, true)
-          )
-        )
-        .limit(1)
-    : [];
+  // Breadcrumb back to the lesson. lessons (was RLS): free previews for
+  // everyone, other published lessons need has_access; admins see all.
+  const [lessonRow] = await db
+    .select({
+      slug: lessons.slug,
+      title: lessons.title,
+      isPublished: lessons.isPublished,
+      isPreview: lessons.isPreview,
+    })
+    .from(lessons)
+    .where(eq(lessons.id, submission.lesson_id))
+    .limit(1);
+  const lesson = lessonRow && (await canViewLesson(user.id, lessonRow)) ? lessonRow : undefined;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
@@ -115,7 +115,8 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
           }}
           viewerId={user.id}
           viewerIsAdmin={admin}
-          viewerHasAccess={access}
+          // A free preview lesson's grade is usable without purchase.
+          viewerHasAccess={access || !!lesson}
         />
       )}
 
