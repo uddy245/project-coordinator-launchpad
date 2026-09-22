@@ -20,6 +20,6 @@ dropdb --if-exists "$DB"
 createdb "$DB"
 psql -q -v ON_ERROR_STOP=1 -d "$DB" -c "drop schema public cascade" >/dev/null
 run "$HERE/neon-schema.sql"
-for f in $(ls "$HERE/../../db/migrations/"*.sql 2>/dev/null | sort); do run "$f"; done
+for f in "$HERE"/../../db/migrations/*.sql; do [ -e "$f" ] && run "$f"; done
 run "$HERE/seed.sql"
 echo "Built replica database: $DB"

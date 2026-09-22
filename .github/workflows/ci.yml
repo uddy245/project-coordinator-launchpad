@@ -110,3 +110,4 @@ jobs:
           tests/integration/auth-identity-mapping.test.ts
           tests/integration/portfolio-gate-trigger.test.ts
           tests/integration/preview-access.test.ts
+          tests/integration/delete-user-cascade.test.ts

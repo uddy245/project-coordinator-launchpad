@@ -60,11 +60,7 @@ describe.skipIf(!DB_AVAILABLE)("portfolio gate count trigger", () => {
   });
 
   afterAll(async () => {
-    // Order matters: deleting the user directly cascades to submissions,
-    // whose delete trigger re-inserts gate_status for the vanishing user
-    // and trips its FK (pre-existing trigger bug — see migration report).
-    await db.delete(submissions).where(eq(submissions.userId, userId));
-    await db.delete(gateStatus).where(eq(gateStatus.userId, userId));
+    // Cascades submissions + gate_status (db/migrations/20260922_01).
     await db.delete(usersInAuth).where(eq(usersInAuth.id, userId));
   });
 

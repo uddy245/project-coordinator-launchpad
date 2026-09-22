@@ -103,9 +103,6 @@ describe.skipIf(!DB_AVAILABLE)("Neon smoke: sign up → create → read → isol
 
   afterAll(async () => {
     if (appIds.length === 0) return;
-    // Submissions first: deleting the user cascades into a trigger that
-    // re-inserts gate_status (pre-existing trigger bug, see report).
-    await db.delete(submissions).where(inArray(submissions.userId, appIds));
     await db.delete(usersInAuth).where(inArray(usersInAuth.id, appIds));
   });
 

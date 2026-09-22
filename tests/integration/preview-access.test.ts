@@ -75,7 +75,6 @@ describe.skipIf(!DB_AVAILABLE)("free preview lessons vs the paid-access check", 
   });
 
   afterAll(async () => {
-    await db.delete(submissions).where(inArray(submissions.userId, ids));
     await db.delete(usersInAuth).where(inArray(usersInAuth.id, ids));
   });
 
