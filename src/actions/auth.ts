@@ -128,11 +128,11 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
   });
 
   // Email must be verified before the account is usable (the app links
-  // accounts by email). Neon Auth ("Verify at Sign-up", code mode) emails a
-  // verification code itself when it withholds the session; if it issued a
-  // session for an unverified user anyway, send the code ourselves.
+  // accounts by email). Neon Auth is configured with requireEmailVerification
+  // + emailVerificationMethod "otp" but sendVerificationEmailOnSignUp=false
+  // (neon_auth.project_config), so it never emails the code itself — send it.
   const verified = !!data?.user?.emailVerified;
-  if (!verified && data && "token" in data && data.token) {
+  if (!verified) {
     await sendVerificationCode(parsed.data.email);
   }
 

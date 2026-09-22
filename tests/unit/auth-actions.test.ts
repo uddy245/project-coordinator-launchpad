@@ -119,14 +119,15 @@ describe("signUp action", () => {
     expect(signUpMock).toHaveBeenCalledWith(expect.objectContaining({ name: "Jane Doe" }));
   });
 
-  it("flags needsEmailConfirmation=true when verification is required (no session)", async () => {
+  it("sends the verification code when verification is required (no session)", async () => {
+    // Neon Auth: requireEmailVerification + otp, sendVerificationEmailOnSignUp=false.
     signUpMock.mockResolvedValue({
       data: { token: null, user: { ...verifiedUser, emailVerified: false } },
       error: null,
     });
     const result = await signUp({ email: "u@x.com", password: "password1" });
     expect(result).toEqual({ ok: true, data: { needsEmailConfirmation: true } });
-    expect(sendOtpMock).not.toHaveBeenCalled();
+    expect(sendOtpMock).toHaveBeenCalledWith({ email: "u@x.com", type: "email-verification" });
   });
 
   it("sends a verification code when a session was issued for an unverified user", async () => {
@@ -143,6 +144,7 @@ describe("signUp action", () => {
     signUpMock.mockResolvedValue({ data: { token: "t", user: verifiedUser }, error: null });
     const result = await signUp({ email: "u@x.com", password: "password1" });
     expect(result).toEqual({ ok: true, data: { needsEmailConfirmation: false } });
+    expect(sendOtpMock).not.toHaveBeenCalled();
   });
 });
 

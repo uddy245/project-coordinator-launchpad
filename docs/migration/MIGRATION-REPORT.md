@@ -1,6 +1,6 @@
 # Supabase → Neon migration report (pc-launchpad)
 
-Branch `chore/migrate-supabase-to-neon`. Updated 2026-09-22 (round 2).
+Branch `chore/migrate-supabase-to-neon`. Updated 2026-09-22 (round 3).
 **Not pushed, not deployed, no Vercel env vars changed.** See
 `SUPABASE-INVENTORY.md` (before any code changed) and `CONVERSION-GUIDE.md`
 (how call sites were converted).
@@ -41,19 +41,30 @@ Remove: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
 `SUPABASE_SERVICE_ROLE_KEY`, `R2_*` (never set). `GRADE_WORKER_SECRET` stays
 (grading worker), no longer used by cron.
 
+## Decisions for Uddy
+
+- New sign-ups currently get paid access by default (prod default = true). Changing this is a one-line migration — not done.
+
 ## Still to do before cut-over
 
-1. **Storage credential**: create one (console → branch → Credentials, scopes
-   `storage:read`+`storage:write`; secret shown once) — not created here.
-2. **Storage copy**: archive `pc-launchpad_supabase-storage_2026-09-22.zip`
-   not yet in `~/backups/…`. Then:
-   `node --env-file=.env.local scripts/migrate-storage-to-neon.mjs` (dry run),
-   and `--apply --rewrite-urls` only on Uddy's go. Tested on a synthetic
-   archive against a local S3 mock + replica (copy, idempotent re-run,
-   URL rewrite, missing-object handling); not yet run against Neon.
-3. Auth flows (sign-up code, reset, magic link, legacy provisioning) are
-   covered by unit tests with Neon Auth mocked; exercise them once on a
-   preview deploy.
+1. **Storage credential — done (round 3).** `neonctl env pull -s object-storage`
+   (production) wrote the four `AWS_*` values into `.env.local` unprinted;
+   endpoint matches. Verified put → get → delete of one object on a throwaway
+   branch (deleted afterwards); production untouched.
+2. **Storage copy — dry run done, not applied.** Archive: 98 files,
+   790.3 MB (16.6% of the 5 GB free limit): lesson-videos 60 (789.8 MB),
+   submissions 24, capstone-artifacts 14, lesson-templates 0. All 35
+   bucket-relative DB keys are in the archive. 25 URL rewrites
+   (`lessons.video_url`, one per published video) Supabase →
+   `https://br-misty-dream-av85gkim.storage.c-11.us-east-1.aws.neon.tech/lesson-videos/<slug>/<slug>.mp4`.
+   11 old root-level/rollback MP4s (~170 MB) are unreferenced but would be
+   copied. `--apply --rewrite-urls` only on Uddy's go.
+3. **Auth flows against a live branch — partly done.** On a throwaway branch
+   with local `pnpm dev`: pages, route gating and the `/api/auth` proxy work
+   (no email sent). The branch's Neon Auth config showed
+   `sendVerificationEmailOnSignUp=false`, so sign-up now sends the code
+   itself (fixed). Sign-up code, reset and magic link each send an email —
+   pending Uddy's choice of address.
 4. `tests/db/neon-schema.sql` predates migration 20260922_01 (the replica
    applies `db/migrations/` on top). Re-dump after future migrations.
 
