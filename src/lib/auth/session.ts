@@ -2,6 +2,7 @@ import "server-only";
 import { createHash } from "node:crypto";
 import { cache } from "react";
 import { cookies } from "next/headers";
+import { unstable_rethrow } from "next/navigation";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { profiles, usersInAuth } from "@/db/schema";
@@ -42,12 +43,17 @@ export const SIGNUP_SOURCE_COOKIE = "lp_signup_source";
  * signed out.
  */
 export const getNeonSessionUser = cache(async (): Promise<NeonSessionUser | null> => {
+  // Touch the request cookies outside the try so the calling route is always
+  // rendered dynamically (never prerendered as "signed out").
+  await cookies();
   try {
     const { data } = await neonAuth().getSession();
     const u = data?.user;
     if (!u?.id || !u.email) return null;
     return { id: u.id, email: u.email, name: u.name ?? null, emailVerified: !!u.emailVerified };
   } catch (err) {
+    // Let Next.js control-flow errors (dynamic usage, redirect) propagate.
+    unstable_rethrow(err);
     console.warn("[auth] getSession failed", err);
     return null;
   }
@@ -131,7 +137,8 @@ async function readSignupSource(): Promise<string | null> {
   try {
     const v = (await cookies()).get(SIGNUP_SOURCE_COOKIE)?.value;
     return v && /^[a-z0-9_-]{1,80}$/.test(v) ? v : null;
-  } catch {
+  } catch (err) {
+    unstable_rethrow(err);
     return null;
   }
 }

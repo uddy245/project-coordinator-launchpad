@@ -62,7 +62,7 @@ vi.mock("next/headers", () => ({
     set: (n: string, v: string) => cookieJar.set(n, v),
   }),
 }));
-vi.mock("next/navigation", () => ({ redirect: vi.fn() }));
+vi.mock("next/navigation", () => ({ redirect: vi.fn(), unstable_rethrow: vi.fn() }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 // Storage and email are external services — stub them.
 vi.mock("@/lib/storage/r2", () => ({
