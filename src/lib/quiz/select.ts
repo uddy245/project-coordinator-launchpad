@@ -12,7 +12,9 @@
  *     action, and once per user/lesson at bootstrap (first visit).
  */
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { and, desc, eq, inArray } from "drizzle-orm";
+import { db } from "@/db";
+import { quizItemSeen, quizItems } from "@/db/schema";
 import { generateQuizItems, type GeneratedQuizItem } from "@/lib/quiz/generate";
 
 export type ServedQuizItem = {
@@ -41,7 +43,6 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export async function selectQuizItemsForUser({
-  supabase,
   userId,
   lessonId,
   lessonSlug,
@@ -50,7 +51,6 @@ export async function selectQuizItemsForUser({
   competency,
   count = 10,
 }: {
-  supabase: SupabaseClient;
   userId: string;
   lessonId: string;
   lessonSlug: string;
@@ -60,20 +60,27 @@ export async function selectQuizItemsForUser({
   count?: number;
 }): Promise<SelectQuizResult> {
   // 1. Fetch all items for the lesson + this user's seen ids in parallel.
-  const [{ data: allItems }, { data: seenRows }] = await Promise.all([
-    supabase
-      .from("quiz_items")
-      .select("id, sort, stem, options, competency, difficulty")
-      .eq("lesson_id", lessonId),
-    supabase
-      .from("quiz_item_seen")
-      .select("quiz_item_id")
-      .eq("user_id", userId)
-      .eq("lesson_id", lessonId),
+  // Projection deliberately omits `correct` / `distractor_rationale`.
+  const [allItems, seenRows] = await Promise.all([
+    db
+      .select({
+        id: quizItems.id,
+        sort: quizItems.sort,
+        stem: quizItems.stem,
+        options: quizItems.options,
+        competency: quizItems.competency,
+        difficulty: quizItems.difficulty,
+      })
+      .from(quizItems)
+      .where(eq(quizItems.lessonId, lessonId)),
+    db
+      .select({ quiz_item_id: quizItemSeen.quizItemId })
+      .from(quizItemSeen)
+      .where(and(eq(quizItemSeen.userId, userId), eq(quizItemSeen.lessonId, lessonId))),
   ]);
 
-  const seenIds = new Set((seenRows ?? []).map((r) => r.quiz_item_id));
-  const unseen = (allItems ?? []).filter((it) => !seenIds.has(it.id));
+  const seenIds = new Set(seenRows.map((r) => r.quiz_item_id));
+  const unseen = allItems.filter((it) => !seenIds.has(it.id));
 
   // 2. If we already have enough unseen items, shuffle and take count.
   let served: ServedQuizItem[] = [];
@@ -105,7 +112,7 @@ export async function selectQuizItemsForUser({
     }));
 
     const gap = count - served.length;
-    const maxSort = Math.max(0, ...(allItems ?? []).map((r) => r.sort));
+    const maxSort = Math.max(0, ...allItems.map((r) => r.sort));
 
     let aiItems: GeneratedQuizItem[] = [];
     try {
@@ -147,13 +154,19 @@ export async function selectQuizItemsForUser({
   //    the user just sees the same items next time, which is recoverable.
   if (served.length > 0) {
     const seenRowsToInsert = served.map((it) => ({
-      user_id: userId,
-      quiz_item_id: it.id,
-      lesson_id: lessonId,
+      userId,
+      quizItemId: it.id,
+      lessonId,
+      seenAt: new Date().toISOString(),
     }));
-    await supabase
-      .from("quiz_item_seen")
-      .upsert(seenRowsToInsert, { onConflict: "user_id,quiz_item_id" });
+    await db
+      .insert(quizItemSeen)
+      .values(seenRowsToInsert)
+      .onConflictDoUpdate({
+        target: [quizItemSeen.userId, quizItemSeen.quizItemId],
+        set: { seenAt: new Date().toISOString() },
+      })
+      .catch((err) => console.error("[quiz/select] seen insert failed:", err));
   }
 
   // 5. Sort served items by their sort value so the UI presentation is stable.
@@ -176,7 +189,6 @@ export async function selectQuizItemsForUser({
  * it happens exactly once per user/lesson.
  */
 export async function getCurrentQuizItems(args: {
-  supabase: SupabaseClient;
   userId: string;
   lessonId: string;
   lessonSlug: string;
@@ -190,23 +202,30 @@ export async function getCurrentQuizItems(args: {
   // Get the most recent `count` items the user has been served. Stable
   // across page renders — same batch every refresh until the user clicks
   // the rotate button.
-  const { data: recent } = await args.supabase
-    .from("quiz_item_seen")
-    .select("quiz_item_id, seen_at")
-    .eq("user_id", args.userId)
-    .eq("lesson_id", args.lessonId)
-    .order("seen_at", { ascending: false })
+  const recent = await db
+    .select({ quiz_item_id: quizItemSeen.quizItemId })
+    .from(quizItemSeen)
+    .where(and(eq(quizItemSeen.userId, args.userId), eq(quizItemSeen.lessonId, args.lessonId)))
+    .orderBy(desc(quizItemSeen.seenAt))
     .limit(count);
 
-  if (recent && recent.length >= count) {
+  if (recent.length >= count) {
     const ids = recent.map((r) => r.quiz_item_id);
-    const { data: items } = await args.supabase
-      .from("quiz_items")
-      .select("id, sort, stem, options, competency, difficulty, is_ai_generated")
-      .in("id", ids)
-      .order("sort", { ascending: true });
+    const items = await db
+      .select({
+        id: quizItems.id,
+        sort: quizItems.sort,
+        stem: quizItems.stem,
+        options: quizItems.options,
+        competency: quizItems.competency,
+        difficulty: quizItems.difficulty,
+        is_ai_generated: quizItems.isAiGenerated,
+      })
+      .from(quizItems)
+      .where(inArray(quizItems.id, ids))
+      .orderBy(quizItems.sort);
 
-    const served: ServedQuizItem[] = (items ?? []).map((it) => ({
+    const served: ServedQuizItem[] = items.map((it) => ({
       id: it.id,
       sort: it.sort,
       stem: it.stem,
@@ -231,18 +250,15 @@ export async function getCurrentQuizItems(args: {
  * everything, reset" flow. Caller must already have authenticated.
  */
 export async function resetSeenHistory({
-  supabase,
   userId,
   lessonId,
 }: {
-  supabase: SupabaseClient;
   userId: string;
   lessonId: string;
 }): Promise<{ deleted: number }> {
-  const { count } = await supabase
-    .from("quiz_item_seen")
-    .delete({ count: "exact" })
-    .eq("user_id", userId)
-    .eq("lesson_id", lessonId);
-  return { deleted: count ?? 0 };
+  const deleted = await db
+    .delete(quizItemSeen)
+    .where(and(eq(quizItemSeen.userId, userId), eq(quizItemSeen.lessonId, lessonId)))
+    .returning({ id: quizItemSeen.quizItemId });
+  return { deleted: deleted.length };
 }

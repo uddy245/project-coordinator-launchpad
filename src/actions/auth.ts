@@ -1,9 +1,15 @@
 "use server";
 
+import { randomBytes } from "node:crypto";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { sql } from "drizzle-orm";
 import { z } from "zod";
 import { env } from "@/env";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db";
+import { usersInAuth } from "@/db/schema";
+import { neonAuth } from "@/lib/auth/neon";
+import { getNeonSessionUser, SIGNUP_SOURCE_COOKIE } from "@/lib/auth/session";
 import type { ActionResult } from "@/lib/types";
 import { sendEmail } from "@/lib/email/send";
 import { renderWelcome } from "@/lib/email/templates/welcome";
@@ -36,6 +42,27 @@ function firstZodIssue(err: z.ZodError): string {
   return err.issues[0]?.message ?? "Invalid input";
 }
 
+type AuthError = { message?: string; code?: string } | null | undefined;
+
+function errorText(error: AuthError): string {
+  return `${error?.code ?? ""} ${error?.message ?? ""}`.toLowerCase();
+}
+
+/** Where email links (verification, reset) land back in the app. */
+function appUrl(path: string): string {
+  return `${env.NEXT_PUBLIC_APP_URL}${path}`;
+}
+
+/** True if this email belongs to a user who signed up before the Neon migration. */
+async function isLegacyUser(email: string): Promise<boolean> {
+  const [row] = await db
+    .select({ id: usersInAuth.id })
+    .from(usersInAuth)
+    .where(sql`lower(${usersInAuth.email}) = ${email}`)
+    .limit(1);
+  return !!row;
+}
+
 export type SignUpResult = { needsEmailConfirmation: boolean };
 
 export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpResult>> {
@@ -44,41 +71,50 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
     return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const userMeta: Record<string, string> = {};
-  if (parsed.data.fullName) userMeta.full_name = parsed.data.fullName;
-  if (parsed.data.signupSource) userMeta.signup_source = parsed.data.signupSource;
-
-  const { data, error } = await supabase.auth.signUp({
-    email: parsed.data.email,
-    password: parsed.data.password,
-    options: Object.keys(userMeta).length > 0 ? { data: userMeta } : undefined,
-  });
-
-  if (error) {
-    const msg = error.message.toLowerCase();
-    if (msg.includes("already registered") || msg.includes("already been registered")) {
-      return { ok: false, error: "That email is already in use.", code: "EMAIL_IN_USE" };
-    }
-    if (msg.includes("password")) {
-      return { ok: false, error: error.message, code: "WEAK_PASSWORD" };
-    }
-    return { ok: false, error: error.message, code: "UNKNOWN" };
-  }
-
-  // Supabase's anti-enumeration behaviour: signing up with an email that
-  // already has a confirmed account "succeeds" but returns a user with no
-  // identities and sends no email. Surface that honestly instead of showing
-  // a "check your email" screen that will never arrive.
-  const isRepeatedSignup =
-    !data.session && data.user != null && (data.user.identities?.length ?? 0) === 0;
-  if (isRepeatedSignup) {
+  // Pre-migration learners already have an account and data. Send them
+  // through the one-time password reset instead of creating a new login.
+  if (await isLegacyUser(parsed.data.email)) {
     return {
       ok: false,
       error:
-        "That email already has an account. Log in instead — or use “Forgot password?” if you don't know the password.",
+        "That email already has an account. We've upgraded sign-in — use “Forgot password?” to set a new password once.",
       code: "EMAIL_IN_USE",
     };
+  }
+
+  const { data, error } = await neonAuth().signUp.email({
+    email: parsed.data.email,
+    password: parsed.data.password,
+    name: parsed.data.fullName || parsed.data.email,
+    callbackURL: appUrl("/dashboard"),
+  });
+
+  if (error) {
+    const msg = errorText(error);
+    if (msg.includes("already exists") || msg.includes("user_already_exists")) {
+      return {
+        ok: false,
+        error:
+          "That email already has an account. Log in instead — or use “Forgot password?” if you don't know the password.",
+        code: "EMAIL_IN_USE",
+      };
+    }
+    if (msg.includes("password")) {
+      return { ok: false, error: error.message ?? "Password rejected.", code: "WEAK_PASSWORD" };
+    }
+    return { ok: false, error: error.message ?? "Sign-up failed.", code: "UNKNOWN" };
+  }
+
+  // The profiles row is created on first verified request (see
+  // provisionAppUser). Carry the attribution token until then.
+  if (parsed.data.signupSource) {
+    (await cookies()).set(SIGNUP_SOURCE_COOKIE, parsed.data.signupSource.toLowerCase(), {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
   }
 
   // Welcome email — fire-and-forget. Silent so a Resend hiccup never breaks
@@ -91,10 +127,18 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
     tag: "welcome",
   });
 
-  // If Supabase has email confirmation enabled, no session is returned.
-  // The form branches on this to show a "check your email" state instead
-  // of trying to redirect into an authed area.
-  return { ok: true, data: { needsEmailConfirmation: !data.session } };
+  // Email must be verified before the account is usable (the app links
+  // accounts by email). If Neon Auth issued a session for an unverified
+  // user, make sure a verification email goes out.
+  const verified = !!data?.user?.emailVerified;
+  if (!verified && data && "token" in data && data.token) {
+    await neonAuth().sendVerificationEmail({
+      email: parsed.data.email,
+      callbackURL: appUrl("/dashboard"),
+    });
+  }
+
+  return { ok: true, data: { needsEmailConfirmation: !verified } };
 }
 
 export async function signIn(input: SignInInput): Promise<ActionResult> {
@@ -103,29 +147,29 @@ export async function signIn(input: SignInInput): Promise<ActionResult> {
     return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
+  const { error } = await neonAuth().signIn.email({
     email: parsed.data.email,
     password: parsed.data.password,
   });
 
   if (error) {
-    const msg = error.message.toLowerCase();
-    if (msg.includes("email not confirmed") || msg.includes("not confirmed")) {
+    const msg = errorText(error);
+    if (msg.includes("not verified") || msg.includes("email_not_verified")) {
       return {
         ok: false,
         error: "Please confirm your email — check your inbox for the confirmation link.",
         code: "EMAIL_NOT_CONFIRMED",
       };
     }
-    if (msg.includes("invalid login credentials") || msg.includes("invalid")) {
+    if (msg.includes("invalid") || msg.includes("credential") || msg.includes("password")) {
       return {
         ok: false,
-        error: "Incorrect email or password.",
+        error:
+          "Incorrect email or password. Had an account before our sign-in upgrade? Use “Forgot password?” to set a new one once.",
         code: "INVALID_CREDENTIALS",
       };
     }
-    return { ok: false, error: error.message, code: "UNKNOWN" };
+    return { ok: false, error: error.message ?? "Sign-in failed.", code: "UNKNOWN" };
   }
 
   return { ok: true, data: undefined };
@@ -147,17 +191,15 @@ export async function sendMagicLink(input: MagicLinkInput): Promise<ActionResult
     return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
   }
 
-  const target = parsed.data.redirectTo ?? "/dashboard";
-  const emailRedirectTo = `${env.NEXT_PUBLIC_APP_URL}/auth/callback?redirect=${encodeURIComponent(target)}`;
+  const target = parsed.data.redirectTo?.startsWith("/") ? parsed.data.redirectTo : "/dashboard";
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithOtp({
+  const { error } = await neonAuth().signIn.magicLink({
     email: parsed.data.email,
-    options: { emailRedirectTo },
+    callbackURL: appUrl(target),
   });
 
   if (error) {
-    return { ok: false, error: error.message, code: "UNKNOWN" };
+    return { ok: false, error: error.message ?? "Could not send link.", code: "UNKNOWN" };
   }
 
   return { ok: true, data: undefined };
@@ -173,13 +215,35 @@ const PasswordResetRequestSchema = z.object({
 export type PasswordResetRequestInput = z.input<typeof PasswordResetRequestSchema>;
 
 /**
- * Send a password-recovery email. The link in the email lands on
- * /auth/callback (which exchanges the recovery code for a session) and
- * then forwards to /reset-password, where the user chooses a new password.
+ * Pre-migration learners have an `auth.users` row but no Neon Auth login.
+ * Create one with an unguessable throwaway password so the reset email below
+ * can be delivered; only the inbox owner can then set a real password.
+ * Called with a plain fetch so no session cookie reaches this browser.
+ */
+async function ensureNeonAccountForLegacyUser(email: string): Promise<void> {
+  if (!(await isLegacyUser(email))) return;
+  try {
+    await fetch(`${env.NEON_AUTH_BASE_URL.replace(/\/$/, "")}/sign-up/email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Origin: env.NEXT_PUBLIC_APP_URL },
+      body: JSON.stringify({
+        email,
+        password: randomBytes(32).toString("base64url"),
+        name: email,
+      }),
+    });
+    // "User already exists" (already claimed) is the expected steady state.
+  } catch (err) {
+    console.warn("[auth] legacy account provisioning failed", err);
+  }
+}
+
+/**
+ * Send a password-reset email. The link returns to /reset-password?token=…
+ * where the user chooses a new password.
  *
- * Note: Supabase deliberately does NOT reveal whether the email has an
- * account (anti-enumeration), so the form always shows a neutral
- * "if an account exists, we sent a link" state on success.
+ * This is also the one-time path for learners who signed up before the move
+ * to Neon Auth. The response never reveals whether the email has an account.
  */
 export async function sendPasswordReset(input: PasswordResetRequestInput): Promise<ActionResult> {
   const parsed = PasswordResetRequestSchema.safeParse(input);
@@ -187,23 +251,23 @@ export async function sendPasswordReset(input: PasswordResetRequestInput): Promi
     return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
   }
 
-  const redirectTo = `${env.NEXT_PUBLIC_APP_URL}/auth/callback?redirect=${encodeURIComponent("/reset-password")}`;
+  await ensureNeonAccountForLegacyUser(parsed.data.email);
 
-  const supabase = await createClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
-    redirectTo,
+  const { error } = await neonAuth().requestPasswordReset({
+    email: parsed.data.email,
+    redirectTo: appUrl("/reset-password"),
   });
 
   if (error) {
-    const msg = error.message.toLowerCase();
-    if (msg.includes("rate limit") || msg.includes("security purposes")) {
+    const msg = errorText(error);
+    if (msg.includes("rate limit") || msg.includes("too many")) {
       return {
         ok: false,
         error: "Too many requests — wait a minute and try again.",
         code: "RATE_LIMITED",
       };
     }
-    return { ok: false, error: error.message, code: "UNKNOWN" };
+    return { ok: false, error: error.message ?? "Could not send reset email.", code: "UNKNOWN" };
   }
 
   return { ok: true, data: undefined };
@@ -211,13 +275,14 @@ export async function sendPasswordReset(input: PasswordResetRequestInput): Promi
 
 const UpdatePasswordSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
+  token: z.string().min(1, "Your reset link is missing its token."),
 });
 
 export type UpdatePasswordInput = z.input<typeof UpdatePasswordSchema>;
 
 /**
- * Set a new password for the currently signed-in user. Reached from
- * /reset-password after the recovery link has established a session.
+ * Set a new password using the token from the reset email
+ * (/reset-password?token=…). The user then signs in with it.
  */
 export async function updatePassword(input: UpdatePasswordInput): Promise<ActionResult> {
   const parsed = UpdatePasswordSchema.safeParse(input);
@@ -225,41 +290,46 @@ export async function updatePassword(input: UpdatePasswordInput): Promise<Action
     return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return {
-      ok: false,
-      error: "Your reset link has expired. Request a new one from the login page.",
-      code: "NOT_AUTHENTICATED",
-    };
-  }
-
-  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+  const { error } = await neonAuth().resetPassword({
+    newPassword: parsed.data.password,
+    token: parsed.data.token,
+  });
 
   if (error) {
-    const msg = error.message.toLowerCase();
-    if (msg.includes("different from the old")) {
+    const msg = errorText(error);
+    if (msg.includes("token")) {
       return {
         ok: false,
-        error: "New password must be different from your old one.",
-        code: "SAME_PASSWORD",
+        error: "Your reset link has expired. Request a new one from the login page.",
+        code: "NOT_AUTHENTICATED",
       };
     }
     if (msg.includes("password")) {
-      return { ok: false, error: error.message, code: "WEAK_PASSWORD" };
+      return { ok: false, error: error.message ?? "Password rejected.", code: "WEAK_PASSWORD" };
     }
-    return { ok: false, error: error.message, code: "UNKNOWN" };
+    return { ok: false, error: error.message ?? "Could not update password.", code: "UNKNOWN" };
   }
 
   return { ok: true, data: undefined };
 }
 
+/** Re-send the verification email for a signed-in but unverified user. */
+export async function resendVerificationEmail(): Promise<ActionResult> {
+  const su = await getNeonSessionUser();
+  if (!su) {
+    return { ok: false, error: "Sign in first.", code: "UNAUTHENTICATED" };
+  }
+  const { error } = await neonAuth().sendVerificationEmail({
+    email: su.email,
+    callbackURL: appUrl("/dashboard"),
+  });
+  if (error) {
+    return { ok: false, error: error.message ?? "Could not send email.", code: "UNKNOWN" };
+  }
+  return { ok: true, data: undefined };
+}
+
 export async function signOut(): Promise<never> {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  await neonAuth().signOut();
   redirect("/login");
 }

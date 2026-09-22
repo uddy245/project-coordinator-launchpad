@@ -27,8 +27,22 @@ export const env = createEnv({
     throw new Error(`Invalid environment variables: ${error.message}`);
   },
   server: {
-    // Supabase
-    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+    // Neon Postgres — pooled connection string. Server-only; never add a
+    // NEXT_PUBLIC_ database variable.
+    DATABASE_URL: z.string().url(),
+
+    // Neon Auth (managed Better Auth). Base URL from Neon console → Auth.
+    NEON_AUTH_BASE_URL: z.string().url(),
+    NEON_AUTH_COOKIE_SECRET: z.string().min(32),
+
+    // Cloudflare R2 (S3-compatible) — replaces Supabase Storage.
+    R2_ACCOUNT_ID: z.string().min(1),
+    R2_ACCESS_KEY_ID: z.string().min(1),
+    R2_SECRET_ACCESS_KEY: z.string().min(1),
+    R2_BUCKET: z.string().min(1),
+
+    // Vercel Cron bearer secret (weekly digest + tutor retention).
+    CRON_SECRET: z.string().min(16).optional(),
 
     // Anthropic
     ANTHROPIC_API_KEY: z.string().min(1),
@@ -63,10 +77,6 @@ export const env = createEnv({
   },
 
   client: {
-    // Supabase
-    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-
     // Stripe
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
 
@@ -80,7 +90,14 @@ export const env = createEnv({
   },
 
   runtimeEnv: {
-    SUPABASE_SERVICE_ROLE_KEY: E("SUPABASE_SERVICE_ROLE_KEY"),
+    DATABASE_URL: E("DATABASE_URL"),
+    NEON_AUTH_BASE_URL: E("NEON_AUTH_BASE_URL"),
+    NEON_AUTH_COOKIE_SECRET: E("NEON_AUTH_COOKIE_SECRET"),
+    R2_ACCOUNT_ID: E("R2_ACCOUNT_ID"),
+    R2_ACCESS_KEY_ID: E("R2_ACCESS_KEY_ID"),
+    R2_SECRET_ACCESS_KEY: E("R2_SECRET_ACCESS_KEY"),
+    R2_BUCKET: E("R2_BUCKET"),
+    CRON_SECRET: E("CRON_SECRET"),
     ANTHROPIC_API_KEY: E("ANTHROPIC_API_KEY"),
     ANTHROPIC_MODEL: E("ANTHROPIC_MODEL"),
     ANTHROPIC_SPEND_CAP_USD: E("ANTHROPIC_SPEND_CAP_USD"),
@@ -96,8 +113,6 @@ export const env = createEnv({
     RESEND_FROM_EMAIL: E("RESEND_FROM_EMAIL"),
     GRADE_WORKER_SECRET: E("GRADE_WORKER_SECRET"),
     SENTRY_DSN: E("SENTRY_DSN"),
-    NEXT_PUBLIC_SUPABASE_URL: E("NEXT_PUBLIC_SUPABASE_URL"),
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: E("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: E("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"),
     NEXT_PUBLIC_APP_URL: E("NEXT_PUBLIC_APP_URL"),
     NEXT_PUBLIC_POSTHOG_KEY: E("NEXT_PUBLIC_POSTHOG_KEY"),

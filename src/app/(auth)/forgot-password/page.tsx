@@ -15,6 +15,10 @@ export default async function ForgotPasswordPage() {
         <p className="text-sm text-muted-foreground">
           Enter the email you signed up with and we&apos;ll send you a link to set a new one.
         </p>
+        <p className="text-sm text-muted-foreground">
+          Had an account before our September 2026 sign-in upgrade? This is also how you set your
+          password for the new sign-in — once, and your progress stays with you.
+        </p>
       </div>
       <hr className="section-rule" />
       <ForgotPasswordForm />

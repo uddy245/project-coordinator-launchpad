@@ -21,6 +21,17 @@ export default async function LoginPage({
           Pick up where you left off in the programme.
         </p>
       </div>
+      <div className="border border-rule bg-paper px-4 py-3 text-sm text-muted-foreground">
+        <strong className="text-ink">Returning learner?</strong> We&apos;ve upgraded sign-in. If
+        your account was created before September 2026, please{" "}
+        <Link
+          href="/forgot-password"
+          className="font-medium text-ink underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-[5px]"
+        >
+          reset your password
+        </Link>{" "}
+        once — your progress and submissions are kept.
+      </div>
       <hr className="section-rule" />
       <LoginForm redirectTo={redirect ?? "/dashboard"} />
       <p className="border-t border-rule pt-4 text-center text-sm text-muted-foreground">
