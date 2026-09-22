@@ -12,7 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "db:pull": "drizzle-kit pull && echo \"Review drizzle/schema.ts and fold changes into src/db/schema.ts\"",
+    "db:pull": "drizzle-kit pull && node scripts/db-normalize-schema.mjs --check",
     "db:replica": "tests/db/build-replica.sh"
   },
   "dependencies": {

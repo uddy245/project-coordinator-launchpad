@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { unstable_rethrow } from "next/navigation";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { profiles, usersInAuth } from "@/db/schema";
 import { neonAuth } from "./neon";
@@ -85,9 +85,11 @@ async function findAuthUserIdByEmail(email: string): Promise<string | null> {
 }
 
 /**
- * Replaces the old `on_auth_user_created` trigger (`handle_new_user()`):
- * creates the `auth.users` row the public tables reference, plus the
- * matching `profiles` row. Idempotent — safe under concurrent first requests.
+ * Sign-up hook: creates the `auth.users` row the public tables reference,
+ * plus the matching `profiles` row. Neon still has the old
+ * `on_auth_user_created` trigger, which inserts the profile first — so the
+ * profile insert is a no-op there and the attribution is set afterwards.
+ * Correct with or without the trigger; idempotent under concurrent requests.
  */
 export async function provisionAppUser(input: {
   neonUserId: string;
@@ -126,6 +128,12 @@ export async function provisionAppUser(input: {
         signupSource: input.signupSource?.toLowerCase() ?? null,
       })
       .onConflictDoNothing();
+    if (input.signupSource) {
+      await tx
+        .update(profiles)
+        .set({ signupSource: input.signupSource.toLowerCase() })
+        .where(and(eq(profiles.id, id), isNull(profiles.signupSource)));
+    }
   });
 
   // If another request won a race with a different id (e.g. a legacy row

@@ -44,7 +44,11 @@ describe.skipIf(!DB_AVAILABLE)("auth identity mapping", async () => {
 
   beforeAll(async () => {
     await db.insert(usersInAuth).values({ id: legacyId, email: legacyEmail });
-    await db.insert(profiles).values({ id: legacyId, email: legacyEmail, fullName: "Legacy" });
+    // The live on_auth_user_created trigger has already created the profile.
+    await db
+      .insert(profiles)
+      .values({ id: legacyId, email: legacyEmail, fullName: "Legacy" })
+      .onConflictDoUpdate({ target: profiles.id, set: { fullName: "Legacy" } });
   });
 
   afterAll(async () => {
@@ -94,7 +98,8 @@ describe.skipIf(!DB_AVAILABLE)("auth identity mapping", async () => {
       email,
       fullName: "New Learner",
       role: "learner",
-      hasAccess: false,
+      // Neon/prod default: profiles.has_access defaults to TRUE.
+      hasAccess: true,
       signupSource: "preview-coordinator-role",
     });
 

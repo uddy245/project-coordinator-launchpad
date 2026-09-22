@@ -1,31 +1,25 @@
 #!/usr/bin/env bash
-# Build a LOCAL Postgres replica of the migrated Neon database, for
-# integration tests (tests/integration/*). Never point this at Neon.
+# Build a LOCAL Postgres replica of the live Neon database (pc-launchpad),
+# for integration tests. Never point this at Neon.
 #
 #   tests/db/build-replica.sh [dbname]        # default: launchpad_test
 #   TEST_DATABASE_URL=postgres://localhost/launchpad_test pnpm test
 #
-# Recreates the Neon state: Supabase migrations applied in prod order, the
-# out-of-band prod objects, then every RLS policy dropped, RLS disabled and
-# the on_auth_user_created trigger removed (the app handles it in code).
+# neon-schema.sql is the exact schema-only pg_dump of what is live in Neon
+# (auth + public schemas, functions, triggers, no RLS policies). Refresh it
+# from Neon when the schema changes; migrations in db/migrations/ are
+# applied on top so the replica matches Neon after they are deployed.
 set -euo pipefail
 DB="${1:-launchpad_test}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
-MIG="$HERE/../../supabase/migrations"
 export PGOPTIONS='--client-min-messages=warning'
 
 run() { psql -q -v ON_ERROR_STOP=1 -d "$DB" -f "$1" >/dev/null; }
 
 dropdb --if-exists "$DB"
 createdb "$DB"
-run "$HERE/00_supabase_shims.sql"
-cd "$MIG"
-for f in $(ls *.sql | sort | grep -v 20260502_seed_default_workbook_briefs); do
-  [[ $f == 20260421_* ]] && run "$HERE/10_out_of_band_tables.sql"
-  run "$f"
-  [[ $f == 20260421_* ]] && run "$HERE/20_lessons_preview_search.sql"
-  # Applied in prod after its table existed; file name sorts before it.
-  [[ $f == 20260503_workbook_assignments.sql ]] && run 20260502_seed_default_workbook_briefs.sql
-done
-run "$HERE/90_neon_state.sql"
+psql -q -v ON_ERROR_STOP=1 -d "$DB" -c "drop schema public cascade" >/dev/null
+run "$HERE/neon-schema.sql"
+for f in $(ls "$HERE/../../db/migrations/"*.sql 2>/dev/null | sort); do run "$f"; done
+run "$HERE/seed.sql"
 echo "Built replica database: $DB"
