@@ -5,10 +5,8 @@
  *   { "path": "/api/cron/weekly-digest", "schedule": "0 14 * * 0" }
  * (Sunday 14:00 UTC = 09:00 ET / 15:00 CET — early morning Pacific.)
  *
- * Auth: Vercel Cron sends an `Authorization: Bearer <CRON_SECRET>` header.
- * For local / manual triggering, pass the same header. We compare against
- * `GRADE_WORKER_SECRET` since that env is already provisioned and serves
- * the same "trusted internal call" purpose.
+ * Auth: Vercel Cron sends an `Authorization: Bearer <CRON_SECRET>` header
+ * (checked by rejectUnlessCron). For manual triggering, pass the same header.
  *
  * Resilience: each user is sent independently. One failure doesn't abort
  * the run. We log per-user outcomes and return a summary count.
@@ -17,6 +15,7 @@
 import { NextResponse } from "next/server";
 import { and, asc, eq, gte, sql } from "drizzle-orm";
 import { db } from "@/db";
+import { rejectUnlessCron } from "@/lib/cron/auth";
 import { learningActivity, lessonProgress, lessons, profiles } from "@/db/schema";
 import { sendEmail } from "@/lib/email/send";
 import { renderWeeklyDigest } from "@/lib/email/templates/weekly-digest";
@@ -55,13 +54,6 @@ type ActivityRow = {
   activity_date: string;
 };
 
-function authorise(req: Request): boolean {
-  const provided = req.headers.get("authorization");
-  if (!provided) return false;
-  const expected = `Bearer ${env.GRADE_WORKER_SECRET}`;
-  return provided === expected;
-}
-
 function isoDateNDaysAgo(n: number): string {
   const d = new Date();
   d.setUTCDate(d.getUTCDate() - n);
@@ -69,9 +61,8 @@ function isoDateNDaysAgo(n: number): string {
 }
 
 export async function GET(req: Request) {
-  if (!authorise(req)) {
-    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
-  }
+  const rejected = rejectUnlessCron(req);
+  if (rejected) return rejected;
 
   // Audience: every confirmed user who has at least one purchase or progress
   // row, opt-in not explicitly false.
