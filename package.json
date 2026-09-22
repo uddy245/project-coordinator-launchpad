@@ -12,8 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "supabase:reset": "supabase db reset",
-    "supabase:types": "supabase gen types typescript --local > src/types/database.ts"
+    "db:pull": "drizzle-kit pull && echo \"Review drizzle/schema.ts and fold changes into src/db/schema.ts\"",
+    "db:replica": "tests/db/build-replica.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",

@@ -6,104 +6,98 @@
  * whenever a submission is written. Before the fix the column was never
  * updated, so Gate 2 sat at 0/7 forever.
  *
- * Runs only when SUPABASE_RUNNING=1 (local Supabase stack).
+ * Runs only when TEST_DATABASE_URL points at a local replica
+ * (tests/db/build-replica.sh). The trigger lives in the database, so it is
+ * the same one Neon runs.
  */
+import { randomUUID } from "node:crypto";
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { gateStatus, lessons, submissions, usersInAuth } from "@/db/schema";
 
-const SUPABASE_RUNNING = !!process.env.SUPABASE_RUNNING;
-const URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+const DB_AVAILABLE = !!process.env.TEST_DATABASE_URL;
 
-function randomEmail(label: string) {
-  return `test-${label}-${Date.now()}-${Math.floor(Math.random() * 1e6)}@launchpad.test`;
-}
-
-describe.skipIf(!SUPABASE_RUNNING)("portfolio gate count trigger", () => {
-  let admin: SupabaseClient;
+describe.skipIf(!DB_AVAILABLE)("portfolio gate count trigger", () => {
   let lessonIds: string[] = [];
-  const user = { id: "", email: randomEmail("portfolio") };
+  const userId = randomUUID();
 
   function passingSubmission(lessonId: string, pass: boolean) {
     return {
-      user_id: user.id,
-      lesson_id: lessonId,
-      storage_path: `submissions/${user.id}/${lessonId}.docx`,
-      original_filename: "artifact.docx",
-      mime_type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      size_bytes: 2048,
-      status: "graded",
-      overall_score: pass ? 4 : 2,
+      userId,
+      lessonId,
+      storagePath: `${userId}/${lessonId}.docx`,
+      originalFilename: "artifact.docx",
+      mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      sizeBytes: 2048,
+      status: "graded" as const,
+      overallScore: pass ? 4 : 2,
       pass,
     };
   }
 
-  async function countFor(userId: string): Promise<number> {
-    const { data } = await admin
-      .from("gate_status")
-      .select("portfolio_artifacts_count")
-      .eq("user_id", userId)
-      .maybeSingle();
-    return data?.portfolio_artifacts_count ?? -1;
+  async function countFor(id: string): Promise<number> {
+    const [row] = await db
+      .select({ n: gateStatus.portfolioArtifactsCount })
+      .from(gateStatus)
+      .where(eq(gateStatus.userId, id));
+    return row?.n ?? -1;
   }
 
   beforeAll(async () => {
-    admin = createClient(URL, SERVICE, {
-      auth: { autoRefreshToken: false, persistSession: false },
-    });
-
-    const { data: lessons } = await admin
-      .from("lessons")
-      .select("id")
-      .eq("is_published", true)
-      .order("number", { ascending: true })
+    const rows = await db
+      .select({ id: lessons.id })
+      .from(lessons)
+      .where(eq(lessons.isPublished, true))
+      .orderBy(lessons.number)
       .limit(3);
-    if (!lessons || lessons.length < 3) throw new Error("need ≥3 published lessons seeded");
-    lessonIds = lessons.map((l) => l.id);
+    if (rows.length < 3) throw new Error("need ≥3 published lessons seeded");
+    lessonIds = rows.map((l) => l.id);
 
-    const { data, error } = await admin.auth.admin.createUser({
-      email: user.email,
-      email_confirm: true,
-    });
-    if (error) throw error;
-    user.id = data.user.id;
+    await db
+      .insert(usersInAuth)
+      .values({ id: userId, email: `test-portfolio-${userId}@launchpad.test` });
   });
 
   afterAll(async () => {
-    if (user.id) await admin.auth.admin.deleteUser(user.id); // cascades submissions + gate_status
+    // Order matters: deleting the user directly cascades to submissions,
+    // whose delete trigger re-inserts gate_status for the vanishing user
+    // and trips its FK (pre-existing trigger bug — see migration report).
+    await db.delete(submissions).where(eq(submissions.userId, userId));
+    await db.delete(gateStatus).where(eq(gateStatus.userId, userId));
+    await db.delete(usersInAuth).where(eq(usersInAuth.id, userId));
   });
 
   it("starts with no portfolio credit", async () => {
     // No gate_status row yet (has_access never flipped) → treated as 0.
-    expect(await countFor(user.id)).toBeLessThanOrEqual(0);
+    expect(await countFor(userId)).toBeLessThanOrEqual(0);
   });
 
   it("a passing submission bumps the count to 1 and creates the gate row", async () => {
-    await admin.from("submissions").insert(passingSubmission(lessonIds[0], true));
-    expect(await countFor(user.id)).toBe(1);
+    await db.insert(submissions).values(passingSubmission(lessonIds[0], true));
+    expect(await countFor(userId)).toBe(1);
   });
 
   it("a second distinct passing lesson makes it 2", async () => {
-    await admin.from("submissions").insert(passingSubmission(lessonIds[1], true));
-    expect(await countFor(user.id)).toBe(2);
+    await db.insert(submissions).values(passingSubmission(lessonIds[1], true));
+    expect(await countFor(userId)).toBe(2);
   });
 
   it("a FAILING submission does not count", async () => {
-    await admin.from("submissions").insert(passingSubmission(lessonIds[2], false));
-    expect(await countFor(user.id)).toBe(2);
+    await db.insert(submissions).values(passingSubmission(lessonIds[2], false));
+    expect(await countFor(userId)).toBe(2);
   });
 
   it("a duplicate pass on an already-counted lesson does not double-count", async () => {
-    await admin.from("submissions").insert(passingSubmission(lessonIds[0], true));
-    expect(await countFor(user.id)).toBe(2);
+    await db.insert(submissions).values(passingSubmission(lessonIds[0], true));
+    expect(await countFor(userId)).toBe(2);
   });
 
   it("flipping the failed submission to pass increments the count", async () => {
-    await admin
-      .from("submissions")
-      .update({ pass: true, overall_score: 4 })
-      .eq("user_id", user.id)
-      .eq("lesson_id", lessonIds[2]);
-    expect(await countFor(user.id)).toBe(3);
+    await db
+      .update(submissions)
+      .set({ pass: true, overallScore: 4 })
+      .where(and(eq(submissions.userId, userId), eq(submissions.lessonId, lessonIds[2])));
+    expect(await countFor(userId)).toBe(3);
   });
 });

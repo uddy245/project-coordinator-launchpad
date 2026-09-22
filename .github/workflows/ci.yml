@@ -36,9 +36,13 @@ jobs:
       - name: Unit tests
         run: pnpm test
         env:
-          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
-          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+          DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
+          NEON_AUTH_BASE_URL: https://placeholder.neonauth.example.com/neondb/auth
+          NEON_AUTH_COOKIE_SECRET: placeholder-neon-auth-cookie-secret-32-chars
+          R2_ACCOUNT_ID: placeholder
+          R2_ACCESS_KEY_ID: placeholder
+          R2_SECRET_ACCESS_KEY: placeholder
+          R2_BUCKET: placeholder
           ANTHROPIC_API_KEY: sk-ant-placeholder
           STRIPE_SECRET_KEY: sk_test_placeholder
           STRIPE_PRICE_ID: price_placeholder
@@ -48,9 +52,13 @@ jobs:
         run: pnpm build
         env:
           SKIP_ENV_VALIDATION: 1
-          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
-          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+          DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
+          NEON_AUTH_BASE_URL: https://placeholder.neonauth.example.com/neondb/auth
+          NEON_AUTH_COOKIE_SECRET: placeholder-neon-auth-cookie-secret-32-chars
+          R2_ACCOUNT_ID: placeholder
+          R2_ACCESS_KEY_ID: placeholder
+          R2_SECRET_ACCESS_KEY: placeholder
+          R2_BUCKET: placeholder
           ANTHROPIC_API_KEY: sk-ant-placeholder
           STRIPE_SECRET_KEY: sk_test_placeholder
           STRIPE_PRICE_ID: price_placeholder
