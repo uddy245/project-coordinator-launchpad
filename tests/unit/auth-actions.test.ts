@@ -119,15 +119,16 @@ describe("signUp action", () => {
     expect(signUpMock).toHaveBeenCalledWith(expect.objectContaining({ name: "Jane Doe" }));
   });
 
-  it("sends the verification code when verification is required (no session)", async () => {
-    // Neon Auth: requireEmailVerification + otp, sendVerificationEmailOnSignUp=false.
+  it("does not send a second code when Neon withheld the session (Neon emails it)", async () => {
+    // Observed on a Neon branch: sign-up in code mode already issues the code;
+    // sending again would email the learner two codes.
     signUpMock.mockResolvedValue({
       data: { token: null, user: { ...verifiedUser, emailVerified: false } },
       error: null,
     });
     const result = await signUp({ email: "u@x.com", password: "password1" });
     expect(result).toEqual({ ok: true, data: { needsEmailConfirmation: true } });
-    expect(sendOtpMock).toHaveBeenCalledWith({ email: "u@x.com", type: "email-verification" });
+    expect(sendOtpMock).not.toHaveBeenCalled();
   });
 
   it("sends a verification code when a session was issued for an unverified user", async () => {
@@ -181,6 +182,22 @@ describe("signIn action", () => {
       code: "EMAIL_NOT_CONFIRMED",
     });
     // A fresh verification code goes out for the /verify-email page.
+    expect(sendOtpMock).toHaveBeenCalledWith({ email: "u@x.com", type: "email-verification" });
+  });
+
+  it("unconfirmed email as the Neon Auth SDK reports it → EMAIL_NOT_CONFIRMED + fresh code", async () => {
+    // Real shape observed on a Neon branch: Neon answers 403 EMAIL_NOT_VERIFIED,
+    // the SDK normalises it to this.
+    signInMock.mockResolvedValue({
+      data: null,
+      error: { message: "Email verification required", code: "email_not_confirmed", status: 422 },
+    });
+    const result = await signIn({ email: "u@x.com", password: "password1" });
+    expect(result).toEqual({
+      ok: false,
+      error: expect.stringContaining("confirm your email"),
+      code: "EMAIL_NOT_CONFIRMED",
+    });
     expect(sendOtpMock).toHaveBeenCalledWith({ email: "u@x.com", type: "email-verification" });
   });
 

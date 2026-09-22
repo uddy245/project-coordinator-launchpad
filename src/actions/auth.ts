@@ -128,11 +128,13 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
   });
 
   // Email must be verified before the account is usable (the app links
-  // accounts by email). Neon Auth is configured with requireEmailVerification
-  // + emailVerificationMethod "otp" but sendVerificationEmailOnSignUp=false
-  // (neon_auth.project_config), so it never emails the code itself — send it.
+  // accounts by email). With "Verify at Sign-up" (code mode) Neon Auth emails
+  // the code itself when it withholds the session — observed on a branch even
+  // though project_config says sendVerificationEmailOnSignUp=false, so sending
+  // here too would email two codes. Only if Neon issued a session for an
+  // unverified user do we send the code ourselves.
   const verified = !!data?.user?.emailVerified;
-  if (!verified) {
+  if (!verified && data && "token" in data && data.token) {
     await sendVerificationCode(parsed.data.email);
   }
 
@@ -152,7 +154,14 @@ export async function signIn(input: SignInInput): Promise<ActionResult> {
 
   if (error) {
     const msg = errorText(error);
-    if (msg.includes("not verified") || msg.includes("email_not_verified")) {
+    // The SDK normalises Neon's 403 EMAIL_NOT_VERIFIED to code
+    // "email_not_confirmed" / "Email verification required".
+    if (
+      msg.includes("email_not_confirmed") ||
+      msg.includes("email_not_verified") ||
+      msg.includes("not verified") ||
+      msg.includes("verification required")
+    ) {
       await sendVerificationCode(parsed.data.email);
       return {
         ok: false,
