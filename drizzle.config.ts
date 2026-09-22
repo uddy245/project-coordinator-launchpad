@@ -1,4 +1,8 @@
+import { existsSync } from "node:fs";
 import { defineConfig } from "drizzle-kit";
+
+// drizzle-kit doesn't read Next.js env files; load .env.local if present.
+if (!process.env.DIRECT_URL && existsSync(".env.local")) process.loadEnvFile(".env.local");
 
 // Introspection only. The Neon database was migrated from Supabase as-is,
 // so the schema in src/db/schema.ts is PULLED from it (`pnpm db:pull`),

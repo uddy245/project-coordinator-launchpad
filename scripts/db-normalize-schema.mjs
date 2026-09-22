@@ -74,7 +74,7 @@ s = s.replace(/^import \{([^}]*)\} from "drizzle-orm\/pg-core"/m, (_m, names) =>
     .split(",")
     .map((n) => n.trim())
     .filter((n) => n && n !== "timestamp" && n !== "pgView");
-  return `import { ${[...keep, "customType"].join(", ")} } from "drizzle-orm/pg-core"`;
+  return `import { ${[...keep, "customType"].sort().join(", ")} } from "drizzle-orm/pg-core"`;
 });
 s = s.replace(/(import \{ sql \} from "drizzle-orm";?\n)/, (m) => m + HELPERS);
 
@@ -95,6 +95,35 @@ s = s.replace(/unknown\("search_text"\)/g, 'tsvector("search_text")');
 
 // Drop the view (last-resort regex: from its export to the next export/EOF).
 s = s.replace(/export const quizItemsPublic = pgView\([\s\S]*?(?=\nexport const |\s*$)/, "");
+
+// drizzle-kit on Postgres 18 lists composite key columns alphabetically, not
+// in key order (Neon itself has e.g. PRIMARY KEY (user_id, lesson_id)).
+// Canonicalise to sorted order so the check is stable across PG versions.
+// The schema is never pushed, so key column order has no runtime effect.
+const sortCols = (list) =>
+  list
+    .split(",")
+    .map((c) => c.trim())
+    .sort()
+    .join(", ");
+s = s.replace(
+  /columns: \[(table\.\w+(?:,\s*table\.\w+)+)\]/g,
+  (_m, l) => `columns: [${sortCols(l)}]`
+);
+s = s.replace(/\.on\((table\.\w+(?:,\s*table\.\w+)+)\)/g, (_m, l) => `.on(${sortCols(l)})`);
+
+// drizzle-kit emits tables in catalog order, which differs between databases
+// with identical schemas. Sort table declarations by name (FK references are
+// resolved lazily, so order doesn't matter); schema/enum declarations keep
+// their order ahead of the tables.
+{
+  const parts = s.split(/\n(?=export const )/);
+  const isTable = (p) => /^export const \w+ = (pgTable|\w+\.table)\(/.test(p);
+  const name = (p) => p.match(/^export const (\w+)/)[1];
+  const head = parts.filter((p) => !isTable(p));
+  const tables = parts.filter(isTable).sort((a, b) => name(a).localeCompare(name(b)));
+  s = [...head, ...tables].map((p) => p.trimEnd()).join("\n\n") + "\n";
+}
 
 const formatted = await prettier.format(HEADER + s, {
   ...(await prettier.resolveConfig(OUT)),

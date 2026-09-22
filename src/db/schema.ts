@@ -9,26 +9,26 @@
  * server code — every user-facing query must filter by the app user id.
  */
 import {
-  pgTable,
-  index,
-  foreignKey,
-  unique,
-  check,
-  uuid,
-  text,
-  integer,
-  boolean,
-  numeric,
-  pgSchema,
-  uniqueIndex,
-  varchar,
-  jsonb,
-  smallint,
   bigint,
-  primaryKey,
-  date,
-  pgEnum,
+  boolean,
+  check,
   customType,
+  date,
+  foreignKey,
+  index,
+  integer,
+  jsonb,
+  numeric,
+  pgEnum,
+  pgSchema,
+  pgTable,
+  primaryKey,
+  smallint,
+  text,
+  unique,
+  uniqueIndex,
+  uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -62,22 +62,31 @@ const timestamptz = customType<{ data: string; driverData: string | Date }>({
 });
 
 export const auth = pgSchema("auth");
+
 export const aalLevelInAuth = auth.enum("aal_level", ["aal1", "aal2", "aal3"]);
+
 export const codeChallengeMethodInAuth = auth.enum("code_challenge_method", ["s256", "plain"]);
+
 export const factorStatusInAuth = auth.enum("factor_status", ["unverified", "verified"]);
+
 export const factorTypeInAuth = auth.enum("factor_type", ["totp", "webauthn", "phone"]);
+
 export const oauthAuthorizationStatusInAuth = auth.enum("oauth_authorization_status", [
   "pending",
   "approved",
   "denied",
   "expired",
 ]);
+
 export const oauthClientTypeInAuth = auth.enum("oauth_client_type", ["public", "confidential"]);
+
 export const oauthRegistrationTypeInAuth = auth.enum("oauth_registration_type", [
   "dynamic",
   "manual",
 ]);
+
 export const oauthResponseTypeInAuth = auth.enum("oauth_response_type", ["code"]);
+
 export const oneTimeTokenTypeInAuth = auth.enum("one_time_token_type", [
   "confirmation_token",
   "reauthentication_token",
@@ -86,14 +95,18 @@ export const oneTimeTokenTypeInAuth = auth.enum("one_time_token_type", [
   "email_change_token_current",
   "phone_change_token",
 ]);
+
 export const auditReason = pgEnum("audit_reason", ["sampled", "requested"]);
+
 export const auditStatus = pgEnum("audit_status", ["pending", "approved", "overridden"]);
+
 export const industryTrack = pgEnum("industry_track", [
   "it_saas",
   "healthcare",
   "construction",
   "marketing",
 ]);
+
 export const submissionStatus = pgEnum("submission_status", [
   "pending",
   "grading",
@@ -101,56 +114,96 @@ export const submissionStatus = pgEnum("submission_status", [
   "grading_failed",
   "manual_review",
 ]);
+
 export const userRole = pgEnum("user_role", ["learner", "admin"]);
 
-export const purchases = pgTable(
-  "purchases",
+export const auditQueue = pgTable(
+  "audit_queue",
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    stripeSessionId: text("stripe_session_id").notNull(),
-    stripePaymentIntentId: text("stripe_payment_intent_id"),
-    amountCents: integer("amount_cents").notNull(),
-    currency: text().notNull(),
-    status: text().notNull(),
+    submissionId: uuid("submission_id").notNull(),
+    reason: auditReason().notNull(),
+    status: auditStatus().default("pending").notNull(),
     createdAt: timestamptz("created_at")
       .default(sql`now()`)
       .notNull(),
   },
   (table) => [
-    index("purchases_user_id_idx").using("btree", table.userId.asc().nullsLast().op("uuid_ops")),
+    index("audit_queue_status_idx")
+      .using("btree", table.status.asc().nullsLast().op("enum_ops"))
+      .where(sql`(status = 'pending'::audit_status)`),
     foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "purchases_user_id_fkey",
+      columns: [table.submissionId],
+      foreignColumns: [submissions.id],
+      name: "audit_queue_submission_id_fkey",
     }).onDelete("cascade"),
-    unique("purchases_stripe_session_id_key").on(table.stripeSessionId),
-    check(
-      "purchases_status_check",
-      sql`status = ANY (ARRAY['paid'::text, 'refunded'::text, 'failed'::text])`
-    ),
+    unique("audit_queue_submission_id_key").on(table.submissionId),
   ]
 );
 
-export const gateStatus = pgTable(
-  "gate_status",
+export const auditRecords = pgTable(
+  "audit_records",
   {
-    userId: uuid("user_id").primaryKey().notNull(),
-    foundationComplete: boolean("foundation_complete").default(false).notNull(),
-    portfolioComplete: boolean("portfolio_complete").default(false).notNull(),
-    portfolioArtifactsCount: integer("portfolio_artifacts_count").default(0).notNull(),
-    portfolioArtifactsTarget: integer("portfolio_artifacts_target").default(7).notNull(),
-    interviewComplete: boolean("interview_complete").default(false).notNull(),
-    industryComplete: boolean("industry_complete").default(false).notNull(),
-    updatedAt: timestamptz("updated_at")
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    auditQueueId: uuid("audit_queue_id").notNull(),
+    reviewerId: uuid("reviewer_id").notNull(),
+    decision: auditStatus().notNull(),
+    overrides: jsonb(),
+    note: text(),
+    decidedAt: timestamptz("decided_at")
       .default(sql`now()`)
       .notNull(),
   },
   (table) => [
+    index("audit_records_queue_idx").using(
+      "btree",
+      table.auditQueueId.asc().nullsLast().op("timestamptz_ops"),
+      table.decidedAt.desc().nullsFirst().op("timestamptz_ops")
+    ),
+    foreignKey({
+      columns: [table.auditQueueId],
+      foreignColumns: [auditQueue.id],
+      name: "audit_records_audit_queue_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.reviewerId],
+      foreignColumns: [usersInAuth.id],
+      name: "audit_records_reviewer_id_fkey",
+    }),
+  ]
+);
+
+export const capstoneArtifacts = pgTable(
+  "capstone_artifacts",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    attemptId: uuid("attempt_id").notNull(),
+    userId: uuid("user_id").notNull(),
+    kind: text().notNull(),
+    filePath: text("file_path").notNull(),
+    fileName: text("file_name").notNull(),
+    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
+    fileSize: bigint("file_size", { mode: "number" }),
+    contentType: text("content_type"),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    index("capstone_artifacts_attempt_idx").using(
+      "btree",
+      table.attemptId.asc().nullsLast().op("text_ops"),
+      table.kind.asc().nullsLast().op("text_ops")
+    ),
+    foreignKey({
+      columns: [table.attemptId],
+      foreignColumns: [capstoneAttempts.id],
+      name: "capstone_artifacts_attempt_id_fkey",
+    }).onDelete("cascade"),
     foreignKey({
       columns: [table.userId],
       foreignColumns: [usersInAuth.id],
-      name: "gate_status_user_id_fkey",
+      name: "capstone_artifacts_user_id_fkey",
     }).onDelete("cascade"),
   ]
 );
@@ -232,44 +285,84 @@ export const capstoneScenarios = pgTable(
   ]
 );
 
-export const mockInterviewScenarios = pgTable(
-  "mock_interview_scenarios",
+export const gateStatus = pgTable(
+  "gate_status",
   {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    slug: text().notNull(),
-    prompt: text().notNull(),
-    competency: text().notNull(),
-    category: text().notNull(),
-    difficulty: text().default("medium").notNull(),
-    sort: integer().default(0).notNull(),
-    isPublished: boolean("is_published").default(true).notNull(),
+    userId: uuid("user_id").primaryKey().notNull(),
+    foundationComplete: boolean("foundation_complete").default(false).notNull(),
+    portfolioComplete: boolean("portfolio_complete").default(false).notNull(),
+    portfolioArtifactsCount: integer("portfolio_artifacts_count").default(0).notNull(),
+    portfolioArtifactsTarget: integer("portfolio_artifacts_target").default(7).notNull(),
+    interviewComplete: boolean("interview_complete").default(false).notNull(),
+    industryComplete: boolean("industry_complete").default(false).notNull(),
+    updatedAt: timestamptz("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "gate_status_user_id_fkey",
+    }).onDelete("cascade"),
+  ]
+);
+
+export const learningActivity = pgTable(
+  "learning_activity",
+  {
+    userId: uuid("user_id").notNull(),
+    activityDate: date("activity_date").notNull(),
+    eventsCount: integer("events_count").default(0).notNull(),
     createdAt: timestamptz("created_at")
       .default(sql`now()`)
       .notNull(),
     updatedAt: timestamptz("updated_at")
       .default(sql`now()`)
       .notNull(),
-    isAiGenerated: boolean("is_ai_generated").default(false).notNull(),
-    generatedAt: timestamptz("generated_at"),
-    rubricSummary: text("rubric_summary"),
   },
   (table) => [
-    index("mock_scenarios_published_idx")
-      .using(
-        "btree",
-        table.isPublished.asc().nullsLast().op("int4_ops"),
-        table.sort.asc().nullsLast().op("int4_ops")
-      )
-      .where(sql`(is_published = true)`),
-    unique("mock_interview_scenarios_slug_key").on(table.slug),
-    check(
-      "mock_interview_scenarios_category_check",
-      sql`category = ANY (ARRAY['behavioural'::text, 'procedural'::text, 'judgment'::text])`
+    index("learning_activity_user_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("date_ops"),
+      table.activityDate.desc().nullsFirst().op("date_ops")
     ),
-    check(
-      "mock_interview_scenarios_difficulty_check",
-      sql`difficulty = ANY (ARRAY['easy'::text, 'medium'::text, 'hard'::text])`
-    ),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "learning_activity_user_id_fkey",
+    }).onDelete("cascade"),
+    primaryKey({ columns: [table.activityDate, table.userId], name: "learning_activity_pkey" }),
+  ]
+);
+
+export const lessonProgress = pgTable(
+  "lesson_progress",
+  {
+    userId: uuid("user_id").notNull(),
+    lessonId: uuid("lesson_id").notNull(),
+    videoSecondsWatched: integer("video_seconds_watched").default(0).notNull(),
+    videoDuration: integer("video_duration"),
+    videoWatched: boolean("video_watched").default(false).notNull(),
+    quizPassed: boolean("quiz_passed").default(false).notNull(),
+    artifactSubmitted: boolean("artifact_submitted").default(false).notNull(),
+    updatedAt: timestamptz("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    index("lesson_progress_user_idx").using("btree", table.userId.asc().nullsLast().op("uuid_ops")),
+    foreignKey({
+      columns: [table.lessonId],
+      foreignColumns: [lessons.id],
+      name: "lesson_progress_lesson_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "lesson_progress_user_id_fkey",
+    }).onDelete("cascade"),
+    primaryKey({ columns: [table.lessonId, table.userId], name: "lesson_progress_pkey" }),
   ]
 );
 
@@ -311,6 +404,122 @@ export const lessons = pgTable(
   ]
 );
 
+export const lessonTemplates = pgTable(
+  "lesson_templates",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    lessonId: uuid("lesson_id").notNull(),
+    title: text().notNull(),
+    description: text(),
+    fileUrl: text("file_url").notNull(),
+    kind: text().notNull(),
+    sort: integer().default(100).notNull(),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamptz("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    index("lesson_templates_lesson_id_idx").using(
+      "btree",
+      table.lessonId.asc().nullsLast().op("int4_ops"),
+      table.sort.asc().nullsLast().op("int4_ops")
+    ),
+    foreignKey({
+      columns: [table.lessonId],
+      foreignColumns: [lessons.id],
+      name: "lesson_templates_lesson_id_fkey",
+    }).onDelete("cascade"),
+    check("lesson_templates_kind_check", sql`kind = ANY (ARRAY['starter'::text, 'example'::text])`),
+  ]
+);
+
+export const mockInterviewResponses = pgTable(
+  "mock_interview_responses",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    userId: uuid("user_id").notNull(),
+    scenarioId: uuid("scenario_id").notNull(),
+    responseText: text("response_text").notNull(),
+    status: text().default("graded_pending").notNull(),
+    overallScore: numeric("overall_score", { mode: "number" }),
+    pass: boolean(),
+    feedbackSummary: text("feedback_summary"),
+    gradedAt: timestamptz("graded_at"),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamptz("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    index("mock_responses_user_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("timestamptz_ops"),
+      table.createdAt.desc().nullsFirst().op("timestamptz_ops")
+    ),
+    foreignKey({
+      columns: [table.scenarioId],
+      foreignColumns: [mockInterviewScenarios.id],
+      name: "mock_interview_responses_scenario_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "mock_interview_responses_user_id_fkey",
+    }).onDelete("cascade"),
+    unique("mock_interview_responses_user_id_scenario_id_key").on(table.scenarioId, table.userId),
+    check(
+      "mock_interview_responses_status_check",
+      sql`status = ANY (ARRAY['graded_pending'::text, 'grading'::text, 'graded'::text, 'grading_failed'::text])`
+    ),
+  ]
+);
+
+export const mockInterviewScenarios = pgTable(
+  "mock_interview_scenarios",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    slug: text().notNull(),
+    prompt: text().notNull(),
+    competency: text().notNull(),
+    category: text().notNull(),
+    difficulty: text().default("medium").notNull(),
+    sort: integer().default(0).notNull(),
+    isPublished: boolean("is_published").default(true).notNull(),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamptz("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+    isAiGenerated: boolean("is_ai_generated").default(false).notNull(),
+    generatedAt: timestamptz("generated_at"),
+    rubricSummary: text("rubric_summary"),
+  },
+  (table) => [
+    index("mock_scenarios_published_idx")
+      .using(
+        "btree",
+        table.isPublished.asc().nullsLast().op("int4_ops"),
+        table.sort.asc().nullsLast().op("int4_ops")
+      )
+      .where(sql`(is_published = true)`),
+    unique("mock_interview_scenarios_slug_key").on(table.slug),
+    check(
+      "mock_interview_scenarios_category_check",
+      sql`category = ANY (ARRAY['behavioural'::text, 'procedural'::text, 'judgment'::text])`
+    ),
+    check(
+      "mock_interview_scenarios_difficulty_check",
+      sql`difficulty = ANY (ARRAY['easy'::text, 'medium'::text, 'hard'::text])`
+    ),
+  ]
+);
+
 export const profiles = pgTable(
   "profiles",
   {
@@ -339,6 +548,305 @@ export const profiles = pgTable(
       foreignColumns: [usersInAuth.id],
       name: "profiles_id_fkey",
     }).onDelete("cascade"),
+  ]
+);
+
+export const prompts = pgTable(
+  "prompts",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    name: text().notNull(),
+    version: integer().notNull(),
+    body: text().notNull(),
+    isCurrent: boolean("is_current").default(false).notNull(),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("prompts_current_unique")
+      .using("btree", table.name.asc().nullsLast().op("text_ops"))
+      .where(sql`(is_current = true)`),
+    unique("prompts_name_version_key").on(table.name, table.version),
+  ]
+);
+
+export const purchases = pgTable(
+  "purchases",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    userId: uuid("user_id").notNull(),
+    stripeSessionId: text("stripe_session_id").notNull(),
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    amountCents: integer("amount_cents").notNull(),
+    currency: text().notNull(),
+    status: text().notNull(),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    index("purchases_user_id_idx").using("btree", table.userId.asc().nullsLast().op("uuid_ops")),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "purchases_user_id_fkey",
+    }).onDelete("cascade"),
+    unique("purchases_stripe_session_id_key").on(table.stripeSessionId),
+    check(
+      "purchases_status_check",
+      sql`status = ANY (ARRAY['paid'::text, 'refunded'::text, 'failed'::text])`
+    ),
+  ]
+);
+
+export const quizAttempts = pgTable(
+  "quiz_attempts",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    userId: uuid("user_id").notNull(),
+    lessonId: uuid("lesson_id").notNull(),
+    score: integer().notNull(),
+    total: integer().notNull(),
+    passed: boolean().notNull(),
+    rawAnswers: jsonb("raw_answers").notNull(),
+    submittedAt: timestamptz("submitted_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    index("quiz_attempts_user_lesson_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.lessonId.asc().nullsLast().op("uuid_ops")
+    ),
+    foreignKey({
+      columns: [table.lessonId],
+      foreignColumns: [lessons.id],
+      name: "quiz_attempts_lesson_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "quiz_attempts_user_id_fkey",
+    }).onDelete("cascade"),
+  ]
+);
+
+export const quizItems = pgTable(
+  "quiz_items",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    lessonId: uuid("lesson_id").notNull(),
+    sort: integer().notNull(),
+    stem: text().notNull(),
+    options: jsonb().notNull(),
+    correct: text().notNull(),
+    distractorRationale: jsonb("distractor_rationale").notNull(),
+    competency: text().notNull(),
+    difficulty: text().notNull(),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    isAiGenerated: boolean("is_ai_generated").default(false).notNull(),
+    generatedAt: timestamptz("generated_at"),
+  },
+  (table) => [
+    index("quiz_items_lesson_sort_idx").using(
+      "btree",
+      table.lessonId.asc().nullsLast().op("int4_ops"),
+      table.sort.asc().nullsLast().op("int4_ops")
+    ),
+    foreignKey({
+      columns: [table.lessonId],
+      foreignColumns: [lessons.id],
+      name: "quiz_items_lesson_id_fkey",
+    }).onDelete("cascade"),
+    check(
+      "quiz_items_difficulty_check",
+      sql`difficulty = ANY (ARRAY['easy'::text, 'medium'::text, 'hard'::text])`
+    ),
+  ]
+);
+
+export const quizItemSeen = pgTable(
+  "quiz_item_seen",
+  {
+    userId: uuid("user_id").notNull(),
+    quizItemId: uuid("quiz_item_id").notNull(),
+    lessonId: uuid("lesson_id").notNull(),
+    seenAt: timestamptz("seen_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    index("quiz_item_seen_user_lesson_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.lessonId.asc().nullsLast().op("uuid_ops")
+    ),
+    foreignKey({
+      columns: [table.lessonId],
+      foreignColumns: [lessons.id],
+      name: "quiz_item_seen_lesson_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.quizItemId],
+      foreignColumns: [quizItems.id],
+      name: "quiz_item_seen_quiz_item_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "quiz_item_seen_user_id_fkey",
+    }).onDelete("cascade"),
+    primaryKey({ columns: [table.quizItemId, table.userId], name: "quiz_item_seen_pkey" }),
+  ]
+);
+
+export const rubrics = pgTable(
+  "rubrics",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    competency: text().notNull(),
+    version: integer().notNull(),
+    schemaJson: jsonb("schema_json").notNull(),
+    isCurrent: boolean("is_current").default(false).notNull(),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("rubrics_current_unique")
+      .using("btree", table.competency.asc().nullsLast().op("text_ops"))
+      .where(sql`(is_current = true)`),
+    unique("rubrics_competency_version_key").on(table.competency, table.version),
+  ]
+);
+
+export const rubricScores = pgTable(
+  "rubric_scores",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    submissionId: uuid("submission_id").notNull(),
+    rubricId: uuid("rubric_id").notNull(),
+    dimension: text().notNull(),
+    score: integer().notNull(),
+    justification: text().notNull(),
+    quote: text(),
+    suggestion: text(),
+    model: text().notNull(),
+    promptVersion: integer("prompt_version").notNull(),
+    inputTokens: integer("input_tokens"),
+    outputTokens: integer("output_tokens"),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => [
+    index("rubric_scores_submission_idx").using(
+      "btree",
+      table.submissionId.asc().nullsLast().op("uuid_ops")
+    ),
+    foreignKey({
+      columns: [table.rubricId],
+      foreignColumns: [rubrics.id],
+      name: "rubric_scores_rubric_id_fkey",
+    }).onDelete("restrict"),
+    foreignKey({
+      columns: [table.submissionId],
+      foreignColumns: [submissions.id],
+      name: "rubric_scores_submission_id_fkey",
+    }).onDelete("cascade"),
+    unique("rubric_scores_submission_id_dimension_key").on(table.dimension, table.submissionId),
+    check("rubric_scores_score_check", sql`(score >= 1) AND (score <= 5)`),
+  ]
+);
+
+export const submissions = pgTable(
+  "submissions",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    userId: uuid("user_id").notNull(),
+    lessonId: uuid("lesson_id").notNull(),
+    storagePath: text("storage_path").notNull(),
+    originalFilename: text("original_filename").notNull(),
+    mimeType: text("mime_type").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    extractedText: text("extracted_text"),
+    status: submissionStatus().default("pending").notNull(),
+    overallScore: numeric("overall_score", { precision: 3, scale: 2, mode: "number" }),
+    pass: boolean(),
+    hireReady: boolean("hire_ready"),
+    submittedAt: timestamptz("submitted_at")
+      .default(sql`now()`)
+      .notNull(),
+    gradedAt: timestamptz("graded_at"),
+  },
+  (table) => [
+    index("submissions_lesson_idx").using("btree", table.lessonId.asc().nullsLast().op("uuid_ops")),
+    index("submissions_status_idx")
+      .using("btree", table.status.asc().nullsLast().op("enum_ops"))
+      .where(
+        sql`(status = ANY (ARRAY['pending'::submission_status, 'grading'::submission_status]))`
+      ),
+    index("submissions_user_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("timestamptz_ops"),
+      table.submittedAt.desc().nullsFirst().op("timestamptz_ops")
+    ),
+    foreignKey({
+      columns: [table.lessonId],
+      foreignColumns: [lessons.id],
+      name: "submissions_lesson_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "submissions_user_id_fkey",
+    }).onDelete("cascade"),
+  ]
+);
+
+export const tutorMessages = pgTable(
+  "tutor_messages",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    userId: uuid("user_id").notNull(),
+    lessonSlug: text("lesson_slug"),
+    role: text().notNull(),
+    content: text().notNull(),
+    inputTokens: integer("input_tokens").default(0).notNull(),
+    outputTokens: integer("output_tokens").default(0).notNull(),
+    model: text(),
+    createdAt: timestamptz("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    conversationId: uuid("conversation_id"),
+  },
+  (table) => [
+    index("tutor_messages_conversation_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("uuid_ops"),
+      table.conversationId.asc().nullsLast().op("timestamptz_ops"),
+      table.createdAt.asc().nullsLast().op("uuid_ops")
+    ),
+    index("tutor_messages_role_created_idx").using(
+      "btree",
+      table.role.asc().nullsLast().op("text_ops"),
+      table.createdAt.desc().nullsFirst().op("text_ops")
+    ),
+    index("tutor_messages_user_created_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("timestamptz_ops"),
+      table.createdAt.desc().nullsFirst().op("timestamptz_ops")
+    ),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [usersInAuth.id],
+      name: "tutor_messages_user_id_fkey",
+    }).onDelete("cascade"),
+    check("tutor_messages_role_check", sql`role = ANY (ARRAY['user'::text, 'assistant'::text])`),
   ]
 );
 
@@ -435,407 +943,6 @@ export const usersInAuth = auth.table(
   ]
 );
 
-export const auditQueue = pgTable(
-  "audit_queue",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    submissionId: uuid("submission_id").notNull(),
-    reason: auditReason().notNull(),
-    status: auditStatus().default("pending").notNull(),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("audit_queue_status_idx")
-      .using("btree", table.status.asc().nullsLast().op("enum_ops"))
-      .where(sql`(status = 'pending'::audit_status)`),
-    foreignKey({
-      columns: [table.submissionId],
-      foreignColumns: [submissions.id],
-      name: "audit_queue_submission_id_fkey",
-    }).onDelete("cascade"),
-    unique("audit_queue_submission_id_key").on(table.submissionId),
-  ]
-);
-
-export const prompts = pgTable(
-  "prompts",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    name: text().notNull(),
-    version: integer().notNull(),
-    body: text().notNull(),
-    isCurrent: boolean("is_current").default(false).notNull(),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    uniqueIndex("prompts_current_unique")
-      .using("btree", table.name.asc().nullsLast().op("text_ops"))
-      .where(sql`(is_current = true)`),
-    unique("prompts_name_version_key").on(table.name, table.version),
-  ]
-);
-
-export const lessonTemplates = pgTable(
-  "lesson_templates",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    lessonId: uuid("lesson_id").notNull(),
-    title: text().notNull(),
-    description: text(),
-    fileUrl: text("file_url").notNull(),
-    kind: text().notNull(),
-    sort: integer().default(100).notNull(),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-    updatedAt: timestamptz("updated_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("lesson_templates_lesson_id_idx").using(
-      "btree",
-      table.lessonId.asc().nullsLast().op("int4_ops"),
-      table.sort.asc().nullsLast().op("int4_ops")
-    ),
-    foreignKey({
-      columns: [table.lessonId],
-      foreignColumns: [lessons.id],
-      name: "lesson_templates_lesson_id_fkey",
-    }).onDelete("cascade"),
-    check("lesson_templates_kind_check", sql`kind = ANY (ARRAY['starter'::text, 'example'::text])`),
-  ]
-);
-
-export const auditRecords = pgTable(
-  "audit_records",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    auditQueueId: uuid("audit_queue_id").notNull(),
-    reviewerId: uuid("reviewer_id").notNull(),
-    decision: auditStatus().notNull(),
-    overrides: jsonb(),
-    note: text(),
-    decidedAt: timestamptz("decided_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("audit_records_queue_idx").using(
-      "btree",
-      table.auditQueueId.asc().nullsLast().op("timestamptz_ops"),
-      table.decidedAt.desc().nullsFirst().op("timestamptz_ops")
-    ),
-    foreignKey({
-      columns: [table.auditQueueId],
-      foreignColumns: [auditQueue.id],
-      name: "audit_records_audit_queue_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.reviewerId],
-      foreignColumns: [usersInAuth.id],
-      name: "audit_records_reviewer_id_fkey",
-    }),
-  ]
-);
-
-export const mockInterviewResponses = pgTable(
-  "mock_interview_responses",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    scenarioId: uuid("scenario_id").notNull(),
-    responseText: text("response_text").notNull(),
-    status: text().default("graded_pending").notNull(),
-    overallScore: numeric("overall_score", { mode: "number" }),
-    pass: boolean(),
-    feedbackSummary: text("feedback_summary"),
-    gradedAt: timestamptz("graded_at"),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-    updatedAt: timestamptz("updated_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("mock_responses_user_idx").using(
-      "btree",
-      table.userId.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops")
-    ),
-    foreignKey({
-      columns: [table.scenarioId],
-      foreignColumns: [mockInterviewScenarios.id],
-      name: "mock_interview_responses_scenario_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "mock_interview_responses_user_id_fkey",
-    }).onDelete("cascade"),
-    unique("mock_interview_responses_user_id_scenario_id_key").on(table.userId, table.scenarioId),
-    check(
-      "mock_interview_responses_status_check",
-      sql`status = ANY (ARRAY['graded_pending'::text, 'grading'::text, 'graded'::text, 'grading_failed'::text])`
-    ),
-  ]
-);
-
-export const rubrics = pgTable(
-  "rubrics",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    competency: text().notNull(),
-    version: integer().notNull(),
-    schemaJson: jsonb("schema_json").notNull(),
-    isCurrent: boolean("is_current").default(false).notNull(),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    uniqueIndex("rubrics_current_unique")
-      .using("btree", table.competency.asc().nullsLast().op("text_ops"))
-      .where(sql`(is_current = true)`),
-    unique("rubrics_competency_version_key").on(table.competency, table.version),
-  ]
-);
-
-export const quizAttempts = pgTable(
-  "quiz_attempts",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    lessonId: uuid("lesson_id").notNull(),
-    score: integer().notNull(),
-    total: integer().notNull(),
-    passed: boolean().notNull(),
-    rawAnswers: jsonb("raw_answers").notNull(),
-    submittedAt: timestamptz("submitted_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("quiz_attempts_user_lesson_idx").using(
-      "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-      table.lessonId.asc().nullsLast().op("uuid_ops")
-    ),
-    foreignKey({
-      columns: [table.lessonId],
-      foreignColumns: [lessons.id],
-      name: "quiz_attempts_lesson_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "quiz_attempts_user_id_fkey",
-    }).onDelete("cascade"),
-  ]
-);
-
-export const submissions = pgTable(
-  "submissions",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    lessonId: uuid("lesson_id").notNull(),
-    storagePath: text("storage_path").notNull(),
-    originalFilename: text("original_filename").notNull(),
-    mimeType: text("mime_type").notNull(),
-    sizeBytes: integer("size_bytes").notNull(),
-    extractedText: text("extracted_text"),
-    status: submissionStatus().default("pending").notNull(),
-    overallScore: numeric("overall_score", { precision: 3, scale: 2, mode: "number" }),
-    pass: boolean(),
-    hireReady: boolean("hire_ready"),
-    submittedAt: timestamptz("submitted_at")
-      .default(sql`now()`)
-      .notNull(),
-    gradedAt: timestamptz("graded_at"),
-  },
-  (table) => [
-    index("submissions_lesson_idx").using("btree", table.lessonId.asc().nullsLast().op("uuid_ops")),
-    index("submissions_status_idx")
-      .using("btree", table.status.asc().nullsLast().op("enum_ops"))
-      .where(
-        sql`(status = ANY (ARRAY['pending'::submission_status, 'grading'::submission_status]))`
-      ),
-    index("submissions_user_idx").using(
-      "btree",
-      table.userId.asc().nullsLast().op("timestamptz_ops"),
-      table.submittedAt.desc().nullsFirst().op("timestamptz_ops")
-    ),
-    foreignKey({
-      columns: [table.lessonId],
-      foreignColumns: [lessons.id],
-      name: "submissions_lesson_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "submissions_user_id_fkey",
-    }).onDelete("cascade"),
-  ]
-);
-
-export const quizItems = pgTable(
-  "quiz_items",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    lessonId: uuid("lesson_id").notNull(),
-    sort: integer().notNull(),
-    stem: text().notNull(),
-    options: jsonb().notNull(),
-    correct: text().notNull(),
-    distractorRationale: jsonb("distractor_rationale").notNull(),
-    competency: text().notNull(),
-    difficulty: text().notNull(),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-    isAiGenerated: boolean("is_ai_generated").default(false).notNull(),
-    generatedAt: timestamptz("generated_at"),
-  },
-  (table) => [
-    index("quiz_items_lesson_sort_idx").using(
-      "btree",
-      table.lessonId.asc().nullsLast().op("int4_ops"),
-      table.sort.asc().nullsLast().op("int4_ops")
-    ),
-    foreignKey({
-      columns: [table.lessonId],
-      foreignColumns: [lessons.id],
-      name: "quiz_items_lesson_id_fkey",
-    }).onDelete("cascade"),
-    check(
-      "quiz_items_difficulty_check",
-      sql`difficulty = ANY (ARRAY['easy'::text, 'medium'::text, 'hard'::text])`
-    ),
-  ]
-);
-
-export const tutorMessages = pgTable(
-  "tutor_messages",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    userId: uuid("user_id").notNull(),
-    lessonSlug: text("lesson_slug"),
-    role: text().notNull(),
-    content: text().notNull(),
-    inputTokens: integer("input_tokens").default(0).notNull(),
-    outputTokens: integer("output_tokens").default(0).notNull(),
-    model: text(),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-    conversationId: uuid("conversation_id"),
-  },
-  (table) => [
-    index("tutor_messages_conversation_idx").using(
-      "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-      table.conversationId.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.asc().nullsLast().op("uuid_ops")
-    ),
-    index("tutor_messages_role_created_idx").using(
-      "btree",
-      table.role.asc().nullsLast().op("text_ops"),
-      table.createdAt.desc().nullsFirst().op("text_ops")
-    ),
-    index("tutor_messages_user_created_idx").using(
-      "btree",
-      table.userId.asc().nullsLast().op("timestamptz_ops"),
-      table.createdAt.desc().nullsFirst().op("timestamptz_ops")
-    ),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "tutor_messages_user_id_fkey",
-    }).onDelete("cascade"),
-    check("tutor_messages_role_check", sql`role = ANY (ARRAY['user'::text, 'assistant'::text])`),
-  ]
-);
-
-export const capstoneArtifacts = pgTable(
-  "capstone_artifacts",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    attemptId: uuid("attempt_id").notNull(),
-    userId: uuid("user_id").notNull(),
-    kind: text().notNull(),
-    filePath: text("file_path").notNull(),
-    fileName: text("file_name").notNull(),
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
-    fileSize: bigint("file_size", { mode: "number" }),
-    contentType: text("content_type"),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("capstone_artifacts_attempt_idx").using(
-      "btree",
-      table.attemptId.asc().nullsLast().op("text_ops"),
-      table.kind.asc().nullsLast().op("text_ops")
-    ),
-    foreignKey({
-      columns: [table.attemptId],
-      foreignColumns: [capstoneAttempts.id],
-      name: "capstone_artifacts_attempt_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "capstone_artifacts_user_id_fkey",
-    }).onDelete("cascade"),
-  ]
-);
-
-export const rubricScores = pgTable(
-  "rubric_scores",
-  {
-    id: uuid().defaultRandom().primaryKey().notNull(),
-    submissionId: uuid("submission_id").notNull(),
-    rubricId: uuid("rubric_id").notNull(),
-    dimension: text().notNull(),
-    score: integer().notNull(),
-    justification: text().notNull(),
-    quote: text(),
-    suggestion: text(),
-    model: text().notNull(),
-    promptVersion: integer("prompt_version").notNull(),
-    inputTokens: integer("input_tokens"),
-    outputTokens: integer("output_tokens"),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("rubric_scores_submission_idx").using(
-      "btree",
-      table.submissionId.asc().nullsLast().op("uuid_ops")
-    ),
-    foreignKey({
-      columns: [table.rubricId],
-      foreignColumns: [rubrics.id],
-      name: "rubric_scores_rubric_id_fkey",
-    }).onDelete("restrict"),
-    foreignKey({
-      columns: [table.submissionId],
-      foreignColumns: [submissions.id],
-      name: "rubric_scores_submission_id_fkey",
-    }).onDelete("cascade"),
-    unique("rubric_scores_submission_id_dimension_key").on(table.submissionId, table.dimension),
-    check("rubric_scores_score_check", sql`(score >= 1) AND (score <= 5)`),
-  ]
-);
-
 export const workbookAssignments = pgTable(
   "workbook_assignments",
   {
@@ -862,41 +969,6 @@ export const workbookAssignments = pgTable(
       foreignColumns: [lessons.id],
       name: "workbook_assignments_lesson_id_fkey",
     }).onDelete("cascade"),
-  ]
-);
-
-export const quizItemSeen = pgTable(
-  "quiz_item_seen",
-  {
-    userId: uuid("user_id").notNull(),
-    quizItemId: uuid("quiz_item_id").notNull(),
-    lessonId: uuid("lesson_id").notNull(),
-    seenAt: timestamptz("seen_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("quiz_item_seen_user_lesson_idx").using(
-      "btree",
-      table.userId.asc().nullsLast().op("uuid_ops"),
-      table.lessonId.asc().nullsLast().op("uuid_ops")
-    ),
-    foreignKey({
-      columns: [table.lessonId],
-      foreignColumns: [lessons.id],
-      name: "quiz_item_seen_lesson_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.quizItemId],
-      foreignColumns: [quizItems.id],
-      name: "quiz_item_seen_quiz_item_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "quiz_item_seen_user_id_fkey",
-    }).onDelete("cascade"),
-    primaryKey({ columns: [table.userId, table.quizItemId], name: "quiz_item_seen_pkey" }),
   ]
 );
 
@@ -933,66 +1005,8 @@ export const workbookAssignmentSeen = pgTable(
       name: "workbook_assignment_seen_user_id_fkey",
     }).onDelete("cascade"),
     primaryKey({
-      columns: [table.userId, table.assignmentId],
+      columns: [table.assignmentId, table.userId],
       name: "workbook_assignment_seen_pkey",
     }),
-  ]
-);
-
-export const learningActivity = pgTable(
-  "learning_activity",
-  {
-    userId: uuid("user_id").notNull(),
-    activityDate: date("activity_date").notNull(),
-    eventsCount: integer("events_count").default(0).notNull(),
-    createdAt: timestamptz("created_at")
-      .default(sql`now()`)
-      .notNull(),
-    updatedAt: timestamptz("updated_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("learning_activity_user_idx").using(
-      "btree",
-      table.userId.asc().nullsLast().op("date_ops"),
-      table.activityDate.desc().nullsFirst().op("date_ops")
-    ),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "learning_activity_user_id_fkey",
-    }).onDelete("cascade"),
-    primaryKey({ columns: [table.userId, table.activityDate], name: "learning_activity_pkey" }),
-  ]
-);
-
-export const lessonProgress = pgTable(
-  "lesson_progress",
-  {
-    userId: uuid("user_id").notNull(),
-    lessonId: uuid("lesson_id").notNull(),
-    videoSecondsWatched: integer("video_seconds_watched").default(0).notNull(),
-    videoDuration: integer("video_duration"),
-    videoWatched: boolean("video_watched").default(false).notNull(),
-    quizPassed: boolean("quiz_passed").default(false).notNull(),
-    artifactSubmitted: boolean("artifact_submitted").default(false).notNull(),
-    updatedAt: timestamptz("updated_at")
-      .default(sql`now()`)
-      .notNull(),
-  },
-  (table) => [
-    index("lesson_progress_user_idx").using("btree", table.userId.asc().nullsLast().op("uuid_ops")),
-    foreignKey({
-      columns: [table.lessonId],
-      foreignColumns: [lessons.id],
-      name: "lesson_progress_lesson_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [usersInAuth.id],
-      name: "lesson_progress_user_id_fkey",
-    }).onDelete("cascade"),
-    primaryKey({ columns: [table.userId, table.lessonId], name: "lesson_progress_pkey" }),
   ]
 );
