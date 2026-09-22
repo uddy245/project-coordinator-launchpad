@@ -128,14 +128,12 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<SignUpRes
   });
 
   // Email must be verified before the account is usable (the app links
-  // accounts by email). If Neon Auth issued a session for an unverified
-  // user, make sure a verification email goes out.
+  // accounts by email). Neon Auth ("Verify at Sign-up", code mode) emails a
+  // verification code itself when it withholds the session; if it issued a
+  // session for an unverified user anyway, send the code ourselves.
   const verified = !!data?.user?.emailVerified;
   if (!verified && data && "token" in data && data.token) {
-    await neonAuth().sendVerificationEmail({
-      email: parsed.data.email,
-      callbackURL: appUrl("/dashboard"),
-    });
+    await sendVerificationCode(parsed.data.email);
   }
 
   return { ok: true, data: { needsEmailConfirmation: !verified } };
@@ -155,9 +153,10 @@ export async function signIn(input: SignInInput): Promise<ActionResult> {
   if (error) {
     const msg = errorText(error);
     if (msg.includes("not verified") || msg.includes("email_not_verified")) {
+      await sendVerificationCode(parsed.data.email);
       return {
         ok: false,
-        error: "Please confirm your email — check your inbox for the confirmation link.",
+        error: "Please confirm your email — we've sent you a verification code.",
         code: "EMAIL_NOT_CONFIRMED",
       };
     }
@@ -313,18 +312,101 @@ export async function updatePassword(input: UpdatePasswordInput): Promise<Action
   return { ok: true, data: undefined };
 }
 
-/** Re-send the verification email for a signed-in but unverified user. */
-export async function resendVerificationEmail(): Promise<ActionResult> {
-  const su = await getNeonSessionUser();
-  if (!su) {
-    return { ok: false, error: "Sign in first.", code: "UNAUTHENTICATED" };
+/** Email a sign-up verification code (Neon Auth email-OTP). Best effort. */
+async function sendVerificationCode(email: string): Promise<{ error: AuthError }> {
+  try {
+    const { error } = await neonAuth().emailOtp.sendVerificationOtp({
+      email,
+      type: "email-verification",
+    });
+    return { error };
+  } catch (err) {
+    console.warn("[auth] sendVerificationOtp failed", err);
+    return { error: { message: "Could not send the code." } };
   }
-  const { error } = await neonAuth().sendVerificationEmail({
-    email: su.email,
-    callbackURL: appUrl("/dashboard"),
+}
+
+const EmailSchema = z
+  .string()
+  .email("Enter a valid email address")
+  .transform((v) => v.toLowerCase().trim());
+
+const VerifyCodeSchema = z.object({
+  email: EmailSchema,
+  code: z
+    .string()
+    .trim()
+    .regex(/^[0-9]{4,10}$/, "Enter the code from the email"),
+});
+
+export type VerifyEmailCodeInput = z.input<typeof VerifyCodeSchema>;
+
+/**
+ * Confirm an email with the code Neon Auth sent (Verify at Sign-up, code
+ * mode). `signedIn` is true when Neon Auth also started a session; otherwise
+ * the user logs in next. Identity linking (src/lib/auth/session.ts) only
+ * happens once the email is verified.
+ */
+export async function verifyEmailCode(
+  input: VerifyEmailCodeInput
+): Promise<ActionResult<{ signedIn: boolean }>> {
+  const parsed = VerifyCodeSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
+  }
+
+  const { data, error } = await neonAuth().emailOtp.verifyEmail({
+    email: parsed.data.email,
+    otp: parsed.data.code,
   });
+
   if (error) {
-    return { ok: false, error: error.message ?? "Could not send email.", code: "UNKNOWN" };
+    const msg = errorText(error);
+    if (msg.includes("expired")) {
+      return {
+        ok: false,
+        error: "That code has expired — send a new one.",
+        code: "CODE_EXPIRED",
+      };
+    }
+    if (msg.includes("attempt")) {
+      return {
+        ok: false,
+        error: "Too many attempts — send a new code.",
+        code: "RATE_LIMITED",
+      };
+    }
+    if (msg.includes("otp") || msg.includes("code") || msg.includes("invalid")) {
+      return {
+        ok: false,
+        error: "That code isn't right. Check the email and try again.",
+        code: "INVALID_CODE",
+      };
+    }
+    return { ok: false, error: error.message ?? "Could not verify the code.", code: "UNKNOWN" };
+  }
+
+  const signedIn = !!(data as { token?: string | null } | null)?.token;
+  return { ok: true, data: { signedIn } };
+}
+
+/**
+ * Re-send the verification code — to the signed-in (unverified) user, or to
+ * the address from the sign-up flow. Never reveals whether it exists.
+ */
+export async function resendVerificationCode(email?: string): Promise<ActionResult> {
+  const su = await getNeonSessionUser();
+  const parsed = EmailSchema.safeParse(su?.email ?? email ?? "");
+  if (!parsed.success) {
+    return { ok: false, error: "Enter a valid email address.", code: "INVALID_INPUT" };
+  }
+  const { error } = await sendVerificationCode(parsed.data);
+  if (error && errorText(error).match(/rate limit|too many/)) {
+    return {
+      ok: false,
+      error: "Too many requests — wait a minute and try again.",
+      code: "RATE_LIMITED",
+    };
   }
   return { ok: true, data: undefined };
 }

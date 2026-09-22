@@ -40,6 +40,10 @@ export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }
       if (!result.ok) {
         setSubmitting(false);
         toast.error(result.error);
+        if (result.code === "EMAIL_NOT_CONFIRMED") {
+          // A fresh code was emailed — enter it on /verify-email.
+          window.location.assign(`/verify-email?email=${encodeURIComponent(values.email)}`);
+        }
         return;
       }
       // Full-page navigation (not router.push): Safari does not reliably
