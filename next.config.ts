@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  logging: {
+    // Next.js dev logs every Server Function call WITH its arguments
+    // (e.g. signIn({ email, password })). Never print credentials to the
+    // terminal. Production never logs them either way.
+    serverFunctions: false,
+  },
+};
 
 // withSentryConfig adds source-map upload + tunnel-route + ad-blocker bypass.
 // All Sentry-uploader options are no-ops when SENTRY_AUTH_TOKEN is unset
