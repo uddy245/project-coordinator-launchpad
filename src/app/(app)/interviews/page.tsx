@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { mockInterviewResponses, mockInterviewScenarios } from "@/db/schema";
 import { GenerateMoreButton } from "@/components/interviews/generate-more-button";
 
 export const metadata = { title: "Mock interviews — Launchpad" };
@@ -25,22 +27,33 @@ type ResponseRow = {
 
 export default async function InterviewsPage() {
   const user = await requireUser();
-  const supabase = await createClient();
 
-  const { data: scenariosData } = await supabase
-    .from("mock_interview_scenarios")
-    .select("id, slug, prompt, category, difficulty, competency, sort")
-    .eq("is_published", true)
-    .order("sort", { ascending: true });
-  const scenarios = (scenariosData ?? []) as ScenarioRow[];
+  // mock_interview_scenarios: published, any signed-in user.
+  const scenarios = (await db
+    .select({
+      id: mockInterviewScenarios.id,
+      slug: mockInterviewScenarios.slug,
+      prompt: mockInterviewScenarios.prompt,
+      category: mockInterviewScenarios.category,
+      difficulty: mockInterviewScenarios.difficulty,
+      competency: mockInterviewScenarios.competency,
+      sort: mockInterviewScenarios.sort,
+    })
+    .from(mockInterviewScenarios)
+    .where(eq(mockInterviewScenarios.isPublished, true))
+    .orderBy(asc(mockInterviewScenarios.sort))) as ScenarioRow[];
 
-  const { data: responsesData } = await supabase
-    .from("mock_interview_responses")
-    .select("scenario_id, status, overall_score, pass")
-    .eq("user_id", user.id);
-  const responses = new Map(
-    ((responsesData ?? []) as ResponseRow[]).map((r) => [r.scenario_id, r])
-  );
+  // mock_interview_responses: owner only.
+  const responsesData = (await db
+    .select({
+      scenario_id: mockInterviewResponses.scenarioId,
+      status: mockInterviewResponses.status,
+      overall_score: mockInterviewResponses.overallScore,
+      pass: mockInterviewResponses.pass,
+    })
+    .from(mockInterviewResponses)
+    .where(eq(mockInterviewResponses.userId, user.id))) as ResponseRow[];
+  const responses = new Map(responsesData.map((r) => [r.scenario_id, r]));
 
   const passedCount = scenarios.filter((s) => responses.get(s.id)?.pass === true).length;
 

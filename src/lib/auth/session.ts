@@ -70,7 +70,9 @@ async function findAuthUserIdByEmail(email: string): Promise<string | null> {
   const [row] = await db
     .select({ id: usersInAuth.id })
     .from(usersInAuth)
-    .where(sql`lower(${usersInAuth.email}) = ${email.toLowerCase()} and ${usersInAuth.deletedAt} is null`)
+    .where(
+      sql`lower(${usersInAuth.email}) = ${email.toLowerCase()} and ${usersInAuth.deletedAt} is null`
+    )
     .orderBy(usersInAuth.createdAt)
     .limit(1);
   return row?.id ?? null;

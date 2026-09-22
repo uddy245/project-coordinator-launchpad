@@ -1,5 +1,15 @@
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { and, asc, count, eq, inArray, sql } from "drizzle-orm";
+import { db } from "@/db";
+import {
+  gateStatus,
+  lessonProgress,
+  lessons,
+  mockInterviewResponses,
+  mockInterviewScenarios,
+  profiles,
+} from "@/db/schema";
+import { isAdmin } from "@/lib/auth/session";
 import { PurchaseCTA } from "@/components/marketing/purchase-cta";
 import { LessonCard } from "@/components/dashboard/lesson-card";
 import { GateStatusBadge } from "@/components/dashboard/gate-status-badge";
@@ -17,13 +27,13 @@ function firstName(fullName: string | null, email: string): string {
 
 export default async function DashboardPage() {
   const user = await requireUser();
-  const supabase = await createClient();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("has_access, full_name")
-    .eq("id", user.id)
-    .single();
+  // profiles: own row only.
+  const [profile] = await db
+    .select({ has_access: profiles.hasAccess, full_name: profiles.fullName })
+    .from(profiles)
+    .where(eq(profiles.id, user.id))
+    .limit(1);
 
   const hasAccess = profile?.has_access ?? false;
   const greeting = firstName(profile?.full_name ?? null, user.email ?? "");
@@ -40,37 +50,61 @@ export default async function DashboardPage() {
     );
   }
 
-  // has_access=true: load all published lessons. RLS enforces that only
-  // lessons visible to this user come back.
-  const { data: lessons } = await supabase
-    .from("lessons")
-    .select("id, slug, number, title, summary, estimated_minutes")
-    .eq("is_published", true)
-    .order("number", { ascending: true });
+  // has_access=true from here on. RLS used to let learners see only
+  // published lessons (admins: all); enforce that explicitly.
+  const admin = await isAdmin(user.id);
+
+  const lessonRows = await db
+    .select({
+      id: lessons.id,
+      slug: lessons.slug,
+      number: lessons.number,
+      title: lessons.title,
+      summary: lessons.summary,
+      estimated_minutes: lessons.estimatedMinutes,
+    })
+    .from(lessons)
+    .where(eq(lessons.isPublished, true))
+    .orderBy(asc(lessons.number));
 
   // Pull all progress rows for this user in one query, then map by lesson_id.
-  const { data: progressRows } = await supabase
-    .from("lesson_progress")
-    .select("lesson_id, video_watched, quiz_passed, artifact_submitted")
-    .eq("user_id", user.id);
+  const progressRows = await db
+    .select({
+      lesson_id: lessonProgress.lessonId,
+      video_watched: lessonProgress.videoWatched,
+      quiz_passed: lessonProgress.quizPassed,
+      artifact_submitted: lessonProgress.artifactSubmitted,
+    })
+    .from(lessonProgress)
+    .where(eq(lessonProgress.userId, user.id));
 
-  const progressByLessonId = new Map((progressRows ?? []).map((row) => [row.lesson_id, row]));
+  const progressByLessonId = new Map(progressRows.map((row) => [row.lesson_id, row]));
 
-  const { data: gateRow } = await supabase
-    .from("gate_status")
-    .select(
-      "foundation_complete, portfolio_complete, portfolio_artifacts_count, portfolio_artifacts_target, interview_complete, industry_complete"
-    )
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const [gateRow] = await db
+    .select({
+      foundation_complete: gateStatus.foundationComplete,
+      portfolio_complete: gateStatus.portfolioComplete,
+      portfolio_artifacts_count: gateStatus.portfolioArtifactsCount,
+      portfolio_artifacts_target: gateStatus.portfolioArtifactsTarget,
+      interview_complete: gateStatus.interviewComplete,
+      industry_complete: gateStatus.industryComplete,
+    })
+    .from(gateStatus)
+    .where(eq(gateStatus.userId, user.id))
+    .limit(1);
 
   // Build a slug-keyed map of foundation lesson progress for Gate 1.
   // We fetch the four foundation lessons by slug + the user's progress
   // rows (if any) and pass both to computeGateSummary.
-  const { data: foundationLessons } = await supabase
-    .from("lessons")
-    .select("id, slug")
-    .in("slug", [...FOUNDATION_SLUGS]);
+  const foundationLessons = await db
+    .select({ id: lessons.id, slug: lessons.slug })
+    .from(lessons)
+    .where(
+      and(
+        inArray(lessons.slug, [...FOUNDATION_SLUGS]),
+        admin ? undefined : eq(lessons.isPublished, true)
+      )
+    );
   const foundationProgressBySlug = new Map<
     string,
     { video_watched: boolean; quiz_passed: boolean; artifact_submitted: boolean } | null
@@ -78,28 +112,24 @@ export default async function DashboardPage() {
   for (const slug of FOUNDATION_SLUGS) {
     foundationProgressBySlug.set(slug, null);
   }
-  for (const lesson of foundationLessons ?? []) {
+  for (const lesson of foundationLessons) {
     const row = progressByLessonId.get(lesson.id);
     foundationProgressBySlug.set(lesson.slug, row ?? null);
   }
   // Mock interview progress for Gate 3.
-  // head:true returns no rows — the count comes back on the response's
-  // `count` field, not on `data`. Reading it off `data` (the old bug) left
-  // totalScenarios permanently 0, so Gate 3 was always "coming soon".
-  const { count: scenarioCount } = await supabase
-    .from("mock_interview_scenarios")
-    .select("id", { count: "exact", head: true })
-    .eq("is_published", true);
-  const totalScenarios = scenarioCount ?? 0;
-  const { data: passedScenarios } = await supabase
-    .from("mock_interview_responses")
-    .select("scenario_id")
-    .eq("user_id", user.id)
-    .eq("pass", true);
-  const passedCount2 = passedScenarios?.length ?? 0;
+  const [scenarioCountRow] = await db
+    .select({ n: count() })
+    .from(mockInterviewScenarios)
+    .where(eq(mockInterviewScenarios.isPublished, true));
+  const totalScenarios = Number(scenarioCountRow?.n ?? 0);
+  const passedScenarios = await db
+    .select({ scenario_id: mockInterviewResponses.scenarioId })
+    .from(mockInterviewResponses)
+    .where(and(eq(mockInterviewResponses.userId, user.id), eq(mockInterviewResponses.pass, true)));
+  const passedCount2 = passedScenarios.length;
 
   const gates = computeGateSummary(
-    gateRow,
+    gateRow ?? null,
     { byLessonSlug: foundationProgressBySlug },
     { passed: passedCount2, total: totalScenarios }
   );
@@ -116,18 +146,20 @@ export default async function DashboardPage() {
   ).length;
   const completionPct = Math.round((completedCount / TOTAL_PROGRAMME) * 100);
 
-  // Daily streak (server-side RPC).
-  const { data: streakRow } = await supabase.rpc("user_streak", { p_user_id: user.id });
-  const streak: number =
-    typeof streakRow === "number"
-      ? streakRow
-      : Array.isArray(streakRow) && streakRow.length > 0
-        ? Number(streakRow[0]) || 0
-        : 0;
+  // Daily streak (SQL function public.user_streak, returns integer).
+  let streak = 0;
+  try {
+    const streakRes = (await db.execute(sql`select public.user_streak(${user.id}) as streak`)) as {
+      rows: Array<{ streak: number | string | null }>;
+    };
+    streak = Number(streakRes.rows[0]?.streak ?? 0) || 0;
+  } catch {
+    streak = 0;
+  }
 
   // Heuristic recommender: foundations first → partial progress → next un-touched.
   // See src/lib/lessons/recommender.ts for the rules.
-  const recommendation = await recommendNextLesson(supabase, user.id);
+  const recommendation = await recommendNextLesson(user.id);
   const nextLesson = recommendation
     ? {
         id: recommendation.lessonId,
@@ -201,14 +233,14 @@ export default async function DashboardPage() {
       </section>
 
       {/* Module list */}
-      {lessons && lessons.length > 0 ? (
+      {lessonRows.length > 0 ? (
         <section>
           <div className="mb-3 flex items-baseline justify-between border-b border-rule pb-3">
             <h2 className="kicker">Modules</h2>
             <span className="kicker">Click to enter →</span>
           </div>
           <div className="space-y-3">
-            {lessons.map((lesson) => (
+            {lessonRows.map((lesson) => (
               <LessonCard
                 key={lesson.id}
                 number={lesson.number}

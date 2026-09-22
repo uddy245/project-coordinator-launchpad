@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { auditQueue, submissions } from "@/db/schema";
+import { requireAdmin } from "@/lib/auth/require-user";
 
 export const metadata = { title: "Audit queue — Launchpad" };
 
@@ -17,16 +20,26 @@ type QueueRow = {
 };
 
 export default async function AuditQueuePage() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("audit_queue")
-    .select(
-      "id, reason, status, created_at, submission:submissions(id, overall_score, submitted_at, user_id)"
-    )
-    .eq("status", "pending")
-    .order("created_at", { ascending: true });
-
-  const rows = (data ?? []) as unknown as QueueRow[];
+  // Previously relied on is_admin() RLS; there is no RLS now, so the admin
+  // check below (plus the layout's) is what scopes this unfiltered query.
+  await requireAdmin();
+  const rows: QueueRow[] = await db
+    .select({
+      id: auditQueue.id,
+      reason: auditQueue.reason,
+      status: auditQueue.status,
+      created_at: auditQueue.createdAt,
+      submission: {
+        id: submissions.id,
+        overall_score: submissions.overallScore,
+        submitted_at: submissions.submittedAt,
+        user_id: submissions.userId,
+      },
+    })
+    .from(auditQueue)
+    .innerJoin(submissions, eq(submissions.id, auditQueue.submissionId))
+    .where(eq(auditQueue.status, "pending"))
+    .orderBy(asc(auditQueue.createdAt));
 
   return (
     <div className="space-y-6">

@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { mockInterviewResponses, mockInterviewScenarios } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
 import type { ActionResult } from "@/lib/types";
 import { gradeMockInterviewResponse } from "@/lib/grading/mock-interview";
 
@@ -15,6 +17,12 @@ const SubmitSchema = z.object({
     .min(80, "A 80-character minimum keeps Claude's grade meaningful")
     .max(8000),
 });
+
+/** Postgres message from a Drizzle error (without the SQL text/params). */
+function dbMessage(err: unknown): string {
+  const e = err as { cause?: { message?: string }; message?: string } | null;
+  return e?.cause?.message ?? e?.message ?? "unknown";
+}
 
 export type SubmitMockInterviewInput = z.input<typeof SubmitSchema>;
 
@@ -45,20 +53,29 @@ export async function submitMockInterview(input: SubmitMockInterviewInput): Prom
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
 
-  const admin = createAdminClient();
-
-  const { data: scenario } = await admin
-    .from("mock_interview_scenarios")
-    .select("id, prompt, competency")
-    .eq("id", parsed.data.scenarioId)
-    .eq("is_published", true)
-    .maybeSingle();
+  let scenario: { id: string; prompt: string; competency: string } | undefined;
+  try {
+    // mock_interview_scenarios: published, any signed-in user.
+    [scenario] = await db
+      .select({
+        id: mockInterviewScenarios.id,
+        prompt: mockInterviewScenarios.prompt,
+        competency: mockInterviewScenarios.competency,
+      })
+      .from(mockInterviewScenarios)
+      .where(
+        and(
+          eq(mockInterviewScenarios.id, parsed.data.scenarioId),
+          eq(mockInterviewScenarios.isPublished, true)
+        )
+      )
+      .limit(1);
+  } catch (err) {
+    return { ok: false, error: dbMessage(err), code: "DB_ERROR" };
+  }
   if (!scenario) {
     return { ok: false, error: "Scenario not found.", code: "NOT_FOUND" };
   }
@@ -69,31 +86,41 @@ export async function submitMockInterview(input: SubmitMockInterviewInput): Prom
   // result will fill them in below. This is a single upsert (insert-or-replace)
   // keyed on the (user_id, scenario_id) unique constraint.
   const nowIso = new Date().toISOString();
-  const { data: row, error: upsertErr } = await admin
-    .from("mock_interview_responses")
-    .upsert(
-      {
-        user_id: user.id,
-        scenario_id: scenario.id,
-        response_text: parsed.data.responseText,
-        status: "grading",
-        overall_score: null,
-        pass: null,
-        feedback_summary: null,
-        graded_at: null,
-        updated_at: nowIso,
-      },
-      { onConflict: "user_id,scenario_id" }
-    )
-    .select("id")
-    .single();
-  if (upsertErr || !row) {
+  let row: { id: string } | undefined;
+  try {
+    const inflight = {
+      responseText: parsed.data.responseText,
+      status: "grading",
+      overallScore: null,
+      pass: null,
+      feedbackSummary: null,
+      gradedAt: null,
+      updatedAt: nowIso,
+    };
+    // user_id comes from the session, never from input.
+    [row] = await db
+      .insert(mockInterviewResponses)
+      .values({ userId: user.id, scenarioId: scenario.id, ...inflight })
+      .onConflictDoUpdate({
+        target: [mockInterviewResponses.userId, mockInterviewResponses.scenarioId],
+        set: inflight,
+      })
+      .returning({ id: mockInterviewResponses.id });
+  } catch (err) {
     return {
       ok: false,
-      error: `Failed to save response: ${upsertErr?.message ?? "unknown"}`,
+      error: `Failed to save response: ${dbMessage(err)}`,
       code: "DB_ERROR",
     };
   }
+  if (!row) {
+    return { ok: false, error: "Failed to save response: unknown", code: "DB_ERROR" };
+  }
+  const responseId = row.id;
+  const ownRow = and(
+    eq(mockInterviewResponses.id, responseId),
+    eq(mockInterviewResponses.userId, user.id)
+  );
 
   try {
     const result = await gradeMockInterviewResponse({
@@ -108,22 +135,23 @@ export async function submitMockInterview(input: SubmitMockInterviewInput): Prom
     // upsert quirks, default-to-null behaviour), this final update fixes it.
     // Error-checked so silent DB failures don't leave the UI showing a stale
     // grade.
-    const { error: updateErr } = await admin
-      .from("mock_interview_responses")
-      .update({
-        response_text: parsed.data.responseText,
-        status: "graded",
-        overall_score: result.overallScore,
-        pass: result.pass,
-        feedback_summary: result.feedbackSummary,
-        graded_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", row.id);
-    if (updateErr) {
+    try {
+      await db
+        .update(mockInterviewResponses)
+        .set({
+          responseText: parsed.data.responseText,
+          status: "graded",
+          overallScore: result.overallScore,
+          pass: result.pass,
+          feedbackSummary: result.feedbackSummary,
+          gradedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        })
+        .where(ownRow);
+    } catch (updateErr) {
       return {
         ok: false,
-        error: `Failed to save grade: ${updateErr.message}`,
+        error: `Failed to save grade: ${dbMessage(updateErr)}`,
         code: "DB_ERROR",
       };
     }
@@ -133,7 +161,7 @@ export async function submitMockInterview(input: SubmitMockInterviewInput): Prom
     return {
       ok: true,
       data: {
-        responseId: row.id,
+        responseId,
         status: "graded",
         overallScore: result.overallScore,
         pass: result.pass,
@@ -143,15 +171,19 @@ export async function submitMockInterview(input: SubmitMockInterviewInput): Prom
     };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "unknown";
-    await admin
-      .from("mock_interview_responses")
-      .update({
-        status: "grading_failed",
-        feedback_summary: `Grading failed: ${msg}`,
-        graded_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", row.id);
+    try {
+      await db
+        .update(mockInterviewResponses)
+        .set({
+          status: "grading_failed",
+          feedbackSummary: `Grading failed: ${msg}`,
+          gradedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        })
+        .where(ownRow);
+    } catch (e) {
+      console.error("[submitMockInterview] failed to record grading failure", e);
+    }
     revalidatePath(`/interviews/${scenario.id}`);
     return { ok: false, error: msg, code: "GRADING_FAILED" };
   }

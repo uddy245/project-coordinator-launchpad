@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { eq, sql } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons, mockInterviewScenarios, quizItems, workbookAssignments } from "@/db/schema";
+import { requireAdmin } from "@/lib/auth/require-user";
 import {
   DeleteQuizItemButton,
   TogglePublishScenarioButton,
@@ -29,34 +32,58 @@ function lessonLabel(lookup: LessonLookup, lessonId: string): string {
 }
 
 export default async function AiContentPage() {
-  const admin = createAdminClient();
+  // Layout already gates; repeated here as defence in depth (no RLS).
+  await requireAdmin();
 
   // Fetch all three AI-content tables + a lessons lookup in parallel.
-  const [
-    { data: quizRows },
-    { data: scenarioRows },
-    { data: workbookRows },
-    { data: lessonsRows },
-  ] = await Promise.all([
-    admin
-      .from("quiz_items")
-      .select("id, lesson_id, sort, stem, options, correct, competency, difficulty, generated_at")
-      .eq("is_ai_generated", true)
-      .order("generated_at", { ascending: false, nullsFirst: false })
+  // Postgres DESC sorts NULLs first; the old query used nullsFirst: false.
+  const [quizRows, scenarioRows, workbookRows, lessonsRows] = await Promise.all([
+    db
+      .select({
+        id: quizItems.id,
+        lesson_id: quizItems.lessonId,
+        sort: quizItems.sort,
+        stem: quizItems.stem,
+        options: quizItems.options,
+        correct: quizItems.correct,
+        competency: quizItems.competency,
+        difficulty: quizItems.difficulty,
+        generated_at: quizItems.generatedAt,
+      })
+      .from(quizItems)
+      .where(eq(quizItems.isAiGenerated, true))
+      .orderBy(sql`${quizItems.generatedAt} desc nulls last`)
       .limit(200),
-    admin
-      .from("mock_interview_scenarios")
-      .select("id, slug, prompt, category, difficulty, competency, is_published, generated_at")
-      .eq("is_ai_generated", true)
-      .order("generated_at", { ascending: false, nullsFirst: false })
+    db
+      .select({
+        id: mockInterviewScenarios.id,
+        slug: mockInterviewScenarios.slug,
+        prompt: mockInterviewScenarios.prompt,
+        category: mockInterviewScenarios.category,
+        difficulty: mockInterviewScenarios.difficulty,
+        competency: mockInterviewScenarios.competency,
+        is_published: mockInterviewScenarios.isPublished,
+        generated_at: mockInterviewScenarios.generatedAt,
+      })
+      .from(mockInterviewScenarios)
+      .where(eq(mockInterviewScenarios.isAiGenerated, true))
+      .orderBy(sql`${mockInterviewScenarios.generatedAt} desc nulls last`)
       .limit(200),
-    admin
-      .from("workbook_assignments")
-      .select("id, lesson_id, title, brief, generated_at")
-      .eq("is_ai_generated", true)
-      .order("generated_at", { ascending: false, nullsFirst: false })
+    db
+      .select({
+        id: workbookAssignments.id,
+        lesson_id: workbookAssignments.lessonId,
+        title: workbookAssignments.title,
+        brief: workbookAssignments.brief,
+        generated_at: workbookAssignments.generatedAt,
+      })
+      .from(workbookAssignments)
+      .where(eq(workbookAssignments.isAiGenerated, true))
+      .orderBy(sql`${workbookAssignments.generatedAt} desc nulls last`)
       .limit(200),
-    admin.from("lessons").select("id, slug, title, number"),
+    db
+      .select({ id: lessons.id, slug: lessons.slug, title: lessons.title, number: lessons.number })
+      .from(lessons),
   ]);
 
   const lessonLookup: LessonLookup = new Map(

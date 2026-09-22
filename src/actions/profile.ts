@@ -2,7 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
 import type { ActionResult } from "@/lib/types";
 
 const UpdateProfileSchema = z.object({
@@ -21,21 +24,24 @@ export async function updateProfile(input: UpdateProfileInput): Promise<ActionRe
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) {
     return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
   }
 
-  const { error } = await supabase
-    .from("profiles")
-    .update({ full_name: parsed.data.fullName || null })
-    .eq("id", user.id);
-
-  if (error) {
-    return { ok: false, error: error.message, code: "DB_ERROR" };
+  try {
+    // Own row only, and only the user-editable column (never role/has_access).
+    await db
+      .update(profiles)
+      .set({ fullName: parsed.data.fullName || null })
+      .where(eq(profiles.id, user.id));
+  } catch (err) {
+    const e = err as { cause?: { message?: string }; message?: string } | null;
+    return {
+      ok: false,
+      error: e?.cause?.message ?? e?.message ?? "Database error",
+      code: "DB_ERROR",
+    };
   }
 
   revalidatePath("/profile");

@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { desc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { auditQueue, auditRecords, rubricScores, rubrics, submissions } from "@/db/schema";
+import { requireAdmin } from "@/lib/auth/require-user";
 import { parseRubric } from "@/lib/grading/rubric";
 import { applyOverrides, type OverrideEntry } from "@/lib/grading/apply-overrides";
 import { RubricScoreCard, type RubricScoreRow } from "@/components/grading/rubric-score-card";
@@ -10,54 +13,82 @@ import { Button } from "@/components/ui/button";
 export const metadata = { title: "Audit review — Launchpad" };
 
 export default async function AuditDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  // Previously relied on is_admin() RLS; there is no RLS now, so the admin
+  // check below (plus the layout's) is what scopes these unfiltered queries.
+  await requireAdmin();
   const { id } = await params;
-  const supabase = await createClient();
 
-  const { data: queueRow } = await supabase
-    .from("audit_queue")
-    .select("id, reason, status, submission_id")
-    .eq("id", id)
-    .maybeSingle();
+  // Non-UUID ids would make Postgres throw; treat them as not found.
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) notFound();
+
+  const [queueRow] = await db
+    .select({
+      id: auditQueue.id,
+      reason: auditQueue.reason,
+      status: auditQueue.status,
+      submission_id: auditQueue.submissionId,
+    })
+    .from(auditQueue)
+    .where(eq(auditQueue.id, id))
+    .limit(1);
   if (!queueRow) notFound();
 
-  const { data: submission } = await supabase
-    .from("submissions")
-    .select(
-      "id, original_filename, submitted_at, overall_score, pass, hire_ready, extracted_text, user_id"
-    )
-    .eq("id", queueRow.submission_id)
-    .single();
+  const [submission] = await db
+    .select({
+      id: submissions.id,
+      original_filename: submissions.originalFilename,
+      submitted_at: submissions.submittedAt,
+      overall_score: submissions.overallScore,
+      pass: submissions.pass,
+      hire_ready: submissions.hireReady,
+      extracted_text: submissions.extractedText,
+      user_id: submissions.userId,
+    })
+    .from(submissions)
+    .where(eq(submissions.id, queueRow.submission_id))
+    .limit(1);
 
-  const { data: scoreRows } = await supabase
-    .from("rubric_scores")
-    .select("dimension, score, justification, quote, suggestion, rubric_id")
-    .eq("submission_id", queueRow.submission_id);
+  const scoreRows = await db
+    .select({
+      dimension: rubricScores.dimension,
+      score: rubricScores.score,
+      justification: rubricScores.justification,
+      quote: rubricScores.quote,
+      suggestion: rubricScores.suggestion,
+      rubric_id: rubricScores.rubricId,
+    })
+    .from(rubricScores)
+    .where(eq(rubricScores.submissionId, queueRow.submission_id));
 
-  const scores: RubricScoreRow[] = (scoreRows ?? []).map((r) => ({
+  const scores: RubricScoreRow[] = scoreRows.map((r) => ({
     dimension: r.dimension,
     score: r.score,
     justification: r.justification,
     quote: r.quote,
-    suggestion: r.suggestion,
+    // Column is nullable; the card expects a string.
+    suggestion: r.suggestion ?? "",
   }));
 
-  const rubricId = scoreRows?.[0]?.rubric_id;
-  const { data: rubricRow } = rubricId
-    ? await supabase.from("rubrics").select("schema_json").eq("id", rubricId).single()
-    : { data: null };
+  const rubricId = scoreRows[0]?.rubric_id;
+  const [rubricRow] = rubricId
+    ? await db
+        .select({ schema_json: rubrics.schemaJson })
+        .from(rubrics)
+        .where(eq(rubrics.id, rubricId))
+        .limit(1)
+    : [];
 
   const rubric = rubricRow ? parseRubric(rubricRow.schema_json) : null;
 
   // Latest decision on this queue row (for admins returning to a reviewed item).
-  const { data: latestRecord } = await supabase
-    .from("audit_records")
-    .select("decision, overrides")
-    .eq("audit_queue_id", queueRow.id)
-    .order("decided_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const [latestRecord] = await db
+    .select({ decision: auditRecords.decision, overrides: auditRecords.overrides })
+    .from(auditRecords)
+    .where(eq(auditRecords.auditQueueId, queueRow.id))
+    .orderBy(desc(auditRecords.decidedAt))
+    .limit(1);
   const overrides = (latestRecord?.overrides as OverrideEntry[] | null) ?? null;
-  const reviewedByHuman = latestRecord !== null && latestRecord !== undefined;
+  const reviewedByHuman = latestRecord !== undefined;
   const applied = rubric ? applyOverrides(scores, overrides, rubric) : null;
 
   return (

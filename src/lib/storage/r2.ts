@@ -22,7 +22,11 @@ import { env } from "@/env";
  * `src/app/api/files/[...key]/route.ts`, which redirects to a short-lived
  * presigned URL and refuses private prefixes.
  */
-export type StorageBucket = "submissions" | "capstone-artifacts" | "lesson-templates" | "lesson-videos";
+export type StorageBucket =
+  | "submissions"
+  | "capstone-artifacts"
+  | "lesson-templates"
+  | "lesson-videos";
 
 export const PUBLIC_BUCKETS: readonly StorageBucket[] = ["lesson-templates", "lesson-videos"];
 

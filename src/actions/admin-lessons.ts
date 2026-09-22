@@ -2,10 +2,40 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons, lessonTemplates, quizItems } from "@/db/schema";
+import { getAppUser, isAdmin } from "@/lib/auth/session";
+import { publicUrl, removeObjects, uploadObject } from "@/lib/storage/r2";
 import type { ActionResult } from "@/lib/types";
 import { QuizItemSchema } from "@/lib/quiz/schema";
+
+function errMsg(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
+/**
+ * Admin gate shared by every action in this file. The database has no RLS,
+ * so this check is the only thing standing between a caller and the writes.
+ */
+async function requireAdmin() {
+  const user = await getAppUser().catch(() => null);
+  if (!user)
+    return { ok: false as const, error: "Not signed in.", code: "UNAUTHENTICATED" as const };
+  // Fail closed: a lookup error is treated as "not an admin".
+  const admin = await isAdmin(user.id).catch(() => false);
+  if (!admin) return { ok: false as const, error: "Not authorized.", code: "FORBIDDEN" as const };
+  return { ok: true as const };
+}
+
+async function findLessonIdBySlug(slug: string): Promise<string | null> {
+  const [row] = await db
+    .select({ id: lessons.id })
+    .from(lessons)
+    .where(eq(lessons.slug, slug))
+    .limit(1);
+  return row?.id ?? null;
+}
 
 // ──────────────────────────────────────────────────────────────────────
 // Lesson upsert
@@ -42,42 +72,53 @@ export async function upsertLesson(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth;
 
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
-
-  const admin = createAdminClient();
   const payload = {
     slug: parsed.data.slug,
     number: parsed.data.number,
     title: parsed.data.title,
     summary: parsed.data.summary || null,
-    video_url: parsed.data.video_url || null,
+    videoUrl: parsed.data.video_url || null,
     competency: parsed.data.competency,
-    prompt_name: parsed.data.prompt_name,
-    estimated_minutes: parsed.data.estimated_minutes ?? null,
-    is_published: parsed.data.is_published,
-    is_preview: parsed.data.is_preview,
-    updated_at: new Date().toISOString(),
+    promptName: parsed.data.prompt_name,
+    estimatedMinutes: parsed.data.estimated_minutes ?? null,
+    isPublished: parsed.data.is_published,
+    isPreview: parsed.data.is_preview,
+    updatedAt: new Date().toISOString(),
   };
 
-  const { data, error } = await admin
-    .from("lessons")
-    .upsert(payload, { onConflict: "slug" })
-    .select("id, slug")
-    .single();
-
-  if (error) {
+  let data: { id: string; slug: string } | undefined;
+  try {
+    [data] = await db
+      .insert(lessons)
+      .values(payload)
+      .onConflictDoUpdate({
+        target: lessons.slug,
+        set: {
+          number: payload.number,
+          title: payload.title,
+          summary: payload.summary,
+          videoUrl: payload.videoUrl,
+          competency: payload.competency,
+          promptName: payload.promptName,
+          estimatedMinutes: payload.estimatedMinutes,
+          isPublished: payload.isPublished,
+          isPreview: payload.isPreview,
+          updatedAt: payload.updatedAt,
+        },
+      })
+      .returning({ id: lessons.id, slug: lessons.slug });
+  } catch (err) {
     return {
       ok: false,
-      error: `Failed to save lesson: ${error.message}`,
+      error: `Failed to save lesson: ${errMsg(err)}`,
       code: "DB_ERROR",
     };
+  }
+  if (!data) {
+    return { ok: false, error: "Failed to save lesson: no row returned", code: "DB_ERROR" };
   }
 
   revalidatePath("/admin/lessons");
@@ -128,44 +169,41 @@ export async function replaceQuizItems(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth;
 
-  const admin = createAdminClient();
-  const { data: lesson } = await admin
-    .from("lessons")
-    .select("id")
-    .eq("slug", parsed.data.lessonSlug)
-    .maybeSingle();
-  if (!lesson) {
+  let lessonId: string | null;
+  try {
+    lessonId = await findLessonIdBySlug(parsed.data.lessonSlug);
+  } catch (err) {
+    return { ok: false, error: `Failed to load lesson: ${errMsg(err)}`, code: "DB_ERROR" };
+  }
+  if (!lessonId) {
     return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
   }
 
   // Replace strategy: delete existing rows for this lesson, then bulk
-  // insert. This is safest for re-publishes; small data set so a transaction
-  // wrapper isn't strictly necessary.
-  await admin.from("quiz_items").delete().eq("lesson_id", lesson.id);
-
+  // insert, in one transaction so a failed insert doesn't leave the
+  // lesson with no quiz items.
   const rows = itemsResult.data.map((it) => ({
-    lesson_id: lesson.id,
+    lessonId: lessonId,
     sort: it.sort,
     stem: it.stem,
     options: it.options,
     correct: it.correct,
-    distractor_rationale: it.distractor_rationale,
+    distractorRationale: it.distractor_rationale,
     competency: it.competency,
     difficulty: it.difficulty,
   }));
-  const { error } = await admin.from("quiz_items").insert(rows);
-  if (error) {
+  try {
+    await db.transaction(async (tx) => {
+      await tx.delete(quizItems).where(eq(quizItems.lessonId, lessonId));
+      await tx.insert(quizItems).values(rows);
+    });
+  } catch (err) {
     return {
       ok: false,
-      error: `Failed to insert quiz items: ${error.message}`,
+      error: `Failed to insert quiz items: ${errMsg(err)}`,
       code: "DB_ERROR",
     };
   }
@@ -175,7 +213,7 @@ export async function replaceQuizItems(
 }
 
 // ──────────────────────────────────────────────────────────────────────
-// Lesson templates — upload an XLSX/PDF/CSV to Supabase Storage and
+// Lesson templates — upload an XLSX/PDF/CSV to R2 storage and
 // register it in the lesson_templates table.
 // ──────────────────────────────────────────────────────────────────────
 
@@ -220,21 +258,16 @@ export async function uploadLessonTemplate(
     return { ok: false, error: "File exceeds 10 MB limit.", code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth;
 
-  const admin = createAdminClient();
-  const { data: lesson } = await admin
-    .from("lessons")
-    .select("id")
-    .eq("slug", parsed.data.lessonSlug)
-    .maybeSingle();
-  if (!lesson) {
+  let lessonId: string | null;
+  try {
+    lessonId = await findLessonIdBySlug(parsed.data.lessonSlug);
+  } catch (err) {
+    return { ok: false, error: `Failed to load lesson: ${errMsg(err)}`, code: "DB_ERROR" };
+  }
+  if (!lessonId) {
     return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
   }
 
@@ -243,12 +276,12 @@ export async function uploadLessonTemplate(
   const objectPath = `${parsed.data.lessonSlug}/${Date.now()}-${safeName}`;
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const { error: uploadErr } = await admin.storage
-    .from(TEMPLATE_BUCKET)
-    .upload(objectPath, buffer, {
-      contentType: file.type || "application/octet-stream",
-      upsert: false,
-    });
+  const { error: uploadErr } = await uploadObject(
+    TEMPLATE_BUCKET,
+    objectPath,
+    buffer,
+    file.type || "application/octet-stream"
+  );
   if (uploadErr) {
     return {
       ok: false,
@@ -257,39 +290,35 @@ export async function uploadLessonTemplate(
     };
   }
 
-  const {
-    data: { publicUrl },
-  } = admin.storage.from(TEMPLATE_BUCKET).getPublicUrl(objectPath);
+  const fileUrl = publicUrl(TEMPLATE_BUCKET, objectPath);
 
-  const { data: row, error: insertErr } = await admin
-    .from("lesson_templates")
-    .insert({
-      lesson_id: lesson.id,
-      title: parsed.data.title,
-      description: parsed.data.description || null,
-      kind: parsed.data.kind,
-      file_url: publicUrl,
-      sort: parsed.data.sort ?? 100,
-    })
-    .select("id")
-    .single();
-
-  if (insertErr) {
-    // Best-effort cleanup of the orphaned file.
-    await admin.storage
-      .from(TEMPLATE_BUCKET)
-      .remove([objectPath])
-      .catch(() => {});
+  let row: { id: string } | undefined;
+  try {
+    [row] = await db
+      .insert(lessonTemplates)
+      .values({
+        lessonId,
+        title: parsed.data.title,
+        description: parsed.data.description || null,
+        kind: parsed.data.kind,
+        fileUrl,
+        sort: parsed.data.sort ?? 100,
+      })
+      .returning({ id: lessonTemplates.id });
+    if (!row) throw new Error("no row returned");
+  } catch (err) {
+    // Best-effort cleanup of the orphaned file (removeObjects never throws).
+    await removeObjects(TEMPLATE_BUCKET, [objectPath]);
     return {
       ok: false,
-      error: `Failed to register template: ${insertErr.message}`,
+      error: `Failed to register template: ${errMsg(err)}`,
       code: "DB_ERROR",
     };
   }
 
   revalidatePath(`/lessons/${parsed.data.lessonSlug}`);
   revalidatePath(`/admin/lessons/${parsed.data.lessonSlug}`);
-  return { ok: true, data: { id: row.id, file_url: publicUrl } };
+  return { ok: true, data: { id: row.id, file_url: fileUrl } };
 }
 
 export async function deleteLessonTemplate(
@@ -299,39 +328,51 @@ export async function deleteLessonTemplate(
     return { ok: false, error: "Missing template id.", code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth;
 
-  const admin = createAdminClient();
-  const { data: row } = await admin
-    .from("lesson_templates")
-    .select("id, file_url, lesson_id")
-    .eq("id", templateId)
-    .maybeSingle();
+  let row: { id: string; file_url: string; lesson_id: string } | undefined;
+  try {
+    [row] = await db
+      .select({
+        id: lessonTemplates.id,
+        file_url: lessonTemplates.fileUrl,
+        lesson_id: lessonTemplates.lessonId,
+      })
+      .from(lessonTemplates)
+      .where(eq(lessonTemplates.id, templateId))
+      .limit(1);
+  } catch (err) {
+    return { ok: false, error: `Failed to load template: ${errMsg(err)}`, code: "DB_ERROR" };
+  }
   if (!row) return { ok: false, error: "Template not found.", code: "NOT_FOUND" };
 
-  const { error: delErr } = await admin.from("lesson_templates").delete().eq("id", templateId);
-  if (delErr) {
+  try {
+    await db.delete(lessonTemplates).where(eq(lessonTemplates.id, templateId));
+  } catch (err) {
     return {
       ok: false,
-      error: `Failed to delete: ${delErr.message}`,
+      error: `Failed to delete: ${errMsg(err)}`,
       code: "DB_ERROR",
     };
   }
 
-  // Best-effort delete of the underlying object.
+  // Best-effort delete of the underlying object. Handles both the current
+  // `/api/files/lesson-templates/<path>` URLs and legacy Supabase Storage
+  // URLs (objects were migrated to R2 under the same path).
   try {
     const url = new URL(row.file_url);
-    const pathPrefix = `/storage/v1/object/public/${TEMPLATE_BUCKET}/`;
-    const idx = url.pathname.indexOf(pathPrefix);
-    if (idx >= 0) {
-      const objectPath = url.pathname.slice(idx + pathPrefix.length);
-      await admin.storage.from(TEMPLATE_BUCKET).remove([objectPath]);
+    const prefixes = [
+      `/api/files/${TEMPLATE_BUCKET}/`,
+      `/storage/v1/object/public/${TEMPLATE_BUCKET}/`,
+    ];
+    for (const pathPrefix of prefixes) {
+      const idx = url.pathname.indexOf(pathPrefix);
+      if (idx >= 0) {
+        const objectPath = decodeURIComponent(url.pathname.slice(idx + pathPrefix.length));
+        await removeObjects(TEMPLATE_BUCKET, [objectPath]);
+        break;
+      }
     }
   } catch {
     /* swallow — orphaned blob is acceptable */
@@ -389,21 +430,16 @@ export async function uploadLessonVideo(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth;
 
-  const admin = createAdminClient();
-  const { data: lesson } = await admin
-    .from("lessons")
-    .select("id, video_url")
-    .eq("slug", parsed.data.lessonSlug)
-    .maybeSingle();
-  if (!lesson) {
+  let lessonId: string | null;
+  try {
+    lessonId = await findLessonIdBySlug(parsed.data.lessonSlug);
+  } catch (err) {
+    return { ok: false, error: `Failed to load lesson: ${errMsg(err)}`, code: "DB_ERROR" };
+  }
+  if (!lessonId) {
     return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
   }
 
@@ -414,10 +450,12 @@ export async function uploadLessonVideo(
   const objectPath = `${parsed.data.lessonSlug}/${Date.now()}-${safeName}`;
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const { error: uploadErr } = await admin.storage.from(VIDEO_BUCKET).upload(objectPath, buffer, {
-    contentType: file.type || "video/mp4",
-    upsert: false,
-  });
+  const { error: uploadErr } = await uploadObject(
+    VIDEO_BUCKET,
+    objectPath,
+    buffer,
+    file.type || "video/mp4"
+  );
   if (uploadErr) {
     return {
       ok: false,
@@ -426,13 +464,11 @@ export async function uploadLessonVideo(
     };
   }
 
-  const {
-    data: { publicUrl },
-  } = admin.storage.from(VIDEO_BUCKET).getPublicUrl(objectPath);
+  const url = publicUrl(VIDEO_BUCKET, objectPath);
 
   // Don't write video_url here — the form's submit path saves the URL
   // along with all other lesson fields atomically. Returning the URL
   // lets the client paste it into the field and confirm before save.
   revalidatePath(`/admin/lessons/${parsed.data.lessonSlug}`);
-  return { ok: true, data: { url: publicUrl, objectPath } };
+  return { ok: true, data: { url, objectPath } };
 }

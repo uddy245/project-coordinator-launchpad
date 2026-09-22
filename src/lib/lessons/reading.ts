@@ -32,6 +32,8 @@ export function getLessonReadingTruncated(slug: string, maxTokens = 6000): strin
   const limit = maxTokens * 4;
   const truncated = raw.slice(0, limit);
   const lastNl = truncated.lastIndexOf("\n");
-  return (lastNl > limit * 0.8 ? truncated.slice(0, lastNl) : truncated) +
-    "\n\n[Reading truncated for length]";
+  return (
+    (lastNl > limit * 0.8 ? truncated.slice(0, lastNl) : truncated) +
+    "\n\n[Reading truncated for length]"
+  );
 }

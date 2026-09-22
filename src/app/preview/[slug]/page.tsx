@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import ReactMarkdown from "react-markdown";
-import { createServerClient } from "@supabase/ssr";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { VideoPlayer } from "@/components/lessons/video-player";
 
@@ -14,36 +16,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: `Preview — ${slug}` };
 }
 
-/**
- * Anonymous-friendly Supabase client. Bypasses the SSR cookie helpers
- * so we never read the session here — preview is intentionally public.
- */
-function anonClient() {
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => [],
-        setAll: () => {},
-      },
-    }
-  );
-}
-
 export default async function PreviewPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const supabase = anonClient();
 
-  // RLS only returns rows where is_preview=true and is_published=true,
-  // so we don't need to filter here — but we do for query economy.
-  const { data: lesson } = await supabase
-    .from("lessons")
-    .select("number, title, summary, video_url")
-    .eq("slug", slug)
-    .eq("is_preview", true)
-    .eq("is_published", true)
-    .maybeSingle();
+  // Public page — no session is read. Mirrors the old anon RLS policy:
+  // only lessons with is_preview = true AND is_published = true.
+  const [lesson] = await db
+    .select({
+      number: lessons.number,
+      title: lessons.title,
+      summary: lessons.summary,
+      video_url: lessons.videoUrl,
+    })
+    .from(lessons)
+    .where(and(eq(lessons.slug, slug), eq(lessons.isPreview, true), eq(lessons.isPublished, true)))
+    .limit(1);
 
   if (!lesson) {
     notFound();

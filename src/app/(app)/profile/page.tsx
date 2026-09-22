@@ -1,18 +1,20 @@
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
 import { ProfileForm } from "@/components/auth/profile-form";
 
 export const metadata = { title: "Profile — Launchpad" };
 
 export default async function ProfilePage() {
   const user = await requireUser();
-  const supabase = await createClient();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", user.id)
-    .single();
+  // profiles: own row only.
+  const [profile] = await db
+    .select({ full_name: profiles.fullName })
+    .from(profiles)
+    .where(eq(profiles.id, user.id))
+    .limit(1);
 
   return (
     <div className="max-w-md space-y-6">

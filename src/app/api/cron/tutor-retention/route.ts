@@ -32,5 +32,7 @@ export async function GET(req: Request) {
     sql`delete from public.tutor_messages where created_at < now() - interval '30 days'`
   );
 
-  return NextResponse.json({ ok: true, deleted: result.rowCount ?? 0 });
+  // node-postgres and the Neon driver both report affected rows as rowCount.
+  const deleted = (result as unknown as { rowCount?: number | null }).rowCount ?? 0;
+  return NextResponse.json({ ok: true, deleted });
 }

@@ -5,7 +5,18 @@ import {
   GRADING_TEMPERATURE,
   GRADING_MAX_TOKENS,
 } from "@/lib/anthropic/client";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import {
+  auditQueue,
+  lessons,
+  profiles,
+  prompts,
+  rubricScores,
+  rubrics,
+  submissions,
+  usersInAuth,
+} from "@/db/schema";
 import type { ActionResult } from "@/lib/types";
 import { parseRubric, type RubricJSON } from "./rubric";
 import { renderPrompt } from "./prompt";
@@ -17,7 +28,6 @@ import { sendEmail } from "@/lib/email/send";
 import { renderGradingComplete } from "@/lib/email/templates/grading-complete";
 
 export type GradeSubmissionDeps = {
-  supabase?: ReturnType<typeof createAdminClient>;
   callClaude?: (
     args: Anthropic.Messages.MessageCreateParamsNonStreaming
   ) => Promise<Anthropic.Messages.Message>;
@@ -140,25 +150,25 @@ type LoadedContext = {
  *   8. On success: insert one rubric_scores row per dimension, write
  *      overall_score / pass / hire_ready / graded_at on the submission.
  *
- * Dependencies are injectable (supabase + Claude call) so the integration
+ * The Claude call is injectable so the integration
  * test can assert the retry path without hitting the real API.
  */
 export async function gradeSubmission(
   submissionId: string,
   deps: GradeSubmissionDeps = {}
 ): Promise<ActionResult<{ status: "graded" | "grading_failed" | "already_graded" }>> {
-  const supabase = deps.supabase ?? createAdminClient();
-
-  const loaded = await loadContext(supabase, submissionId);
+  const loaded = await loadContext(submissionId);
   if (!loaded.ok) return loaded;
   const ctx = loaded.data;
 
   // Idempotency: another run already claimed this one.
-  const { data: currentStatus } = await supabase
-    .from("submissions")
-    .select("status")
-    .eq("id", submissionId)
-    .single();
+  const currentStatus = await firstOrNull(
+    db
+      .select({ status: submissions.status })
+      .from(submissions)
+      .where(eq(submissions.id, submissionId))
+      .limit(1)
+  );
   if (currentStatus?.status === "graded") {
     return { ok: true, data: { status: "already_graded" } };
   }
@@ -171,12 +181,12 @@ export async function gradeSubmission(
   // grading_failed so the user sees a clear state, and returns a
   // distinct error code so callers can distinguish cost-cap rejection
   // from a Claude failure.
-  const spend = await checkSpendCap(supabase);
+  const spend = await checkSpendCap();
   if (!spend.ok) {
-    await supabase
-      .from("submissions")
-      .update({ status: "grading_failed", graded_at: new Date().toISOString() })
-      .eq("id", submissionId);
+    await setStatus(submissionId, {
+      status: "grading_failed",
+      gradedAt: new Date().toISOString(),
+    });
     return {
       ok: false,
       error: `Daily Anthropic spend cap would be exceeded ($${spend.spendTodayUsd.toFixed(2)} spent, $${spend.capUsd.toFixed(2)} cap).`,
@@ -184,7 +194,7 @@ export async function gradeSubmission(
     };
   }
 
-  await supabase.from("submissions").update({ status: "grading" }).eq("id", submissionId);
+  await setStatus(submissionId, { status: "grading" });
 
   const graded = await gradeWithContext(
     {
@@ -197,13 +207,10 @@ export async function gradeSubmission(
   );
 
   if (!graded.ok) {
-    await supabase
-      .from("submissions")
-      .update({
-        status: "grading_failed",
-        graded_at: new Date().toISOString(),
-      })
-      .eq("id", submissionId);
+    await setStatus(submissionId, {
+      status: "grading_failed",
+      gradedAt: new Date().toISOString(),
+    });
     return graded;
   }
 
@@ -213,47 +220,47 @@ export async function gradeSubmission(
   // rows for MVP — aggregate cost is what we care about; per-dimension
   // breakdown would need a separate schema for marginal use.
   const rowsToInsert = score.dimension_scores.map((d) => ({
-    submission_id: submissionId,
-    rubric_id: ctx.rubricRow.id,
+    submissionId,
+    rubricId: ctx.rubricRow.id,
     dimension: d.dimension,
     score: d.score,
     justification: d.justification,
     quote: d.quote,
     suggestion: d.suggestion,
     model: GRADING_MODEL,
-    prompt_version: ctx.promptRow.version,
-    input_tokens: Math.round(inputTokens / score.dimension_scores.length),
-    output_tokens: Math.round(outputTokens / score.dimension_scores.length),
+    promptVersion: ctx.promptRow.version,
+    inputTokens: Math.round(inputTokens / score.dimension_scores.length),
+    outputTokens: Math.round(outputTokens / score.dimension_scores.length),
   }));
 
-  const { error: insertErr } = await supabase.from("rubric_scores").insert(rowsToInsert);
-
-  if (insertErr) {
+  try {
+    await db.insert(rubricScores).values(rowsToInsert);
+  } catch (err) {
     // Rare path: DB write failed after a good grade. Don't mark failed —
     // rely on the unique(submission_id, dimension) constraint to make a
     // retry safe.
     return {
       ok: false,
-      error: `DB write failed: ${insertErr.message}`,
+      error: `DB write failed: ${errMessage(err)}`,
       code: "DB_ERROR",
     };
   }
 
-  const { error: updateErr } = await supabase
-    .from("submissions")
-    .update({
-      status: "graded",
-      overall_score: score.overall_competency_score,
-      pass: score.pass,
-      hire_ready: score.hire_ready,
-      graded_at: new Date().toISOString(),
-    })
-    .eq("id", submissionId);
-
-  if (updateErr) {
+  try {
+    await db
+      .update(submissions)
+      .set({
+        status: "graded",
+        overallScore: score.overall_competency_score,
+        pass: score.pass,
+        hireReady: score.hire_ready,
+        gradedAt: new Date().toISOString(),
+      })
+      .where(eq(submissions.id, submissionId));
+  } catch (err) {
     return {
       ok: false,
-      error: `Submission update failed: ${updateErr.message}`,
+      error: `Submission update failed: ${errMessage(err)}`,
       code: "DB_ERROR",
     };
   }
@@ -262,46 +269,84 @@ export async function gradeSubmission(
   // on audit_queue.submission_id makes this idempotent — if we sampled
   // on a prior run and the row exists, this no-ops silently.
   if (shouldSample(submissionId)) {
-    await supabase.from("audit_queue").insert({ submission_id: submissionId, reason: "sampled" });
+    await db
+      .insert(auditQueue)
+      .values({ submissionId, reason: "sampled" })
+      .onConflictDoNothing({ target: auditQueue.submissionId })
+      .catch((err) => console.error("[grading] audit sample insert failed:", errMessage(err)));
   }
 
   // Notify the learner — silent so a Resend hiccup doesn't fail the grade.
-  void notifyGradingComplete(supabase, submissionId, score);
+  void notifyGradingComplete(submissionId, score);
 
   return { ok: true, data: { status: "graded" } };
 }
 
-/** Look up the user/lesson and send the graded-submission email. Best-effort. */
-async function notifyGradingComplete(
-  supabase: ReturnType<typeof createAdminClient>,
+function errMessage(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
+/** First row or null; swallows DB errors (Supabase `{ data: null }` semantics). */
+async function firstOrNull<T>(query: PromiseLike<T[]>): Promise<T | null> {
+  try {
+    return (await query)[0] ?? null;
+  } catch (err) {
+    console.error("[grading] query failed:", errMessage(err));
+    return null;
+  }
+}
+
+/** Status write whose failure the old code ignored — log, never throw. */
+async function setStatus(
   submissionId: string,
-  score: ScoreOutput
+  values: Pick<typeof submissions.$inferInsert, "status" | "gradedAt">
 ): Promise<void> {
   try {
-    const { data: row } = await supabase
-      .from("submissions")
-      .select("id, user_id, lesson:lessons(slug, title), profile:profiles!inner(full_name)")
-      .eq("id", submissionId)
-      .maybeSingle();
+    await db.update(submissions).set(values).where(eq(submissions.id, submissionId));
+  } catch (err) {
+    console.error("[grading] status update failed:", errMessage(err));
+  }
+}
+
+/** profiles.email, falling back to auth.users.email (replaces auth.admin.getUserById). */
+async function getUserEmail(userId: string): Promise<string | null> {
+  const [p] = await db
+    .select({ email: profiles.email })
+    .from(profiles)
+    .where(eq(profiles.id, userId))
+    .limit(1);
+  if (p?.email) return p.email;
+  const [u] = await db
+    .select({ email: usersInAuth.email })
+    .from(usersInAuth)
+    .where(eq(usersInAuth.id, userId))
+    .limit(1);
+  return u?.email ?? null;
+}
+
+/** Look up the user/lesson and send the graded-submission email. Best-effort. */
+async function notifyGradingComplete(submissionId: string, score: ScoreOutput): Promise<void> {
+  try {
+    const [row] = await db
+      .select({
+        id: submissions.id,
+        user_id: submissions.userId,
+        lesson_slug: lessons.slug,
+        lesson_title: lessons.title,
+        full_name: profiles.fullName,
+      })
+      .from(submissions)
+      .innerJoin(profiles, eq(profiles.id, submissions.userId))
+      .leftJoin(lessons, eq(lessons.id, submissions.lessonId))
+      .where(eq(submissions.id, submissionId))
+      .limit(1);
     if (!row?.user_id) return;
 
-    // Pull the auth email separately — profiles doesn't store it.
-    const { data: authUser } = await supabase.auth.admin.getUserById(row.user_id);
-    const recipientEmail = authUser?.user?.email;
+    const recipientEmail = await getUserEmail(row.user_id);
     if (!recipientEmail) return;
 
-    type LessonRow = { slug: string | null; title: string | null };
-    type ProfileRow = { full_name: string | null };
-    const lesson = (Array.isArray(row.lesson) ? row.lesson[0] : row.lesson) as
-      | LessonRow
-      | null
-      | undefined;
-    const profile = (Array.isArray(row.profile) ? row.profile[0] : row.profile) as
-      | ProfileRow
-      | null
-      | undefined;
-
-    const fullName = profile?.full_name ?? null;
+    const lesson = { slug: row.lesson_slug, title: row.lesson_title };
+    const fullName = row.full_name ?? null;
     const firstName = fullName ? (fullName.split(/\s+/)[0] ?? null) : null;
 
     // Build a short summary from the strongest and weakest dimensions.
@@ -335,17 +380,22 @@ async function notifyGradingComplete(
   }
 }
 
-async function loadContext(
-  supabase: ReturnType<typeof createAdminClient>,
-  submissionId: string
-): Promise<ActionResult<LoadedContext>> {
-  const { data: sub, error: subErr } = await supabase
-    .from("submissions")
-    .select("id, user_id, lesson_id, extracted_text, status")
-    .eq("id", submissionId)
-    .single();
+async function loadContext(submissionId: string): Promise<ActionResult<LoadedContext>> {
+  const sub = await firstOrNull(
+    db
+      .select({
+        id: submissions.id,
+        user_id: submissions.userId,
+        lesson_id: submissions.lessonId,
+        extracted_text: submissions.extractedText,
+        status: submissions.status,
+      })
+      .from(submissions)
+      .where(eq(submissions.id, submissionId))
+      .limit(1)
+  );
 
-  if (subErr || !sub) {
+  if (!sub) {
     return { ok: false, error: "Submission not found", code: "NOT_FOUND" };
   }
   if (!sub.extracted_text) {
@@ -356,11 +406,17 @@ async function loadContext(
     };
   }
 
-  const { data: lesson } = await supabase
-    .from("lessons")
-    .select("scenario_text, competency, prompt_name")
-    .eq("id", sub.lesson_id)
-    .single();
+  const lesson = await firstOrNull(
+    db
+      .select({
+        scenario_text: lessons.scenarioText,
+        competency: lessons.competency,
+        prompt_name: lessons.promptName,
+      })
+      .from(lessons)
+      .where(eq(lessons.id, sub.lesson_id))
+      .limit(1)
+  );
 
   if (!lesson?.scenario_text) {
     return { ok: false, error: "Lesson scenario missing", code: "NOT_FOUND" };
@@ -373,23 +429,25 @@ async function loadContext(
     };
   }
 
-  const { data: rubricRow } = await supabase
-    .from("rubrics")
-    .select("id, schema_json")
-    .eq("competency", lesson.competency)
-    .eq("is_current", true)
-    .single();
+  const rubricRow = await firstOrNull(
+    db
+      .select({ id: rubrics.id, schema_json: rubrics.schemaJson })
+      .from(rubrics)
+      .where(and(eq(rubrics.competency, lesson.competency), eq(rubrics.isCurrent, true)))
+      .limit(1)
+  );
 
   if (!rubricRow) {
     return { ok: false, error: "No current rubric", code: "NOT_FOUND" };
   }
 
-  const { data: promptRow } = await supabase
-    .from("prompts")
-    .select("version, body")
-    .eq("name", lesson.prompt_name)
-    .eq("is_current", true)
-    .single();
+  const promptRow = await firstOrNull(
+    db
+      .select({ version: prompts.version, body: prompts.body })
+      .from(prompts)
+      .where(and(eq(prompts.name, lesson.prompt_name), eq(prompts.isCurrent, true)))
+      .limit(1)
+  );
 
   if (!promptRow) {
     return { ok: false, error: "No current prompt", code: "NOT_FOUND" };

@@ -3,8 +3,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const { envMock } = vi.hoisted(() => ({
   envMock: { ANTHROPIC_SPEND_CAP_USD: 100 },
 }));
+const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
 
 vi.mock("@/env", () => ({ env: envMock }));
+vi.mock("@/db", () => ({ db: fakeDb.db }));
 vi.mock("@/lib/anthropic/client", () => ({
   GRADING_MODEL: "claude-sonnet-4-5",
 }));
@@ -13,35 +15,21 @@ import { checkSpendCap } from "@/lib/grading/spend-guard";
 
 type Row = { model: string; input_tokens: number; output_tokens: number };
 
-function fakeSupabase(rows: Row[]) {
-  // rubric_scores: .gte() resolves directly (no .eq chain)
-  const gteMock = vi.fn(async (_col: string, _val: string) => ({ data: rows, error: null }));
-  // tutor_messages: .gte() must return something with .eq() (the role filter)
-  // Always returns empty so existing tests are unaffected by the new query.
-  const tutorGteMock = vi.fn((_col: string, _val: string) => ({
-    eq: vi.fn(async () => ({ data: [] as Row[], error: null })),
-  }));
-  return {
-    from: (table: string) => {
-      if (table === "tutor_messages") {
-        return { select: (_cols: string) => ({ gte: tutorGteMock }) };
-      }
-      return { select: (_cols: string) => ({ gte: gteMock }) };
-    },
-    _gteMock: gteMock,
-  } as unknown as Parameters<typeof checkSpendCap>[0] & { _gteMock: typeof gteMock };
+// rubric_scores returns `rows`; tutor_messages is always empty here so the
+// grading-spend maths is tested in isolation.
+function withRubricRows(rows: Row[]) {
+  fakeDb.reset((q) => (q.table === "rubric_scores" ? rows : []));
 }
 
 beforeEach(() => {
   envMock.ANTHROPIC_SPEND_CAP_USD = 100;
+  withRubricRows([]);
 });
 
 describe("checkSpendCap", () => {
   it("passes when today's spend plus one estimate stays under the cap", async () => {
-    const supa = fakeSupabase([
-      { model: "claude-sonnet-4-5", input_tokens: 1000, output_tokens: 500 },
-    ]);
-    const r = await checkSpendCap(supa);
+    withRubricRows([{ model: "claude-sonnet-4-5", input_tokens: 1000, output_tokens: 500 }]);
+    const r = await checkSpendCap();
     expect(r.ok).toBe(true);
     if (r.ok) {
       expect(r.capUsd).toBe(100);
@@ -53,10 +41,8 @@ describe("checkSpendCap", () => {
 
   it("rejects when projected spend would exceed the cap", async () => {
     envMock.ANTHROPIC_SPEND_CAP_USD = 0.05;
-    const supa = fakeSupabase([
-      { model: "claude-sonnet-4-5", input_tokens: 5000, output_tokens: 2048 },
-    ]);
-    const r = await checkSpendCap(supa);
+    withRubricRows([{ model: "claude-sonnet-4-5", input_tokens: 5000, output_tokens: 2048 }]);
+    const r = await checkSpendCap();
     expect(r.ok).toBe(false);
     if (!r.ok) {
       expect(r.code).toBe("COST_CAP_EXCEEDED");
@@ -64,16 +50,14 @@ describe("checkSpendCap", () => {
     }
   });
 
-  it("queries rubric_scores filtered by start-of-UTC-day", async () => {
-    const supa = fakeSupabase([]);
-    const now = new Date("2026-04-19T08:30:00Z");
-    await checkSpendCap(supa, now);
-    expect(supa._gteMock).toHaveBeenCalledWith("created_at", "2026-04-19T00:00:00.000Z");
+  it("queries both metered tables (rubric_scores + tutor_messages)", async () => {
+    await checkSpendCap(new Date("2026-04-19T08:30:00Z"));
+    expect(fakeDb.callsFor("select", "rubric_scores")).toHaveLength(1);
+    expect(fakeDb.callsFor("select", "tutor_messages")).toHaveLength(1);
   });
 
   it("treats an empty day as 0 spend", async () => {
-    const supa = fakeSupabase([]);
-    const r = await checkSpendCap(supa);
+    const r = await checkSpendCap();
     expect(r.ok).toBe(true);
     if (r.ok) expect(r.spendTodayUsd).toBe(0);
   });

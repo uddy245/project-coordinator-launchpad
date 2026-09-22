@@ -14,7 +14,9 @@
 import { z } from "zod";
 import { anthropic, GRADING_MODEL } from "@/lib/anthropic/client";
 import { checkSpendCap } from "@/lib/grading/spend-guard";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { desc, sql } from "drizzle-orm";
+import { db } from "@/db";
+import { mockInterviewScenarios } from "@/db/schema";
 import { ScenarioSchema, type ScenarioInput } from "@/lib/interviews/schema";
 
 export type GenerateScenariosArgs = {
@@ -63,34 +65,31 @@ No preamble, no markdown, no code fences — output ONLY the JSON array.`;
 export async function generateInterviewScenarios(
   args: GenerateScenariosArgs
 ): Promise<GeneratedScenario[]> {
-  const spend = await checkSpendCap(createAdminClient());
+  const spend = await checkSpendCap();
   if (!spend.ok) {
     throw new Error(
       `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`
     );
   }
 
-  const admin = createAdminClient();
-
   // Pull existing slugs + recent prompts so Claude can avoid collisions.
-  const [{ data: existingSlugs }, { data: recentPrompts }, { data: maxSortRow }] =
-    await Promise.all([
-      admin.from("mock_interview_scenarios").select("slug"),
-      admin
-        .from("mock_interview_scenarios")
-        .select("prompt")
-        .order("created_at", { ascending: false, nullsFirst: false })
-        .limit(15),
-      admin
-        .from("mock_interview_scenarios")
-        .select("sort")
-        .order("sort", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-    ]);
+  const [existingSlugs, recentPrompts, maxSortRows] = await Promise.all([
+    db.select({ slug: mockInterviewScenarios.slug }).from(mockInterviewScenarios),
+    db
+      .select({ prompt: mockInterviewScenarios.prompt })
+      .from(mockInterviewScenarios)
+      .orderBy(sql`${mockInterviewScenarios.createdAt} desc nulls last`)
+      .limit(15),
+    db
+      .select({ sort: mockInterviewScenarios.sort })
+      .from(mockInterviewScenarios)
+      .orderBy(desc(mockInterviewScenarios.sort))
+      .limit(1),
+  ]);
+  const maxSortRow = maxSortRows[0] ?? null;
 
-  const slugList = (existingSlugs ?? []).map((r) => r.slug).join(", ");
-  const promptList = (recentPrompts ?? []).map((r, i) => `${i + 1}. ${r.prompt}`).join("\n");
+  const slugList = existingSlugs.map((r) => r.slug).join(", ");
+  const promptList = recentPrompts.map((r, i) => `${i + 1}. ${r.prompt}`).join("\n");
   const startSort = (maxSortRow?.sort ?? 0) + 1;
 
   const steerLines: string[] = [];
@@ -146,7 +145,7 @@ Output the JSON array now.`;
 
   // Belt-and-braces de-dupe against existing slugs in case Claude ignores
   // the avoid list. Append "-ai-<n>" so we don't fail on conflict.
-  const existingSlugSet = new Set((existingSlugs ?? []).map((r) => r.slug));
+  const existingSlugSet = new Set(existingSlugs.map((r) => r.slug));
   const rows = validated.data.map((s: ScenarioInput) => {
     let slug = s.slug;
     let suffix = 2;
@@ -162,20 +161,27 @@ Output the JSON array now.`;
       difficulty: s.difficulty,
       competency: s.competency,
       sort: s.sort,
-      is_published: true,
-      rubric_summary: s.rubric_summary || null,
-      is_ai_generated: true,
-      generated_at: new Date().toISOString(),
+      isPublished: true,
+      rubricSummary: s.rubric_summary || null,
+      isAiGenerated: true,
+      generatedAt: new Date().toISOString(),
     };
   });
 
-  const { data: inserted, error: insertErr } = await admin
-    .from("mock_interview_scenarios")
-    .insert(rows)
-    .select("id, slug, prompt, category, difficulty, competency, sort");
-  if (insertErr || !inserted) {
-    throw new Error(`Failed to insert generated scenarios: ${insertErr?.message ?? "unknown"}`);
+  try {
+    const inserted = await db.insert(mockInterviewScenarios).values(rows).returning({
+      id: mockInterviewScenarios.id,
+      slug: mockInterviewScenarios.slug,
+      prompt: mockInterviewScenarios.prompt,
+      category: mockInterviewScenarios.category,
+      difficulty: mockInterviewScenarios.difficulty,
+      competency: mockInterviewScenarios.competency,
+      sort: mockInterviewScenarios.sort,
+    });
+    return inserted as GeneratedScenario[];
+  } catch (err) {
+    throw new Error(
+      `Failed to insert generated scenarios: ${err instanceof Error ? err.message : "unknown"}`
+    );
   }
-
-  return inserted as GeneratedScenario[];
 }

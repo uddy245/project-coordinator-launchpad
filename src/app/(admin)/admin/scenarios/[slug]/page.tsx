@@ -1,23 +1,35 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { mockInterviewScenarios } from "@/db/schema";
+import { requireAdmin } from "@/lib/auth/require-user";
 import { ScenarioForm, type ScenarioFormDefaults } from "@/components/admin/scenario-form";
 
 export const metadata = { title: "Edit scenario — Admin" };
 export const dynamic = "force-dynamic";
 
 export default async function EditScenarioPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Layout already gates; repeated here as defence in depth (no RLS).
+  await requireAdmin();
   const { slug } = await params;
   if (slug === "new") notFound();
 
-  const admin = createAdminClient();
-  const { data } = await admin
-    .from("mock_interview_scenarios")
-    .select(
-      "id, slug, prompt, category, difficulty, competency, sort, is_published, rubric_summary"
-    )
-    .eq("slug", slug)
-    .maybeSingle();
+  const [data] = await db
+    .select({
+      id: mockInterviewScenarios.id,
+      slug: mockInterviewScenarios.slug,
+      prompt: mockInterviewScenarios.prompt,
+      category: mockInterviewScenarios.category,
+      difficulty: mockInterviewScenarios.difficulty,
+      competency: mockInterviewScenarios.competency,
+      sort: mockInterviewScenarios.sort,
+      is_published: mockInterviewScenarios.isPublished,
+      rubric_summary: mockInterviewScenarios.rubricSummary,
+    })
+    .from(mockInterviewScenarios)
+    .where(eq(mockInterviewScenarios.slug, slug))
+    .limit(1);
 
   if (!data) notFound();
 

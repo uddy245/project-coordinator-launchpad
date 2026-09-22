@@ -100,7 +100,10 @@ export async function rotateAssignment({
       .select({ assignment_id: workbookAssignmentSeen.assignmentId })
       .from(workbookAssignmentSeen)
       .where(
-        and(eq(workbookAssignmentSeen.userId, userId), eq(workbookAssignmentSeen.lessonId, lessonId))
+        and(
+          eq(workbookAssignmentSeen.userId, userId),
+          eq(workbookAssignmentSeen.lessonId, lessonId)
+        )
       ),
   ]);
 

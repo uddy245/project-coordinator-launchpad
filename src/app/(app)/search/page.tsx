@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { sql } from "drizzle-orm";
+import { db } from "@/db";
+import { hasAccess } from "@/lib/auth/session";
 import { SearchForm } from "@/components/search/search-form";
 
 export const metadata = { title: "Search — Launchpad" };
@@ -46,17 +48,23 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
   const { q } = await searchParams;
   const query = (q ?? "").trim();
 
   let results: SearchResult[] = [];
   if (query.length >= 2) {
-    const supabase = await createClient();
-    // Use websearch_to_tsquery — handles user input safely (operators like
-    // quotes, OR, -negation), no need to escape.
-    const { data } = await supabase.rpc("search_lessons", { q: query }).limit(20);
-    results = (data ?? []) as SearchResult[];
+    // search_lessons() is SECURITY INVOKER and only filters is_published;
+    // RLS used to also require has_access on lessons. Without purchased
+    // access (admins count as having it) the search returns nothing.
+    if (await hasAccess(user.id)) {
+      // Use websearch_to_tsquery — handles user input safely (operators like
+      // quotes, OR, -negation), no need to escape.
+      const res = (await db.execute(
+        sql`select * from public.search_lessons(${query}) limit 20`
+      )) as { rows: SearchResult[] };
+      results = res.rows;
+    }
   }
 
   return (
