@@ -19,7 +19,6 @@ import { rejectUnlessCron } from "@/lib/cron/auth";
 import { learningActivity, lessonProgress, lessons, profiles } from "@/db/schema";
 import { sendEmail } from "@/lib/email/send";
 import { renderWeeklyDigest } from "@/lib/email/templates/weekly-digest";
-import { env } from "@/env";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
