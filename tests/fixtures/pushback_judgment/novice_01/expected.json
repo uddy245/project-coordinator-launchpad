@@ -1,0 +1,15 @@
+{
+  "fixture_id": "novice_01",
+  "scenario_ref": "iam-modernisation-board-preread-pushback-v1",
+  "expected_dimension_scores": {
+    "four_conditions_diagnosis": { "score": 1, "tolerance": 1 },
+    "pushback_craft": { "score": 1, "tolerance": 1 },
+    "accept_the_overrule_posture": { "score": 1, "tolerance": 1 },
+    "medium_judgment": { "score": 1, "tolerance": 1 },
+    "coordinator_role_posture": { "score": 1, "tolerance": 1 }
+  },
+  "expected_overall_competency_score": 1.0,
+  "expected_pass": false,
+  "expected_hire_ready": false,
+  "notes_for_human_reviewer": "Floor submission — the caver. Sends the stale summary as instructed and buries a one-line 'fyi conformance pending' that nobody will read in time. No four-conditions analysis (the cave caps four_conditions_diagnosis at 1). No real push — 'you're closer to it than I am and you said to send' is hierarchy-deference, not a push (pushback_craft caps at 1 for caving; the buried FYI is the named anti-pattern). Never raises the concern for a decision, so there is nothing to accept-the-overrule on — accept_the_overrule_posture floors at 1 (caved). No medium reasoning. coordinator_role_posture floors at 1: hides behind blameless compliance ('I don't want to hold up the pack', 'let me know if you want anything changed after') and substitutes ease for the self-pushback the stakes demand. All five floor at 1."
+}
