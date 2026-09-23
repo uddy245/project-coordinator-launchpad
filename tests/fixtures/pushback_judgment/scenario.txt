@@ -1,0 +1,28 @@
+You are PC on the eleven-month IAM modernisation programme for a large healthcare provider. Sponsor: CISO. Go-live target: end of Q4. It is 4:30 p.m. The board meets tomorrow morning, and the CISO's office is assembling the board pre-read tonight — it closes at 6 p.m.
+
+Yesterday your PM, R. Adekanmi, drafted the "Q4 Go-Live Readiness Summary" — a one-pager that states Federation is "on track for conditional go-live, pending final conformance." That was an accurate reflection of the picture as of yesterday afternoon.
+
+Two things landed this morning that R. may not have seen — she has been in back-to-back steering prep all day:
+
+- The Federation broker token-exchange conformance results came in: FAIL. The integration does not pass the security conformance suite — the exact gate that "conditional go-live" was pending on. Vantage's fix ETA is "early next week," unconfirmed.
+- Federation is the single largest go-live risk on the programme, and tomorrow's board pre-read is the document the board will use to confirm (or hold) the Q4 go-live date.
+
+At 4:30 p.m. R. Slacks you, clearly between meetings: "PC — send the readiness summary to the CISO's chief of staff now, they're closing the board pack at 6. Thanks."
+
+The summary she means is yesterday's draft — the one that says Federation is on track. If it goes into the board pre-read unchanged, the board will confirm the Q4 date believing the last gate is essentially clear, when this morning it failed. A board decision made on that basis would be embarrassing and costly to unwind — the kind of thing that forces a formal correction and damages the programme's credibility with the board.
+
+You are aware of the temptations in both directions. You could just send it, as instructed — you'd be following a direct instruction from your PM, and you'd be "blameless" in the narrowest sense. You could send it with a buried one-line "fyi, conformance failed" that nobody will read in time. Or you could over-rotate the other way: refuse, or quietly rewrite the summary to show Federation RED and send your own version to the chief of staff. R. is rushing and may genuinely not know this morning's conformance result. The board pack closes in about ninety minutes.
+
+Your reply to R. — 400 to 700 words — should:
+
+1. Decide whether this warrants pushing back, applying the four conditions: (a) the stakes are material, (b) you have relevant information R. may not, (c) the decision is reversible only at higher cost if wrong, (d) R. is deciding under time pressure or with incomplete information. Distinguish pushing back from merely disagreeing.
+
+2. Draft the actual push-back message to R.: state the concern specifically and briefly, make the consequence concrete, and offer an alternative.
+
+3. Make clear you accept R.'s authority to overrule — if, knowing this, she still says send, you send, without relitigating.
+
+4. Choose your medium (written vs verbal) and say why, given the board-level stakes and the ninety-minute clock.
+
+5. Keep the tone respectful, not accusing; route any scope or role question through R.; and do not substitute your judgment for hers.
+
+Do not send anything to the CISO's chief of staff yourself, and do not rewrite-and-send your own version of the summary. The decision and the deliverable are R.'s — equip her to make the call in the next ninety minutes. That is what R. needs from you, even though she asked only for the send.

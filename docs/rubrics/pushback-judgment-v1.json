@@ -1,0 +1,61 @@
+{
+  "rubric_id": "pushback-judgment-v1",
+  "rubric_version": "1.0.0",
+  "competency": "pushback_judgment",
+  "competency_label": "Push-Back Judgment — The Four Conditions, the Method, the Medium, and Accepting the Overrule",
+  "lesson_ref": "push-back",
+  "pass_threshold": 3,
+  "hire_ready_threshold": 4,
+  "dimensions": [
+    {
+      "name": "four_conditions_diagnosis",
+      "description": "Does the learner decide whether to push back using the chapter's four conditions — (1) the stakes are material, (2) you have relevant information the senior person may not, (3) the decision is reversible only at higher cost if wrong, (4) the senior person is deciding under time pressure or with incomplete information — and conclude correctly that all four are present here, so a push is warranted? Does the learner distinguish pushing back from merely disagreeing (this is not a preference; it is an informed, consequential concern)?",
+      "anchors": {
+        "1": "No conditions test. Either complies silently (no push) or pushes purely as personal preference. Or invents facts not in the scenario.",
+        "3": "Names two or three of the four conditions and concludes a push is warranted, but does not work all four, or does not distinguish pushback from disagreement.",
+        "5": "Applies all four conditions explicitly to the facts (board-level stakes; PC holds this morning's conformance result R. may not; a board decision is costly to reverse; R. is rushed and working off yesterday's draft) and concludes a push is warranted. Explicitly frames this as warranted pushback, not mere disagreement."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "pushback_craft",
+      "description": "Does the drafted push-back follow the chapter's method — state the concern specifically and briefly (not 'I have concerns' but the exact issue), make the consequence concrete (what goes wrong if the stale summary reaches the board), and offer a specific alternative (e.g. an updated line on Federation, a short holding note, or a corrected one-pager R. can send)? Is it crisp rather than vague or padded?",
+      "anchors": {
+        "1": "Vague or absent. 'Are you sure?' with no specifics, or complies with no push, or a buried one-line FYI.",
+        "3": "States the concern with some specificity and one of {concrete consequence, specific alternative}, but is missing the other or stays general.",
+        "5": "States the concern specifically and briefly, makes the consequence concrete (board confirms Q4 on a failed gate → formal correction, credibility damage), and offers a specific, actionable alternative R. can act on inside ninety minutes."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "accept_the_overrule_posture",
+      "description": "Does the learner explicitly accept the PM's authority to overrule — if, having seen the concern, R. still says send, PC sends, without relitigating — while still having pushed? This is the boundary between the two failure modes: caving (never pushing) and insubordination (pushing but refusing to accept the call). Does the learner land the chapter's script posture ('…but if you've thought about this and still want me to proceed, I'll proceed')?",
+      "anchors": {
+        "1": "Either caves entirely (no push, defers to hierarchy) OR refuses to accept R.'s authority — relitigates, threatens, or unilaterally overrides/holds/rewrites-and-sends.",
+        "3": "Pushes and gestures at deference, but does not explicitly accept the overrule, or leaves ambiguous whether PC will comply if R. reaffirms.",
+        "5": "Pushes clearly AND explicitly accepts R.'s authority to overrule — states that if R. considers the concern and still says send, PC sends and does not relitigate. Uses the chapter's flag-recommend-defer posture."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "medium_judgment",
+      "description": "Does the learner choose written vs verbal deliberately and justify it for these stakes? The chapter's rule: everyday pushes are better verbal (softer, less paper trail); consequential pushes where you want a record should be written (respectfully) so the flag is on the record. Here the board-level stakes and the ninety-minute clock argue for a brief written push (Slack/email, dated) — does the learner reason this rather than defaulting?",
+      "anchors": {
+        "1": "No medium choice, or an unreasoned default that ignores the stakes.",
+        "3": "Picks a medium that fits but with thin justification, or notes the written-vs-verbal trade-off without committing.",
+        "5": "Chooses a brief written push given the board-level stakes and the clock, and justifies it with the chapter's record-and-social-weight reasoning (the flag should be on the record; a respectful written note protects both parties if it goes sideways)."
+      },
+      "weight": 0.20
+    },
+    {
+      "name": "coordinator_role_posture",
+      "description": "Does the learner hold the chapter's coordinator posture — respectful and not accusing (offering information and a recommendation, not telling R. she is wrong), routing any scope/role question through R. rather than acting unilaterally, declining to substitute PC's judgment for R.'s (no rewrite-and-send, no going around her), and showing the self-pushback discipline (not caving for ease or to avoid conflict, not hiding behind 'I flagged it, I'm blameless')?",
+      "anchors": {
+        "1": "Accusatory or insubordinate toward R., OR substitutes PC's judgment for hers (unilateral send/hold/rewrite), OR hides behind blameless compliance ('I raised it, I'm covered').",
+        "3": "Respectful and routes through R., but misses one of: the not-accusing framing, the self-pushback discipline, or the don't-substitute-judgment boundary.",
+        "5": "Respectful, offers information and a recommendation rather than a verdict; keeps the decision and deliverable R.'s; declines to rewrite-and-send or go around her; and reflects the self-pushback discipline — refusing the easy cave precisely because the stakes are material."
+      },
+      "weight": 0.20
+    }
+  ]
+}

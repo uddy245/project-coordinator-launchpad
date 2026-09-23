@@ -1,0 +1,19 @@
+To: R. Adekanmi
+From: PC
+Subject: Re: send the readiness summary — quick flag first
+
+Hi R,
+
+Before I send this I want to raise one thing quickly, because I think it's important enough to check with you first rather than just send.
+
+This isn't a small preference thing — the summary is going into the board pre-read, the board will use it to confirm the Q4 date, and that's hard to walk back if it's wrong. And I think I'm holding something you may not have seen today: the Federation conformance results came in this morning and they failed. That's the gate the "conditional go-live" line was pending on. The draft you asked me to send still says Federation is on track. I know you've been in steering prep all day so you may not have caught it.
+
+The concern is that if the board sees "on track" and signs off on Q4, and then it comes out that the conformance gate failed this morning, we're going to be issuing a correction to the board, which is a bad spot for the programme.
+
+What I'd suggest instead: let me update the Federation line to reflect that the conformance gate failed and remediation is in progress, and you can send that corrected version. I can have it ready for you to look at in a few minutes if you want.
+
+If you've already factored the conformance result in and you still want yesterday's version to go, just say so and I'll send it — you've got the full board context and it's your call. I just didn't want it going out without flagging this.
+
+I'm sending this as a Slack so you can reply quickly. Let me know which way you want to go and I'll move on it before the 6 p.m. close.
+
+PC
