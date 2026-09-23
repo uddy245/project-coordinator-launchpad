@@ -6,6 +6,7 @@ const signOutMock = vi.fn();
 const requestPasswordResetMock = vi.fn();
 const resetPasswordMock = vi.fn();
 const sendOtpMock = vi.fn();
+const signInOtpMock = vi.fn();
 const verifyEmailMock = vi.fn();
 const fetchMock = vi.fn();
 const redirectMock = vi.fn((_path: string) => {
@@ -17,7 +18,7 @@ const legacyRows = vi.hoisted(() => ({ rows: [] as { id: string }[] }));
 vi.mock("@/lib/auth/neon", () => ({
   neonAuth: () => ({
     signUp: { email: signUpMock },
-    signIn: { email: signInMock },
+    signIn: { email: signInMock, emailOtp: signInOtpMock },
     signOut: signOutMock,
     requestPasswordReset: requestPasswordResetMock,
     resetPassword: resetPasswordMock,
@@ -41,7 +42,15 @@ vi.mock("next/navigation", () => ({
   redirect: (path: string) => redirectMock(path),
 }));
 
-import { signUp, signIn, sendPasswordReset, updatePassword, verifyEmailCode } from "@/actions/auth";
+import {
+  signUp,
+  signIn,
+  sendPasswordReset,
+  updatePassword,
+  verifyEmailCode,
+  sendSignInCode,
+  signInWithCode,
+} from "@/actions/auth";
 
 beforeEach(() => {
   for (const m of [
@@ -51,6 +60,7 @@ beforeEach(() => {
     requestPasswordResetMock,
     resetPasswordMock,
     sendOtpMock,
+    signInOtpMock,
     verifyEmailMock,
     fetchMock,
   ]) {
@@ -326,6 +336,63 @@ describe("verifyEmailCode action", () => {
       error: { message: "OTP expired", code: "OTP_EXPIRED" },
     });
     expect(await verifyEmailCode({ email: "u@x.com", code: "000000" })).toMatchObject({
+      ok: false,
+      code: "CODE_EXPIRED",
+    });
+  });
+});
+
+describe("email sign-in code (replaces the magic link)", () => {
+  it("sendSignInCode validates the email and sends a 'sign-in' OTP", async () => {
+    expect(await sendSignInCode({ email: "nope" })).toMatchObject({
+      ok: false,
+      code: "INVALID_INPUT",
+    });
+    expect(sendOtpMock).not.toHaveBeenCalled();
+
+    const result = await sendSignInCode({ email: "User@X.com" });
+    expect(result).toEqual({ ok: true, data: undefined });
+    expect(sendOtpMock).toHaveBeenCalledWith({ email: "user@x.com", type: "sign-in" });
+  });
+
+  it("sendSignInCode maps rate limiting", async () => {
+    sendOtpMock.mockResolvedValue({
+      data: null,
+      error: { message: "Too many requests", code: "over_request_rate_limit" },
+    });
+    expect(await sendSignInCode({ email: "u@x.com" })).toMatchObject({
+      ok: false,
+      code: "RATE_LIMITED",
+    });
+  });
+
+  it("signInWithCode completes sign-in in the server action", async () => {
+    signInOtpMock.mockResolvedValue({ data: { token: "t", user: { id: "n1" } }, error: null });
+    const result = await signInWithCode({ email: "U@X.com", code: " 123456 " });
+    expect(signInOtpMock).toHaveBeenCalledWith({ email: "u@x.com", otp: "123456" });
+    expect(result).toEqual({ ok: true, data: undefined });
+  });
+
+  it("signInWithCode rejects malformed codes and maps wrong/expired codes", async () => {
+    expect(await signInWithCode({ email: "u@x.com", code: "abc" })).toMatchObject({
+      ok: false,
+      code: "INVALID_INPUT",
+    });
+    expect(signInOtpMock).not.toHaveBeenCalled();
+
+    signInOtpMock.mockResolvedValue({
+      data: null,
+      error: { message: "Invalid OTP", code: "INVALID_OTP" },
+    });
+    expect(await signInWithCode({ email: "u@x.com", code: "000000" })).toMatchObject({
+      ok: false,
+      code: "INVALID_CODE",
+    });
+    signInOtpMock.mockResolvedValue({
+      data: null,
+      error: { message: "OTP expired", code: "OTP_EXPIRED" },
+    });
+    expect(await signInWithCode({ email: "u@x.com", code: "000000" })).toMatchObject({
       ok: false,
       code: "CODE_EXPIRED",
     });

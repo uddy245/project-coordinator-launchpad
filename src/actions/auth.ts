@@ -183,36 +183,6 @@ export async function signIn(input: SignInInput): Promise<ActionResult> {
   return { ok: true, data: undefined };
 }
 
-const MagicLinkSchema = z.object({
-  email: z
-    .string()
-    .email("Enter a valid email address")
-    .transform((v) => v.toLowerCase().trim()),
-  redirectTo: z.string().optional(),
-});
-
-export type MagicLinkInput = z.input<typeof MagicLinkSchema>;
-
-export async function sendMagicLink(input: MagicLinkInput): Promise<ActionResult> {
-  const parsed = MagicLinkSchema.safeParse(input);
-  if (!parsed.success) {
-    return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
-  }
-
-  const target = parsed.data.redirectTo?.startsWith("/") ? parsed.data.redirectTo : "/dashboard";
-
-  const { error } = await neonAuth().signIn.magicLink({
-    email: parsed.data.email,
-    callbackURL: appUrl(target),
-  });
-
-  if (error) {
-    return { ok: false, error: error.message ?? "Could not send link.", code: "UNKNOWN" };
-  }
-
-  return { ok: true, data: undefined };
-}
-
 const PasswordResetRequestSchema = z.object({
   email: z
     .string()
@@ -417,6 +387,79 @@ export async function resendVerificationCode(email?: string): Promise<ActionResu
       code: "RATE_LIMITED",
     };
   }
+  return { ok: true, data: undefined };
+}
+
+const SignInCodeRequestSchema = z.object({ email: EmailSchema });
+
+export type SignInCodeRequestInput = z.input<typeof SignInCodeRequestSchema>;
+
+/**
+ * "Email me a sign-in code": Neon Auth email-OTP (type "sign-in"). Replaces
+ * the magic link, which cannot complete in this cross-domain setup (Neon
+ * never issues the session-challenge cookie the app needs). Never reveals
+ * whether the email has an account.
+ */
+export async function sendSignInCode(input: SignInCodeRequestInput): Promise<ActionResult> {
+  const parsed = SignInCodeRequestSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
+  }
+  const { error } = await neonAuth().emailOtp.sendVerificationOtp({
+    email: parsed.data.email,
+    type: "sign-in",
+  });
+  if (error) {
+    const msg = errorText(error);
+    if (msg.includes("rate_limit") || msg.includes("too many")) {
+      return {
+        ok: false,
+        error: "Too many requests — wait a minute and try again.",
+        code: "RATE_LIMITED",
+      };
+    }
+    return { ok: false, error: error.message ?? "Could not send the code.", code: "UNKNOWN" };
+  }
+  return { ok: true, data: undefined };
+}
+
+export type SignInWithCodeInput = z.input<typeof VerifyCodeSchema>;
+
+/**
+ * Complete email-code sign-in. Runs in this server action, so Neon's session
+ * cookies are set on this response (same mechanism as the sign-up code).
+ * A correct code proves the inbox, so the email is verified and identity
+ * linking (src/lib/auth/session.ts) applies as usual.
+ */
+export async function signInWithCode(input: SignInWithCodeInput): Promise<ActionResult> {
+  const parsed = VerifyCodeSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: firstZodIssue(parsed.error), code: "INVALID_INPUT" };
+  }
+
+  const { error } = await neonAuth().signIn.emailOtp({
+    email: parsed.data.email,
+    otp: parsed.data.code,
+  });
+
+  if (error) {
+    const msg = errorText(error);
+    if (msg.includes("expired")) {
+      return { ok: false, error: "That code has expired — send a new one.", code: "CODE_EXPIRED" };
+    }
+    if (msg.includes("attempt")) {
+      return { ok: false, error: "Too many attempts — send a new code.", code: "RATE_LIMITED" };
+    }
+    if (msg.includes("otp") || msg.includes("code") || msg.includes("invalid")) {
+      return {
+        ok: false,
+        error: "That code isn't right. Check the email and try again.",
+        code: "INVALID_CODE",
+      };
+    }
+    return { ok: false, error: error.message ?? "Could not sign in.", code: "UNKNOWN" };
+  }
+
   return { ok: true, data: undefined };
 }
 

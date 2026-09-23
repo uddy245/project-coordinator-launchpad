@@ -9,7 +9,8 @@ export default function AuthCodeErrorPage() {
       <div className="w-full max-w-sm space-y-4 rounded-lg border bg-card p-6 text-center shadow-sm">
         <h1 className="text-xl font-semibold">This link didn&apos;t work</h1>
         <p className="text-sm text-muted-foreground">
-          The magic link has expired or has already been used. Request a new one to continue.
+          This link has expired or has already been used. Log in again, or request a new
+          password-reset link.
         </p>
         <Button asChild className="w-full">
           <Link href="/login">Back to log in</Link>
