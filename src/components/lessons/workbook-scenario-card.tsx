@@ -4,20 +4,23 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { refreshWorkbookAssignment } from "@/actions/workbook";
+import { MarkdownProse } from "@/components/ui/markdown-prose";
 import type { WorkbookAssignment } from "@/lib/workbook/select";
+import { splitTask } from "@/lib/workbook/task";
 
 /**
- * Scenario brief card on the workbook tab. Shows the user's current
- * scenario (or an empty-state CTA if none yet), with a "↻ New scenario"
- * button. Clicking generates/rotates and updates inline so the brief
- * appears without a full page reload.
+ * Top of the Workbook tab: the "Your task" box (task sentence pulled out of
+ * the scenario + numbered steps), then the scenario itself with a
+ * "↻ New scenario" button. Rotating updates both inline.
  */
 export function WorkbookScenarioCard({
   lessonSlug,
   initialAssignment,
+  hasTemplate,
 }: {
   lessonSlug: string;
   initialAssignment: WorkbookAssignment | null;
+  hasTemplate: boolean;
 }) {
   const router = useRouter();
   const [assignment, setAssignment] = useState<WorkbookAssignment | null>(initialAssignment);
@@ -40,56 +43,78 @@ export function WorkbookScenarioCard({
     });
   }
 
-  if (!assignment) {
-    return (
-      <section className="space-y-3">
-        <div className="flex items-baseline justify-between border-b border-rule pb-2">
-          <h2 className="kicker">Scenario</h2>
-          <button
-            type="button"
-            onClick={rotate}
-            disabled={pending}
-            className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground disabled:opacity-50"
-            title="Generate a fresh practice scenario for this lesson via Claude."
-          >
-            {pending ? "Generating…" : "Generate scenario"}
-          </button>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          No scenario assigned yet. Click <em>Generate scenario</em> to draft a fictional case to
-          apply your workbook against.
-        </p>
-      </section>
-    );
-  }
+  const { task, scenario } = assignment
+    ? splitTask(assignment.brief)
+    : { task: null, scenario: "" };
+
+  const steps = hasTemplate
+    ? [
+        "Download the template below.",
+        "Complete each sheet using the scenario.",
+        "Check your work against “How this is graded”.",
+        "Upload your completed workbook.",
+      ]
+    : [
+        "Read the scenario.",
+        "Write your response as a Word, PDF or Excel document.",
+        "Check your work against “How this is graded”.",
+        "Upload your completed workbook.",
+      ];
 
   return (
-    <section className="space-y-3">
-      <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-2">
-        <h2 className="kicker">Scenario</h2>
-        <div className="flex items-center gap-3">
-          {assignment.is_ai_generated ? (
-            <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
-              · AI generated
-            </span>
-          ) : null}
-          <button
-            type="button"
-            onClick={rotate}
-            disabled={pending}
-            className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground disabled:opacity-50"
-            title="Switch to a different scenario you haven't seen — generates a new one if the pool is exhausted."
-          >
-            {pending ? "Loading…" : "↻ New scenario"}
-          </button>
+    <>
+      <section className="space-y-3 rounded-md border-2 border-ink bg-paper p-5">
+        <h2 className="kicker">Your task</h2>
+        {task ? (
+          <MarkdownProse content={task} compact />
+        ) : (
+          <p className="text-sm leading-relaxed text-ink">
+            Apply this lesson to the scenario below and produce the artifact it asks for.
+          </p>
+        )}
+        <ol className="list-decimal space-y-1 pl-5 text-sm text-ink">
+          {steps.map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="space-y-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-rule pb-2">
+          <h2 className="kicker">Scenario</h2>
+          <div className="flex items-center gap-3">
+            {assignment?.is_ai_generated ? (
+              <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+                · AI generated
+              </span>
+            ) : null}
+            <button
+              type="button"
+              onClick={rotate}
+              disabled={pending}
+              className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground disabled:opacity-50"
+              title="Switch to a different scenario you haven't seen — generates a new one if the pool is exhausted."
+            >
+              {pending ? "Loading…" : assignment ? "↻ New scenario" : "Generate scenario"}
+            </button>
+          </div>
         </div>
-      </div>
-      <article className="space-y-3 rounded-md border border-rule bg-paper p-4">
-        <h3 className="text-base font-medium leading-snug text-ink">{assignment.title}</h3>
-        <div className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
-          {assignment.brief}
-        </div>
-      </article>
-    </section>
+        {assignment ? (
+          <article className="space-y-3 rounded-md border border-rule bg-paper p-4">
+            <h3 className="text-base font-medium leading-snug text-ink">{assignment.title}</h3>
+            <MarkdownProse content={scenario} compact />
+          </article>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            No scenario assigned yet. Click <em>Generate scenario</em> to draft a fictional case to
+            apply your workbook against.
+          </p>
+        )}
+        <p className="text-xs text-muted-foreground">
+          A new scenario only changes the case you practise on. Submissions you&apos;ve already made
+          stay in your history with their grades, and the grading criteria stay the same.
+        </p>
+      </section>
+    </>
   );
 }
