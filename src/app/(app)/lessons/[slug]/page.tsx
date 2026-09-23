@@ -49,7 +49,6 @@ export default async function LessonPage({
     .where(eq(lessons.slug, slug))
     .limit(1);
   const lesson = row && (await canViewLesson(user.id, row)) ? row : undefined;
-  const lessonTitle = lesson?.title ?? "";
 
   if (!lesson) {
     // Either the slug doesn't exist or the user may not view it.
@@ -76,10 +75,8 @@ export default async function LessonPage({
         className={active === "read" ? "mx-auto max-w-4xl" : "mx-auto max-w-3xl"}
       >
         {active === "video" && <VideoPanel lessonSlug={slug} />}
-        {active === "read" && (
-          <ReadPanel lessonSlug={slug} lessonNumber={lesson.number} lessonTitle={lessonTitle} />
-        )}
-        {active === "workbook" && <WorkbookPanel lessonSlug={slug} lessonTitle={lessonTitle} />}
+        {active === "read" && <ReadPanel lessonSlug={slug} lessonNumber={lesson.number} />}
+        {active === "workbook" && <WorkbookPanel lessonSlug={slug} />}
         {active === "quiz" && <QuizPanel lessonSlug={slug} />}
       </section>
     </div>

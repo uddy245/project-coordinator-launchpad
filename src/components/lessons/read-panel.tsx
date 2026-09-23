@@ -1,4 +1,4 @@
-import ReactMarkdown from "react-markdown";
+import { MarkdownProse } from "@/components/ui/markdown-prose";
 import { getLessonReading } from "@/lib/lessons/reading";
 
 /**
@@ -16,7 +16,6 @@ import { getLessonReading } from "@/lib/lessons/reading";
 type Props = {
   lessonSlug: string;
   lessonNumber?: number;
-  lessonTitle?: string;
 };
 
 const WORDS_PER_MINUTE = 220;
@@ -26,19 +25,13 @@ function readingTimeMinutes(text: string): number {
   return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 }
 
-function deriveTitle(body: string, fallback?: string): string {
-  // The first H1 in the markdown is the article title. Strip it from
-  // the body so the masthead can render it with editorial typography
-  // instead of the default H1 inside the prose.
-  const m = body.match(/^#\s+(.+)$/m);
-  return m?.[1]?.trim() ?? fallback ?? "Reading";
-}
-
+// The markdown's first H1 repeats the lesson title, which the page header
+// already shows — strip it so the title appears once.
 function stripFirstH1(body: string): string {
   return body.replace(/^#\s+.+\n+/, "");
 }
 
-export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
+export function ReadPanel({ lessonSlug, lessonNumber }: Props) {
   const body = getLessonReading(lessonSlug);
 
   if (!body) {
@@ -52,7 +45,6 @@ export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
     );
   }
 
-  const title = deriveTitle(body, lessonTitle);
   const article = stripFirstH1(body);
   const minutes = readingTimeMinutes(article);
   const chapterLabel = typeof lessonNumber === "number" ? `Chapter ${lessonNumber}` : "Reading";
@@ -60,32 +52,18 @@ export function ReadPanel({ lessonSlug, lessonNumber, lessonTitle }: Props) {
   return (
     <div className="read-paper overflow-hidden border border-[#d9dde4] bg-white">
       {/* Course-handout header */}
-      <header className="border-b border-[#d9dde4] px-5 pb-6 pt-10 sm:px-14 sm:pb-8 sm:pt-12 lg:px-20">
+      <header className="border-b border-[#d9dde4] px-5 pb-4 pt-8 sm:px-14 sm:pb-5 sm:pt-10 lg:px-20">
         <div className="flex items-center justify-between gap-4">
           <span className="read-masthead">{chapterLabel} · Reading</span>
           <span className="read-masthead">{minutes} min</span>
         </div>
         <hr className="read-rule mt-3" />
-
-        <h1 className="read-title">{title}</h1>
       </header>
 
       {/* Article body — textbook reading measure */}
       <article className="px-5 pb-16 pt-8 sm:px-14 sm:pt-10 lg:px-20">
-        <div className="read-prose mx-auto max-w-[68ch]">
-          <ReactMarkdown
-            components={{
-              // Let wide lesson tables scroll horizontally on small screens
-              // instead of forcing the page to overflow.
-              table: (props) => (
-                <div className="overflow-x-auto">
-                  <table {...props} />
-                </div>
-              ),
-            }}
-          >
-            {article}
-          </ReactMarkdown>
+        <div className="mx-auto max-w-[68ch]">
+          <MarkdownProse content={article} />
           <div className="read-end-mark">End of reading · Companion to {chapterLabel}</div>
         </div>
       </article>

@@ -388,6 +388,47 @@
   border-bottom: 1.5px solid var(--ink);
 }
 
+/* Tables scroll sideways on narrow screens instead of squashing columns */
+.read-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.8em 0;
+}
+.read-table-wrap table {
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .read-prose th,
+  .read-prose td {
+    min-width: 9rem;
+  }
+}
+
+/* Compact modifier — same font as the Read tab, tighter rhythm for cards
+   (workbook scenario, task box). */
+.read-prose--compact {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.read-prose--compact p {
+  margin: 0 0 0.85em;
+}
+.read-prose--compact p:last-child {
+  margin-bottom: 0;
+}
+.read-prose--compact ul,
+.read-prose--compact ol {
+  margin: 0.6em 0 0.9em;
+}
+.read-prose--compact h2 {
+  font-size: 1.15rem;
+  margin: 1.2em 0 0.4em;
+  padding-top: 0.8em;
+}
+.read-prose--compact h3 {
+  margin: 1em 0 0.3em;
+}
+
 /* Horizontal rule — clean academic divider */
 .read-prose hr {
   border: 0;
