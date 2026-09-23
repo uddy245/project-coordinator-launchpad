@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { and, desc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { submissions as submissionsTable } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
 
 const STATUS_LABELS: Record<string, { label: string; tone: string }> = {
   pending: { label: "Grading…", tone: "bg-blue-100 text-blue-900" },
@@ -10,14 +13,24 @@ const STATUS_LABELS: Record<string, { label: string; tone: string }> = {
 };
 
 export async function SubmissionHistory({ lessonId }: { lessonId: string }) {
-  const supabase = await createClient();
-  const { data: submissions } = await supabase
-    .from("submissions")
-    .select("id, original_filename, status, overall_score, submitted_at")
-    .eq("lesson_id", lessonId)
-    .order("submitted_at", { ascending: false });
+  const user = await getAppUser();
 
-  if (!submissions || submissions.length === 0) {
+  // submissions: owner only.
+  const submissions = user
+    ? await db
+        .select({
+          id: submissionsTable.id,
+          original_filename: submissionsTable.originalFilename,
+          status: submissionsTable.status,
+          overall_score: submissionsTable.overallScore,
+          submitted_at: submissionsTable.submittedAt,
+        })
+        .from(submissionsTable)
+        .where(and(eq(submissionsTable.userId, user.id), eq(submissionsTable.lessonId, lessonId)))
+        .orderBy(desc(submissionsTable.submittedAt))
+    : [];
+
+  if (submissions.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">
         You haven&apos;t submitted an artifact for this lesson yet.

@@ -7,9 +7,9 @@ export const metadata = { title: "Log in — Launchpad" };
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ redirect?: string }>;
+  searchParams: Promise<{ redirect?: string; verified?: string }>;
 }) {
-  const { redirect } = await searchParams;
+  const { redirect, verified } = await searchParams;
   await redirectIfAuthed(redirect ?? "/dashboard");
 
   return (
@@ -20,6 +20,22 @@ export default async function LoginPage({
         <p className="text-sm text-muted-foreground">
           Pick up where you left off in the programme.
         </p>
+      </div>
+      {verified ? (
+        <p className="border border-rule bg-paper px-4 py-3 text-sm text-ink">
+          Email confirmed — log in to continue.
+        </p>
+      ) : null}
+      <div className="border border-rule bg-paper px-4 py-3 text-sm text-muted-foreground">
+        <strong className="text-ink">Returning learner?</strong> We&apos;ve upgraded sign-in. If
+        your account was created before September 2026, please{" "}
+        <Link
+          href="/forgot-password"
+          className="font-medium text-ink underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-[5px]"
+        >
+          reset your password
+        </Link>{" "}
+        once — your progress and submissions are kept.
       </div>
       <hr className="section-rule" />
       <LoginForm redirectTo={redirect ?? "/dashboard"} />

@@ -1,16 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type Stripe from "stripe";
 
-const { insertMock, updateEqMock, fromMock } = vi.hoisted(() => {
-  const insertMock = vi.fn();
-  const updateEqMock = vi.fn();
-  const fromMock = vi.fn();
-  return { insertMock, updateEqMock, fromMock };
-});
+const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
 
-vi.mock("@/lib/supabase/admin", () => ({
-  createAdminClient: () => ({ from: fromMock }),
-}));
+vi.mock("@/db", () => ({ db: fakeDb.db }));
+vi.mock("@/lib/email/send", () => ({ sendEmail: vi.fn(async () => undefined) }));
 
 import { handleCheckoutSessionCompleted } from "@/lib/stripe/webhook";
 
@@ -27,46 +21,50 @@ function buildSession(overrides: Partial<Stripe.Checkout.Session> = {}): Stripe.
   } as Stripe.Checkout.Session;
 }
 
-beforeEach(() => {
-  insertMock.mockReset();
-  updateEqMock.mockReset();
-  fromMock.mockReset();
-
-  fromMock.mockImplementation((table: string) => {
-    if (table === "purchases") return { insert: insertMock };
-    if (table === "profiles") return { update: () => ({ eq: updateEqMock }) };
-    throw new Error("unexpected table: " + table);
+/**
+ * purchases insert…onConflictDoNothing…returning → `inserted` (an empty
+ * array means the conflict fired, i.e. duplicate delivery);
+ * profiles update → `update`.
+ */
+function withDb(inserted: unknown = [{ id: "p1" }], update: unknown = []) {
+  fakeDb.reset((q) => {
+    if (q.op === "insert" && q.table === "purchases") return inserted;
+    if (q.op === "update" && q.table === "profiles") return update;
+    return [];
   });
+}
+
+beforeEach(() => {
+  withDb();
 });
 
 describe("handleCheckoutSessionCompleted", () => {
   it("happy path: inserts a purchase and flips has_access", async () => {
-    insertMock.mockResolvedValue({ error: null });
-    updateEqMock.mockResolvedValue({ error: null });
-
     const result = await handleCheckoutSessionCompleted(buildSession());
 
     expect(result).toEqual({ granted: true });
-    expect(insertMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        user_id: "u1",
-        stripe_session_id: "cs_test_1",
-        stripe_payment_intent_id: "pi_test_1",
-        amount_cents: 74900,
-        currency: "usd",
-        status: "paid",
-      })
-    );
-    expect(updateEqMock).toHaveBeenCalledWith("id", "u1");
+    const [insert] = fakeDb.callsFor("insert", "purchases");
+    expect(insert.values).toEqual({
+      userId: "u1",
+      stripeSessionId: "cs_test_1",
+      stripePaymentIntentId: "pi_test_1",
+      amountCents: 74900,
+      currency: "usd",
+      status: "paid",
+    });
+    expect(insert.chain).toContain("onConflictDoNothing");
+    const updates = fakeDb.callsFor("update", "profiles");
+    expect(updates).toHaveLength(1);
+    expect(updates[0].set).toEqual({ hasAccess: true });
   });
 
-  it("is idempotent: unique-violation on duplicate does not grant again", async () => {
-    insertMock.mockResolvedValue({ error: { code: "23505", message: "unique" } });
+  it("is idempotent: a duplicate session (no row returned) does not grant again", async () => {
+    withDb([]);
 
     const result = await handleCheckoutSessionCompleted(buildSession());
 
     expect(result).toMatchObject({ granted: false, reason: expect.stringContaining("duplicate") });
-    expect(updateEqMock).not.toHaveBeenCalled();
+    expect(fakeDb.callsFor("update", "profiles")).toHaveLength(0);
   });
 
   it("skips sessions without a user_id", async () => {
@@ -74,30 +72,28 @@ describe("handleCheckoutSessionCompleted", () => {
       buildSession({ metadata: {}, client_reference_id: null })
     );
     expect(result).toMatchObject({ granted: false, reason: "no user_id in metadata" });
-    expect(insertMock).not.toHaveBeenCalled();
+    expect(fakeDb.calls).toHaveLength(0);
   });
 
   it("skips sessions with non-paid status", async () => {
     const result = await handleCheckoutSessionCompleted(buildSession({ payment_status: "unpaid" }));
     expect(result).toMatchObject({ granted: false });
-    expect(insertMock).not.toHaveBeenCalled();
+    expect(fakeDb.calls).toHaveLength(0);
   });
 
-  it("throws on non-idempotent insert errors so Stripe retries", async () => {
-    insertMock.mockResolvedValue({ error: { code: "22000", message: "boom" } });
+  it("throws on insert errors so Stripe retries", async () => {
+    withDb(new Error("boom"));
     await expect(handleCheckoutSessionCompleted(buildSession())).rejects.toThrow(/boom/);
+    expect(fakeDb.callsFor("update", "profiles")).toHaveLength(0);
   });
 
   it("throws when the profile update fails", async () => {
-    insertMock.mockResolvedValue({ error: null });
-    updateEqMock.mockResolvedValue({ error: { message: "rls blocked" } });
-    await expect(handleCheckoutSessionCompleted(buildSession())).rejects.toThrow(/rls blocked/);
+    withDb([{ id: "p1" }], new Error("connection lost"));
+    await expect(handleCheckoutSessionCompleted(buildSession())).rejects.toThrow(/connection lost/);
   });
 
   it("falls back to client_reference_id when metadata.user_id is missing", async () => {
-    insertMock.mockResolvedValue({ error: null });
-    updateEqMock.mockResolvedValue({ error: null });
     await handleCheckoutSessionCompleted(buildSession({ metadata: {} }));
-    expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({ user_id: "u1" }));
+    expect(fakeDb.callsFor("insert", "purchases")[0].values).toMatchObject({ userId: "u1" });
   });
 });

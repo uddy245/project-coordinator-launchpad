@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { and, desc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { capstoneArtifacts, capstoneAttempts, capstoneScenarios } from "@/db/schema";
+import { hasAccess } from "@/lib/auth/session";
 import { CapstoneWorkspace, type ArtifactSlot } from "@/components/capstone/capstone-workspace";
 
 export const metadata = { title: "Capstone — Launchpad" };
@@ -24,35 +27,58 @@ export default async function CapstoneScenarioPage({
 }) {
   const user = await requireUser();
   const { slug } = await params;
-  const supabase = await createClient();
 
-  const { data: scenario } = await supabase
-    .from("capstone_scenarios")
-    .select(
-      "id, slug, title, brief, required_artifacts, estimated_hours, is_published, rubric_summary"
-    )
-    .eq("slug", slug)
-    .maybeSingle();
+  // capstone_scenarios (was RLS): published AND has_access. Admins could
+  // read unpublished rows, but this page 404s on unpublished anyway.
+  if (!(await hasAccess(user.id))) notFound();
+
+  const [scenario] = await db
+    .select({
+      id: capstoneScenarios.id,
+      slug: capstoneScenarios.slug,
+      title: capstoneScenarios.title,
+      brief: capstoneScenarios.brief,
+      required_artifacts: capstoneScenarios.requiredArtifacts,
+      estimated_hours: capstoneScenarios.estimatedHours,
+      is_published: capstoneScenarios.isPublished,
+      rubric_summary: capstoneScenarios.rubricSummary,
+    })
+    .from(capstoneScenarios)
+    .where(and(eq(capstoneScenarios.slug, slug), eq(capstoneScenarios.isPublished, true)))
+    .limit(1);
 
   if (!scenario || !scenario.is_published) notFound();
 
-  const { data: attempt } = await supabase
-    .from("capstone_attempts")
-    .select("id, status, started_at, submitted_at, graded_at, overall_score, pass")
-    .eq("user_id", user.id)
-    .eq("scenario_id", scenario.id)
-    .order("started_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  // capstone_attempts / capstone_artifacts: owner only.
+  const [attempt] = await db
+    .select({
+      id: capstoneAttempts.id,
+      status: capstoneAttempts.status,
+      started_at: capstoneAttempts.startedAt,
+      submitted_at: capstoneAttempts.submittedAt,
+      graded_at: capstoneAttempts.gradedAt,
+      overall_score: capstoneAttempts.overallScore,
+      pass: capstoneAttempts.pass,
+    })
+    .from(capstoneAttempts)
+    .where(and(eq(capstoneAttempts.userId, user.id), eq(capstoneAttempts.scenarioId, scenario.id)))
+    .orderBy(desc(capstoneAttempts.startedAt))
+    .limit(1);
 
-  const { data: artifacts } = attempt
-    ? await supabase
-        .from("capstone_artifacts")
-        .select("kind, file_name, created_at")
-        .eq("attempt_id", attempt.id)
-    : { data: [] as Array<{ kind: string; file_name: string; created_at: string }> };
+  const artifacts = attempt
+    ? await db
+        .select({
+          kind: capstoneArtifacts.kind,
+          file_name: capstoneArtifacts.fileName,
+          created_at: capstoneArtifacts.createdAt,
+        })
+        .from(capstoneArtifacts)
+        .where(
+          and(eq(capstoneArtifacts.attemptId, attempt.id), eq(capstoneArtifacts.userId, user.id))
+        )
+    : [];
 
-  const artifactByKind = new Map((artifacts ?? []).map((a) => [a.kind, a]));
+  const artifactByKind = new Map(artifacts.map((a) => [a.kind, a]));
 
   const required = (scenario.required_artifacts ?? []) as string[];
   const artifactSlots: ArtifactSlot[] = required.map((kind) => {

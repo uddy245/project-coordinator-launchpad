@@ -2,8 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import { rotateAssignment, type WorkbookAssignment } from "@/lib/workbook/select";
 import type { ActionResult } from "@/lib/types";
 
@@ -28,26 +31,36 @@ export async function refreshWorkbookAssignment(
     return { ok: false, error: "Invalid input", code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
 
-  const admin = createAdminClient();
-  const { data: lesson } = await admin
-    .from("lessons")
-    .select("id, title, summary, competency")
-    .eq("slug", parsed.data.lessonSlug)
-    .eq("is_published", true)
-    .maybeSingle();
+  let lesson: { id: string; title: string; summary: string | null; competency: string } | null =
+    null;
+  try {
+    const [row] = await db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        summary: lessons.summary,
+        competency: lessons.competency,
+        isPublished: lessons.isPublished,
+        isPreview: lessons.isPreview,
+      })
+      .from(lessons)
+      .where(eq(lessons.slug, parsed.data.lessonSlug))
+      .limit(1);
+    // lessons (was RLS): free previews for anyone, else has_access; admins all.
+    if (row && (await canViewLesson(user.id, row))) lesson = row;
+  } catch {
+    lesson = null;
+  }
   if (!lesson) {
     return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
   }
 
   try {
+    // workbook_assignment_seen is scoped by the session user id we pass.
     const result = await rotateAssignment({
-      supabase: admin,
       userId: user.id,
       lessonId: lesson.id,
       lessonSlug: parsed.data.lessonSlug,

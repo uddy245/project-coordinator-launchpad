@@ -2,51 +2,58 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { auditQueue, auditRecords, submissions } from "@/db/schema";
+import { getAppUser, isAdmin } from "@/lib/auth/session";
 import type { ActionResult } from "@/lib/types";
 import { notifyAuditDecision } from "@/lib/email/notify-audit";
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Postgres message from a Drizzle error (without the SQL text/params). */
+function dbMessage(err: unknown): string {
+  const e = err as { cause?: { message?: string }; message?: string } | null;
+  return e?.cause?.message ?? e?.message ?? "Database error";
+}
 
 // --------------------------------------------------------------------------
 // Learner-initiated: flag a submission for human review.
 // --------------------------------------------------------------------------
 export async function requestReview(submissionId: string): Promise<ActionResult> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
 
-  // RLS on submissions keeps a non-owner from flagging a submission
-  // they can't see.
-  const { data: submission } = await supabase
-    .from("submissions")
-    .select("id, status")
-    .eq("id", submissionId)
-    .maybeSingle();
-  if (!submission) {
+  // A malformed id can't match a row (Postgres would reject the uuid cast).
+  if (!UUID_RE.test(submissionId)) {
     return { ok: false, error: "Submission not found.", code: "NOT_FOUND" };
   }
-  if (submission.status !== "graded") {
-    return {
-      ok: false,
-      error: "Only graded submissions can be sent for review.",
-      code: "NOT_ELIGIBLE",
-    };
-  }
 
-  const admin = createAdminClient();
-  const { error } = await admin
-    .from("audit_queue")
-    .insert({ submission_id: submissionId, reason: "requested" });
-
-  if (error) {
-    // Unique violation → already queued. That's fine; surface a success
-    // with a distinct code the UI can use to stop showing the button.
-    if ((error as { code?: string }).code === "23505") {
-      return { ok: true, data: undefined };
+  try {
+    // Owner check (was RLS on submissions): a non-owner's id reads as not found.
+    const [submission] = await db
+      .select({ id: submissions.id, status: submissions.status })
+      .from(submissions)
+      .where(and(eq(submissions.id, submissionId), eq(submissions.userId, user.id)))
+      .limit(1);
+    if (!submission) {
+      return { ok: false, error: "Submission not found.", code: "NOT_FOUND" };
     }
-    return { ok: false, error: error.message, code: "DB_ERROR" };
+    if (submission.status !== "graded") {
+      return {
+        ok: false,
+        error: "Only graded submissions can be sent for review.",
+        code: "NOT_ELIGIBLE",
+      };
+    }
+
+    // Already queued (unique submission_id) is fine — treat as success.
+    await db
+      .insert(auditQueue)
+      .values({ submissionId: submission.id, reason: "requested" })
+      .onConflictDoNothing({ target: auditQueue.submissionId });
+  } catch (err) {
+    return { ok: false, error: dbMessage(err), code: "DB_ERROR" };
   }
 
   revalidatePath(`/submissions/${submissionId}`);
@@ -57,25 +64,27 @@ export async function requestReview(submissionId: string): Promise<ActionResult>
 // Admin-only: approve an audit with no changes.
 // --------------------------------------------------------------------------
 export async function approveAudit(queueId: string): Promise<ActionResult> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
 
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+  if (!(await isAdmin(user.id))) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
 
-  const admin = createAdminClient();
+  try {
+    await db.insert(auditRecords).values({
+      auditQueueId: queueId,
+      reviewerId: user.id,
+      decision: "approved",
+    });
+  } catch (err) {
+    return { ok: false, error: dbMessage(err), code: "DB_ERROR" };
+  }
 
-  const { error: recordErr } = await admin.from("audit_records").insert({
-    audit_queue_id: queueId,
-    reviewer_id: user.id,
-    decision: "approved",
-  });
-  if (recordErr) return { ok: false, error: recordErr.message, code: "DB_ERROR" };
-
-  await admin.from("audit_queue").update({ status: "approved" }).eq("id", queueId);
+  try {
+    await db.update(auditQueue).set({ status: "approved" }).where(eq(auditQueue.id, queueId));
+  } catch (err) {
+    // Old code ignored this error; the audit record is already written.
+    console.error("[approveAudit] queue status update failed", err);
+  }
 
   void notifyAuditDecision({ queueId, decision: "approved" });
 
@@ -113,27 +122,32 @@ export async function overrideScores(input: OverrideInput): Promise<ActionResult
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
 
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+  if (!(await isAdmin(user.id))) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
 
-  const admin = createAdminClient();
+  try {
+    await db.insert(auditRecords).values({
+      auditQueueId: parsed.data.queueId,
+      reviewerId: user.id,
+      decision: "overridden",
+      overrides: parsed.data.overrides,
+      note: parsed.data.note,
+    });
+  } catch (err) {
+    return { ok: false, error: dbMessage(err), code: "DB_ERROR" };
+  }
 
-  const { error: recordErr } = await admin.from("audit_records").insert({
-    audit_queue_id: parsed.data.queueId,
-    reviewer_id: user.id,
-    decision: "overridden",
-    overrides: parsed.data.overrides,
-    note: parsed.data.note,
-  });
-  if (recordErr) return { ok: false, error: recordErr.message, code: "DB_ERROR" };
-
-  await admin.from("audit_queue").update({ status: "overridden" }).eq("id", parsed.data.queueId);
+  try {
+    await db
+      .update(auditQueue)
+      .set({ status: "overridden" })
+      .where(eq(auditQueue.id, parsed.data.queueId));
+  } catch (err) {
+    // Old code ignored this error; the audit record is already written.
+    console.error("[overrideScores] queue status update failed", err);
+  }
 
   void notifyAuditDecision({
     queueId: parsed.data.queueId,

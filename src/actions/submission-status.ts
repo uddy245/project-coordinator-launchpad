@@ -1,26 +1,29 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { submissions } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
 
 /**
  * Read-only helper the polling UI uses to know when a pending
  * submission has flipped to graded / grading_failed. Scoped to the
- * authed user via RLS — returns null for unknown or foreign IDs.
+ * authed user (owner filter) — returns null for unknown or foreign IDs.
  */
 export async function getSubmissionStatus(
   submissionId: string
 ): Promise<{ status: string } | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return null;
 
-  const { data } = await supabase
-    .from("submissions")
-    .select("status")
-    .eq("id", submissionId)
-    .maybeSingle();
-
-  return data ?? null;
+  try {
+    const [row] = await db
+      .select({ status: submissions.status })
+      .from(submissions)
+      .where(and(eq(submissions.id, submissionId), eq(submissions.userId, user.id)))
+      .limit(1);
+    return row ?? null;
+  } catch {
+    return null;
+  }
 }

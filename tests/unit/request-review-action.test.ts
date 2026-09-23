@@ -1,97 +1,102 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { getUserMock, submissionMaybeSingleMock, queueInsertMock } = vi.hoisted(() => ({
-  getUserMock: vi.fn(),
-  submissionMaybeSingleMock: vi.fn(),
-  queueInsertMock: vi.fn(),
+const { getAppUserMock, isAdminMock } = vi.hoisted(() => ({
+  getAppUserMock: vi.fn(),
+  isAdminMock: vi.fn(),
 }));
+const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: async () => ({
-    auth: { getUser: getUserMock },
-    from: (table: string) => {
-      if (table === "submissions") {
-        return {
-          select: () => ({ eq: () => ({ maybeSingle: submissionMaybeSingleMock }) }),
-        };
-      }
-      throw new Error("unexpected table on user client: " + table);
-    },
-  }),
-}));
-
-vi.mock("@/lib/supabase/admin", () => ({
-  createAdminClient: () => ({
-    from: (table: string) => {
-      if (table === "audit_queue") {
-        return { insert: queueInsertMock };
-      }
-      throw new Error("unexpected admin table: " + table);
-    },
-  }),
-}));
-
+vi.mock("@/db", () => ({ db: fakeDb.db }));
+vi.mock("@/lib/auth/session", () => ({ getAppUser: getAppUserMock, isAdmin: isAdminMock }));
+vi.mock("@/lib/email/notify-audit", () => ({ notifyAuditDecision: vi.fn() }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
 import { requestReview } from "@/actions/audit";
 
+const SUB_ID = "11111111-2222-4333-8444-555555555555";
+const USER = { id: "u1", email: "u1@example.com", name: null, neonAuthUserId: "n1" };
+
+/**
+ * submissions select returns `submission` (the owner-scoped lookup — a
+ * non-owner's id reads as no row); audit_queue insert returns `queueInsert`.
+ */
+function withDb(submission: { id: string; status: string } | null, queueInsert: unknown = []) {
+  fakeDb.reset((q) => {
+    if (q.op === "select" && q.table === "submissions") return submission ? [submission] : [];
+    if (q.op === "insert" && q.table === "audit_queue") return queueInsert;
+    return [];
+  });
+}
+
 beforeEach(() => {
-  getUserMock.mockReset();
-  submissionMaybeSingleMock.mockReset();
-  queueInsertMock.mockReset();
+  getAppUserMock.mockReset();
+  isAdminMock.mockReset();
+  withDb(null);
 });
 
 describe("requestReview", () => {
   it("rejects unauthenticated callers", async () => {
-    getUserMock.mockResolvedValueOnce({ data: { user: null } });
-    const r = await requestReview("sub-1");
+    getAppUserMock.mockResolvedValueOnce(null);
+    const r = await requestReview(SUB_ID);
     expect(r).toEqual({ ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" });
+    expect(fakeDb.calls).toHaveLength(0);
   });
 
-  it("returns NOT_FOUND when RLS hides the submission", async () => {
-    getUserMock.mockResolvedValueOnce({ data: { user: { id: "u1" } } });
-    submissionMaybeSingleMock.mockResolvedValueOnce({ data: null });
-    const r = await requestReview("sub-missing");
+  it("returns NOT_FOUND for a malformed id without querying", async () => {
+    getAppUserMock.mockResolvedValueOnce(USER);
+    const r = await requestReview("sub-1");
     expect(r).toEqual({ ok: false, error: "Submission not found.", code: "NOT_FOUND" });
+    expect(fakeDb.calls).toHaveLength(0);
+  });
+
+  // The owner filter itself (user_id = session user) is in the WHERE clause,
+  // covered by tests/integration/neon-smoke.test.ts.
+  it("returns NOT_FOUND when the submission is missing or not the user's", async () => {
+    getAppUserMock.mockResolvedValueOnce(USER);
+    withDb(null);
+    const r = await requestReview(SUB_ID);
+    expect(r).toEqual({ ok: false, error: "Submission not found.", code: "NOT_FOUND" });
+    expect(fakeDb.callsFor("insert")).toHaveLength(0);
   });
 
   it("refuses when the submission is not yet graded", async () => {
-    getUserMock.mockResolvedValueOnce({ data: { user: { id: "u1" } } });
-    submissionMaybeSingleMock.mockResolvedValueOnce({ data: { id: "sub-1", status: "grading" } });
-    const r = await requestReview("sub-1");
+    getAppUserMock.mockResolvedValueOnce(USER);
+    withDb({ id: SUB_ID, status: "grading" });
+    const r = await requestReview(SUB_ID);
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.code).toBe("NOT_ELIGIBLE");
+    expect(fakeDb.callsFor("insert")).toHaveLength(0);
   });
 
   it("inserts into audit_queue with reason=requested on success", async () => {
-    getUserMock.mockResolvedValueOnce({ data: { user: { id: "u1" } } });
-    submissionMaybeSingleMock.mockResolvedValueOnce({ data: { id: "sub-1", status: "graded" } });
-    queueInsertMock.mockResolvedValueOnce({ error: null });
+    getAppUserMock.mockResolvedValueOnce(USER);
+    withDb({ id: SUB_ID, status: "graded" });
 
-    const r = await requestReview("sub-1");
+    const r = await requestReview(SUB_ID);
     expect(r).toEqual({ ok: true, data: undefined });
-    expect(queueInsertMock).toHaveBeenCalledWith({
-      submission_id: "sub-1",
-      reason: "requested",
-    });
+    const [insert] = fakeDb.callsFor("insert", "audit_queue");
+    expect(insert.values).toEqual({ submissionId: SUB_ID, reason: "requested" });
   });
 
-  it("treats a unique-violation (already queued) as success", async () => {
-    getUserMock.mockResolvedValueOnce({ data: { user: { id: "u1" } } });
-    submissionMaybeSingleMock.mockResolvedValueOnce({ data: { id: "sub-1", status: "graded" } });
-    queueInsertMock.mockResolvedValueOnce({ error: { code: "23505", message: "duplicate" } });
+  it("treats an already-queued submission as success (ON CONFLICT DO NOTHING)", async () => {
+    getAppUserMock.mockResolvedValueOnce(USER);
+    // Conflict → no row returned; still success.
+    withDb({ id: SUB_ID, status: "graded" }, []);
 
-    const r = await requestReview("sub-1");
+    const r = await requestReview(SUB_ID);
     expect(r).toEqual({ ok: true, data: undefined });
+    expect(fakeDb.callsFor("insert", "audit_queue")[0].chain).toContain("onConflictDoNothing");
   });
 
   it("surfaces unexpected DB errors", async () => {
-    getUserMock.mockResolvedValueOnce({ data: { user: { id: "u1" } } });
-    submissionMaybeSingleMock.mockResolvedValueOnce({ data: { id: "sub-1", status: "graded" } });
-    queueInsertMock.mockResolvedValueOnce({ error: { code: "XXXXX", message: "boom" } });
+    getAppUserMock.mockResolvedValueOnce(USER);
+    withDb({ id: SUB_ID, status: "graded" }, new Error("boom"));
 
-    const r = await requestReview("sub-1");
+    const r = await requestReview(SUB_ID);
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.code).toBe("DB_ERROR");
+    if (!r.ok) {
+      expect(r.code).toBe("DB_ERROR");
+      expect(r.error).toBe("boom");
+    }
   });
 });

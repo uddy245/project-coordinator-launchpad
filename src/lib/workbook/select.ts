@@ -12,7 +12,9 @@
  *   the "↻ New scenario" action.
  */
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { and, desc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { workbookAssignmentSeen, workbookAssignments } from "@/db/schema";
 import { generateWorkbookAssignment, type GeneratedAssignment } from "@/lib/workbook/generate";
 
 export type WorkbookAssignment = {
@@ -25,48 +27,54 @@ export type WorkbookAssignment = {
   sort: number;
 };
 
+const assignmentColumns = {
+  id: workbookAssignments.id,
+  lesson_id: workbookAssignments.lessonId,
+  title: workbookAssignments.title,
+  brief: workbookAssignments.brief,
+  is_ai_generated: workbookAssignments.isAiGenerated,
+  is_default: workbookAssignments.isDefault,
+  sort: workbookAssignments.sort,
+};
+
 export async function getCurrentAssignment({
-  supabase,
   userId,
   lessonId,
 }: {
-  supabase: SupabaseClient;
   userId: string;
   lessonId: string;
 }): Promise<WorkbookAssignment | null> {
   // Try the most recently seen one first.
-  const { data: seenRows } = await supabase
-    .from("workbook_assignment_seen")
-    .select("assignment_id")
-    .eq("user_id", userId)
-    .eq("lesson_id", lessonId)
-    .order("seen_at", { ascending: false })
+  const seenRows = await db
+    .select({ assignment_id: workbookAssignmentSeen.assignmentId })
+    .from(workbookAssignmentSeen)
+    .where(
+      and(eq(workbookAssignmentSeen.userId, userId), eq(workbookAssignmentSeen.lessonId, lessonId))
+    )
+    .orderBy(desc(workbookAssignmentSeen.seenAt))
     .limit(1);
 
-  if (seenRows && seenRows.length > 0) {
-    const { data: assignment } = await supabase
-      .from("workbook_assignments")
-      .select("id, lesson_id, title, brief, is_ai_generated, is_default, sort")
-      .eq("id", seenRows[0].assignment_id)
-      .maybeSingle();
-    if (assignment) return assignment as WorkbookAssignment;
+  if (seenRows.length > 0) {
+    const [assignment] = await db
+      .select(assignmentColumns)
+      .from(workbookAssignments)
+      .where(eq(workbookAssignments.id, seenRows[0].assignment_id))
+      .limit(1);
+    if (assignment) return assignment;
     // Fall through if assignment was deleted out from under the seen row.
   }
 
   // No seen rows — show the lesson's default brief if there is one.
-  const { data: defaultRow } = await supabase
-    .from("workbook_assignments")
-    .select("id, lesson_id, title, brief, is_ai_generated, is_default, sort")
-    .eq("lesson_id", lessonId)
-    .eq("is_default", true)
-    .order("sort", { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  return (defaultRow as WorkbookAssignment | null) ?? null;
+  const [defaultRow] = await db
+    .select(assignmentColumns)
+    .from(workbookAssignments)
+    .where(and(eq(workbookAssignments.lessonId, lessonId), eq(workbookAssignments.isDefault, true)))
+    .orderBy(workbookAssignments.sort)
+    .limit(1);
+  return defaultRow ?? null;
 }
 
 export async function rotateAssignment({
-  supabase,
   userId,
   lessonId,
   lessonSlug,
@@ -74,7 +82,6 @@ export async function rotateAssignment({
   lessonSummary,
   competency,
 }: {
-  supabase: SupabaseClient;
   userId: string;
   lessonId: string;
   lessonSlug: string;
@@ -83,28 +90,32 @@ export async function rotateAssignment({
   competency: string;
 }): Promise<{ assignment: WorkbookAssignment; generated: boolean }> {
   // 1. Pull pool + this user's seen ids in parallel.
-  const [{ data: pool }, { data: seenRows }] = await Promise.all([
-    supabase
-      .from("workbook_assignments")
-      .select("id, lesson_id, title, brief, is_ai_generated, is_default, sort")
-      .eq("lesson_id", lessonId)
-      .order("sort", { ascending: true }),
-    supabase
-      .from("workbook_assignment_seen")
-      .select("assignment_id")
-      .eq("user_id", userId)
-      .eq("lesson_id", lessonId),
+  const [pool, seenRows] = await Promise.all([
+    db
+      .select(assignmentColumns)
+      .from(workbookAssignments)
+      .where(eq(workbookAssignments.lessonId, lessonId))
+      .orderBy(workbookAssignments.sort),
+    db
+      .select({ assignment_id: workbookAssignmentSeen.assignmentId })
+      .from(workbookAssignmentSeen)
+      .where(
+        and(
+          eq(workbookAssignmentSeen.userId, userId),
+          eq(workbookAssignmentSeen.lessonId, lessonId)
+        )
+      ),
   ]);
 
-  const seenIds = new Set((seenRows ?? []).map((r) => r.assignment_id));
-  const unseen = (pool ?? []).filter((it) => !seenIds.has(it.id));
+  const seenIds = new Set(seenRows.map((r) => r.assignment_id));
+  const unseen = pool.filter((it) => !seenIds.has(it.id));
 
   let assignment: WorkbookAssignment;
   let generated = false;
 
   if (unseen.length > 0) {
     // Pick the lowest-sort unseen one for predictable ordering across users.
-    assignment = unseen[0] as WorkbookAssignment;
+    assignment = unseen[0];
   } else {
     // Pool exhausted for this user — generate a new brief.
     const fresh: GeneratedAssignment = await generateWorkbookAssignment({
@@ -127,14 +138,14 @@ export async function rotateAssignment({
   }
 
   // Mark the chosen assignment as seen so subsequent rotates don't repeat.
-  await supabase.from("workbook_assignment_seen").upsert(
-    {
-      user_id: userId,
-      assignment_id: assignment.id,
-      lesson_id: lessonId,
-    },
-    { onConflict: "user_id,assignment_id" }
-  );
+  const seenAt = new Date().toISOString();
+  await db
+    .insert(workbookAssignmentSeen)
+    .values({ userId, assignmentId: assignment.id, lessonId, seenAt })
+    .onConflictDoUpdate({
+      target: [workbookAssignmentSeen.userId, workbookAssignmentSeen.assignmentId],
+      set: { seenAt },
+    });
 
   return { assignment, generated };
 }

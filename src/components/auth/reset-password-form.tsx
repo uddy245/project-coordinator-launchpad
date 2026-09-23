@@ -22,7 +22,7 @@ const ResetPasswordSchema = z
 
 type ResetPasswordValues = z.infer<typeof ResetPasswordSchema>;
 
-export function ResetPasswordForm() {
+export function ResetPasswordForm({ token }: { token: string }) {
   const [isPending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
 
@@ -38,18 +38,16 @@ export function ResetPasswordForm() {
   function onSubmit(values: ResetPasswordValues) {
     setSubmitting(true);
     startTransition(async () => {
-      const result = await updatePassword({ password: values.password });
+      const result = await updatePassword({ password: values.password, token });
       if (!result.ok) {
         setSubmitting(false);
         toast.error(result.error);
         return;
       }
-      toast.success("Password updated — you're all set.");
-      // Full-page navigation (not router.push): Safari does not reliably
-      // attach cookies set by the server action to the immediate client-side
-      // RSC navigation. A hard navigation always sends the fresh session
-      // cookies.
-      window.location.assign("/dashboard");
+      toast.success("Password updated — log in with your new password.");
+      // Full-page navigation (not router.push) so the login page renders
+      // with fresh cookies (Safari quirk with server-action cookies).
+      window.location.assign("/login");
     });
   }
 

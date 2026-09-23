@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { and, asc, desc, eq, inArray, notInArray } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons, submissions } from "@/db/schema";
+import { visibleLessonsFilter } from "@/lib/lessons/access";
 import { Button } from "@/components/ui/button";
 import { ArtifactCard } from "@/components/portfolio/artifact-card";
 
@@ -8,33 +11,51 @@ export const metadata = { title: "Portfolio — Launchpad" };
 
 export default async function PortfolioPage() {
   const user = await requireUser();
-  const supabase = await createClient();
 
-  const { data: graded } = await supabase
-    .from("submissions")
-    .select("id, original_filename, submitted_at, overall_score, pass, hire_ready, lesson_id")
-    .eq("user_id", user.id)
-    .eq("status", "graded")
-    .order("submitted_at", { ascending: false });
+  // submissions: owner only.
+  const graded = await db
+    .select({
+      id: submissions.id,
+      original_filename: submissions.originalFilename,
+      submitted_at: submissions.submittedAt,
+      overall_score: submissions.overallScore,
+      pass: submissions.pass,
+      hire_ready: submissions.hireReady,
+      lesson_id: submissions.lessonId,
+    })
+    .from(submissions)
+    .where(and(eq(submissions.userId, user.id), eq(submissions.status, "graded")))
+    .orderBy(desc(submissions.submittedAt));
 
-  const lessonIds = Array.from(new Set((graded ?? []).map((s) => s.lesson_id)));
-  const { data: lessons } = lessonIds.length
-    ? await supabase.from("lessons").select("id, title").in("id", lessonIds)
-    : { data: [] };
+  // lessons (was RLS): admins see all; paid learners published lessons;
+  // everyone else published free previews.
+  const visible = await visibleLessonsFilter(user.id);
 
-  const lessonTitle = new Map((lessons ?? []).map((l) => [l.id, l.title]));
+  const lessonIds = Array.from(new Set(graded.map((s) => s.lesson_id)));
+  const lessonRows = lessonIds.length
+    ? await db
+        .select({ id: lessons.id, title: lessons.title })
+        .from(lessons)
+        .where(and(inArray(lessons.id, lessonIds), visible))
+    : [];
+
+  const lessonTitle = new Map(lessonRows.map((l) => [l.id, l.title]));
 
   // CTA for the empty state — first published lesson the learner
   // hasn't graded yet, ordered by number. Falls back to the lowest
   // published lesson if everything's graded (or nothing is).
-  const { data: nextLesson } = await supabase
-    .from("lessons")
-    .select("slug, number, title")
-    .eq("is_published", true)
-    .not("id", "in", `(${lessonIds.length ? lessonIds.map((id) => `"${id}"`).join(",") : '""'})`)
-    .order("number", { ascending: true })
-    .limit(1)
-    .maybeSingle();
+  const [nextLesson] = await db
+    .select({ slug: lessons.slug, number: lessons.number, title: lessons.title })
+    .from(lessons)
+    .where(
+      and(
+        eq(lessons.isPublished, true),
+        visible,
+        lessonIds.length ? notInArray(lessons.id, lessonIds) : undefined
+      )
+    )
+    .orderBy(asc(lessons.number))
+    .limit(1);
   const fallbackCta = nextLesson
     ? {
         href: `/lessons/${nextLesson.slug}?tab=workbook`,
@@ -52,7 +73,7 @@ export default async function PortfolioPage() {
         </p>
       </header>
 
-      {graded && graded.length > 0 ? (
+      {graded.length > 0 ? (
         <div className="space-y-3">
           {graded.map((s) => (
             <ArtifactCard

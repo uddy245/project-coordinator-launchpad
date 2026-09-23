@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { asc } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons as lessonsTable } from "@/db/schema";
+import { requireAdmin } from "@/lib/auth/require-user";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Lessons — Admin" };
@@ -19,17 +22,25 @@ type LessonRow = {
 };
 
 export default async function AdminLessonsPage() {
-  // The (admin) layout already gates on requireAdmin(). We use the admin
-  // client here because we want to see unpublished lessons too.
-  const admin = createAdminClient();
-  const { data } = await admin
-    .from("lessons")
-    .select(
-      "id, slug, number, title, summary, competency, is_published, is_preview, estimated_minutes, updated_at"
-    )
-    .order("number", { ascending: true });
-
-  const lessons = (data ?? []) as LessonRow[];
+  // The (admin) layout already gates on requireAdmin(); repeated here as
+  // defence in depth. The query is unfiltered because admins see
+  // unpublished lessons too.
+  await requireAdmin();
+  const lessons: LessonRow[] = await db
+    .select({
+      id: lessonsTable.id,
+      slug: lessonsTable.slug,
+      number: lessonsTable.number,
+      title: lessonsTable.title,
+      summary: lessonsTable.summary,
+      competency: lessonsTable.competency,
+      is_published: lessonsTable.isPublished,
+      is_preview: lessonsTable.isPreview,
+      estimated_minutes: lessonsTable.estimatedMinutes,
+      updated_at: lessonsTable.updatedAt,
+    })
+    .from(lessonsTable)
+    .orderBy(asc(lessonsTable.number));
 
   return (
     <div className="space-y-8">

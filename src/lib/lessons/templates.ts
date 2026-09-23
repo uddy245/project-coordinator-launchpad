@@ -1,3 +1,7 @@
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons, lessonTemplates } from "@/db/schema";
+
 /**
  * Workbook template descriptors, keyed by lesson slug. Each new lesson
  * that publishes a workbook adds an entry here. A lesson with no entry
@@ -279,30 +283,25 @@ export function templatesFor(lessonSlug: string): Template[] {
  * If the DB query fails (e.g. table doesn't exist yet on a fresh checkout),
  * we silently fall back to static — never crash the lesson page.
  */
-import type { SupabaseClient } from "@supabase/supabase-js";
-
-export async function templatesForAsync(
-  supabase: SupabaseClient,
-  lessonSlug: string
-): Promise<Template[]> {
+export async function templatesForAsync(lessonSlug: string): Promise<Template[]> {
   const staticEntries = templatesFor(lessonSlug);
 
-  const { data: lesson } = await supabase
-    .from("lessons")
-    .select("id")
-    .eq("slug", lessonSlug)
-    .maybeSingle();
-
-  if (!lesson) return staticEntries;
-
-  const { data, error } = await supabase
-    .from("lesson_templates")
-    .select("title, description, file_url, kind, sort, created_at")
-    .eq("lesson_id", lesson.id)
-    .order("sort", { ascending: true })
-    .order("created_at", { ascending: true });
-
-  if (error || !data) return staticEntries;
+  let data: { title: string; description: string | null; file_url: string; kind: string }[];
+  try {
+    data = await db
+      .select({
+        title: lessonTemplates.title,
+        description: lessonTemplates.description,
+        file_url: lessonTemplates.fileUrl,
+        kind: lessonTemplates.kind,
+      })
+      .from(lessonTemplates)
+      .innerJoin(lessons, eq(lessons.id, lessonTemplates.lessonId))
+      .where(eq(lessons.slug, lessonSlug))
+      .orderBy(lessonTemplates.sort, lessonTemplates.createdAt);
+  } catch {
+    return staticEntries;
+  }
 
   const dbEntries: Template[] = data.map((row) => ({
     file: row.file_url,

@@ -2,8 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { count, eq } from "drizzle-orm";
+import { db } from "@/db";
+import {
+  mockInterviewResponses,
+  mockInterviewScenarios,
+  quizItems,
+  workbookAssignments,
+} from "@/db/schema";
+import { getAppUser, isAdmin } from "@/lib/auth/session";
 import type { ActionResult } from "@/lib/types";
 
 // ──────────────────────────────────────────────────────────────────────
@@ -17,14 +24,16 @@ import type { ActionResult } from "@/lib/types";
 
 const IdSchema = z.object({ id: z.string().uuid() });
 
+function errMsg(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
 async function requireAdminGate(): Promise<ActionResult<true>> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser().catch(() => null);
   if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
+  // Fail closed: a lookup error is treated as "not an admin".
+  const admin = await isAdmin(user.id).catch(() => false);
+  if (!admin) return { ok: false, error: "Not authorized.", code: "FORBIDDEN" };
   return { ok: true, data: true };
 }
 
@@ -37,27 +46,27 @@ export async function deleteAiQuizItem(id: string): Promise<ActionResult<{ id: s
   const gate = await requireAdminGate();
   if (!gate.ok) return gate;
 
-  const admin = createAdminClient();
-  // Refuse if it's not actually AI-generated — admin can use the lesson
-  // builder for hand-authored items. Prevents fat-finger from this page
-  // wiping seed data.
-  const { data: row } = await admin
-    .from("quiz_items")
-    .select("id, is_ai_generated")
-    .eq("id", parsed.data.id)
-    .maybeSingle();
-  if (!row) return { ok: false, error: "Not found.", code: "NOT_FOUND" };
-  if (!row.is_ai_generated) {
-    return {
-      ok: false,
-      error: "Refusing to delete an authored item from this page.",
-      code: "CONFLICT",
-    };
-  }
+  try {
+    // Refuse if it's not actually AI-generated — admin can use the lesson
+    // builder for hand-authored items. Prevents fat-finger from this page
+    // wiping seed data.
+    const [row] = await db
+      .select({ id: quizItems.id, is_ai_generated: quizItems.isAiGenerated })
+      .from(quizItems)
+      .where(eq(quizItems.id, parsed.data.id))
+      .limit(1);
+    if (!row) return { ok: false, error: "Not found.", code: "NOT_FOUND" };
+    if (!row.is_ai_generated) {
+      return {
+        ok: false,
+        error: "Refusing to delete an authored item from this page.",
+        code: "CONFLICT",
+      };
+    }
 
-  const { error } = await admin.from("quiz_items").delete().eq("id", parsed.data.id);
-  if (error) {
-    return { ok: false, error: `Delete failed: ${error.message}`, code: "DB_ERROR" };
+    await db.delete(quizItems).where(eq(quizItems.id, parsed.data.id));
+  } catch (err) {
+    return { ok: false, error: `Delete failed: ${errMsg(err)}`, code: "DB_ERROR" };
   }
 
   revalidatePath("/admin/ai-content");
@@ -75,28 +84,33 @@ export async function toggleAiScenarioPublished(
   const gate = await requireAdminGate();
   if (!gate.ok) return gate;
 
-  const admin = createAdminClient();
-  const { data: row } = await admin
-    .from("mock_interview_scenarios")
-    .select("id, is_ai_generated, is_published")
-    .eq("id", parsed.data.id)
-    .maybeSingle();
-  if (!row) return { ok: false, error: "Not found.", code: "NOT_FOUND" };
-  if (!row.is_ai_generated) {
-    return {
-      ok: false,
-      error: "Refusing to toggle an authored scenario from this page.",
-      code: "CONFLICT",
-    };
-  }
+  let next: boolean;
+  try {
+    const [row] = await db
+      .select({
+        id: mockInterviewScenarios.id,
+        is_ai_generated: mockInterviewScenarios.isAiGenerated,
+        is_published: mockInterviewScenarios.isPublished,
+      })
+      .from(mockInterviewScenarios)
+      .where(eq(mockInterviewScenarios.id, parsed.data.id))
+      .limit(1);
+    if (!row) return { ok: false, error: "Not found.", code: "NOT_FOUND" };
+    if (!row.is_ai_generated) {
+      return {
+        ok: false,
+        error: "Refusing to toggle an authored scenario from this page.",
+        code: "CONFLICT",
+      };
+    }
 
-  const next = !row.is_published;
-  const { error } = await admin
-    .from("mock_interview_scenarios")
-    .update({ is_published: next, updated_at: new Date().toISOString() })
-    .eq("id", parsed.data.id);
-  if (error) {
-    return { ok: false, error: `Update failed: ${error.message}`, code: "DB_ERROR" };
+    next = !row.is_published;
+    await db
+      .update(mockInterviewScenarios)
+      .set({ isPublished: next, updatedAt: new Date().toISOString() })
+      .where(eq(mockInterviewScenarios.id, parsed.data.id));
+  } catch (err) {
+    return { ok: false, error: `Update failed: ${errMsg(err)}`, code: "DB_ERROR" };
   }
 
   revalidatePath("/admin/ai-content");
@@ -111,38 +125,42 @@ export async function deleteAiScenario(id: string): Promise<ActionResult<{ id: s
   const gate = await requireAdminGate();
   if (!gate.ok) return gate;
 
-  const admin = createAdminClient();
-  const { data: row } = await admin
-    .from("mock_interview_scenarios")
-    .select("id, is_ai_generated")
-    .eq("id", parsed.data.id)
-    .maybeSingle();
-  if (!row) return { ok: false, error: "Not found.", code: "NOT_FOUND" };
-  if (!row.is_ai_generated) {
-    return {
-      ok: false,
-      error: "Refusing to delete an authored scenario from this page.",
-      code: "CONFLICT",
-    };
-  }
+  try {
+    const [row] = await db
+      .select({
+        id: mockInterviewScenarios.id,
+        is_ai_generated: mockInterviewScenarios.isAiGenerated,
+      })
+      .from(mockInterviewScenarios)
+      .where(eq(mockInterviewScenarios.id, parsed.data.id))
+      .limit(1);
+    if (!row) return { ok: false, error: "Not found.", code: "NOT_FOUND" };
+    if (!row.is_ai_generated) {
+      return {
+        ok: false,
+        error: "Refusing to delete an authored scenario from this page.",
+        code: "CONFLICT",
+      };
+    }
 
-  // Same hard refusal as the existing deleteScenario action — preserve
-  // learner responses; admin should unpublish instead.
-  const { count } = await admin
-    .from("mock_interview_responses")
-    .select("id", { count: "exact", head: true })
-    .eq("scenario_id", parsed.data.id);
-  if ((count ?? 0) > 0) {
-    return {
-      ok: false,
-      error: `Cannot delete — ${count} learner responses exist. Unpublish instead.`,
-      code: "CONFLICT",
-    };
-  }
+    // Same hard refusal as the existing deleteScenario action — preserve
+    // learner responses; admin should unpublish instead.
+    const [responses] = await db
+      .select({ n: count() })
+      .from(mockInterviewResponses)
+      .where(eq(mockInterviewResponses.scenarioId, parsed.data.id));
+    const responseCount = Number(responses?.n ?? 0);
+    if (responseCount > 0) {
+      return {
+        ok: false,
+        error: `Cannot delete — ${responseCount} learner responses exist. Unpublish instead.`,
+        code: "CONFLICT",
+      };
+    }
 
-  const { error } = await admin.from("mock_interview_scenarios").delete().eq("id", parsed.data.id);
-  if (error) {
-    return { ok: false, error: `Delete failed: ${error.message}`, code: "DB_ERROR" };
+    await db.delete(mockInterviewScenarios).where(eq(mockInterviewScenarios.id, parsed.data.id));
+  } catch (err) {
+    return { ok: false, error: `Delete failed: ${errMsg(err)}`, code: "DB_ERROR" };
   }
 
   revalidatePath("/admin/ai-content");
@@ -161,25 +179,25 @@ export async function deleteAiWorkbookAssignment(
   const gate = await requireAdminGate();
   if (!gate.ok) return gate;
 
-  const admin = createAdminClient();
-  const { data: row } = await admin
-    .from("workbook_assignments")
-    .select("id, is_ai_generated")
-    .eq("id", parsed.data.id)
-    .maybeSingle();
-  if (!row) return { ok: false, error: "Not found.", code: "NOT_FOUND" };
-  if (!row.is_ai_generated) {
-    return {
-      ok: false,
-      error: "Refusing to delete an authored assignment from this page.",
-      code: "CONFLICT",
-    };
-  }
+  try {
+    const [row] = await db
+      .select({ id: workbookAssignments.id, is_ai_generated: workbookAssignments.isAiGenerated })
+      .from(workbookAssignments)
+      .where(eq(workbookAssignments.id, parsed.data.id))
+      .limit(1);
+    if (!row) return { ok: false, error: "Not found.", code: "NOT_FOUND" };
+    if (!row.is_ai_generated) {
+      return {
+        ok: false,
+        error: "Refusing to delete an authored assignment from this page.",
+        code: "CONFLICT",
+      };
+    }
 
-  // workbook_assignment_seen rows cascade-delete via FK; nothing else to clean.
-  const { error } = await admin.from("workbook_assignments").delete().eq("id", parsed.data.id);
-  if (error) {
-    return { ok: false, error: `Delete failed: ${error.message}`, code: "DB_ERROR" };
+    // workbook_assignment_seen rows cascade-delete via FK; nothing else to clean.
+    await db.delete(workbookAssignments).where(eq(workbookAssignments.id, parsed.data.id));
+  } catch (err) {
+    return { ok: false, error: `Delete failed: ${errMsg(err)}`, code: "DB_ERROR" };
   }
 
   revalidatePath("/admin/ai-content");

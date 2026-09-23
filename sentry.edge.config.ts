@@ -5,6 +5,7 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
+import { scrubEvent } from "./src/lib/observability/scrub-event";
 
 const dsn = process.env.SENTRY_DSN;
 const release = process.env.VERCEL_GIT_COMMIT_SHA;
@@ -18,5 +19,7 @@ if (dsn) {
     release,
     tracesSampleRate: environment === "production" ? 0.1 : 1.0,
     sendDefaultPii: false,
+    // Same PII/secret filter as the server config (the proxy runs here).
+    beforeSend: scrubEvent,
   });
 }

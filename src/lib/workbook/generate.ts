@@ -11,8 +11,10 @@
 
 import { anthropic, GRADING_MODEL } from "@/lib/anthropic/client";
 import { checkSpendCap } from "@/lib/grading/spend-guard";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { WorkbookAssignmentSchema, type WorkbookAssignmentInput } from "@/lib/workbook/schema";
+import { desc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { workbookAssignments } from "@/db/schema";
+import { WorkbookAssignmentSchema } from "@/lib/workbook/schema";
 
 export type GenerateAssignmentArgs = {
   lessonId: string;
@@ -47,32 +49,30 @@ No preamble, no markdown code fence, no explanation outside the JSON.`;
 export async function generateWorkbookAssignment(
   args: GenerateAssignmentArgs
 ): Promise<GeneratedAssignment> {
-  const spend = await checkSpendCap(createAdminClient());
+  const spend = await checkSpendCap();
   if (!spend.ok) {
     throw new Error(
       `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`
     );
   }
 
-  const admin = createAdminClient();
-
-  const [{ data: existingTitles }, { data: maxSortRow }] = await Promise.all([
-    admin
-      .from("workbook_assignments")
-      .select("title")
-      .eq("lesson_id", args.lessonId)
-      .order("created_at", { ascending: false })
+  const [existingTitles, maxSortRows] = await Promise.all([
+    db
+      .select({ title: workbookAssignments.title })
+      .from(workbookAssignments)
+      .where(eq(workbookAssignments.lessonId, args.lessonId))
+      .orderBy(desc(workbookAssignments.createdAt))
       .limit(15),
-    admin
-      .from("workbook_assignments")
-      .select("sort")
-      .eq("lesson_id", args.lessonId)
-      .order("sort", { ascending: false })
-      .limit(1)
-      .maybeSingle(),
+    db
+      .select({ sort: workbookAssignments.sort })
+      .from(workbookAssignments)
+      .where(eq(workbookAssignments.lessonId, args.lessonId))
+      .orderBy(desc(workbookAssignments.sort))
+      .limit(1),
   ]);
+  const maxSortRow = maxSortRows[0] ?? null;
 
-  const avoidList = (existingTitles ?? []).map((r, i) => `${i + 1}. ${r.title}`).join("\n");
+  const avoidList = existingTitles.map((r, i) => `${i + 1}. ${r.title}`).join("\n");
   const startSort = (maxSortRow?.sort ?? 99) + 1;
 
   const userMessage = `Lesson: ${args.lessonTitle}
@@ -120,32 +120,34 @@ Generate ONE new workbook scenario. Output the JSON object now.`;
     );
   }
 
-  const row: WorkbookAssignmentInput & {
-    lesson_id: string;
-    is_ai_generated: boolean;
-    generated_at: string;
-    sort: number;
-    is_default: boolean;
-  } = {
-    lesson_id: args.lessonId,
-    title: validated.data.title,
-    brief: validated.data.brief,
-    is_ai_generated: true,
-    generated_at: new Date().toISOString(),
-    sort: startSort,
-    is_default: false,
-  };
-
-  const { data: inserted, error: insertErr } = await admin
-    .from("workbook_assignments")
-    .insert(row)
-    .select("id, lesson_id, title, brief, sort")
-    .single();
-  if (insertErr || !inserted) {
+  let inserted: GeneratedAssignment | undefined;
+  try {
+    [inserted] = await db
+      .insert(workbookAssignments)
+      .values({
+        lessonId: args.lessonId,
+        title: validated.data.title,
+        brief: validated.data.brief,
+        isAiGenerated: true,
+        generatedAt: new Date().toISOString(),
+        sort: startSort,
+        isDefault: false,
+      })
+      .returning({
+        id: workbookAssignments.id,
+        lesson_id: workbookAssignments.lessonId,
+        title: workbookAssignments.title,
+        brief: workbookAssignments.brief,
+        sort: workbookAssignments.sort,
+      });
+  } catch (err) {
     throw new Error(
-      `Failed to insert generated workbook assignment: ${insertErr?.message ?? "unknown"}`
+      `Failed to insert generated workbook assignment: ${err instanceof Error ? err.message : "unknown"}`
     );
   }
+  if (!inserted) {
+    throw new Error("Failed to insert generated workbook assignment: unknown");
+  }
 
-  return inserted as GeneratedAssignment;
+  return inserted;
 }

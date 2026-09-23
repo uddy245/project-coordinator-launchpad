@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons } from "@/db/schema";
+import { canViewLesson } from "@/lib/lessons/access";
 import { LessonHeader } from "@/components/lessons/lesson-header";
 import { LessonTabs, type LessonTabKey } from "@/components/lessons/tabs";
 import { WorkbookPanel } from "@/components/lessons/workbook-panel";
@@ -28,20 +31,28 @@ export default async function LessonPage({
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ tab?: string | string[] }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
   const [{ slug }, { tab }] = await Promise.all([params, searchParams]);
 
-  const supabase = await createClient();
-  const { data: lesson } = await supabase
-    .from("lessons")
-    .select("number, title, summary, estimated_minutes")
-    .eq("slug", slug)
-    .eq("is_published", true)
-    .maybeSingle();
+  // lessons (was RLS): free preview lessons for everyone signed in, other
+  // published lessons need has_access, admins see all (incl. drafts).
+  const [row] = await db
+    .select({
+      number: lessons.number,
+      title: lessons.title,
+      summary: lessons.summary,
+      estimated_minutes: lessons.estimatedMinutes,
+      isPublished: lessons.isPublished,
+      isPreview: lessons.isPreview,
+    })
+    .from(lessons)
+    .where(eq(lessons.slug, slug))
+    .limit(1);
+  const lesson = row && (await canViewLesson(user.id, row)) ? row : undefined;
   const lessonTitle = lesson?.title ?? "";
 
   if (!lesson) {
-    // Either the slug doesn't exist or RLS hid it (has_access=false).
+    // Either the slug doesn't exist or the user may not view it.
     // 404 in both cases — we don't leak which.
     notFound();
   }

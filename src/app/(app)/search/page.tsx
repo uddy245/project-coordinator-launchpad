@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { and, inArray, sql } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons } from "@/db/schema";
+import { visibleLessonsFilter } from "@/lib/lessons/access";
 import { SearchForm } from "@/components/search/search-form";
 
 export const metadata = { title: "Search — Launchpad" };
@@ -46,17 +49,39 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  await requireUser();
+  const user = await requireUser();
   const { q } = await searchParams;
   const query = (q ?? "").trim();
 
   let results: SearchResult[] = [];
   if (query.length >= 2) {
-    const supabase = await createClient();
+    // search_lessons() is SECURITY INVOKER and only filters is_published;
+    // RLS on lessons used to narrow it per user. Same rule here: paid
+    // learners (and admins) see every result, everyone else only free
+    // preview lessons.
+    const visible = await visibleLessonsFilter(user.id);
     // Use websearch_to_tsquery — handles user input safely (operators like
     // quotes, OR, -negation), no need to escape.
-    const { data } = await supabase.rpc("search_lessons", { q: query }).limit(20);
-    results = (data ?? []) as SearchResult[];
+    const res = (await db.execute(sql`select * from public.search_lessons(${query}) limit 20`)) as {
+      rows: SearchResult[];
+    };
+    results = res.rows;
+    if (visible && results.length > 0) {
+      const allowed = await db
+        .select({ id: lessons.id })
+        .from(lessons)
+        .where(
+          and(
+            inArray(
+              lessons.id,
+              results.map((r) => r.id)
+            ),
+            visible
+          )
+        );
+      const ok = new Set(allowed.map((r) => r.id));
+      results = results.filter((r) => ok.has(r.id));
+    }
   }
 
   return (

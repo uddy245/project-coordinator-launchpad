@@ -3,41 +3,77 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const signUpMock = vi.fn();
 const signInMock = vi.fn();
 const signOutMock = vi.fn();
-const resetPasswordForEmailMock = vi.fn();
-const getUserMock = vi.fn();
-const updateUserMock = vi.fn();
+const requestPasswordResetMock = vi.fn();
+const resetPasswordMock = vi.fn();
+const sendOtpMock = vi.fn();
+const signInOtpMock = vi.fn();
+const verifyEmailMock = vi.fn();
+const fetchMock = vi.fn();
 const redirectMock = vi.fn((_path: string) => {
   throw new Error(`REDIRECT:${_path}`);
 });
+// Rows returned by the "is this a pre-migration learner?" lookup.
+const legacyRows = vi.hoisted(() => ({ rows: [] as { id: string }[] }));
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: async () => ({
-    auth: {
-      signUp: signUpMock,
-      signInWithPassword: signInMock,
-      signOut: signOutMock,
-      resetPasswordForEmail: resetPasswordForEmailMock,
-      getUser: getUserMock,
-      updateUser: updateUserMock,
-    },
+vi.mock("@/lib/auth/neon", () => ({
+  neonAuth: () => ({
+    signUp: { email: signUpMock },
+    signIn: { email: signInMock, emailOtp: signInOtpMock },
+    signOut: signOutMock,
+    requestPasswordReset: requestPasswordResetMock,
+    resetPassword: resetPasswordMock,
+    emailOtp: { sendVerificationOtp: sendOtpMock, verifyEmail: verifyEmailMock },
   }),
+}));
+
+vi.mock("@/db", () => ({
+  db: {
+    select: () => ({
+      from: () => ({ where: () => ({ limit: async () => legacyRows.rows }) }),
+    }),
+  },
+}));
+
+vi.mock("next/headers", () => ({
+  cookies: async () => ({ set: vi.fn(), get: () => undefined }),
 }));
 
 vi.mock("next/navigation", () => ({
   redirect: (path: string) => redirectMock(path),
 }));
 
-import { signUp, signIn, sendPasswordReset, updatePassword } from "@/actions/auth";
+import {
+  signUp,
+  signIn,
+  sendPasswordReset,
+  updatePassword,
+  verifyEmailCode,
+  sendSignInCode,
+  signInWithCode,
+} from "@/actions/auth";
 
 beforeEach(() => {
-  signUpMock.mockReset();
-  signInMock.mockReset();
-  signOutMock.mockReset();
-  resetPasswordForEmailMock.mockReset();
-  getUserMock.mockReset();
-  updateUserMock.mockReset();
+  for (const m of [
+    signUpMock,
+    signInMock,
+    signOutMock,
+    requestPasswordResetMock,
+    resetPasswordMock,
+    sendOtpMock,
+    signInOtpMock,
+    verifyEmailMock,
+    fetchMock,
+  ]) {
+    m.mockReset();
+  }
+  sendOtpMock.mockResolvedValue({ data: { success: true }, error: null });
+  fetchMock.mockResolvedValue(new Response("{}", { status: 200 }));
+  vi.stubGlobal("fetch", fetchMock);
+  legacyRows.rows = [];
   redirectMock.mockClear();
 });
+
+const verifiedUser = { id: "n1", email: "user@example.com", emailVerified: true };
 
 describe("signUp action", () => {
   it("rejects invalid email", async () => {
@@ -56,45 +92,70 @@ describe("signUp action", () => {
     if (!result.ok) expect(result.code).toBe("INVALID_INPUT");
   });
 
-  it("lowercases email before calling Supabase", async () => {
-    signUpMock.mockResolvedValue({ data: { session: { access_token: "t" } }, error: null });
+  it("lowercases email before calling Neon Auth", async () => {
+    signUpMock.mockResolvedValue({ data: { token: "t", user: verifiedUser }, error: null });
     const result = await signUp({ email: "UseR@Example.COM", password: "password1" });
     expect(result.ok).toBe(true);
     expect(signUpMock).toHaveBeenCalledWith(expect.objectContaining({ email: "user@example.com" }));
   });
 
-  it("maps 'already registered' to EMAIL_IN_USE", async () => {
+  it("sends pre-migration learners to the one-time password reset instead", async () => {
+    legacyRows.rows = [{ id: "legacy-1" }];
+    const result = await signUp({ email: "old@example.com", password: "password1" });
+    expect(result).toEqual({
+      ok: false,
+      error: expect.stringContaining("Forgot password"),
+      code: "EMAIL_IN_USE",
+    });
+    expect(signUpMock).not.toHaveBeenCalled();
+  });
+
+  it("maps 'already exists' to EMAIL_IN_USE", async () => {
     signUpMock.mockResolvedValue({
-      error: { message: "User already registered" },
+      data: null,
+      error: { message: "User already exists", code: "USER_ALREADY_EXISTS" },
     });
     const result = await signUp({ email: "user@example.com", password: "password1" });
     expect(result).toEqual({
       ok: false,
-      error: expect.stringContaining("already in use"),
+      error: expect.stringContaining("already has an account"),
       code: "EMAIL_IN_USE",
     });
   });
 
-  it("passes fullName through user metadata", async () => {
-    signUpMock.mockResolvedValue({ data: { session: { access_token: "t" } }, error: null });
+  it("passes fullName as the Neon Auth user name", async () => {
+    signUpMock.mockResolvedValue({ data: { token: "t", user: verifiedUser }, error: null });
     await signUp({ email: "u@x.com", password: "password1", fullName: "Jane Doe" });
-    expect(signUpMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        options: { data: { full_name: "Jane Doe" } },
-      })
-    );
+    expect(signUpMock).toHaveBeenCalledWith(expect.objectContaining({ name: "Jane Doe" }));
   });
 
-  it("flags needsEmailConfirmation=true when Supabase returns no session", async () => {
-    signUpMock.mockResolvedValue({ data: { session: null }, error: null });
+  it("does not send a second code when Neon withheld the session (Neon emails it)", async () => {
+    // Observed on a Neon branch: sign-up in code mode already issues the code;
+    // sending again would email the learner two codes.
+    signUpMock.mockResolvedValue({
+      data: { token: null, user: { ...verifiedUser, emailVerified: false } },
+      error: null,
+    });
     const result = await signUp({ email: "u@x.com", password: "password1" });
     expect(result).toEqual({ ok: true, data: { needsEmailConfirmation: true } });
+    expect(sendOtpMock).not.toHaveBeenCalled();
   });
 
-  it("flags needsEmailConfirmation=false when Supabase returns a session", async () => {
-    signUpMock.mockResolvedValue({ data: { session: { access_token: "t" } }, error: null });
+  it("sends a verification code when a session was issued for an unverified user", async () => {
+    signUpMock.mockResolvedValue({
+      data: { token: "t", user: { ...verifiedUser, emailVerified: false } },
+      error: null,
+    });
+    const result = await signUp({ email: "u@x.com", password: "password1" });
+    expect(result).toEqual({ ok: true, data: { needsEmailConfirmation: true } });
+    expect(sendOtpMock).toHaveBeenCalledWith({ email: "u@x.com", type: "email-verification" });
+  });
+
+  it("flags needsEmailConfirmation=false for an already-verified user", async () => {
+    signUpMock.mockResolvedValue({ data: { token: "t", user: verifiedUser }, error: null });
     const result = await signUp({ email: "u@x.com", password: "password1" });
     expect(result).toEqual({ ok: true, data: { needsEmailConfirmation: false } });
+    expect(sendOtpMock).not.toHaveBeenCalled();
   });
 });
 
@@ -105,21 +166,24 @@ describe("signIn action", () => {
     if (!result.ok) expect(result.code).toBe("INVALID_INPUT");
   });
 
-  it("maps invalid credentials to INVALID_CREDENTIALS", async () => {
+  it("maps invalid credentials to INVALID_CREDENTIALS and points at the reset path", async () => {
     signInMock.mockResolvedValue({
-      error: { message: "Invalid login credentials" },
+      data: null,
+      error: { message: "Invalid email or password", code: "INVALID_EMAIL_OR_PASSWORD" },
     });
     const result = await signIn({ email: "u@x.com", password: "password1" });
     expect(result).toEqual({
       ok: false,
-      error: "Incorrect email or password.",
+      error: expect.stringContaining("Incorrect email or password."),
       code: "INVALID_CREDENTIALS",
     });
+    if (!result.ok) expect(result.error).toContain("Forgot password");
   });
 
-  it("maps 'email not confirmed' to EMAIL_NOT_CONFIRMED", async () => {
+  it("maps 'email not verified' to EMAIL_NOT_CONFIRMED", async () => {
     signInMock.mockResolvedValue({
-      error: { message: "Email not confirmed" },
+      data: null,
+      error: { message: "Email not verified", code: "EMAIL_NOT_VERIFIED" },
     });
     const result = await signIn({ email: "u@x.com", password: "password1" });
     expect(result).toEqual({
@@ -127,10 +191,28 @@ describe("signIn action", () => {
       error: expect.stringContaining("confirm your email"),
       code: "EMAIL_NOT_CONFIRMED",
     });
+    // A fresh verification code goes out for the /verify-email page.
+    expect(sendOtpMock).toHaveBeenCalledWith({ email: "u@x.com", type: "email-verification" });
+  });
+
+  it("unconfirmed email as the Neon Auth SDK reports it → EMAIL_NOT_CONFIRMED + fresh code", async () => {
+    // Real shape observed on a Neon branch: Neon answers 403 EMAIL_NOT_VERIFIED,
+    // the SDK normalises it to this.
+    signInMock.mockResolvedValue({
+      data: null,
+      error: { message: "Email verification required", code: "email_not_confirmed", status: 422 },
+    });
+    const result = await signIn({ email: "u@x.com", password: "password1" });
+    expect(result).toEqual({
+      ok: false,
+      error: expect.stringContaining("confirm your email"),
+      code: "EMAIL_NOT_CONFIRMED",
+    });
+    expect(sendOtpMock).toHaveBeenCalledWith({ email: "u@x.com", type: "email-verification" });
   });
 
   it("returns ok on success", async () => {
-    signInMock.mockResolvedValue({ error: null });
+    signInMock.mockResolvedValue({ data: {}, error: null });
     const result = await signIn({ email: "u@x.com", password: "password1" });
     expect(result.ok).toBe(true);
   });
@@ -141,24 +223,39 @@ describe("sendPasswordReset action", () => {
     const result = await sendPasswordReset({ email: "not-an-email" });
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.code).toBe("INVALID_INPUT");
-    expect(resetPasswordForEmailMock).not.toHaveBeenCalled();
+    expect(requestPasswordResetMock).not.toHaveBeenCalled();
   });
 
-  it("lowercases email and passes an /auth/callback redirect", async () => {
-    resetPasswordForEmailMock.mockResolvedValue({ error: null });
+  it("lowercases email and redirects the link to /reset-password", async () => {
+    requestPasswordResetMock.mockResolvedValue({ data: {}, error: null });
     const result = await sendPasswordReset({ email: "UseR@Example.COM" });
     expect(result.ok).toBe(true);
-    expect(resetPasswordForEmailMock).toHaveBeenCalledWith(
-      "user@example.com",
-      expect.objectContaining({
-        redirectTo: expect.stringContaining("/auth/callback?redirect="),
-      })
-    );
+    expect(requestPasswordResetMock).toHaveBeenCalledWith({
+      email: "user@example.com",
+      redirectTo: expect.stringMatching(/\/reset-password$/),
+    });
+    // Not a legacy learner → no account provisioning.
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("provisions a Neon Auth login for a pre-migration learner before sending the reset", async () => {
+    legacyRows.rows = [{ id: "legacy-1" }];
+    requestPasswordResetMock.mockResolvedValue({ data: {}, error: null });
+    const result = await sendPasswordReset({ email: "old@example.com" });
+    expect(result.ok).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(String(url)).toMatch(/\/sign-up\/email$/);
+    const body = JSON.parse(init.body);
+    expect(body.email).toBe("old@example.com");
+    expect(body.password.length).toBeGreaterThanOrEqual(32);
+    expect(requestPasswordResetMock).toHaveBeenCalled();
   });
 
   it("maps rate-limit errors to RATE_LIMITED", async () => {
-    resetPasswordForEmailMock.mockResolvedValue({
-      error: { message: "Email rate limit exceeded" },
+    requestPasswordResetMock.mockResolvedValue({
+      data: null,
+      error: { message: "Too many requests. Please try again later." },
     });
     const result = await sendPasswordReset({ email: "u@x.com" });
     expect(result).toEqual({
@@ -171,41 +268,133 @@ describe("sendPasswordReset action", () => {
 
 describe("updatePassword action", () => {
   it("rejects short password", async () => {
-    const result = await updatePassword({ password: "short" });
+    const result = await updatePassword({ password: "short", token: "tok" });
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.code).toBe("INVALID_INPUT");
-    expect(getUserMock).not.toHaveBeenCalled();
+    expect(resetPasswordMock).not.toHaveBeenCalled();
   });
 
-  it("returns NOT_AUTHENTICATED when there is no session", async () => {
-    getUserMock.mockResolvedValue({ data: { user: null } });
-    const result = await updatePassword({ password: "password1" });
+  it("rejects a missing token", async () => {
+    const result = await updatePassword({ password: "password1", token: "" });
+    expect(result).toMatchObject({ ok: false, code: "INVALID_INPUT" });
+  });
+
+  it("returns NOT_AUTHENTICATED for an expired/invalid token", async () => {
+    resetPasswordMock.mockResolvedValue({
+      data: null,
+      error: { message: "Invalid token", code: "INVALID_TOKEN" },
+    });
+    const result = await updatePassword({ password: "password1", token: "tok" });
     expect(result).toEqual({
       ok: false,
-      error: expect.any(String),
+      error: expect.stringContaining("expired"),
       code: "NOT_AUTHENTICATED",
-    });
-    expect(updateUserMock).not.toHaveBeenCalled();
-  });
-
-  it("maps 'different from the old' to SAME_PASSWORD", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    updateUserMock.mockResolvedValue({
-      error: { message: "New password should be different from the old password." },
-    });
-    const result = await updatePassword({ password: "password1" });
-    expect(result).toEqual({
-      ok: false,
-      error: expect.any(String),
-      code: "SAME_PASSWORD",
     });
   });
 
   it("returns ok on success", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    updateUserMock.mockResolvedValue({ error: null });
-    const result = await updatePassword({ password: "password1" });
+    resetPasswordMock.mockResolvedValue({ data: { status: true }, error: null });
+    const result = await updatePassword({ password: "password1", token: "tok" });
     expect(result.ok).toBe(true);
-    expect(updateUserMock).toHaveBeenCalledWith({ password: "password1" });
+    expect(resetPasswordMock).toHaveBeenCalledWith({ newPassword: "password1", token: "tok" });
+  });
+});
+
+describe("verifyEmailCode action", () => {
+  it("rejects a malformed code without calling Neon Auth", async () => {
+    const result = await verifyEmailCode({ email: "u@x.com", code: "abc" });
+    expect(result).toMatchObject({ ok: false, code: "INVALID_INPUT" });
+    expect(verifyEmailMock).not.toHaveBeenCalled();
+  });
+
+  it("verifies the emailed code (lowercased email) and reports whether a session started", async () => {
+    verifyEmailMock.mockResolvedValue({ data: { status: true, token: "t" }, error: null });
+    const result = await verifyEmailCode({ email: "U@X.com", code: " 123456 " });
+    expect(verifyEmailMock).toHaveBeenCalledWith({ email: "u@x.com", otp: "123456" });
+    expect(result).toEqual({ ok: true, data: { signedIn: true } });
+  });
+
+  it("signedIn=false when no session is returned (user logs in next)", async () => {
+    verifyEmailMock.mockResolvedValue({ data: { status: true, token: null }, error: null });
+    expect(await verifyEmailCode({ email: "u@x.com", code: "123456" })).toEqual({
+      ok: true,
+      data: { signedIn: false },
+    });
+  });
+
+  it("maps a wrong code to INVALID_CODE and an expired one to CODE_EXPIRED", async () => {
+    verifyEmailMock.mockResolvedValue({
+      data: null,
+      error: { message: "Invalid OTP", code: "INVALID_OTP" },
+    });
+    expect(await verifyEmailCode({ email: "u@x.com", code: "000000" })).toMatchObject({
+      ok: false,
+      code: "INVALID_CODE",
+    });
+    verifyEmailMock.mockResolvedValue({
+      data: null,
+      error: { message: "OTP expired", code: "OTP_EXPIRED" },
+    });
+    expect(await verifyEmailCode({ email: "u@x.com", code: "000000" })).toMatchObject({
+      ok: false,
+      code: "CODE_EXPIRED",
+    });
+  });
+});
+
+describe("email sign-in code (replaces the magic link)", () => {
+  it("sendSignInCode validates the email and sends a 'sign-in' OTP", async () => {
+    expect(await sendSignInCode({ email: "nope" })).toMatchObject({
+      ok: false,
+      code: "INVALID_INPUT",
+    });
+    expect(sendOtpMock).not.toHaveBeenCalled();
+
+    const result = await sendSignInCode({ email: "User@X.com" });
+    expect(result).toEqual({ ok: true, data: undefined });
+    expect(sendOtpMock).toHaveBeenCalledWith({ email: "user@x.com", type: "sign-in" });
+  });
+
+  it("sendSignInCode maps rate limiting", async () => {
+    sendOtpMock.mockResolvedValue({
+      data: null,
+      error: { message: "Too many requests", code: "over_request_rate_limit" },
+    });
+    expect(await sendSignInCode({ email: "u@x.com" })).toMatchObject({
+      ok: false,
+      code: "RATE_LIMITED",
+    });
+  });
+
+  it("signInWithCode completes sign-in in the server action", async () => {
+    signInOtpMock.mockResolvedValue({ data: { token: "t", user: { id: "n1" } }, error: null });
+    const result = await signInWithCode({ email: "U@X.com", code: " 123456 " });
+    expect(signInOtpMock).toHaveBeenCalledWith({ email: "u@x.com", otp: "123456" });
+    expect(result).toEqual({ ok: true, data: undefined });
+  });
+
+  it("signInWithCode rejects malformed codes and maps wrong/expired codes", async () => {
+    expect(await signInWithCode({ email: "u@x.com", code: "abc" })).toMatchObject({
+      ok: false,
+      code: "INVALID_INPUT",
+    });
+    expect(signInOtpMock).not.toHaveBeenCalled();
+
+    signInOtpMock.mockResolvedValue({
+      data: null,
+      error: { message: "Invalid OTP", code: "INVALID_OTP" },
+    });
+    expect(await signInWithCode({ email: "u@x.com", code: "000000" })).toMatchObject({
+      ok: false,
+      code: "INVALID_CODE",
+    });
+    signInOtpMock.mockResolvedValue({
+      data: null,
+      error: { message: "OTP expired", code: "OTP_EXPIRED" },
+    });
+    expect(await signInWithCode({ email: "u@x.com", code: "000000" })).toMatchObject({
+      ok: false,
+      code: "CODE_EXPIRED",
+    });
   });
 });

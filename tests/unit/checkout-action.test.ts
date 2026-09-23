@@ -1,20 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { getUserMock, singleMock, createSessionMock } = vi.hoisted(() => ({
-  getUserMock: vi.fn(),
-  singleMock: vi.fn(),
+const { getAppUserMock, createSessionMock } = vi.hoisted(() => ({
+  getAppUserMock: vi.fn(),
   createSessionMock: vi.fn(),
 }));
+const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: async () => ({
-    auth: { getUser: getUserMock },
-    from: () => ({
-      select: () => ({ eq: () => ({ single: singleMock }) }),
-    }),
-  }),
-}));
-
+vi.mock("@/db", () => ({ db: fakeDb.db }));
+vi.mock("@/lib/auth/session", () => ({ getAppUser: getAppUserMock }));
 vi.mock("@/lib/stripe/client", () => ({
   stripe: { checkout: { sessions: { create: createSessionMock } } },
   STRIPE_API_VERSION: "2025-02-24.acacia",
@@ -22,31 +15,41 @@ vi.mock("@/lib/stripe/client", () => ({
 
 import { createCheckoutSession } from "@/actions/checkout";
 
+const USER = { id: "u1", email: "u@x.com", name: null, neonAuthUserId: "n1" };
+
+function withProfile(profile: { has_access: boolean } | null | Error) {
+  fakeDb.reset((q) => {
+    if (q.op === "select" && q.table === "profiles") {
+      return profile instanceof Error ? profile : profile ? [profile] : [];
+    }
+    return [];
+  });
+}
+
 beforeEach(() => {
-  getUserMock.mockReset();
-  singleMock.mockReset();
+  getAppUserMock.mockReset();
   createSessionMock.mockReset();
+  withProfile({ has_access: false });
 });
 
 describe("createCheckoutSession", () => {
   it("returns UNAUTHENTICATED when there is no user", async () => {
-    getUserMock.mockResolvedValue({ data: { user: null } });
+    getAppUserMock.mockResolvedValue(null);
     const result = await createCheckoutSession();
     expect(result).toMatchObject({ ok: false, code: "UNAUTHENTICATED" });
     expect(createSessionMock).not.toHaveBeenCalled();
   });
 
   it("returns ALREADY_PURCHASED when profile.has_access is true", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1", email: "u@x.com" } } });
-    singleMock.mockResolvedValue({ data: { has_access: true } });
+    getAppUserMock.mockResolvedValue(USER);
+    withProfile({ has_access: true });
     const result = await createCheckoutSession();
     expect(result).toMatchObject({ ok: false, code: "ALREADY_PURCHASED" });
     expect(createSessionMock).not.toHaveBeenCalled();
   });
 
   it("creates a Stripe session with the pinned price and user metadata", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1", email: "u@x.com" } } });
-    singleMock.mockResolvedValue({ data: { has_access: false } });
+    getAppUserMock.mockResolvedValue(USER);
     createSessionMock.mockResolvedValue({ url: "https://checkout.stripe.com/abc" });
 
     const result = await createCheckoutSession();
@@ -65,9 +68,18 @@ describe("createCheckoutSession", () => {
     );
   });
 
+  it("falls through to Stripe when the profile read fails", async () => {
+    getAppUserMock.mockResolvedValue(USER);
+    withProfile(new Error("connection reset"));
+    createSessionMock.mockResolvedValue({ url: "https://checkout.stripe.com/abc" });
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const result = await createCheckoutSession();
+    expect(result).toEqual({ ok: true, data: { url: "https://checkout.stripe.com/abc" } });
+  });
+
   it("returns STRIPE_ERROR when Stripe throws", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1", email: "u@x.com" } } });
-    singleMock.mockResolvedValue({ data: { has_access: false } });
+    getAppUserMock.mockResolvedValue(USER);
     createSessionMock.mockRejectedValue(new Error("Stripe is down"));
 
     const result = await createCheckoutSession();
@@ -75,8 +87,7 @@ describe("createCheckoutSession", () => {
   });
 
   it("returns STRIPE_ERROR when Stripe response has no url", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1", email: "u@x.com" } } });
-    singleMock.mockResolvedValue({ data: { has_access: false } });
+    getAppUserMock.mockResolvedValue(USER);
     createSessionMock.mockResolvedValue({ url: null });
 
     const result = await createCheckoutSession();

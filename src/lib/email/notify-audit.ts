@@ -4,7 +4,17 @@
  * the audit-decision email. Best-effort; never throws.
  */
 
-import { createAdminClient } from "@/lib/supabase/admin";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import {
+  auditQueue,
+  lessons,
+  profiles,
+  rubricScores,
+  rubrics,
+  submissions,
+  usersInAuth,
+} from "@/db/schema";
 import { parseRubric } from "@/lib/grading/rubric";
 import { applyOverrides, type OverrideEntry } from "@/lib/grading/apply-overrides";
 import type { RubricScoreRow } from "@/components/grading/rubric-score-card";
@@ -18,44 +28,61 @@ export type AuditNotifyArgs = {
   reviewerNote?: string | null;
 };
 
+/** profiles.email, falling back to auth.users.email (replaces auth.admin.getUserById). */
+async function getUserEmail(userId: string): Promise<string | null> {
+  const [p] = await db
+    .select({ email: profiles.email })
+    .from(profiles)
+    .where(eq(profiles.id, userId))
+    .limit(1);
+  if (p?.email) return p.email;
+  const [u] = await db
+    .select({ email: usersInAuth.email })
+    .from(usersInAuth)
+    .where(eq(usersInAuth.id, userId))
+    .limit(1);
+  return u?.email ?? null;
+}
+
 export async function notifyAuditDecision(args: AuditNotifyArgs): Promise<void> {
   try {
-    const admin = createAdminClient();
-
-    const { data: queueRow } = await admin
-      .from("audit_queue")
-      .select("id, submission_id")
-      .eq("id", args.queueId)
-      .maybeSingle();
+    const [queueRow] = await db
+      .select({ id: auditQueue.id, submission_id: auditQueue.submissionId })
+      .from(auditQueue)
+      .where(eq(auditQueue.id, args.queueId))
+      .limit(1);
     if (!queueRow?.submission_id) return;
 
-    const { data: sub } = await admin
-      .from("submissions")
-      .select("id, user_id, overall_score, lesson:lessons(slug, title, competency)")
-      .eq("id", queueRow.submission_id)
-      .maybeSingle();
+    const [sub] = await db
+      .select({
+        id: submissions.id,
+        user_id: submissions.userId,
+        overall_score: submissions.overallScore,
+        lesson_slug: lessons.slug,
+        lesson_title: lessons.title,
+        lesson_competency: lessons.competency,
+      })
+      .from(submissions)
+      .leftJoin(lessons, eq(lessons.id, submissions.lessonId))
+      .where(eq(submissions.id, queueRow.submission_id))
+      .limit(1);
     if (!sub?.user_id) return;
 
-    type LessonRow = {
-      slug: string | null;
-      title: string | null;
-      competency: string | null;
+    const lesson = {
+      slug: sub.lesson_slug,
+      title: sub.lesson_title,
+      competency: sub.lesson_competency,
     };
-    const lesson = (Array.isArray(sub.lesson) ? sub.lesson[0] : sub.lesson) as
-      | LessonRow
-      | null
-      | undefined;
 
-    // Auth user → email
-    const { data: authUser } = await admin.auth.admin.getUserById(sub.user_id);
-    const email = authUser?.user?.email;
+    // User id → email (profiles.email, falling back to auth.users)
+    const email = await getUserEmail(sub.user_id);
     if (!email) return;
 
-    const { data: profile } = await admin
-      .from("profiles")
-      .select("full_name")
-      .eq("id", sub.user_id)
-      .maybeSingle();
+    const [profile] = await db
+      .select({ full_name: profiles.fullName })
+      .from(profiles)
+      .where(eq(profiles.id, sub.user_id))
+      .limit(1);
     const fullName = profile?.full_name ?? null;
     const firstName = fullName ? (fullName.split(/\s+/)[0] ?? null) : null;
 
@@ -68,17 +95,22 @@ export async function notifyAuditDecision(args: AuditNotifyArgs): Promise<void> 
     if (args.decision === "overridden" && args.overrides && args.overrides.length > 0) {
       // Recompute post-override overall using applyOverrides.
       if (lesson?.competency) {
-        const { data: rubricRow } = await admin
-          .from("rubrics")
-          .select("schema_json")
-          .eq("competency", lesson.competency)
-          .eq("is_current", true)
-          .maybeSingle();
+        const [rubricRow] = await db
+          .select({ schema_json: rubrics.schemaJson })
+          .from(rubrics)
+          .where(and(eq(rubrics.competency, lesson.competency), eq(rubrics.isCurrent, true)))
+          .limit(1);
 
-        const { data: aiScores } = await admin
-          .from("rubric_scores")
-          .select("dimension, score, justification, quote, suggestion")
-          .eq("submission_id", queueRow.submission_id);
+        const aiScores = await db
+          .select({
+            dimension: rubricScores.dimension,
+            score: rubricScores.score,
+            justification: rubricScores.justification,
+            quote: rubricScores.quote,
+            suggestion: rubricScores.suggestion,
+          })
+          .from(rubricScores)
+          .where(eq(rubricScores.submissionId, queueRow.submission_id));
 
         if (rubricRow?.schema_json && aiScores && aiScores.length > 0) {
           const rubric = parseRubric(rubricRow.schema_json);
@@ -87,7 +119,8 @@ export async function notifyAuditDecision(args: AuditNotifyArgs): Promise<void> 
             score: s.score,
             justification: s.justification,
             quote: s.quote,
-            suggestion: s.suggestion,
+            // Column is nullable; the card type expects a string.
+            suggestion: s.suggestion ?? "",
           }));
           const applied = applyOverrides(scoresAsRows, args.overrides, rubric);
           newScoreNormalised = Math.max(0, Math.min(1, (applied.overallScore - 1) / 4));

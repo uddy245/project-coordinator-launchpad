@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import { getAppUser } from "@/lib/auth/session";
 import { generateInterviewScenarios, type GeneratedScenario } from "@/lib/interviews/generate";
 import type { ActionResult } from "@/lib/types";
 
@@ -38,10 +38,7 @@ export async function generateMoreScenarios(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) {
     return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
   }

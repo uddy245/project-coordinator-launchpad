@@ -15,7 +15,9 @@
 import { z } from "zod";
 import { anthropic, GRADING_MODEL } from "@/lib/anthropic/client";
 import { checkSpendCap } from "@/lib/grading/spend-guard";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { desc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { quizItems } from "@/db/schema";
 import { QuizItemSchema } from "@/lib/quiz/schema";
 
 export type GenerateQuizItemsArgs = {
@@ -62,7 +64,7 @@ No preamble, no markdown, no code fences — output ONLY the JSON array.`;
 
 export async function generateQuizItems(args: GenerateQuizItemsArgs): Promise<GeneratedQuizItem[]> {
   // Spend cap — bail before calling Claude if we'd blow the daily budget.
-  const spend = await checkSpendCap(createAdminClient());
+  const spend = await checkSpendCap();
   if (!spend.ok) {
     throw new Error(
       `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`
@@ -70,15 +72,14 @@ export async function generateQuizItems(args: GenerateQuizItemsArgs): Promise<Ge
   }
 
   // Pull a small sample of existing stems so Claude can avoid obvious dupes.
-  const admin = createAdminClient();
-  const { data: existingStems } = await admin
-    .from("quiz_items")
-    .select("stem")
-    .eq("lesson_id", args.lessonId)
-    .order("created_at", { ascending: false })
+  const existingStems = await db
+    .select({ stem: quizItems.stem })
+    .from(quizItems)
+    .where(eq(quizItems.lessonId, args.lessonId))
+    .orderBy(desc(quizItems.createdAt))
     .limit(20);
 
-  const avoidList = (existingStems ?? []).map((r, i) => `${i + 1}. ${r.stem}`).join("\n");
+  const avoidList = existingStems.map((r, i) => `${i + 1}. ${r.stem}`).join("\n");
 
   const userMessage = `Lesson: ${args.lessonTitle}
 Slug: ${args.lessonSlug}
@@ -130,24 +131,39 @@ Output the JSON array now.`;
   // Insert into quiz_items, marked as AI-generated. Returning rows gives
   // us the assigned ids which the caller needs to record in quiz_item_seen.
   const rows = validated.data.map((it) => ({
-    lesson_id: args.lessonId,
+    lessonId: args.lessonId,
     sort: it.sort,
     stem: it.stem,
     options: it.options,
     correct: it.correct,
-    distractor_rationale: it.distractor_rationale,
+    distractorRationale: it.distractor_rationale,
     competency: it.competency,
     difficulty: it.difficulty,
-    is_ai_generated: true,
-    generated_at: new Date().toISOString(),
+    isAiGenerated: true,
+    generatedAt: new Date().toISOString(),
   }));
 
-  const { data: inserted, error: insertErr } = await admin
-    .from("quiz_items")
-    .insert(rows)
-    .select("id, sort, stem, options, competency, difficulty");
-  if (insertErr || !inserted) {
-    throw new Error(`Failed to insert generated quiz items: ${insertErr?.message ?? "unknown"}`);
+  let inserted: {
+    id: string;
+    sort: number;
+    stem: string;
+    options: unknown;
+    competency: string;
+    difficulty: string;
+  }[];
+  try {
+    inserted = await db.insert(quizItems).values(rows).returning({
+      id: quizItems.id,
+      sort: quizItems.sort,
+      stem: quizItems.stem,
+      options: quizItems.options,
+      competency: quizItems.competency,
+      difficulty: quizItems.difficulty,
+    });
+  } catch (err) {
+    throw new Error(
+      `Failed to insert generated quiz items: ${err instanceof Error ? err.message : "unknown"}`
+    );
   }
 
   return inserted.map((r) => ({

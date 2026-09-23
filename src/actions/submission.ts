@@ -2,8 +2,12 @@
 
 import { z } from "zod";
 import { env } from "@/env";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons, submissions } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
+import { uploadObject } from "@/lib/storage/object-storage";
 import { extractText, SUPPORTED_MIME_TYPES } from "@/lib/grading/parsers";
 import { gradeSubmission } from "@/lib/grading/service";
 import { MAX_UPLOAD_BYTES } from "@/lib/submission/constants";
@@ -15,6 +19,12 @@ const CreateSchema = z.object({
   mimeType: z.enum(SUPPORTED_MIME_TYPES),
   fileBase64: z.string().min(1),
 });
+
+/** Postgres message from a Drizzle error (without the SQL text/params). */
+function dbMessage(err: unknown): string {
+  const e = err as { cause?: { message?: string }; message?: string } | null;
+  return e?.cause?.message ?? e?.message ?? "Insert failed";
+}
 
 export type CreateSubmissionInput = z.input<typeof CreateSchema>;
 
@@ -42,10 +52,7 @@ async function createSubmissionImpl(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) {
     return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
   }
@@ -59,52 +66,62 @@ async function createSubmissionImpl(
     };
   }
 
-  const { data: lesson } = await supabase
-    .from("lessons")
-    .select("id")
-    .eq("slug", parsed.data.lessonSlug)
-    .eq("is_published", true)
-    .maybeSingle();
+  let lesson: { id: string } | null = null;
+  try {
+    const [row] = await db
+      .select({ id: lessons.id, isPublished: lessons.isPublished, isPreview: lessons.isPreview })
+      .from(lessons)
+      .where(eq(lessons.slug, parsed.data.lessonSlug))
+      .limit(1);
+    // lessons (was RLS): free previews for anyone, else has_access; admins all.
+    if (row && (await canViewLesson(user.id, row))) lesson = row;
+  } catch {
+    lesson = null;
+  }
   if (!lesson) {
     return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
   }
 
   // Insert the pending submission row first so we have an id to key the
-  // storage path by. Service role writes here because the grading path
-  // later will need to mutate this row.
-  const admin = createAdminClient();
+  // storage path by. user_id is bound to the session, never taken from input.
   const ext = extFor(parsed.data.mimeType);
   const placeholderPath = "pending";
 
-  const { data: sub, error: insertErr } = await admin
-    .from("submissions")
-    .insert({
-      user_id: user.id,
-      lesson_id: lesson.id,
-      storage_path: placeholderPath,
-      original_filename: parsed.data.filename,
-      mime_type: parsed.data.mimeType,
-      size_bytes: buffer.length,
-      status: "pending",
-    })
-    .select("id")
-    .single();
-  if (insertErr || !sub) {
-    return {
-      ok: false,
-      error: insertErr?.message ?? "Insert failed",
-      code: "DB_ERROR",
-    };
+  let sub: { id: string } | undefined;
+  try {
+    [sub] = await db
+      .insert(submissions)
+      .values({
+        userId: user.id,
+        lessonId: lesson.id,
+        storagePath: placeholderPath,
+        originalFilename: parsed.data.filename,
+        mimeType: parsed.data.mimeType,
+        sizeBytes: buffer.length,
+        status: "pending",
+      })
+      .returning({ id: submissions.id });
+  } catch (err) {
+    return { ok: false, error: dbMessage(err), code: "DB_ERROR" };
   }
+  if (!sub) {
+    return { ok: false, error: "Insert failed", code: "DB_ERROR" };
+  }
+  const ownSubmission = and(eq(submissions.id, sub.id), eq(submissions.userId, user.id));
 
   const storagePath = `${user.id}/${sub.id}.${ext}`;
-  const { error: uploadErr } = await admin.storage.from("submissions").upload(storagePath, buffer, {
-    contentType: parsed.data.mimeType,
-    upsert: false,
-  });
+  const { error: uploadErr } = await uploadObject(
+    "submissions",
+    storagePath,
+    buffer,
+    parsed.data.mimeType
+  );
   if (uploadErr) {
     // Clean up the orphaned row so retries are clean.
-    await admin.from("submissions").delete().eq("id", sub.id);
+    await db
+      .delete(submissions)
+      .where(ownSubmission)
+      .catch((e: unknown) => console.error("[createSubmission] orphan cleanup failed", e));
     return {
       ok: false,
       error: `Upload failed: ${uploadErr.message}`,
@@ -116,20 +133,23 @@ async function createSubmissionImpl(
   // and doing it here lets the grading route skip a storage round-trip.
   const extracted = await extractText(parsed.data.mimeType, buffer);
   if (!extracted.ok) {
-    await admin
-      .from("submissions")
-      .update({ status: "grading_failed", graded_at: new Date().toISOString() })
-      .eq("id", sub.id);
+    await db
+      .update(submissions)
+      .set({ status: "grading_failed", gradedAt: new Date().toISOString() })
+      .where(ownSubmission)
+      .catch((e: unknown) => console.error("[createSubmission] status update failed", e));
     return extracted;
   }
 
-  await admin
-    .from("submissions")
-    .update({
-      storage_path: storagePath,
-      extracted_text: extracted.data.text,
+  // Old code didn't check this write; keep that (log only).
+  await db
+    .update(submissions)
+    .set({
+      storagePath,
+      extractedText: extracted.data.text,
     })
-    .eq("id", sub.id);
+    .where(ownSubmission)
+    .catch((e: unknown) => console.error("[createSubmission] storage_path update failed", e));
 
   // Fire-and-forget the grading worker. We call our own /api/grade/[id]
   // route over HTTP with a shared secret; that route runs gradeSubmission

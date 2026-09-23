@@ -2,7 +2,7 @@
  * POST /api/tutor  — streaming AI tutor
  * GET  /api/tutor  — recent message history
  *
- * Auth: cookie-based Supabase session (createClient + getUser).
+ * Auth: Neon Auth session via getAppUser().
  *       Returns JSON 401/403 — never redirects.
  * Gate: profiles.has_access must be true (paid feature).
  * Guard: per-user daily message cap + global daily spend cap, checked
@@ -18,8 +18,10 @@ import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { and, desc, eq, ne } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons, profiles, tutorMessages } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
 import { anthropic } from "@/lib/anthropic/client";
 import { env } from "@/env";
 import { getLessonReadingTruncated } from "@/lib/lessons/reading";
@@ -45,24 +47,19 @@ const postBodySchema = z.object({
 
 // ── Workbook brief fetch ──────────────────────────────────────────────────────
 
-async function fetchWorkbookBrief(
-  admin: ReturnType<typeof createAdminClient>,
-  userId: string,
-  lessonSlug: string
-): Promise<string | null> {
+async function fetchWorkbookBrief(userId: string, lessonSlug: string): Promise<string | null> {
   try {
     // Resolve slug → lesson id + scenario_text fallback
-    const { data: lesson } = await admin
-      .from("lessons")
-      .select("id, scenario_text")
-      .eq("slug", lessonSlug)
-      .single();
+    const [lesson] = await db
+      .select({ id: lessons.id, scenario_text: lessons.scenarioText })
+      .from(lessons)
+      .where(eq(lessons.slug, lessonSlug))
+      .limit(1);
 
     if (!lesson) return null;
 
     // Try the user's currently active workbook assignment (most recently seen → default)
     const assignment = await getCurrentAssignment({
-      supabase: admin,
       userId,
       lessonId: lesson.id,
     });
@@ -70,7 +67,7 @@ async function fetchWorkbookBrief(
     if (assignment?.brief) return assignment.brief;
 
     // Fall back to the lesson's own scenario_text if no workbook assignment exists
-    return (lesson.scenario_text as string | null) ?? null;
+    return lesson.scenario_text ?? null;
   } catch {
     return null;
   }
@@ -140,21 +137,18 @@ function buildSystemPrompt(
 
 export async function POST(request: NextRequest) {
   // 1. Auth
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // 2. Access gate — profiles.has_access
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("has_access")
-    .eq("id", user.id)
-    .single();
+  // 2. Access gate — profiles.has_access (own row only)
+  const [profile] = await db
+    .select({ has_access: profiles.hasAccess })
+    .from(profiles)
+    .where(eq(profiles.id, user.id))
+    .limit(1);
 
   if (!profile?.has_access) {
     return NextResponse.json(
@@ -180,13 +174,23 @@ export async function POST(request: NextRequest) {
   }
   const { messages, lessonSlug, tab, conversation_id } = parsed.data;
 
-  // 4. Abuse guards — admin client so we can query all users' rows for the spend cap
-  const admin = createAdminClient();
+  // 3b. Conversation ownership — ids are client-generated, so a new id has
+  // no rows yet; reject only an id that already belongs to another user.
+  if (conversation_id) {
+    const [foreign] = await db
+      .select({ id: tutorMessages.id })
+      .from(tutorMessages)
+      .where(
+        and(eq(tutorMessages.conversationId, conversation_id), ne(tutorMessages.userId, user.id))
+      )
+      .limit(1);
+    if (foreign) {
+      return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+    }
+  }
 
-  const [msgCap, spendCap] = await Promise.all([
-    checkUserMessageCap(admin, user.id),
-    checkSpendCap(admin),
-  ]);
+  // 4. Abuse guards — spend cap is global (all users' rows); message cap is per-user
+  const [msgCap, spendCap] = await Promise.all([checkUserMessageCap(user.id), checkSpendCap()]);
 
   if (!msgCap.ok) {
     return NextResponse.json(
@@ -207,23 +211,22 @@ export async function POST(request: NextRequest) {
   // 5. Persist the user's message (fire-and-forget — don't block the stream)
   const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
   if (lastUserMsg) {
-    admin
-      .from("tutor_messages")
-      .insert({
-        user_id: user.id,
-        lesson_slug: lessonSlug ?? null,
-        conversation_id: conversation_id ?? null,
+    db.insert(tutorMessages)
+      .values({
+        userId: user.id,
+        lessonSlug: lessonSlug ?? null,
+        conversationId: conversation_id ?? null,
         role: "user",
         content: lastUserMsg.content,
       })
-      .then(({ error }) => {
-        if (error) console.error("[tutor] persist user msg:", error.message);
+      .catch((err: unknown) => {
+        console.error("[tutor] persist user msg:", err instanceof Error ? err.message : err);
       });
   }
 
   // 6. Fetch workbook scenario (only when on workbook tab — safe assignment prompt, not an answer key)
   const workbookBrief =
-    tab === "workbook" && lessonSlug ? await fetchWorkbookBrief(admin, user.id, lessonSlug) : null;
+    tab === "workbook" && lessonSlug ? await fetchWorkbookBrief(user.id, lessonSlug) : null;
 
   // 7. Build system prompt
   const systemPrompt = buildSystemPrompt(lessonSlug, tab, workbookBrief);
@@ -263,20 +266,22 @@ export async function POST(request: NextRequest) {
         controller.close();
 
         // 9. Persist assistant reply + token usage
-        admin
-          .from("tutor_messages")
-          .insert({
-            user_id: user.id,
-            lesson_slug: lessonSlug ?? null,
-            conversation_id: conversation_id ?? null,
+        db.insert(tutorMessages)
+          .values({
+            userId: user.id,
+            lessonSlug: lessonSlug ?? null,
+            conversationId: conversation_id ?? null,
             role: "assistant",
             content: assistantContent,
-            input_tokens: inputTokens,
-            output_tokens: outputTokens,
+            inputTokens,
+            outputTokens,
             model: env.TUTOR_MODEL,
           })
-          .then(({ error }) => {
-            if (error) console.error("[tutor] persist assistant msg:", error.message);
+          .catch((err: unknown) => {
+            console.error(
+              "[tutor] persist assistant msg:",
+              err instanceof Error ? err.message : err
+            );
           });
       }
     },
@@ -294,10 +299,7 @@ export async function POST(request: NextRequest) {
 // ── GET — recent history ──────────────────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -308,25 +310,36 @@ export async function GET(request: NextRequest) {
   const lessonSlug = url.searchParams.get("lessonSlug") ?? undefined;
   const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") ?? "100", 10), 1), 200);
 
-  // User-scoped client — RLS ensures we only see this user's rows.
-  let query = supabase
-    .from("tutor_messages")
-    .select("id, role, content, lesson_slug, conversation_id, created_at")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-
+  // No RLS: always scope to the signed-in user's rows. A conversation id
+  // owned by someone else therefore returns an empty list.
+  const filters = [eq(tutorMessages.userId, user.id)];
   if (conversationId) {
-    query = query.eq("conversation_id", conversationId) as typeof query;
+    filters.push(eq(tutorMessages.conversationId, conversationId));
   } else if (lessonSlug) {
-    query = query.eq("lesson_slug", lessonSlug) as typeof query;
+    filters.push(eq(tutorMessages.lessonSlug, lessonSlug));
   }
 
-  const { data, error } = await query;
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  let data;
+  try {
+    data = await db
+      .select({
+        id: tutorMessages.id,
+        role: tutorMessages.role,
+        content: tutorMessages.content,
+        lesson_slug: tutorMessages.lessonSlug,
+        conversation_id: tutorMessages.conversationId,
+        created_at: tutorMessages.createdAt,
+      })
+      .from(tutorMessages)
+      .where(and(...filters))
+      .orderBy(desc(tutorMessages.createdAt))
+      .limit(limit);
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Query failed" },
+      { status: 500 }
+    );
   }
 
-  return NextResponse.json({ messages: (data ?? []).reverse() });
+  return NextResponse.json({ messages: data.reverse() });
 }

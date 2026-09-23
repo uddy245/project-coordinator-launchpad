@@ -1,64 +1,68 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { getUserMock, lessonSingleMock, upsertMock, fromMock } = vi.hoisted(() => ({
-  getUserMock: vi.fn(),
-  lessonSingleMock: vi.fn(),
-  upsertMock: vi.fn(),
-  fromMock: vi.fn(),
+const { getAppUserMock, canViewLessonMock, revalidatePathMock } = vi.hoisted(() => ({
+  getAppUserMock: vi.fn(),
+  canViewLessonMock: vi.fn(),
+  revalidatePathMock: vi.fn(),
 }));
+const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: async () => ({
-    auth: { getUser: getUserMock },
-    from: fromMock,
-  }),
+vi.mock("@/db", () => ({ db: fakeDb.db }));
+vi.mock("@/lib/auth/session", () => ({
+  getAppUser: getAppUserMock,
 }));
-
-vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
+vi.mock("@/lib/lessons/access", () => ({ canViewLesson: canViewLessonMock }));
+vi.mock("next/cache", () => ({ revalidatePath: revalidatePathMock }));
 
 import { updateVideoProgress } from "@/actions/video-progress";
 
-beforeEach(() => {
-  getUserMock.mockReset();
-  lessonSingleMock.mockReset();
-  upsertMock.mockReset();
-  fromMock.mockReset();
+function user(id = "u1") {
+  return { id, email: `${id}@example.com`, name: null, neonAuthUserId: `neon-${id}` };
+}
 
-  fromMock.mockImplementation((table: string) => {
-    if (table === "lessons") {
-      return {
-        select: () => ({
-          eq: () => ({
-            eq: () => ({ maybeSingle: lessonSingleMock }),
-          }),
-        }),
-      };
-    }
-    if (table === "lesson_progress") {
-      return { upsert: upsertMock };
-    }
-    throw new Error("unexpected table: " + table);
+/** lessons select returns `lesson` (or nothing); upsert returns `upsert`. */
+function withDb(lesson: { id: string } | null, upsert: unknown = []) {
+  fakeDb.reset((q) => {
+    if (q.op === "select" && q.table === "lessons") return lesson ? [lesson] : [];
+    if (q.op === "insert" && q.table === "lesson_progress") return upsert;
+    return [];
   });
+}
+
+beforeEach(() => {
+  getAppUserMock.mockReset();
+  canViewLessonMock.mockReset().mockResolvedValue(true);
+  revalidatePathMock.mockReset();
+  withDb({ id: "lesson-1" });
 });
 
 describe("updateVideoProgress", () => {
   it("returns UNAUTHENTICATED when no user", async () => {
-    getUserMock.mockResolvedValue({ data: { user: null } });
+    getAppUserMock.mockResolvedValue(null);
     const result = await updateVideoProgress({ lessonSlug: "raid-logs", seconds: 10 });
     expect(result).toMatchObject({ ok: false, code: "UNAUTHENTICATED" });
+    expect(fakeDb.calls).toHaveLength(0);
   });
 
   it("returns NOT_FOUND for unknown lesson slug", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    lessonSingleMock.mockResolvedValue({ data: null });
+    getAppUserMock.mockResolvedValue(user());
+    withDb(null);
     const result = await updateVideoProgress({ lessonSlug: "nope", seconds: 10 });
     expect(result).toMatchObject({ ok: false, code: "NOT_FOUND" });
+    expect(fakeDb.callsFor("insert")).toHaveLength(0);
+  });
+
+  it("returns NOT_FOUND when the user has no access (was RLS)", async () => {
+    getAppUserMock.mockResolvedValue(user());
+    canViewLessonMock.mockResolvedValue(false);
+    const result = await updateVideoProgress({ lessonSlug: "raid-logs", seconds: 10 });
+    expect(result).toMatchObject({ ok: false, code: "NOT_FOUND" });
+    expect(canViewLessonMock).toHaveBeenCalledWith("u1", expect.anything());
+    expect(fakeDb.callsFor("insert")).toHaveLength(0);
   });
 
   it("flips video_watched true at >=90% of duration", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    lessonSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    upsertMock.mockResolvedValue({ error: null });
+    getAppUserMock.mockResolvedValue(user());
 
     const result = await updateVideoProgress({
       lessonSlug: "raid-logs",
@@ -67,22 +71,21 @@ describe("updateVideoProgress", () => {
     });
 
     expect(result).toEqual({ ok: true, data: { video_watched: true } });
-    expect(upsertMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        user_id: "u1",
-        lesson_id: "lesson-1",
-        video_seconds_watched: 540,
-        video_duration: 600,
-        video_watched: true,
-      }),
-      { onConflict: "user_id,lesson_id" }
-    );
+    const [insert] = fakeDb.callsFor("insert", "lesson_progress");
+    expect(insert.values).toEqual({
+      userId: "u1",
+      lessonId: "lesson-1",
+      videoSecondsWatched: 540,
+      videoDuration: 600,
+      videoWatched: true,
+    });
+    // Upsert on the (user_id, lesson_id) PK.
+    expect(insert.chain).toContain("onConflictDoUpdate");
+    expect(revalidatePathMock).toHaveBeenCalledWith("/dashboard");
   });
 
   it("keeps video_watched false below 90% threshold", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    lessonSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    upsertMock.mockResolvedValue({ error: null });
+    getAppUserMock.mockResolvedValue(user());
 
     const result = await updateVideoProgress({
       lessonSlug: "raid-logs",
@@ -91,12 +94,11 @@ describe("updateVideoProgress", () => {
     });
 
     expect(result).toEqual({ ok: true, data: { video_watched: false } });
+    expect(revalidatePathMock).not.toHaveBeenCalled();
   });
 
   it("keeps video_watched false when duration is unknown", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    lessonSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    upsertMock.mockResolvedValue({ error: null });
+    getAppUserMock.mockResolvedValue(user());
 
     const result = await updateVideoProgress({
       lessonSlug: "raid-logs",
@@ -104,23 +106,28 @@ describe("updateVideoProgress", () => {
     });
 
     expect(result).toEqual({ ok: true, data: { video_watched: false } });
+    expect(fakeDb.callsFor("insert", "lesson_progress")[0].values).toMatchObject({
+      videoDuration: null,
+      videoWatched: false,
+    });
   });
 
+  // The conflict-target/WHERE ownership is covered by
+  // tests/integration/neon-smoke.test.ts; here we check the written userId.
   it("writes user_id from session, not from input", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "authed-user" } } });
-    lessonSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    upsertMock.mockResolvedValue({ error: null });
+    getAppUserMock.mockResolvedValue(user("authed-user"));
 
     await updateVideoProgress({ lessonSlug: "raid-logs", seconds: 10 });
 
-    expect(upsertMock.mock.calls[0]?.[0]).toMatchObject({ user_id: "authed-user" });
+    expect(fakeDb.callsFor("insert", "lesson_progress")[0].values).toMatchObject({
+      userId: "authed-user",
+    });
   });
 
   it("maps DB errors to DB_ERROR", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    lessonSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    upsertMock.mockResolvedValue({ error: { message: "rls blocked" } });
+    getAppUserMock.mockResolvedValue(user());
+    withDb({ id: "lesson-1" }, new Error("constraint violation"));
     const result = await updateVideoProgress({ lessonSlug: "raid-logs", seconds: 10 });
-    expect(result).toMatchObject({ ok: false, code: "DB_ERROR" });
+    expect(result).toMatchObject({ ok: false, code: "DB_ERROR", error: "constraint violation" });
   });
 });

@@ -12,7 +12,6 @@
 
 import { anthropic, GRADING_MODEL } from "@/lib/anthropic/client";
 import { checkSpendCap } from "@/lib/grading/spend-guard";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { z } from "zod";
 
 export type GradeMockInterviewArgs = {
@@ -54,7 +53,7 @@ No preamble, no explanation outside the JSON.`;
 export async function gradeMockInterviewResponse(
   args: GradeMockInterviewArgs
 ): Promise<GradeMockInterviewResult> {
-  const spend = await checkSpendCap(createAdminClient());
+  const spend = await checkSpendCap();
   if (!spend.ok) {
     throw new Error(
       `Spend cap reached: $${spend.projectedUsd.toFixed(4)} would exceed $${spend.capUsd}`

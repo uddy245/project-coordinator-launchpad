@@ -1,5 +1,7 @@
 import type Stripe from "stripe";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { profiles, purchases } from "@/db/schema";
 import { sendEmail } from "@/lib/email/send";
 import { renderPurchaseConfirmed } from "@/lib/email/templates/purchase-confirmed";
 
@@ -10,7 +12,8 @@ import { renderPurchaseConfirmed } from "@/lib/email/templates/purchase-confirme
  * Contract:
  *   - On first successful delivery: insert a purchases row, flip
  *     profiles.has_access to true for the user encoded in metadata.
- *   - On duplicate delivery: detect the unique-violation and no-op.
+ *   - On duplicate delivery: the insert hits ON CONFLICT (stripe_session_id)
+ *     DO NOTHING, returns no row, and we no-op.
  *   - On a session with no user_id in metadata: log and ignore.
  */
 export async function handleCheckoutSessionCompleted(
@@ -25,36 +28,39 @@ export async function handleCheckoutSessionCompleted(
     return { granted: false, reason: `payment_status=${session.payment_status}` };
   }
 
-  const admin = createAdminClient();
-
-  const { error: insertError } = await admin.from("purchases").insert({
-    user_id: userId,
-    stripe_session_id: session.id,
-    stripe_payment_intent_id:
-      typeof session.payment_intent === "string"
-        ? session.payment_intent
-        : (session.payment_intent?.id ?? null),
-    amount_cents: session.amount_total ?? 0,
-    currency: session.currency ?? "usd",
-    status: "paid",
-  });
-
-  if (insertError) {
-    // 23505 = unique_violation on stripe_session_id — duplicate delivery.
-    // Supabase returns the Postgres code on `.code`.
-    if ((insertError as { code?: string }).code === "23505") {
-      return { granted: false, reason: "duplicate session (idempotent)" };
-    }
-    throw new Error(`Failed to insert purchase: ${insertError.message}`);
+  let insertedRows: { id: string }[];
+  try {
+    insertedRows = await db
+      .insert(purchases)
+      .values({
+        userId,
+        stripeSessionId: session.id,
+        stripePaymentIntentId:
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : (session.payment_intent?.id ?? null),
+        amountCents: session.amount_total ?? 0,
+        currency: session.currency ?? "usd",
+        status: "paid",
+      })
+      // purchases.stripe_session_id is UNIQUE — duplicate delivery no-ops.
+      .onConflictDoNothing({ target: purchases.stripeSessionId })
+      .returning({ id: purchases.id });
+  } catch (err) {
+    throw new Error(
+      `Failed to insert purchase: ${err instanceof Error ? err.message : String(err)}`
+    );
   }
 
-  const { error: updateError } = await admin
-    .from("profiles")
-    .update({ has_access: true })
-    .eq("id", userId);
+  if (insertedRows.length === 0) {
+    return { granted: false, reason: "duplicate session (idempotent)" };
+  }
 
-  if (updateError) {
-    throw new Error(`Failed to grant access: ${updateError.message}`);
+  // Setting has_access fires the DB trigger that creates gate_status.
+  try {
+    await db.update(profiles).set({ hasAccess: true }).where(eq(profiles.id, userId));
+  } catch (err) {
+    throw new Error(`Failed to grant access: ${err instanceof Error ? err.message : String(err)}`);
   }
 
   // Confirmation email (silent / fire-and-forget). We resolve the recipient
@@ -62,11 +68,11 @@ export async function handleCheckoutSessionCompleted(
   // already sends its own receipt and the user has access regardless.
   void (async () => {
     try {
-      const { data: profile } = await admin
-        .from("profiles")
-        .select("full_name")
-        .eq("id", userId)
-        .maybeSingle();
+      const [profile] = await db
+        .select({ full_name: profiles.fullName })
+        .from(profiles)
+        .where(eq(profiles.id, userId))
+        .limit(1);
       const customerEmail = session.customer_details?.email ?? session.customer_email ?? null;
       if (!customerEmail) return;
 

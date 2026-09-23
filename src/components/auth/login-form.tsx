@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { signIn, sendMagicLink } from "@/actions/auth";
+import { signIn, sendSignInCode } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,7 +21,6 @@ type LoginValues = z.infer<typeof LoginSchema>;
 export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }) {
   const [isPending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
-  const [magicLinkSentTo, setMagicLinkSentTo] = useState<string | null>(null);
 
   const {
     register,
@@ -40,6 +39,10 @@ export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }
       if (!result.ok) {
         setSubmitting(false);
         toast.error(result.error);
+        if (result.code === "EMAIL_NOT_CONFIRMED") {
+          // A fresh code was emailed — enter it on /verify-email.
+          window.location.assign(`/verify-email?email=${encodeURIComponent(values.email)}`);
+        }
         return;
       }
       // Full-page navigation (not router.push): Safari does not reliably
@@ -50,7 +53,7 @@ export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }
     });
   }
 
-  function onMagicLink() {
+  function onSignInCode() {
     const email = getValues("email");
     const emailCheck = z.string().email().safeParse(email);
     if (!emailCheck.success) {
@@ -59,36 +62,18 @@ export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }
     }
     setSubmitting(true);
     startTransition(async () => {
-      const result = await sendMagicLink({ email, redirectTo });
-      setSubmitting(false);
+      const result = await sendSignInCode({ email });
       if (!result.ok) {
+        setSubmitting(false);
         toast.error(result.error);
         return;
       }
-      setMagicLinkSentTo(email);
+      const params = new URLSearchParams({ email, redirect: redirectTo });
+      window.location.assign(`/login/code?${params.toString()}`);
     });
   }
 
   const disabled = isPending || submitting;
-
-  if (magicLinkSentTo) {
-    return (
-      <div className="space-y-3 rounded-md border bg-muted/40 p-4 text-center">
-        <h2 className="font-medium">Check your email</h2>
-        <p className="text-sm text-muted-foreground">
-          We sent a sign-in link to <strong>{magicLinkSentTo}</strong>. Click the link to finish
-          logging in.
-        </p>
-        <button
-          type="button"
-          onClick={() => setMagicLinkSentTo(null)}
-          className="text-sm text-muted-foreground underline"
-        >
-          Use a different email
-        </button>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit(onPasswordSubmit)} className="space-y-4" noValidate>
@@ -134,10 +119,10 @@ export function LoginForm({ redirectTo = "/dashboard" }: { redirectTo?: string }
         type="button"
         variant="outline"
         className="w-full"
-        onClick={onMagicLink}
+        onClick={onSignInCode}
         disabled={disabled}
       >
-        Send me a magic link
+        Email me a sign-in code
       </Button>
     </form>
   );

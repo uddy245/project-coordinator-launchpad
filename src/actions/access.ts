@@ -1,19 +1,27 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
 
 /**
  * Read the authenticated user's has_access. Used by the checkout-success
  * page to poll for the webhook having flipped the flag.
  */
 export async function getMyAccess(): Promise<{ hasAccess: boolean }> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return { hasAccess: false };
 
-  const { data } = await supabase.from("profiles").select("has_access").eq("id", user.id).single();
-
-  return { hasAccess: !!data?.has_access };
+  try {
+    // Owner-only: the caller's own profile row.
+    const [row] = await db
+      .select({ has_access: profiles.hasAccess })
+      .from(profiles)
+      .where(eq(profiles.id, user.id))
+      .limit(1);
+    return { hasAccess: !!row?.has_access };
+  } catch {
+    return { hasAccess: false };
+  }
 }

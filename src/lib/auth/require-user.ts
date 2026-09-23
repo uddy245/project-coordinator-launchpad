@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import { redirect, notFound } from "next/navigation";
-import type { User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/server";
+import { getSessionState, isAdmin, type AppUser } from "@/lib/auth/session";
 
 async function currentPath(): Promise<string> {
   const h = await headers();
@@ -10,20 +9,21 @@ async function currentPath(): Promise<string> {
 
 /**
  * Require an authenticated user. Redirects to `/login?redirect=<current>`
- * if there is no session. Always returns a user when it returns.
+ * if there is no session, or to `/verify-email` if the email is not yet
+ * verified. Always returns a user when it returns.
  */
-export async function requireUser(): Promise<User> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export async function requireUser(): Promise<AppUser> {
+  const state = await getSessionState();
 
-  if (!user) {
+  if (state.status === "unverified") {
+    redirect("/verify-email");
+  }
+  if (state.status !== "signed_in") {
     const path = await currentPath();
     redirect(`/login?redirect=${encodeURIComponent(path)}`);
   }
 
-  return user;
+  return state.user;
 }
 
 /**
@@ -31,11 +31,9 @@ export async function requireUser(): Promise<User> {
  * returns a 404 for authenticated non-admins (so the existence of the
  * admin area is not revealed).
  */
-export async function requireAdmin(): Promise<User> {
+export async function requireAdmin(): Promise<AppUser> {
   const user = await requireUser();
-  const supabase = await createClient();
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) {
+  if (!(await isAdmin(user.id))) {
     notFound();
   }
   return user;
@@ -46,11 +44,8 @@ export async function requireAdmin(): Promise<User> {
  * Used on /login and /signup so signed-in users don't see the auth forms.
  */
 export async function redirectIfAuthed(target = "/dashboard"): Promise<void> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (user) {
+  const state = await getSessionState();
+  if (state.status === "signed_in") {
     redirect(target);
   }
 }

@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { asc } from "drizzle-orm";
+import { db } from "@/db";
+import { capstoneScenarios } from "@/db/schema";
+import { requireAdmin } from "@/lib/auth/require-user";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Capstones — Admin" };
@@ -16,13 +19,20 @@ type CapstoneRow = {
 };
 
 export default async function AdminCapstonesPage() {
-  const admin = createAdminClient();
-  const { data } = await admin
-    .from("capstone_scenarios")
-    .select("id, slug, title, required_artifacts, estimated_hours, is_published, updated_at")
-    .order("created_at", { ascending: true });
-
-  const capstones = (data ?? []) as CapstoneRow[];
+  // Layout already gates; repeated here as defence in depth (no RLS).
+  await requireAdmin();
+  const capstones: CapstoneRow[] = await db
+    .select({
+      id: capstoneScenarios.id,
+      slug: capstoneScenarios.slug,
+      title: capstoneScenarios.title,
+      required_artifacts: capstoneScenarios.requiredArtifacts,
+      estimated_hours: capstoneScenarios.estimatedHours,
+      is_published: capstoneScenarios.isPublished,
+      updated_at: capstoneScenarios.updatedAt,
+    })
+    .from(capstoneScenarios)
+    .orderBy(asc(capstoneScenarios.createdAt));
 
   return (
     <div className="space-y-8">

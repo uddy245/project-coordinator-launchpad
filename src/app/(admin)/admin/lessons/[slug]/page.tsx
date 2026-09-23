@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessons, lessonTemplates } from "@/db/schema";
+import { requireAdmin } from "@/lib/auth/require-user";
 import { LessonForm, type LessonFormDefaults } from "@/components/admin/lesson-form";
 import { TemplateUploader, type ExistingTemplate } from "@/components/admin/template-uploader";
 
@@ -8,37 +11,47 @@ export const metadata = { title: "Edit lesson — Admin" };
 export const dynamic = "force-dynamic";
 
 export default async function EditLessonPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Layout already gates; repeated here as defence in depth (no RLS).
+  await requireAdmin();
   const { slug } = await params;
   // The /admin/lessons/new route lives next to this; bail early so we don't
   // mistake the literal "new" path for a slug.
   if (slug === "new") notFound();
 
-  const admin = createAdminClient();
-  const { data } = await admin
-    .from("lessons")
-    .select(
-      "slug, number, title, summary, video_url, competency, prompt_name, estimated_minutes, is_published, is_preview"
-    )
-    .eq("slug", slug)
-    .maybeSingle();
+  const [data] = await db
+    .select({
+      id: lessons.id,
+      slug: lessons.slug,
+      number: lessons.number,
+      title: lessons.title,
+      summary: lessons.summary,
+      video_url: lessons.videoUrl,
+      competency: lessons.competency,
+      prompt_name: lessons.promptName,
+      estimated_minutes: lessons.estimatedMinutes,
+      is_published: lessons.isPublished,
+      is_preview: lessons.isPreview,
+    })
+    .from(lessons)
+    .where(eq(lessons.slug, slug))
+    .limit(1);
 
   if (!data) notFound();
 
-  const { data: lessonRow } = await admin
-    .from("lessons")
-    .select("id")
-    .eq("slug", slug)
-    .maybeSingle();
-  const { data: templateRows } = lessonRow
-    ? await admin
-        .from("lesson_templates")
-        .select("id, title, description, kind, file_url, sort")
-        .eq("lesson_id", lessonRow.id)
-        .order("sort", { ascending: true })
-        .order("created_at", { ascending: true })
-    : { data: [] as ExistingTemplate[] };
+  const templateRows = await db
+    .select({
+      id: lessonTemplates.id,
+      title: lessonTemplates.title,
+      description: lessonTemplates.description,
+      kind: lessonTemplates.kind,
+      file_url: lessonTemplates.fileUrl,
+      sort: lessonTemplates.sort,
+    })
+    .from(lessonTemplates)
+    .where(eq(lessonTemplates.lessonId, data.id))
+    .orderBy(asc(lessonTemplates.sort), asc(lessonTemplates.createdAt));
 
-  const existingTemplates: ExistingTemplate[] = (templateRows ?? []) as ExistingTemplate[];
+  const existingTemplates: ExistingTemplate[] = templateRows as ExistingTemplate[];
 
   const defaults: LessonFormDefaults = {
     slug: data.slug,

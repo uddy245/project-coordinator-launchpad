@@ -2,7 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessonProgress, lessons } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import type { ActionResult } from "@/lib/types";
 
 const Schema = z.object({
@@ -23,20 +27,23 @@ export async function updateVideoProgress(
     return { ok: false, error: "Invalid input", code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) {
     return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
   }
 
-  const { data: lesson } = await supabase
-    .from("lessons")
-    .select("id")
-    .eq("slug", parsed.data.lessonSlug)
-    .eq("is_published", true)
-    .maybeSingle();
+  let lesson: { id: string } | null = null;
+  try {
+    const [row] = await db
+      .select({ id: lessons.id, isPublished: lessons.isPublished, isPreview: lessons.isPreview })
+      .from(lessons)
+      .where(eq(lessons.slug, parsed.data.lessonSlug))
+      .limit(1);
+    // lessons (was RLS): free previews for anyone, else has_access; admins all.
+    if (row && (await canViewLesson(user.id, row))) lesson = row;
+  } catch {
+    lesson = null;
+  }
   if (!lesson) {
     return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
   }
@@ -50,19 +57,28 @@ export async function updateVideoProgress(
     parsed.data.duration > 0 &&
     parsed.data.seconds / parsed.data.duration >= WATCHED_THRESHOLD;
 
-  const { error } = await supabase.from("lesson_progress").upsert(
-    {
-      user_id: user.id,
-      lesson_id: lesson.id,
-      video_seconds_watched: parsed.data.seconds,
-      video_duration: parsed.data.duration ?? null,
-      video_watched,
-    },
-    { onConflict: "user_id,lesson_id" }
-  );
-
-  if (error) {
-    return { ok: false, error: error.message, code: "DB_ERROR" };
+  try {
+    const progress = {
+      videoSecondsWatched: parsed.data.seconds,
+      videoDuration: parsed.data.duration ?? null,
+      videoWatched: video_watched,
+    };
+    // Owner-only: user_id comes from the session; the conflict target is
+    // the (user_id, lesson_id) PK so only this user's row is updated.
+    await db
+      .insert(lessonProgress)
+      .values({ userId: user.id, lessonId: lesson.id, ...progress })
+      .onConflictDoUpdate({
+        target: [lessonProgress.userId, lessonProgress.lessonId],
+        set: progress,
+      });
+  } catch (err) {
+    const e = err as { cause?: { message?: string }; message?: string } | null;
+    return {
+      ok: false,
+      error: e?.cause?.message ?? e?.message ?? "Database error",
+      code: "DB_ERROR",
+    };
   }
 
   // Only bust the dashboard cache on the transition that actually

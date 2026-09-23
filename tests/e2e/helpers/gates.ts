@@ -1,25 +1,27 @@
 /**
  * E2E helpers for the authed dashboard-gate spec.
  *
- * The app is magic-link only, so we log a seeded test user in
- * programmatically via the GoTrue admin `generateLink` action and visit
- * the resulting link (which lands on /auth/callback and establishes the
- * SSR session). All seeding is reversible — `cleanup()` removes every row
- * and the user itself.
+ * Auth is Neon Auth (managed Better Auth, email + password). The helper
+ * signs a dedicated test user up through the Neon Auth HTTP API, marks its
+ * email verified directly in the database (the app only maps VERIFIED Neon
+ * Auth emails to an `auth.users` row — see src/lib/auth/session.ts), and
+ * then logs in through the real /login form. Gate inputs are seeded with
+ * plain SQL against the app's Neon Postgres database. `cleanup()` removes
+ * every app-side row for the user (including its `auth.users` row).
  *
- * Requires SUPABASE_SERVICE_ROLE_KEY + NEXT_PUBLIC_SUPABASE_URL. When
- * absent the spec skips (see HAS_SERVICE_ROLE), exactly like the
- * calibration corpus skips without ANTHROPIC_API_KEY — so default
- * `pnpm test:e2e` stays green for contributors without the service role.
+ * Requires DATABASE_URL + NEON_AUTH_BASE_URL + E2E_TEST_PASSWORD. When any
+ * is absent the spec skips (see HAS_E2E_AUTH), exactly like the calibration
+ * corpus skips without ANTHROPIC_API_KEY — so default `pnpm test:e2e` stays
+ * green for contributors without database credentials.
  *
  * NOTE: the Playwright webServer runs `pnpm dev`, which reads the same
  * .env.local these vars come from — so the spec seeds and asserts against
- * whatever Supabase that points at. Use a local stack (`supabase start`)
- * if you don't want a transient e2e user created on a shared project.
+ * whatever database / Neon Auth project that points at. Use a Neon branch
+ * if you don't want a transient e2e user created on a shared database.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { Pool } from "pg";
 import type { Page } from "@playwright/test";
 
 // Playwright doesn't auto-load .env.local; parse it ourselves as a fallback.
@@ -36,36 +38,92 @@ function loadEnvLocal(): void {
 }
 loadEnvLocal();
 
-const URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
-export const HAS_SERVICE_ROLE = Boolean(URL && SERVICE_KEY);
+const DATABASE_URL = process.env.DATABASE_URL ?? "";
+const NEON_AUTH_BASE_URL = (process.env.NEON_AUTH_BASE_URL ?? "").replace(/\/+$/, "");
+const TEST_PASSWORD = process.env.E2E_TEST_PASSWORD ?? "";
+export const HAS_E2E_AUTH = Boolean(DATABASE_URL && NEON_AUTH_BASE_URL && TEST_PASSWORD);
+
+/** Origin Neon Auth expects on sign-up; matches playwright.config baseURL. */
+const APP_BASE_URL = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(
+  /\/+$/,
+  ""
+);
 
 export const TEST_EMAIL = "e2e+gate-status@projectcoordinator.test";
 const FOUNDATION_SLUGS = ["coordinator-role", "project-lifecycle", "written-voice", "mindset"];
 
-export function admin(): SupabaseClient {
-  return createClient(URL, SERVICE_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+/** Pooled connection to the app database. Call `.end()` when done. */
+export function testDb(): Pool {
+  return new Pool({ connectionString: DATABASE_URL, max: 2 });
 }
 
-/** Create (or fetch) the dedicated test user. Returns its id. */
-export async function ensureTestUser(db: SupabaseClient): Promise<string> {
-  const created = await db.auth.admin.createUser({
-    email: TEST_EMAIL,
-    email_confirm: true,
-    password: crypto.randomUUID(),
+/**
+ * Create (or reuse) the dedicated test user and return its app user id
+ * (the `auth.users.id` every public table references).
+ */
+export async function ensureTestUser(db: Pool, appBaseURL = APP_BASE_URL): Promise<string> {
+  // 1. Neon Auth account (email + password). "Already exists" is fine.
+  const res = await fetch(`${NEON_AUTH_BASE_URL}/sign-up/email`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Origin: appBaseURL },
+    body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD, name: "E2E Gate" }),
   });
-  if (created.data.user) return created.data.user.id;
-
-  // Already exists — page through and find it.
-  for (let page = 1; page <= 20; page++) {
-    const { data } = await db.auth.admin.listUsers({ page, perPage: 200 });
-    const found = data.users.find((u) => u.email === TEST_EMAIL);
-    if (found) return found.id;
-    if (data.users.length < 200) break;
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    if (!/already|exist/i.test(body)) {
+      throw new Error(`Neon Auth sign-up failed (${res.status}): ${body.slice(0, 300)}`);
+    }
   }
-  throw new Error(`could not create or find test user ${TEST_EMAIL}`);
+
+  // 2. Mark the email verified — the app refuses to map unverified sessions.
+  // ASSUMPTION: Neon Auth stores Better Auth's tables in the `neon_auth`
+  // schema of this database, with the default `user` table / camelCase
+  // `emailVerified` column.
+  try {
+    const verified = await db.query(
+      `update neon_auth."user" set "emailVerified" = true where lower(email) = lower($1)`,
+      [TEST_EMAIL]
+    );
+    if (verified.rowCount === 0) {
+      throw new Error(`no neon_auth."user" row for ${TEST_EMAIL} after sign-up`);
+    }
+  } catch (err) {
+    throw new Error(
+      `Could not mark the e2e user's email verified. This helper assumes Neon Auth ` +
+        `keeps its Better Auth tables in the "neon_auth" schema of DATABASE_URL ` +
+        `(table neon_auth."user", column "emailVerified"). Underlying error: ${
+          err instanceof Error ? err.message : String(err)
+        }`
+    );
+  }
+
+  // 3. App rows, provisioned the same way src/lib/auth/session.ts does.
+  const existing = await db.query<{ id: string }>(
+    `select id from auth.users
+      where lower(email) = lower($1) and deleted_at is null
+      order by created_at limit 1`,
+    [TEST_EMAIL]
+  );
+  let id = existing.rows[0]?.id;
+  if (!id) {
+    const inserted = await db.query<{ id: string }>(
+      `insert into auth.users
+         (id, email, aud, role, email_confirmed_at, raw_app_meta_data, raw_user_meta_data,
+          created_at, updated_at)
+       values (gen_random_uuid(), lower($1), 'authenticated', 'authenticated', now(),
+               '{"provider":"neon_auth"}'::jsonb, '{"full_name":"E2E Gate"}'::jsonb, now(), now())
+       returning id`,
+      [TEST_EMAIL]
+    );
+    id = inserted.rows[0].id;
+  }
+  await db.query(
+    `insert into public.profiles (id, email, full_name)
+     values ($1, lower($2), 'E2E Gate')
+     on conflict do nothing`,
+    [id, TEST_EMAIL]
+  );
+  return id;
 }
 
 export type GateSeed = {
@@ -76,77 +134,82 @@ export type GateSeed = {
 };
 
 /** Flip a user's gate inputs to a known state. Idempotent. */
-export async function seedGateState(
-  db: SupabaseClient,
-  userId: string,
-  seed: GateSeed
-): Promise<void> {
+export async function seedGateState(db: Pool, userId: string, seed: GateSeed): Promise<void> {
   const target = seed.portfolioTarget ?? 7;
 
-  await db.from("gate_status").upsert({
-    user_id: userId,
-    portfolio_artifacts_count: seed.portfolioCount,
-    portfolio_artifacts_target: target,
-    portfolio_complete: seed.portfolioCount >= target,
-    foundation_complete: seed.foundationComplete,
-  });
+  await db.query(
+    `insert into public.gate_status
+       (user_id, portfolio_artifacts_count, portfolio_artifacts_target,
+        portfolio_complete, foundation_complete)
+     values ($1, $2, $3, $4, $5)
+     on conflict (user_id) do update set
+       portfolio_artifacts_count = excluded.portfolio_artifacts_count,
+       portfolio_artifacts_target = excluded.portfolio_artifacts_target,
+       portfolio_complete = excluded.portfolio_complete,
+       foundation_complete = excluded.foundation_complete`,
+    [userId, seed.portfolioCount, target, seed.portfolioCount >= target, seed.foundationComplete]
+  );
 
-  const { data: foundation } = await db
-    .from("lessons")
-    .select("id, slug")
-    .in("slug", FOUNDATION_SLUGS);
-  if (foundation?.length) {
-    await db.from("lesson_progress").upsert(
-      foundation.map((l) => ({
-        user_id: userId,
-        lesson_id: l.id,
-        video_watched: seed.foundationComplete,
-        quiz_passed: seed.foundationComplete,
-        artifact_submitted: seed.foundationComplete,
-      }))
+  const foundation = await db.query<{ id: string }>(
+    `select id from public.lessons where slug = any($1::text[])`,
+    [FOUNDATION_SLUGS]
+  );
+  for (const l of foundation.rows) {
+    await db.query(
+      `insert into public.lesson_progress
+         (user_id, lesson_id, video_watched, quiz_passed, artifact_submitted)
+       values ($1, $2, $3, $3, $3)
+       on conflict (user_id, lesson_id) do update set
+         video_watched = excluded.video_watched,
+         quiz_passed = excluded.quiz_passed,
+         artifact_submitted = excluded.artifact_submitted`,
+      [userId, l.id, seed.foundationComplete]
     );
   }
 
   // Clear any prior test passes, then seed exactly `interviewPasses` of them.
-  await db.from("mock_interview_responses").delete().eq("user_id", userId);
+  await db.query(`delete from public.mock_interview_responses where user_id = $1`, [userId]);
   if (seed.interviewPasses > 0) {
-    const { data: scenarios } = await db
-      .from("mock_interview_scenarios")
-      .select("id")
-      .eq("is_published", true)
-      .limit(seed.interviewPasses);
-    if (scenarios?.length) {
-      await db.from("mock_interview_responses").insert(
-        scenarios.map((s) => ({
-          user_id: userId,
-          scenario_id: s.id,
-          response_text: "__e2e_gate_test__",
-          status: "graded",
-          pass: true,
-        }))
+    const scenarios = await db.query<{ id: string }>(
+      `select id from public.mock_interview_scenarios where is_published = true limit $1`,
+      [seed.interviewPasses]
+    );
+    for (const s of scenarios.rows) {
+      await db.query(
+        `insert into public.mock_interview_responses
+           (user_id, scenario_id, response_text, status, pass)
+         values ($1, $2, '__e2e_gate_test__', 'graded', true)`,
+        [userId, s.id]
       );
     }
   }
 }
 
-/** Remove every seeded row and the user. Safe to call in afterAll. */
-export async function cleanup(db: SupabaseClient, userId: string): Promise<void> {
-  await db.from("mock_interview_responses").delete().eq("user_id", userId);
-  await db.from("lesson_progress").delete().eq("user_id", userId);
-  await db.from("gate_status").delete().eq("user_id", userId);
-  await db.auth.admin.deleteUser(userId).catch(() => {});
+/**
+ * Remove every seeded row and the app-side user. Safe to call in afterAll.
+ *
+ * Order matters: deleting auth.users cascades to submissions, whose delete
+ * trigger re-inserts gate_status for the (now-deleted) user → FK error. So
+ * submissions and gate_status are deleted explicitly first.
+ *
+ * The Neon Auth account is intentionally NOT deleted: it lives in the
+ * managed auth service, and ensureTestUser() reuses it (re-provisioning the
+ * app rows by email) on the next run.
+ */
+export async function cleanup(db: Pool, userId: string): Promise<void> {
+  await db.query(`delete from public.submissions where user_id = $1`, [userId]);
+  await db.query(`delete from public.mock_interview_responses where user_id = $1`, [userId]);
+  await db.query(`delete from public.lesson_progress where user_id = $1`, [userId]);
+  await db.query(`delete from public.gate_status where user_id = $1`, [userId]);
+  await db.query(`delete from public.profiles where id = $1`, [userId]).catch(() => {});
+  await db.query(`delete from auth.users where id = $1`, [userId]).catch(() => {});
 }
 
-/** Log the seeded user in by minting + visiting a magic link. */
-export async function loginAs(page: Page, db: SupabaseClient, baseURL: string): Promise<void> {
-  const { data, error } = await db.auth.admin.generateLink({
-    type: "magiclink",
-    email: TEST_EMAIL,
-    options: { redirectTo: `${baseURL}/auth/callback` },
-  });
-  if (error || !data.properties?.action_link) {
-    throw new Error(`generateLink failed: ${error?.message ?? "no action_link"}`);
-  }
-  await page.goto(data.properties.action_link);
+/** Log the seeded user in through the real /login form (email + password). */
+export async function loginAs(page: Page): Promise<void> {
+  await page.goto("/login");
+  await page.locator("#email").fill(TEST_EMAIL);
+  await page.locator("#password").fill(TEST_PASSWORD);
+  await page.getByRole("button", { name: "Log in", exact: true }).click();
   await page.waitForURL(/\/dashboard/, { timeout: 15000 });
 }

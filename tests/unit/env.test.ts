@@ -5,9 +5,11 @@ describe("env validation", () => {
   it("exports required env vars", () => {
     expect(typeof env.ANTHROPIC_API_KEY).toBe("string");
     expect(env.ANTHROPIC_API_KEY.length).toBeGreaterThan(0);
-    expect(typeof env.NEXT_PUBLIC_SUPABASE_URL).toBe("string");
-    expect(typeof env.NEXT_PUBLIC_SUPABASE_ANON_KEY).toBe("string");
-    expect(typeof env.SUPABASE_SERVICE_ROLE_KEY).toBe("string");
+    expect(typeof env.DATABASE_URL).toBe("string");
+    expect(typeof env.NEON_AUTH_BASE_URL).toBe("string");
+    expect(env.NEON_AUTH_COOKIE_SECRET.length).toBeGreaterThanOrEqual(32);
+    expect(env.AWS_ENDPOINT_URL_S3).toMatch(/^https:\/\//);
+    expect(env.AWS_REGION).toBe("us-east-1");
   });
 
   it("defaults ANTHROPIC_SPEND_CAP_USD to 100 when unset", () => {
@@ -16,5 +18,12 @@ describe("env validation", () => {
 
   it("defaults ANTHROPIC_MODEL to claude-sonnet-4-5 when unset", () => {
     expect(env.ANTHROPIC_MODEL).toBe("claude-sonnet-4-5");
+  });
+
+  it("exposes no database or auth secrets as NEXT_PUBLIC_ variables", () => {
+    const publicKeys = Object.keys(env).filter((k) => k.startsWith("NEXT_PUBLIC_"));
+    for (const k of publicKeys) {
+      expect(k).not.toMatch(/DATABASE|SUPABASE|NEON|AWS_|SECRET/);
+    }
   });
 });

@@ -1,29 +1,37 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { env } from "@/env";
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
 import { stripe } from "@/lib/stripe/client";
-import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/types";
 
 type CheckoutData = { url: string };
 
 export async function createCheckoutSession(): Promise<ActionResult<CheckoutData>> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
 
   if (!user?.email) {
     return { ok: false, error: "You must be signed in.", code: "UNAUTHENTICATED" };
   }
 
   // Short-circuit if the user already has access — don't let them pay twice.
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("has_access")
-    .eq("id", user.id)
-    .single();
-  if (profile?.has_access) {
+  // Owner-only: the caller's own profile row. A failed read falls through,
+  // as the old `.single()` error did.
+  let alreadyHasAccess = false;
+  try {
+    const [profile] = await db
+      .select({ has_access: profiles.hasAccess })
+      .from(profiles)
+      .where(eq(profiles.id, user.id))
+      .limit(1);
+    alreadyHasAccess = !!profile?.has_access;
+  } catch (err) {
+    console.error("[createCheckoutSession] profile read failed", err);
+  }
+  if (alreadyHasAccess) {
     return { ok: false, error: "You already have access.", code: "ALREADY_PURCHASED" };
   }
 

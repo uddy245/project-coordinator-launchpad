@@ -1,61 +1,29 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const {
-  getUserMock,
-  lessonMaybeSingleMock,
-  insertReturnMock,
-  updateEqMock,
-  uploadMock,
+  getAppUserMock,
+  canViewLessonMock,
+  uploadObjectMock,
   gradeSubmissionMock,
   extractTextMock,
-  deleteEqMock,
 } = vi.hoisted(() => ({
-  getUserMock: vi.fn(),
-  lessonMaybeSingleMock: vi.fn(),
-  insertReturnMock: vi.fn(),
-  updateEqMock: vi.fn(),
-  uploadMock: vi.fn(),
+  getAppUserMock: vi.fn(),
+  canViewLessonMock: vi.fn(),
+  uploadObjectMock: vi.fn(),
   gradeSubmissionMock: vi.fn(),
   extractTextMock: vi.fn(),
-  deleteEqMock: vi.fn(),
 }));
+const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
 
-vi.mock("@/lib/supabase/server", () => ({
-  createClient: async () => ({
-    auth: { getUser: getUserMock },
-    from: (table: string) => {
-      if (table === "lessons") {
-        return {
-          select: () => ({
-            eq: () => ({
-              eq: () => ({ maybeSingle: lessonMaybeSingleMock }),
-            }),
-          }),
-        };
-      }
-      throw new Error("unexpected table on user client: " + table);
-    },
-  }),
+vi.mock("@/db", () => ({ db: fakeDb.db }));
+vi.mock("@/lib/auth/session", () => ({
+  getAppUser: getAppUserMock,
 }));
-
-vi.mock("@/lib/supabase/admin", () => ({
-  createAdminClient: () => ({
-    from: (table: string) => {
-      if (table === "submissions") {
-        return {
-          insert: () => ({
-            select: () => ({
-              single: insertReturnMock,
-            }),
-          }),
-          update: () => ({ eq: updateEqMock }),
-          delete: () => ({ eq: deleteEqMock }),
-        };
-      }
-      throw new Error("unexpected admin table: " + table);
-    },
-    storage: { from: () => ({ upload: uploadMock }) },
-  }),
+vi.mock("@/lib/lessons/access", () => ({ canViewLesson: canViewLessonMock }));
+vi.mock("@/lib/storage/object-storage", () => ({
+  uploadObject: uploadObjectMock,
+  removeObjects: vi.fn(async () => ({ error: null })),
+  createSignedUrl: vi.fn(async () => null),
 }));
 
 vi.mock("@/lib/grading/service", () => ({
@@ -77,18 +45,37 @@ import { createSubmission } from "@/actions/submission";
 const XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 const SMALL_BASE64 = Buffer.from("hello").toString("base64");
 
+function user(id = "u1") {
+  return { id, email: `${id}@example.com`, name: null, neonAuthUserId: `neon-${id}` };
+}
+
+/**
+ * lessons select → `lesson`; submissions insert…returning → `inserted`.
+ * Updates/deletes resolve to [] (or `writeResult` if given).
+ */
+function withDb(opts: {
+  lesson?: { id: string } | null;
+  inserted?: { id: string } | null | Error;
+  writeResult?: unknown;
+}) {
+  const { lesson = { id: "lesson-1" }, inserted = { id: "sub-99" }, writeResult = [] } = opts;
+  fakeDb.reset((q) => {
+    if (q.op === "select" && q.table === "lessons") return lesson ? [lesson] : [];
+    if (q.op === "insert" && q.table === "submissions") {
+      return inserted instanceof Error ? inserted : inserted ? [inserted] : [];
+    }
+    if (q.op === "update" || q.op === "delete") return writeResult;
+    return [];
+  });
+}
+
 beforeEach(() => {
-  getUserMock.mockReset();
-  lessonMaybeSingleMock.mockReset();
-  insertReturnMock.mockReset();
-  updateEqMock.mockReset();
-  uploadMock.mockReset();
+  getAppUserMock.mockReset();
+  canViewLessonMock.mockReset().mockResolvedValue(true);
+  uploadObjectMock.mockReset();
   gradeSubmissionMock.mockReset();
   extractTextMock.mockReset();
-  deleteEqMock.mockReset();
-
-  updateEqMock.mockResolvedValue({ error: null });
-  deleteEqMock.mockResolvedValue({ error: null });
+  withDb({});
 
   // Replace global fetch so the fire-and-forget grading dispatch is
   // captured but doesn't actually run (and doesn't need a network).
@@ -100,7 +87,7 @@ beforeEach(() => {
 
 describe("createSubmission", () => {
   it("rejects unauthenticated calls", async () => {
-    getUserMock.mockResolvedValue({ data: { user: null } });
+    getAppUserMock.mockResolvedValue(null);
     const result = await createSubmission({
       lessonSlug: "raid-logs",
       filename: "x.xlsx",
@@ -108,12 +95,12 @@ describe("createSubmission", () => {
       fileBase64: SMALL_BASE64,
     });
     expect(result).toMatchObject({ ok: false, code: "UNAUTHENTICATED" });
-    expect(insertReturnMock).not.toHaveBeenCalled();
+    expect(fakeDb.callsFor("insert")).toHaveLength(0);
   });
 
   it("rejects an unknown lesson slug", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    lessonMaybeSingleMock.mockResolvedValue({ data: null });
+    getAppUserMock.mockResolvedValue(user());
+    withDb({ lesson: null });
     const result = await createSubmission({
       lessonSlug: "unknown",
       filename: "x.xlsx",
@@ -121,14 +108,26 @@ describe("createSubmission", () => {
       fileBase64: SMALL_BASE64,
     });
     expect(result).toMatchObject({ ok: false, code: "NOT_FOUND" });
+    expect(fakeDb.callsFor("insert")).toHaveLength(0);
+  });
+
+  it("rejects a lesson the user has no access to (was RLS)", async () => {
+    getAppUserMock.mockResolvedValue(user());
+    canViewLessonMock.mockResolvedValue(false);
+    const result = await createSubmission({
+      lessonSlug: "raid-logs",
+      filename: "x.xlsx",
+      mimeType: XLSX_MIME,
+      fileBase64: SMALL_BASE64,
+    });
+    expect(result).toMatchObject({ ok: false, code: "NOT_FOUND" });
+    expect(canViewLessonMock).toHaveBeenCalledWith("u1", expect.anything());
+    expect(fakeDb.callsFor("insert")).toHaveLength(0);
   });
 
   it("rejects a file exceeding the 10MB cap", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "u1" } } });
-    lessonMaybeSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    // 10.5 MB of base64 -> raw ~7.9 MB? No — base64 is 4/3 size. We need
-    // raw > 10MB which means base64 > ~13.33MB. Build a Buffer of 11MB
-    // directly and base64 it.
+    getAppUserMock.mockResolvedValue(user());
+    // base64 is 4/3 the raw size, so build an 11MB raw buffer directly.
     const big = Buffer.alloc(11 * 1024 * 1024).toString("base64");
     const result = await createSubmission({
       lessonSlug: "raid-logs",
@@ -150,11 +149,22 @@ describe("createSubmission", () => {
     expect(result).toMatchObject({ ok: false, code: "INVALID_INPUT" });
   });
 
+  it("returns DB_ERROR when the insert fails", async () => {
+    getAppUserMock.mockResolvedValue(user());
+    withDb({ inserted: new Error("insert blew up") });
+    const result = await createSubmission({
+      lessonSlug: "raid-logs",
+      filename: "my.xlsx",
+      mimeType: XLSX_MIME,
+      fileBase64: SMALL_BASE64,
+    });
+    expect(result).toMatchObject({ ok: false, code: "DB_ERROR", error: "insert blew up" });
+    expect(uploadObjectMock).not.toHaveBeenCalled();
+  });
+
   it("happy path: inserts, uploads, extracts, schedules grading", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "user-42" } } });
-    lessonMaybeSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    insertReturnMock.mockResolvedValue({ data: { id: "sub-99" }, error: null });
-    uploadMock.mockResolvedValue({ error: null });
+    getAppUserMock.mockResolvedValue(user("user-42"));
+    uploadObjectMock.mockResolvedValue({ error: null });
     extractTextMock.mockResolvedValue({
       ok: true,
       data: { text: "extracted", truncated: false },
@@ -169,9 +179,33 @@ describe("createSubmission", () => {
     });
 
     expect(result).toEqual({ ok: true, data: { submissionId: "sub-99" } });
-    expect(uploadMock).toHaveBeenCalled();
-    const [path] = uploadMock.mock.calls[0] ?? [];
+
+    // user_id is bound to the session, never taken from input. (WHERE-level
+    // ownership on the follow-up updates is covered by
+    // tests/integration/neon-smoke.test.ts.)
+    const [insert] = fakeDb.callsFor("insert", "submissions");
+    expect(insert.values).toMatchObject({
+      userId: "user-42",
+      lessonId: "lesson-1",
+      storagePath: "pending",
+      originalFilename: "my.xlsx",
+      mimeType: XLSX_MIME,
+      sizeBytes: 5,
+      status: "pending",
+    });
+
+    expect(uploadObjectMock).toHaveBeenCalledTimes(1);
+    const [bucket, path, , contentType] = uploadObjectMock.mock.calls[0] ?? [];
+    expect(bucket).toBe("submissions");
     expect(path).toBe("user-42/sub-99.xlsx");
+    expect(contentType).toBe(XLSX_MIME);
+
+    const updates = fakeDb.callsFor("update", "submissions");
+    expect(updates).toHaveLength(1);
+    expect(updates[0].set).toEqual({
+      storagePath: "user-42/sub-99.xlsx",
+      extractedText: "extracted",
+    });
 
     // Grading is dispatched via fetch to /api/grade/[id] — verify the
     // fire-and-forget URL + shared secret header, not a direct call.
@@ -185,10 +219,8 @@ describe("createSubmission", () => {
   });
 
   it("rolls back the row when storage upload fails", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "user-42" } } });
-    lessonMaybeSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    insertReturnMock.mockResolvedValue({ data: { id: "sub-99" }, error: null });
-    uploadMock.mockResolvedValue({ error: { message: "quota exceeded" } });
+    getAppUserMock.mockResolvedValue(user("user-42"));
+    uploadObjectMock.mockResolvedValue({ error: new Error("quota exceeded") });
 
     const result = await createSubmission({
       lessonSlug: "raid-logs",
@@ -197,15 +229,18 @@ describe("createSubmission", () => {
       fileBase64: SMALL_BASE64,
     });
 
-    expect(result).toMatchObject({ ok: false, code: "STORAGE_ERROR" });
-    expect(deleteEqMock).toHaveBeenCalled();
+    expect(result).toMatchObject({
+      ok: false,
+      code: "STORAGE_ERROR",
+      error: "Upload failed: quota exceeded",
+    });
+    expect(fakeDb.callsFor("delete", "submissions")).toHaveLength(1);
+    expect(extractTextMock).not.toHaveBeenCalled();
   });
 
   it("marks submission grading_failed when text extraction fails", async () => {
-    getUserMock.mockResolvedValue({ data: { user: { id: "user-42" } } });
-    lessonMaybeSingleMock.mockResolvedValue({ data: { id: "lesson-1" } });
-    insertReturnMock.mockResolvedValue({ data: { id: "sub-99" }, error: null });
-    uploadMock.mockResolvedValue({ error: null });
+    getAppUserMock.mockResolvedValue(user("user-42"));
+    uploadObjectMock.mockResolvedValue({ error: null });
     extractTextMock.mockResolvedValue({
       ok: false,
       error: "bad file",
@@ -220,7 +255,10 @@ describe("createSubmission", () => {
     });
 
     expect(result).toMatchObject({ ok: false, code: "PARSER_ERROR" });
-    expect(updateEqMock).toHaveBeenCalled();
+    const updates = fakeDb.callsFor("update", "submissions");
+    expect(updates).toHaveLength(1);
+    expect(updates[0].set).toMatchObject({ status: "grading_failed" });
     expect(gradeSubmissionMock).not.toHaveBeenCalled();
+    expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 });

@@ -20,7 +20,9 @@
  * heuristic is legible: "Continue M03 — your quiz is the only step left."
  */
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { lessonProgress, lessons as lessonsTable } from "@/db/schema";
 
 const FOUNDATION_SLUGS = ["coordinator-role", "project-lifecycle", "written-voice", "mindset"];
 
@@ -60,24 +62,28 @@ function nextStep(p: ProgressRow | undefined): {
   return null; // fully done
 }
 
-export async function recommendNextLesson(
-  supabase: SupabaseClient,
-  userId: string
-): Promise<LessonRecommendation | null> {
-  const [{ data: lessonsData }, { data: progressData }] = await Promise.all([
-    supabase
-      .from("lessons")
-      .select("id, slug, number, title")
-      .eq("is_published", true)
-      .order("number", { ascending: true }),
-    supabase
-      .from("lesson_progress")
-      .select("lesson_id, video_watched, quiz_passed, artifact_submitted")
-      .eq("user_id", userId),
+export async function recommendNextLesson(userId: string): Promise<LessonRecommendation | null> {
+  const [lessons, progress]: [LessonRow[], ProgressRow[]] = await Promise.all([
+    db
+      .select({
+        id: lessonsTable.id,
+        slug: lessonsTable.slug,
+        number: lessonsTable.number,
+        title: lessonsTable.title,
+      })
+      .from(lessonsTable)
+      .where(eq(lessonsTable.isPublished, true))
+      .orderBy(lessonsTable.number),
+    db
+      .select({
+        lesson_id: lessonProgress.lessonId,
+        video_watched: lessonProgress.videoWatched,
+        quiz_passed: lessonProgress.quizPassed,
+        artifact_submitted: lessonProgress.artifactSubmitted,
+      })
+      .from(lessonProgress)
+      .where(eq(lessonProgress.userId, userId)),
   ]);
-
-  const lessons = (lessonsData ?? []) as LessonRow[];
-  const progress = (progressData ?? []) as ProgressRow[];
   const progressByLesson = new Map(progress.map((p) => [p.lesson_id, p]));
 
   // Stage 1 — foundations first.

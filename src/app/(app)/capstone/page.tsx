@@ -1,5 +1,8 @@
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { asc, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { capstoneAttempts, capstoneScenarios } from "@/db/schema";
+import { hasAccess, isAdmin } from "@/lib/auth/session";
 
 export const metadata = { title: "Capstone — Launchpad" };
 export const dynamic = "force-dynamic";
@@ -36,19 +39,39 @@ const ARTIFACT_LABELS: Record<string, string> = {
 
 export default async function CapstonePage() {
   const user = await requireUser();
-  const supabase = await createClient();
+  // capstone_scenarios (was RLS): learners see published rows only and
+  // only with purchased access; admins see everything (incl. unpublished).
+  const [admin, access] = await Promise.all([isAdmin(user.id), hasAccess(user.id)]);
 
-  const { data: scenarioData } = await supabase
-    .from("capstone_scenarios")
-    .select("id, slug, title, brief, required_artifacts, estimated_hours, is_published")
-    .order("created_at", { ascending: true });
-  const scenarios = (scenarioData ?? []) as Scenario[];
+  const scenarios: Scenario[] = access
+    ? await db
+        .select({
+          id: capstoneScenarios.id,
+          slug: capstoneScenarios.slug,
+          title: capstoneScenarios.title,
+          brief: capstoneScenarios.brief,
+          required_artifacts: capstoneScenarios.requiredArtifacts,
+          estimated_hours: capstoneScenarios.estimatedHours,
+          is_published: capstoneScenarios.isPublished,
+        })
+        .from(capstoneScenarios)
+        .where(admin ? undefined : eq(capstoneScenarios.isPublished, true))
+        .orderBy(asc(capstoneScenarios.createdAt))
+    : [];
 
-  const { data: attemptData } = await supabase
-    .from("capstone_attempts")
-    .select("id, scenario_id, status, started_at, graded_at, overall_score, pass")
-    .eq("user_id", user.id);
-  const attempts = (attemptData ?? []) as Attempt[];
+  // capstone_attempts: owner only.
+  const attempts = (await db
+    .select({
+      id: capstoneAttempts.id,
+      scenario_id: capstoneAttempts.scenarioId,
+      status: capstoneAttempts.status,
+      started_at: capstoneAttempts.startedAt,
+      graded_at: capstoneAttempts.gradedAt,
+      overall_score: capstoneAttempts.overallScore,
+      pass: capstoneAttempts.pass,
+    })
+    .from(capstoneAttempts)
+    .where(eq(capstoneAttempts.userId, user.id))) as Attempt[];
   const attemptByScenario = new Map(attempts.map((a) => [a.scenario_id, a]));
 
   return (

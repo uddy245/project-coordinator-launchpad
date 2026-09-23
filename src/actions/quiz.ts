@@ -2,8 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { eq, inArray } from "drizzle-orm";
+import { db } from "@/db";
+import { lessonProgress, lessons, quizAttempts, quizItems as quizItemsTable } from "@/db/schema";
+import { getAppUser } from "@/lib/auth/session";
+import { canViewLesson } from "@/lib/lessons/access";
 import { gradeQuizAttempt, type QuizItem } from "@/lib/grading/quiz";
 import { selectQuizItemsForUser, resetSeenHistory, type ServedQuizItem } from "@/lib/quiz/select";
 import type { ActionResult } from "@/lib/types";
@@ -17,6 +20,35 @@ const SubmitSchema = z.object({
   lessonSlug: z.string().min(1),
   answers: z.array(AnswerSchema).min(1),
 });
+
+/** Postgres message from a Drizzle error (without the SQL text/params). */
+function dbMessage(err: unknown): string {
+  const e = err as { cause?: { message?: string }; message?: string } | null;
+  return e?.cause?.message ?? e?.message ?? "Database error";
+}
+
+type LessonRow = { id: string; title: string; summary: string | null; competency: string };
+
+/**
+ * Lesson by slug if this learner may use it (was RLS on lessons): free
+ * preview lessons for anyone signed in, else has_access; admins see all.
+ */
+async function findAccessibleLesson(userId: string, slug: string): Promise<LessonRow | null> {
+  const [lesson] = await db
+    .select({
+      id: lessons.id,
+      title: lessons.title,
+      summary: lessons.summary,
+      competency: lessons.competency,
+      isPublished: lessons.isPublished,
+      isPreview: lessons.isPreview,
+    })
+    .from(lessons)
+    .where(eq(lessons.slug, slug))
+    .limit(1);
+  if (!lesson) return null;
+  return (await canViewLesson(userId, lesson)) ? lesson : null;
+}
 
 export type SubmitQuizInput = z.input<typeof SubmitSchema>;
 
@@ -45,27 +77,21 @@ export async function submitQuizAttempt(
     };
   }
 
-  // Require authentication via the user-scoped client.
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) {
     return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
   }
 
-  // Service role for reading quiz_items (the correct answer) and writing
+  // Server-side read of quiz_items (the correct answer) and write of
   // quiz_attempts after grading. Auth was enforced above; the user_id we
   // write is bound to the authenticated session, not taken from input.
-  const admin = createAdminClient();
-
-  const { data: lesson, error: lessonErr } = await admin
-    .from("lessons")
-    .select("id")
-    .eq("slug", parsed.data.lessonSlug)
-    .eq("is_published", true)
-    .maybeSingle();
-  if (lessonErr || !lesson) {
+  let lesson: LessonRow | null;
+  try {
+    lesson = await findAccessibleLesson(user.id, parsed.data.lessonSlug);
+  } catch {
+    lesson = null;
+  }
+  if (!lesson) {
     return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
   }
 
@@ -74,11 +100,30 @@ export async function submitQuizAttempt(
   // the refresh feature growing the pool, fetching by lesson_id alone would
   // include items the learner never saw and grade them as wrong.
   const answeredIds = parsed.data.answers.map((a) => a.itemId);
-  const { data: items, error: itemsErr } = await admin
-    .from("quiz_items")
-    .select("id, correct, distractor_rationale, options, lesson_id")
-    .in("id", answeredIds);
-  if (itemsErr || !items || items.length === 0) {
+  let items: {
+    id: string;
+    correct: string;
+    distractor_rationale: unknown;
+    options: unknown;
+    lesson_id: string;
+  }[];
+  try {
+    // `correct` / `distractor_rationale` are read server-side for grading
+    // only; the response carries just what gradeQuizAttempt returns.
+    items = await db
+      .select({
+        id: quizItemsTable.id,
+        correct: quizItemsTable.correct,
+        distractor_rationale: quizItemsTable.distractorRationale,
+        options: quizItemsTable.options,
+        lesson_id: quizItemsTable.lessonId,
+      })
+      .from(quizItemsTable)
+      .where(inArray(quizItemsTable.id, answeredIds));
+  } catch {
+    items = [];
+  }
+  if (items.length === 0) {
     return {
       ok: false,
       error: "Quiz items not available.",
@@ -87,7 +132,8 @@ export async function submitQuizAttempt(
   }
   // Reject any answers referencing items that don't belong to this lesson —
   // prevents a malicious client from grading against arbitrary items.
-  if (items.some((it) => it.lesson_id !== lesson.id)) {
+  const lessonId = lesson.id;
+  if (items.some((it) => it.lesson_id !== lessonId)) {
     return {
       ok: false,
       error: "Answer set references items outside this lesson.",
@@ -104,18 +150,19 @@ export async function submitQuizAttempt(
 
   const result = gradeQuizAttempt(quizItems, parsed.data.answers);
 
-  const { error: insertErr } = await admin.from("quiz_attempts").insert({
-    user_id: user.id,
-    lesson_id: lesson.id,
-    score: result.score,
-    total: result.total,
-    passed: result.passed,
-    raw_answers: parsed.data.answers,
-  });
-  if (insertErr) {
+  try {
+    await db.insert(quizAttempts).values({
+      userId: user.id,
+      lessonId,
+      score: result.score,
+      total: result.total,
+      passed: result.passed,
+      rawAnswers: parsed.data.answers,
+    });
+  } catch (err) {
     return {
       ok: false,
-      error: `Failed to record attempt: ${insertErr.message}`,
+      error: `Failed to record attempt: ${dbMessage(err)}`,
       code: "DB_ERROR",
     };
   }
@@ -124,14 +171,18 @@ export async function submitQuizAttempt(
   // Idempotent on the composite PK; a later lower-scoring attempt
   // does not clear the flag (pass once = passed).
   if (result.passed) {
-    await admin.from("lesson_progress").upsert(
-      {
-        user_id: user.id,
-        lesson_id: lesson.id,
-        quiz_passed: true,
-      },
-      { onConflict: "user_id,lesson_id" }
-    );
+    try {
+      await db
+        .insert(lessonProgress)
+        .values({ userId: user.id, lessonId, quizPassed: true })
+        .onConflictDoUpdate({
+          target: [lessonProgress.userId, lessonProgress.lessonId],
+          set: { quizPassed: true },
+        });
+    } catch (err) {
+      // Old code didn't check this write; the attempt is already recorded.
+      console.error("[submitQuizAttempt] lesson_progress upsert failed", err);
+    }
 
     // Invalidate the Next.js router cache for pages that read from
     // lesson_progress so the learner sees "In progress" immediately
@@ -165,29 +216,23 @@ export async function refreshQuizItems(
     return { ok: false, error: "Invalid input", code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
 
-  const admin = createAdminClient();
-  const { data: lesson } = await admin
-    .from("lessons")
-    .select("id, title, summary, competency")
-    .eq("slug", parsed.data.lessonSlug)
-    .eq("is_published", true)
-    .maybeSingle();
+  let lesson: LessonRow | null;
+  try {
+    lesson = await findAccessibleLesson(user.id, parsed.data.lessonSlug);
+  } catch {
+    lesson = null;
+  }
   if (!lesson) {
     return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
   }
 
-  // Use the admin client so generate.ts can read existing stems and the
-  // selector can write to quiz_item_seen on behalf of the user. The
-  // selector still scopes everything by user_id we pass in.
+  // The selector scopes quiz_item_seen reads/writes by the user_id we pass
+  // in (from the session) and never returns `correct`.
   try {
     const result = await selectQuizItemsForUser({
-      supabase: admin,
       userId: user.id,
       lessonId: lesson.id,
       lessonSlug: parsed.data.lessonSlug,
@@ -215,27 +260,28 @@ export async function resetQuizHistory(
     return { ok: false, error: "Invalid input", code: "INVALID_INPUT" };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser();
   if (!user) return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
 
-  const admin = createAdminClient();
-  const { data: lesson } = await admin
-    .from("lessons")
-    .select("id")
-    .eq("slug", parsed.data.lessonSlug)
-    .maybeSingle();
-  if (!lesson) {
-    return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
-  }
+  let result: { deleted: number };
+  try {
+    const [lesson] = await db
+      .select({ id: lessons.id, isPublished: lessons.isPublished, isPreview: lessons.isPreview })
+      .from(lessons)
+      .where(eq(lessons.slug, parsed.data.lessonSlug))
+      .limit(1);
+    if (!lesson) {
+      return { ok: false, error: "Lesson not found.", code: "NOT_FOUND" };
+    }
 
-  const result = await resetSeenHistory({
-    supabase: admin,
-    userId: user.id,
-    lessonId: lesson.id,
-  });
+    // Deletes only this user's quiz_item_seen rows (owner-scoped in the helper).
+    result = await resetSeenHistory({
+      userId: user.id,
+      lessonId: lesson.id,
+    });
+  } catch (err) {
+    return { ok: false, error: dbMessage(err), code: "DB_ERROR" };
+  }
   revalidatePath(`/lessons/${parsed.data.lessonSlug}`);
   return { ok: true, data: result };
 }

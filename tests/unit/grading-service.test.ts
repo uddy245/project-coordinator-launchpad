@@ -3,8 +3,15 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type Anthropic from "@anthropic-ai/sdk";
 
-const { checkSpendCapMock } = vi.hoisted(() => ({ checkSpendCapMock: vi.fn() }));
+const { checkSpendCapMock, sendEmailMock } = vi.hoisted(() => ({
+  checkSpendCapMock: vi.fn(),
+  sendEmailMock: vi.fn(),
+}));
+const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
+
+vi.mock("@/db", () => ({ db: fakeDb.db }));
 vi.mock("@/lib/grading/spend-guard", () => ({ checkSpendCap: checkSpendCapMock }));
+vi.mock("@/lib/email/send", () => ({ sendEmail: sendEmailMock }));
 
 import { gradeSubmission } from "@/lib/grading/service";
 
@@ -76,23 +83,22 @@ function claudeResponse(input: unknown): Anthropic.Messages.Message {
 
 type Row = Record<string, unknown>;
 
-function makeFakeSupabase() {
-  // Minimal in-memory mock — good enough to exercise the orchestrator
-  // reads and writes without running against a real DB. The grading
-  // service only does .from(table).select()/update()/insert() — we
-  // can fake those with a chainable object per table.
+/**
+ * Stateful handler over the shared fake db. Reads are routed by table;
+ * updates to `submissions` are applied to the in-memory row so the tests
+ * can assert on the resulting status / score (values use Drizzle's
+ * camelCase property names).
+ */
+function makeDbState() {
   const state = {
     submission: {
       id: "sub-1",
       user_id: "u-1",
       lesson_id: "lesson-1",
-      extracted_text: "Learner submission text here.",
+      extracted_text: "Learner submission text here." as string | null,
       status: "pending" as string,
-      overall_score: null as number | null,
-      pass: null as boolean | null,
-      hire_ready: null as boolean | null,
-      graded_at: null as string | null,
     },
+    submissionUpdates: {} as Record<string, unknown>,
     lesson: {
       scenario_text: "Scenario text.",
       competency: "risk_identification",
@@ -103,81 +109,42 @@ function makeFakeSupabase() {
     rubricScores: [] as Row[],
   };
 
-  const submissionsTable = {
-    select: (_cols?: string) => ({
-      eq: (_col: string, _val: string) => ({
-        single: async () => ({ data: { ...state.submission }, error: null }),
-      }),
-    }),
-    update: (patch: Record<string, unknown>) => ({
-      eq: async (_col: string, _val: string) => {
-        Object.assign(state.submission, patch);
-        return { error: null };
-      },
-    }),
-    insert: async (_rows: Row[]) => ({ error: null }),
-  };
+  fakeDb.reset((q) => {
+    if (q.op === "select") {
+      switch (q.table) {
+        case "submissions":
+          return [{ ...state.submission }];
+        case "lessons":
+          return [state.lesson];
+        case "rubrics":
+          return [state.rubric];
+        case "prompts":
+          return [state.prompt];
+        default:
+          return [];
+      }
+    }
+    if (q.op === "update" && q.table === "submissions") {
+      const set = q.set as Record<string, unknown>;
+      Object.assign(state.submissionUpdates, set);
+      if (typeof set.status === "string") state.submission.status = set.status;
+      return [];
+    }
+    if (q.op === "insert" && q.table === "rubric_scores") {
+      state.rubricScores.push(...(q.values as Row[]));
+      return [];
+    }
+    return [];
+  });
 
-  const lessonsTable = {
-    select: () => ({
-      eq: () => ({
-        single: async () => ({ data: state.lesson, error: null }),
-      }),
-    }),
-  };
-
-  const rubricsTable = {
-    select: () => ({
-      eq: () => ({
-        eq: () => ({
-          single: async () => ({ data: state.rubric, error: null }),
-        }),
-      }),
-    }),
-  };
-
-  const promptsTable = {
-    select: () => ({
-      eq: () => ({
-        eq: () => ({
-          single: async () => ({ data: state.prompt, error: null }),
-        }),
-      }),
-    }),
-  };
-
-  const rubricScoresTable = {
-    insert: async (rows: Row[]) => {
-      state.rubricScores.push(...rows);
-      return { error: null };
-    },
-    // Used by the spend guard — return today's already-graded rows.
-    select: (_cols?: string) => ({
-      gte: async (_col: string, _val: string) => ({ data: state.rubricScores, error: null }),
-    }),
-  };
-
-  const auditQueueTable = {
-    insert: async (_row: Row) => ({ error: null }),
-  };
-
-  const from = (table: string) => {
-    if (table === "submissions") return submissionsTable;
-    if (table === "lessons") return lessonsTable;
-    if (table === "rubrics") return rubricsTable;
-    if (table === "prompts") return promptsTable;
-    if (table === "rubric_scores") return rubricScoresTable;
-    if (table === "audit_queue") return auditQueueTable;
-    throw new Error("unexpected table: " + table);
-  };
-
-  return { from, _state: state };
+  return state;
 }
 
 describe("gradeSubmission", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     checkSpendCapMock.mockReset();
+    sendEmailMock.mockReset().mockResolvedValue(undefined);
     checkSpendCapMock.mockResolvedValue({
       ok: true,
       spendTodayUsd: 0,
@@ -187,73 +154,73 @@ describe("gradeSubmission", () => {
   });
 
   it("happy path: writes 5 rubric_scores rows and flips submission to graded", async () => {
-    const supabase = makeFakeSupabase();
+    const state = makeDbState();
     const callClaude = vi
       .fn<() => Promise<Anthropic.Messages.Message>>()
       .mockResolvedValue(claudeResponse(validScore()));
 
     const result = await gradeSubmission("sub-1", {
-      supabase: supabase as unknown as ReturnType<
-        typeof import("@/lib/supabase/admin").createAdminClient
-      >,
       callClaude,
     });
 
     expect(result).toEqual({ ok: true, data: { status: "graded" } });
-    expect(supabase._state.rubricScores).toHaveLength(5);
-    expect(supabase._state.submission.status).toBe("graded");
-    expect(supabase._state.submission.overall_score).toBe(4);
+    expect(state.rubricScores).toHaveLength(5);
+    expect(state.rubricScores[0]).toMatchObject({
+      submissionId: "sub-1",
+      rubricId: "rubric-1",
+      promptVersion: 1,
+      score: 4,
+      inputTokens: 240,
+      outputTokens: 60,
+    });
+    expect(state.submission.status).toBe("graded");
+    expect(state.submissionUpdates).toMatchObject({
+      overallScore: 4,
+      pass: true,
+      hireReady: false,
+    });
     expect(callClaude).toHaveBeenCalledTimes(1);
   });
 
   it("retries once on validation failure and succeeds on second attempt", async () => {
-    const supabase = makeFakeSupabase();
+    const state = makeDbState();
     const callClaude = vi
       .fn<() => Promise<Anthropic.Messages.Message>>()
       .mockResolvedValueOnce(claudeResponse(invalidScore()))
       .mockResolvedValueOnce(claudeResponse(validScore()));
 
     const result = await gradeSubmission("sub-1", {
-      supabase: supabase as unknown as ReturnType<
-        typeof import("@/lib/supabase/admin").createAdminClient
-      >,
       callClaude,
     });
 
     expect(result).toEqual({ ok: true, data: { status: "graded" } });
     expect(callClaude).toHaveBeenCalledTimes(2);
-    expect(supabase._state.rubricScores).toHaveLength(5);
+    expect(state.rubricScores).toHaveLength(5);
   });
 
   it("marks submission grading_failed after two consecutive validation failures", async () => {
-    const supabase = makeFakeSupabase();
+    const state = makeDbState();
     const callClaude = vi
       .fn<() => Promise<Anthropic.Messages.Message>>()
       .mockResolvedValue(claudeResponse(invalidScore()));
 
     const result = await gradeSubmission("sub-1", {
-      supabase: supabase as unknown as ReturnType<
-        typeof import("@/lib/supabase/admin").createAdminClient
-      >,
       callClaude,
     });
 
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.code).toBe("GRADING_FAILED");
     expect(callClaude).toHaveBeenCalledTimes(2);
-    expect(supabase._state.submission.status).toBe("grading_failed");
-    expect(supabase._state.rubricScores).toHaveLength(0);
+    expect(state.submission.status).toBe("grading_failed");
+    expect(state.rubricScores).toHaveLength(0);
   });
 
   it("is idempotent on already-graded submissions", async () => {
-    const supabase = makeFakeSupabase();
-    supabase._state.submission.status = "graded";
+    const state = makeDbState();
+    state.submission.status = "graded";
     const callClaude = vi.fn<() => Promise<Anthropic.Messages.Message>>();
 
     const result = await gradeSubmission("sub-1", {
-      supabase: supabase as unknown as ReturnType<
-        typeof import("@/lib/supabase/admin").createAdminClient
-      >,
       callClaude,
     });
 
@@ -269,30 +236,24 @@ describe("gradeSubmission", () => {
       projectedUsd: 101,
       code: "COST_CAP_EXCEEDED",
     });
-    const supabase = makeFakeSupabase();
+    const state = makeDbState();
     const callClaude = vi.fn<() => Promise<Anthropic.Messages.Message>>();
 
     const result = await gradeSubmission("sub-1", {
-      supabase: supabase as unknown as ReturnType<
-        typeof import("@/lib/supabase/admin").createAdminClient
-      >,
       callClaude,
     });
 
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.code).toBe("COST_CAP_EXCEEDED");
     expect(callClaude).not.toHaveBeenCalled();
-    expect(supabase._state.submission.status).toBe("grading_failed");
+    expect(state.submission.status).toBe("grading_failed");
   });
 
   it("returns NO_EXTRACTED_TEXT when the submission has no extracted text", async () => {
-    const supabase = makeFakeSupabase();
-    supabase._state.submission.extracted_text = "";
+    const state = makeDbState();
+    state.submission.extracted_text = "";
 
     const result = await gradeSubmission("sub-1", {
-      supabase: supabase as unknown as ReturnType<
-        typeof import("@/lib/supabase/admin").createAdminClient
-      >,
       callClaude: vi.fn(),
     });
 

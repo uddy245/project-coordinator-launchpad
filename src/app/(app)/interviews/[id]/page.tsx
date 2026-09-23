@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { and, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { mockInterviewResponses, mockInterviewScenarios } from "@/db/schema";
 import { MockInterviewForm } from "@/components/interviews/mock-interview-form";
 
 export const metadata = { title: "Mock interview — Launchpad" };
 export const dynamic = "force-dynamic";
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export default async function InterviewScenarioPage({
   params,
@@ -14,23 +18,45 @@ export default async function InterviewScenarioPage({
 }) {
   const user = await requireUser();
   const { id } = await params;
-  const supabase = await createClient();
 
-  const { data: scenario } = await supabase
-    .from("mock_interview_scenarios")
-    .select("id, slug, prompt, category, difficulty, competency")
-    .eq("id", id)
-    .eq("is_published", true)
-    .maybeSingle();
+  // Route param is used as a uuid; a malformed value would make Postgres
+  // throw instead of returning no rows.
+  if (!UUID_RE.test(id)) notFound();
+
+  // mock_interview_scenarios: published, any signed-in user.
+  const [scenario] = await db
+    .select({
+      id: mockInterviewScenarios.id,
+      slug: mockInterviewScenarios.slug,
+      prompt: mockInterviewScenarios.prompt,
+      category: mockInterviewScenarios.category,
+      difficulty: mockInterviewScenarios.difficulty,
+      competency: mockInterviewScenarios.competency,
+    })
+    .from(mockInterviewScenarios)
+    .where(and(eq(mockInterviewScenarios.id, id), eq(mockInterviewScenarios.isPublished, true)))
+    .limit(1);
 
   if (!scenario) notFound();
 
-  const { data: response } = await supabase
-    .from("mock_interview_responses")
-    .select("response_text, status, overall_score, pass, feedback_summary, graded_at")
-    .eq("user_id", user.id)
-    .eq("scenario_id", scenario.id)
-    .maybeSingle();
+  // mock_interview_responses: owner only.
+  const [response] = await db
+    .select({
+      response_text: mockInterviewResponses.responseText,
+      status: mockInterviewResponses.status,
+      overall_score: mockInterviewResponses.overallScore,
+      pass: mockInterviewResponses.pass,
+      feedback_summary: mockInterviewResponses.feedbackSummary,
+      graded_at: mockInterviewResponses.gradedAt,
+    })
+    .from(mockInterviewResponses)
+    .where(
+      and(
+        eq(mockInterviewResponses.userId, user.id),
+        eq(mockInterviewResponses.scenarioId, scenario.id)
+      )
+    )
+    .limit(1);
 
   return (
     <div className="space-y-8">
@@ -53,7 +79,14 @@ export default async function InterviewScenarioPage({
       <MockInterviewForm
         scenarioId={scenario.id}
         initialResponse={response?.response_text ?? ""}
-        currentStatus={response?.status ?? null}
+        currentStatus={
+          (response?.status ?? null) as
+            | "graded_pending"
+            | "grading"
+            | "graded"
+            | "grading_failed"
+            | null
+        }
         currentScore={response?.overall_score ?? null}
         currentPass={response?.pass ?? null}
         currentFeedback={response?.feedback_summary ?? null}

@@ -1,23 +1,22 @@
 import { redirect } from "next/navigation";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
-import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Set a new password — Launchpad" };
 
 /**
- * Landing page for the password-recovery email link. The link goes through
- * /auth/callback first, which exchanges the recovery code for a session and
- * forwards here — so by the time this page renders, the user is signed in.
- * If there's no session (expired or reused link), bounce to /forgot-password
- * so they can request a fresh one.
+ * Landing page for the password-reset email link. Neon Auth redirects here
+ * with `?token=…` (or `?error=INVALID_TOKEN` for an expired/used link).
+ * Without a usable token, bounce to /forgot-password so they can request a
+ * fresh one.
  */
-export default async function ResetPasswordPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default async function ResetPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token?: string; error?: string }>;
+}) {
+  const { token, error } = await searchParams;
 
-  if (!user) {
+  if (!token || error) {
     redirect("/forgot-password");
   }
 
@@ -27,11 +26,11 @@ export default async function ResetPasswordPage() {
         <span className="kicker">Reset access</span>
         <h1 className="display-title text-2xl sm:text-3xl">Set a new password.</h1>
         <p className="text-sm text-muted-foreground">
-          Signed in as <strong>{user.email}</strong>. Choose a new password to finish.
+          Choose a new password to finish. You&apos;ll use it to log in from now on.
         </p>
       </div>
       <hr className="section-rule" />
-      <ResetPasswordForm />
+      <ResetPasswordForm token={token} />
     </div>
   );
 }

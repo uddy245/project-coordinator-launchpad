@@ -27,8 +27,23 @@ export const env = createEnv({
     throw new Error(`Invalid environment variables: ${error.message}`);
   },
   server: {
-    // Supabase
-    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+    // Neon Postgres — pooled connection string. Server-only; never add a
+    // NEXT_PUBLIC_ database variable.
+    DATABASE_URL: z.string().url(),
+
+    // Neon Auth (managed Better Auth). Base URL from Neon console → Auth.
+    NEON_AUTH_BASE_URL: z.string().url(),
+    NEON_AUTH_COOKIE_SECRET: z.string().min(32),
+
+    // Neon Object Storage (S3-compatible) — replaces Supabase Storage.
+    // Names per Neon's docs. Endpoint = the branch storage host.
+    AWS_ENDPOINT_URL_S3: z.string().url(),
+    AWS_REGION: z.string().min(1).default("us-east-1"),
+    AWS_ACCESS_KEY_ID: z.string().min(1),
+    AWS_SECRET_ACCESS_KEY: z.string().min(1),
+
+    // Vercel Cron bearer secret (weekly digest + tutor retention).
+    CRON_SECRET: z.string().min(16).optional(),
 
     // Anthropic
     ANTHROPIC_API_KEY: z.string().min(1),
@@ -63,10 +78,6 @@ export const env = createEnv({
   },
 
   client: {
-    // Supabase
-    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
-
     // Stripe
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
 
@@ -80,7 +91,14 @@ export const env = createEnv({
   },
 
   runtimeEnv: {
-    SUPABASE_SERVICE_ROLE_KEY: E("SUPABASE_SERVICE_ROLE_KEY"),
+    DATABASE_URL: E("DATABASE_URL"),
+    NEON_AUTH_BASE_URL: E("NEON_AUTH_BASE_URL"),
+    NEON_AUTH_COOKIE_SECRET: E("NEON_AUTH_COOKIE_SECRET"),
+    AWS_ENDPOINT_URL_S3: E("AWS_ENDPOINT_URL_S3"),
+    AWS_REGION: E("AWS_REGION"),
+    AWS_ACCESS_KEY_ID: E("AWS_ACCESS_KEY_ID"),
+    AWS_SECRET_ACCESS_KEY: E("AWS_SECRET_ACCESS_KEY"),
+    CRON_SECRET: E("CRON_SECRET"),
     ANTHROPIC_API_KEY: E("ANTHROPIC_API_KEY"),
     ANTHROPIC_MODEL: E("ANTHROPIC_MODEL"),
     ANTHROPIC_SPEND_CAP_USD: E("ANTHROPIC_SPEND_CAP_USD"),
@@ -96,8 +114,6 @@ export const env = createEnv({
     RESEND_FROM_EMAIL: E("RESEND_FROM_EMAIL"),
     GRADE_WORKER_SECRET: E("GRADE_WORKER_SECRET"),
     SENTRY_DSN: E("SENTRY_DSN"),
-    NEXT_PUBLIC_SUPABASE_URL: E("NEXT_PUBLIC_SUPABASE_URL"),
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: E("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: E("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"),
     NEXT_PUBLIC_APP_URL: E("NEXT_PUBLIC_APP_URL"),
     NEXT_PUBLIC_POSTHOG_KEY: E("NEXT_PUBLIC_POSTHOG_KEY"),

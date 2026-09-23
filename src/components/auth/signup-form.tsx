@@ -27,7 +27,6 @@ export function SignupForm({
 }) {
   const [isPending, startTransition] = useTransition();
   const [submitting, setSubmitting] = useState(false);
-  const [pendingConfirmationEmail, setPendingConfirmationEmail] = useState<string | null>(null);
 
   const {
     register,
@@ -48,8 +47,8 @@ export function SignupForm({
         return;
       }
       if (result.data.needsEmailConfirmation) {
-        setSubmitting(false);
-        setPendingConfirmationEmail(values.email);
+        // Neon Auth emails a verification code; enter it on /verify-email.
+        window.location.assign(`/verify-email?email=${encodeURIComponent(values.email)}`);
         return;
       }
       toast.success("Account created — signing you in...");
@@ -59,25 +58,6 @@ export function SignupForm({
       // A hard navigation always sends the fresh session cookies.
       window.location.assign(redirectTo);
     });
-  }
-
-  if (pendingConfirmationEmail) {
-    return (
-      <div className="space-y-3 rounded-md border bg-muted/40 p-4 text-center">
-        <h2 className="font-medium">Confirm your email</h2>
-        <p className="text-sm text-muted-foreground">
-          We sent a confirmation link to <strong>{pendingConfirmationEmail}</strong>. Click the link
-          to finish creating your account.
-        </p>
-        <button
-          type="button"
-          onClick={() => setPendingConfirmationEmail(null)}
-          className="text-sm text-muted-foreground underline"
-        >
-          Use a different email
-        </button>
-      </div>
-    );
   }
 
   const disabled = isPending || submitting;

@@ -1,17 +1,16 @@
 import Link from "next/link";
 import { PrimaryNav } from "@/components/nav/primary-nav";
 import { requireUser } from "@/lib/auth/require-user";
-import { createClient } from "@/lib/supabase/server";
+import { isAdmin as checkIsAdmin } from "@/lib/auth/session";
 import { TutorShell } from "@/components/tutor/tutor-shell";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  await requireUser();
+  const user = await requireUser();
 
   // Only render the Admin link in the primary nav for admin users. The
   // /admin routes already gate themselves server-side; this is just so
   // ordinary learners don't see a link they can't use.
-  const supabase = await createClient();
-  const { data: isAdmin } = await supabase.rpc("is_admin");
+  const isAdmin = await checkIsAdmin(user.id);
 
   return (
     <TutorShell>

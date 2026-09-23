@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { asc } from "drizzle-orm";
+import { db } from "@/db";
+import { mockInterviewScenarios } from "@/db/schema";
+import { requireAdmin } from "@/lib/auth/require-user";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "Mock interview scenarios — Admin" };
@@ -18,13 +21,22 @@ type ScenarioRow = {
 };
 
 export default async function AdminScenariosPage() {
-  const admin = createAdminClient();
-  const { data } = await admin
-    .from("mock_interview_scenarios")
-    .select("id, slug, prompt, category, difficulty, competency, sort, is_published, updated_at")
-    .order("sort", { ascending: true });
-
-  const scenarios = (data ?? []) as ScenarioRow[];
+  // Layout already gates; repeated here as defence in depth (no RLS).
+  await requireAdmin();
+  const scenarios: ScenarioRow[] = await db
+    .select({
+      id: mockInterviewScenarios.id,
+      slug: mockInterviewScenarios.slug,
+      prompt: mockInterviewScenarios.prompt,
+      category: mockInterviewScenarios.category,
+      difficulty: mockInterviewScenarios.difficulty,
+      competency: mockInterviewScenarios.competency,
+      sort: mockInterviewScenarios.sort,
+      is_published: mockInterviewScenarios.isPublished,
+      updated_at: mockInterviewScenarios.updatedAt,
+    })
+    .from(mockInterviewScenarios)
+    .orderBy(asc(mockInterviewScenarios.sort));
 
   return (
     <div className="space-y-8">

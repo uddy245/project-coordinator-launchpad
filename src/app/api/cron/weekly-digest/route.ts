@@ -5,20 +5,20 @@
  *   { "path": "/api/cron/weekly-digest", "schedule": "0 14 * * 0" }
  * (Sunday 14:00 UTC = 09:00 ET / 15:00 CET — early morning Pacific.)
  *
- * Auth: Vercel Cron sends an `Authorization: Bearer <CRON_SECRET>` header.
- * For local / manual triggering, pass the same header. We compare against
- * `GRADE_WORKER_SECRET` since that env is already provisioned and serves
- * the same "trusted internal call" purpose.
+ * Auth: Vercel Cron sends an `Authorization: Bearer <CRON_SECRET>` header
+ * (checked by rejectUnlessCron). For manual triggering, pass the same header.
  *
  * Resilience: each user is sent independently. One failure doesn't abort
  * the run. We log per-user outcomes and return a summary count.
  */
 
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { and, asc, eq, gte, sql } from "drizzle-orm";
+import { db } from "@/db";
+import { rejectUnlessCron } from "@/lib/cron/auth";
+import { learningActivity, lessonProgress, lessons, profiles } from "@/db/schema";
 import { sendEmail } from "@/lib/email/send";
 import { renderWeeklyDigest } from "@/lib/email/templates/weekly-digest";
-import { env } from "@/env";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -37,7 +37,7 @@ type UserRow = {
 type ProgressRow = {
   user_id: string;
   lesson_id: string;
-  completed_at: string | null;
+  updated_at: string;
 };
 
 type LessonRow = {
@@ -53,13 +53,6 @@ type ActivityRow = {
   activity_date: string;
 };
 
-function authorise(req: Request): boolean {
-  const provided = req.headers.get("authorization");
-  if (!provided) return false;
-  const expected = `Bearer ${env.GRADE_WORKER_SECRET}`;
-  return provided === expected;
-}
-
 function isoDateNDaysAgo(n: number): string {
   const d = new Date();
   d.setUTCDate(d.getUTCDate() - n);
@@ -67,42 +60,59 @@ function isoDateNDaysAgo(n: number): string {
 }
 
 export async function GET(req: Request) {
-  if (!authorise(req)) {
-    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
-  }
-
-  const admin = createAdminClient();
+  const rejected = rejectUnlessCron(req);
+  if (rejected) return rejected;
 
   // Audience: every confirmed user who has at least one purchase or progress
   // row, opt-in not explicitly false.
-  const { data: usersData } = await admin
-    .from("profiles")
-    .select("id, email, full_name, weekly_digest_opt_in");
-  const users = (usersData ?? []) as UserRow[];
+  const users: UserRow[] = await db
+    .select({
+      id: profiles.id,
+      email: profiles.email,
+      full_name: profiles.fullName,
+      weekly_digest_opt_in: profiles.weeklyDigestOptIn,
+    })
+    .from(profiles);
   const optedIn = users.filter((u) => u.weekly_digest_opt_in !== false && !!u.email);
 
   // Single bulk fetch for the activity / progress data so per-user is just
   // a hash lookup.
   const since = isoDateNDaysAgo(7);
 
-  const [{ data: activityData }, { data: progressData }, { data: lessonsData }] = await Promise.all(
-    [
-      admin.from("learning_activity").select("user_id, activity_date").gte("activity_date", since),
-      admin
-        .from("lesson_progress")
-        .select("user_id, lesson_id, completed_at")
-        .not("completed_at", "is", null),
-      admin
-        .from("lessons")
-        .select("id, slug, title, number, is_published")
-        .eq("is_published", true)
-        .order("number", { ascending: true }),
-    ]
-  );
-
-  const activity = (activityData ?? []) as ActivityRow[];
-  const progress = (progressData ?? []) as ProgressRow[];
-  const lessons = (lessonsData ?? []) as LessonRow[];
+  const [activity, progress, publishedLessons]: [ActivityRow[], ProgressRow[], LessonRow[]] =
+    await Promise.all([
+      db
+        .select({ user_id: learningActivity.userId, activity_date: learningActivity.activityDate })
+        .from(learningActivity)
+        .where(gte(learningActivity.activityDate, since)),
+      // lesson_progress has no completed_at column: "completed" = all three
+      // gates passed; updated_at stands in for the completion time.
+      db
+        .select({
+          user_id: lessonProgress.userId,
+          lesson_id: lessonProgress.lessonId,
+          updated_at: lessonProgress.updatedAt,
+        })
+        .from(lessonProgress)
+        .where(
+          and(
+            eq(lessonProgress.videoWatched, true),
+            eq(lessonProgress.quizPassed, true),
+            eq(lessonProgress.artifactSubmitted, true)
+          )
+        ),
+      db
+        .select({
+          id: lessons.id,
+          slug: lessons.slug,
+          title: lessons.title,
+          number: lessons.number,
+          is_published: lessons.isPublished,
+        })
+        .from(lessons)
+        .where(eq(lessons.isPublished, true))
+        .orderBy(asc(lessons.number)),
+    ]);
 
   // Per-user activity day count (week)
   const activeByUser = new Map<string, Set<string>>();
@@ -132,23 +142,26 @@ export async function GET(req: Request) {
       const activeDays = activeByUser.get(u.id)?.size ?? 0;
       const completedSet = completedByUser.get(u.id) ?? new Set<string>();
       const completedThisWeek = (completedDateByUser.get(u.id) ?? []).filter(
-        (r) => r.completed_at && r.completed_at.slice(0, 10) >= since
+        // Completed (all three gates) and last updated within the window.
+        (r) => !!r.updated_at && r.updated_at.slice(0, 10) >= since
       ).length;
 
-      const { data: streakData } = await admin.rpc("user_streak", { p_user_id: u.id });
-      const streak = (streakData ?? { current: 0, longest: 0 }) as {
-        current: number;
-        longest: number;
-      };
+      // user_streak() returns an integer (current streak in days).
+      const streakResult = (await db.execute(
+        sql`select public.user_streak(${u.id}) as streak`
+      )) as { rows: Array<{ streak?: unknown }> };
+      const currentStreak = Number(streakResult.rows[0]?.streak) || 0;
 
       // Suggested next: first published lesson the user hasn't completed.
-      const next = lessons.find((l) => !completedSet.has(l.id));
+      const next = publishedLessons.find((l) => !completedSet.has(l.id));
 
       const render = renderWeeklyDigest({
         firstName: u.full_name ? u.full_name.split(/\s+/)[0] : null,
         activeDays,
-        currentStreak: streak.current ?? 0,
-        longestStreak: streak.longest ?? 0,
+        currentStreak,
+        // user_streak() returns only the current streak (integer); no longest
+        // is tracked, so reuse it here to keep the template contract.
+        longestStreak: currentStreak,
         lessonsCompletedThisWeek: completedThisWeek,
         lessonsCompletedTotal: completedSet.size,
         nextLessonSlug: next?.slug ?? null,

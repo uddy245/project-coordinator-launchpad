@@ -36,9 +36,12 @@ jobs:
       - name: Unit tests
         run: pnpm test
         env:
-          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
-          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+          DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
+          NEON_AUTH_BASE_URL: https://placeholder.neonauth.example.com/neondb/auth
+          NEON_AUTH_COOKIE_SECRET: placeholder-neon-auth-cookie-secret-32-chars
+          AWS_ENDPOINT_URL_S3: https://br-placeholder.storage.c-1.us-east-1.aws.neon.tech
+          AWS_ACCESS_KEY_ID: placeholder
+          AWS_SECRET_ACCESS_KEY: placeholder
           ANTHROPIC_API_KEY: sk-ant-placeholder
           STRIPE_SECRET_KEY: sk_test_placeholder
           STRIPE_PRICE_ID: price_placeholder
@@ -48,10 +51,61 @@ jobs:
         run: pnpm build
         env:
           SKIP_ENV_VALIDATION: 1
-          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
-          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-role-key
+          DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
+          NEON_AUTH_BASE_URL: https://placeholder.neonauth.example.com/neondb/auth
+          NEON_AUTH_COOKIE_SECRET: placeholder-neon-auth-cookie-secret-32-chars
+          AWS_ENDPOINT_URL_S3: https://br-placeholder.storage.c-1.us-east-1.aws.neon.tech
+          AWS_ACCESS_KEY_ID: placeholder
+          AWS_SECRET_ACCESS_KEY: placeholder
           ANTHROPIC_API_KEY: sk-ant-placeholder
           STRIPE_SECRET_KEY: sk_test_placeholder
           STRIPE_PRICE_ID: price_placeholder
           GRADE_WORKER_SECRET: placeholder-grade-worker-secret-32-chars
+
+  db-integration:
+    name: DB integration (access control smoke)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/launchpad_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build local replica of the Neon schema
+        run: tests/db/build-replica.sh launchpad_test
+
+      - name: Integration tests (sign-up hook, isolation, triggers)
+        run: >-
+          pnpm exec vitest run
+          tests/integration/neon-smoke.test.ts
+          tests/integration/auth-identity-mapping.test.ts
+          tests/integration/portfolio-gate-trigger.test.ts
+          tests/integration/preview-access.test.ts
+          tests/integration/delete-user-cascade.test.ts

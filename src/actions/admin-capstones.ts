@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { count, eq } from "drizzle-orm";
+import { db } from "@/db";
+import { capstoneAttempts, capstoneScenarios } from "@/db/schema";
+import { getAppUser, isAdmin } from "@/lib/auth/session";
 import type { ActionResult } from "@/lib/types";
 
 const KNOWN_ARTIFACTS = [
@@ -34,15 +36,17 @@ export type AdminCapstoneInput = z.input<typeof CapstoneSchema>;
 
 export const KNOWN_CAPSTONE_ARTIFACTS = KNOWN_ARTIFACTS;
 
+function errMsg(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
 async function requireAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getAppUser().catch(() => null);
   if (!user)
     return { ok: false as const, error: "Not signed in.", code: "UNAUTHENTICATED" as const };
-  const { data: isAdmin } = await supabase.rpc("is_admin");
-  if (!isAdmin) return { ok: false as const, error: "Not authorized.", code: "FORBIDDEN" as const };
+  // Fail closed: a lookup error is treated as "not an admin".
+  const admin = await isAdmin(user.id).catch(() => false);
+  if (!admin) return { ok: false as const, error: "Not authorized.", code: "FORBIDDEN" as const };
   return { ok: true as const };
 }
 
@@ -60,30 +64,44 @@ export async function upsertCapstone(
   const auth = await requireAdmin();
   if (!auth.ok) return auth;
 
-  const admin = createAdminClient();
   const payload = {
     slug: parsed.data.slug,
     title: parsed.data.title,
     brief: parsed.data.brief,
-    required_artifacts: parsed.data.required_artifacts,
-    estimated_hours: parsed.data.estimated_hours ?? null,
-    is_published: parsed.data.is_published,
-    rubric_summary: parsed.data.rubric_summary || null,
-    updated_at: new Date().toISOString(),
+    requiredArtifacts: parsed.data.required_artifacts,
+    estimatedHours: parsed.data.estimated_hours ?? null,
+    isPublished: parsed.data.is_published,
+    rubricSummary: parsed.data.rubric_summary || null,
+    updatedAt: new Date().toISOString(),
   };
 
-  const { data, error } = await admin
-    .from("capstone_scenarios")
-    .upsert(payload, { onConflict: "slug" })
-    .select("id, slug")
-    .single();
-
-  if (error) {
+  let data: { id: string; slug: string } | undefined;
+  try {
+    [data] = await db
+      .insert(capstoneScenarios)
+      .values(payload)
+      .onConflictDoUpdate({
+        target: capstoneScenarios.slug,
+        set: {
+          title: payload.title,
+          brief: payload.brief,
+          requiredArtifacts: payload.requiredArtifacts,
+          estimatedHours: payload.estimatedHours,
+          isPublished: payload.isPublished,
+          rubricSummary: payload.rubricSummary,
+          updatedAt: payload.updatedAt,
+        },
+      })
+      .returning({ id: capstoneScenarios.id, slug: capstoneScenarios.slug });
+  } catch (err) {
     return {
       ok: false,
-      error: `Failed to save capstone: ${error.message}`,
+      error: `Failed to save capstone: ${errMsg(err)}`,
       code: "DB_ERROR",
     };
+  }
+  if (!data) {
+    return { ok: false, error: "Failed to save capstone: no row returned", code: "DB_ERROR" };
   }
 
   revalidatePath("/admin/capstones");
@@ -98,24 +116,25 @@ export async function deleteCapstone(capstoneId: string): Promise<ActionResult<{
   const auth = await requireAdmin();
   if (!auth.ok) return auth;
 
-  const admin = createAdminClient();
-  const { count } = await admin
-    .from("capstone_attempts")
-    .select("id", { count: "exact", head: true })
-    .eq("scenario_id", capstoneId);
-  if ((count ?? 0) > 0) {
-    return {
-      ok: false,
-      error: `Cannot delete — ${count} learner attempts exist. Unpublish instead.`,
-      code: "CONFLICT",
-    };
-  }
+  try {
+    const [attempts] = await db
+      .select({ n: count() })
+      .from(capstoneAttempts)
+      .where(eq(capstoneAttempts.scenarioId, capstoneId));
+    const attemptCount = Number(attempts?.n ?? 0);
+    if (attemptCount > 0) {
+      return {
+        ok: false,
+        error: `Cannot delete — ${attemptCount} learner attempts exist. Unpublish instead.`,
+        code: "CONFLICT",
+      };
+    }
 
-  const { error } = await admin.from("capstone_scenarios").delete().eq("id", capstoneId);
-  if (error) {
+    await db.delete(capstoneScenarios).where(eq(capstoneScenarios.id, capstoneId));
+  } catch (err) {
     return {
       ok: false,
-      error: `Failed to delete: ${error.message}`,
+      error: `Failed to delete: ${errMsg(err)}`,
       code: "DB_ERROR",
     };
   }
