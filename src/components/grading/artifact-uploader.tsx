@@ -91,10 +91,8 @@ export function ArtifactUploader({ lessonSlug }: { lessonSlug: string }) {
             : "border-border hover:border-muted-foreground/50")
         }
       >
-        <p className="font-medium">Upload your completed workbook</p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Drop it here or choose a file · XLSX, PDF, or DOCX · up to 10 MB
-        </p>
+        <p className="font-medium">Drop your file here or choose one</p>
+        <p className="mt-1 text-sm text-muted-foreground">XLSX, PDF, or DOCX · up to 10 MB</p>
         <Button
           type="button"
           variant="outline"

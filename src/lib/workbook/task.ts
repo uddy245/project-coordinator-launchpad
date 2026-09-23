@@ -25,5 +25,18 @@ export function splitTask(brief: string): { task: string | null; scenario: strin
     (TASK_START.test(last.replace(/^\*\*|\*\*$/g, "")) || /workbook template/i.test(last));
   if (!looksLikeTask) return { task: null, scenario: brief.trim() };
 
-  return { task: last, scenario: paragraphs.slice(0, -1).join("\n\n") };
+  return { task: stripTaskLabel(last), scenario: paragraphs.slice(0, -1).join("\n\n") };
+}
+
+/**
+ * The Workbook tab's box is already labelled "Your task", so drop a leading
+ * "Your task:" / "**Your task:**" / "Your task —" and capitalise what's left.
+ */
+export function stripTaskLabel(task: string): string {
+  const stripped = task.replace(
+    /^\s*(\*\*|__)?\s*your task\s*(\*\*|__)?\s*[:—–-]\s*(\*\*|__)?\s*/i,
+    ""
+  );
+  if (stripped === task) return task;
+  return stripped.charAt(0).toUpperCase() + stripped.slice(1);
 }
