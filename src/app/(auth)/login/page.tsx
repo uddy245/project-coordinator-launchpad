@@ -22,11 +22,11 @@ export default async function LoginPage({
         </p>
       </div>
       {verified ? (
-        <p className="border border-rule bg-paper px-4 py-3 text-sm text-ink">
+        <p className="rounded-md border border-rule bg-paper px-4 py-3 text-sm text-ink">
           Email confirmed — log in to continue.
         </p>
       ) : null}
-      <div className="border border-rule bg-paper px-4 py-3 text-sm text-muted-foreground">
+      <div className="rounded-md border border-rule bg-paper px-4 py-3 text-sm text-muted-foreground">
         <strong className="text-ink">Returning learner?</strong> We&apos;ve upgraded sign-in. If
         your account was created before September 2026, please{" "}
         <Link

@@ -58,7 +58,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </span>
             <span className="kicker">PROG·PC·25</span>
           </Link>
-          <div className="border border-rule bg-card p-8 sm:p-10">{children}</div>
+          <div className="rounded-lg border border-rule bg-card p-8 shadow-sm sm:p-10">
+            {children}
+          </div>
         </div>
       </section>
     </div>

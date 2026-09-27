@@ -1,28 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Serif, Lora } from "next/font/google";
+import { IBM_Plex_Mono, Manrope, Plus_Jakarta_Sans, Lora } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-// Career Programme typography — university × office.
+// Warm classroom typography — a working programme, not a console.
 //
-//   Display:  IBM Plex Serif — academic / institutional credibility
-//   Body:     IBM Plex Sans  — professional Bloomberg/HBS-style grotesque
-//   Reading:  Lora           — durable book serif for the Read tab
-//   Mono:     IBM Plex Mono  — tabular data, codes, labels
-//
-// One typeface family across the surface (Plex), with Lora reserved for long-form reading.
-const sans = IBM_Plex_Sans({
+//   Display:  Plus Jakarta Sans — warm, rounded, confident headings
+//   Body:     Manrope           — humanist grotesque for body/data
+//   Reading:  Lora              — durable book serif for the Read tab
+//   Mono:     IBM Plex Mono     — reserved for genuinely tabular figures
+const sans = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const display = IBM_Plex_Serif({
+const display = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   style: ["normal", "italic"],
   display: "swap",
 });

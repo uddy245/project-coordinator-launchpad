@@ -5,24 +5,27 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-mono text-[0.72rem] font-medium uppercase tracking-[0.18em] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-sans text-sm font-bold ring-offset-background transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-ink text-paper border border-ink hover:bg-[hsl(var(--accent))] hover:border-[hsl(var(--accent))]",
+          "bg-primary text-primary-foreground shadow-[0_8px_18px_-8px_hsl(var(--primary)/0.6)] hover:bg-[hsl(var(--accent))]",
         destructive:
-          "bg-destructive text-destructive-foreground border border-destructive hover:bg-destructive/90",
-        outline: "border border-ink bg-transparent text-ink hover:bg-ink hover:text-paper",
-        secondary: "bg-secondary text-secondary-foreground border border-rule hover:bg-muted",
-        ghost: "border border-transparent text-ink hover:border-rule hover:bg-muted/40",
+          "bg-destructive text-destructive-foreground shadow-[0_8px_18px_-8px_hsl(var(--destructive)/0.6)] hover:bg-destructive/90",
+        outline:
+          "border border-rule bg-card text-ink hover:border-primary/50 hover:text-[hsl(var(--accent))]",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-muted",
+        ghost: "text-ink hover:bg-muted/60",
         link: "text-ink underline-offset-[5px] decoration-[hsl(var(--accent))] decoration-1 hover:underline",
+        white:
+          "bg-white text-[#0F172A] shadow-[0_10px_24px_-10px_rgba(0,0,0,0.45)] hover:bg-teal-50",
       },
       size: {
-        default: "h-10 px-5",
-        sm: "h-8 px-3 text-[0.68rem]",
-        lg: "h-12 px-7 text-[0.74rem]",
-        icon: "h-10 w-10",
+        default: "h-11 px-5",
+        sm: "h-9 px-4 text-[0.82rem]",
+        lg: "h-12 px-7 text-base",
+        icon: "h-11 w-11",
       },
     },
     defaultVariants: {

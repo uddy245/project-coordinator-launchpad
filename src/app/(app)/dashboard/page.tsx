@@ -14,6 +14,7 @@ import { PurchaseCTA } from "@/components/marketing/purchase-cta";
 import { LessonCard } from "@/components/dashboard/lesson-card";
 import { GateStatusBadge } from "@/components/dashboard/gate-status-badge";
 import { StreakBadge } from "@/components/dashboard/streak-badge";
+import { ProgressRing } from "@/components/ui/progress-ring";
 import { computeLessonStatus } from "@/lib/lessons/progress";
 import { computeGateSummary, FOUNDATION_SLUGS } from "@/lib/gates/compute";
 import { recommendNextLesson } from "@/lib/lessons/recommender";
@@ -171,29 +172,43 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-12">
-      {/* Programme header */}
+      {/* Programme header — Campus resume-hero energy */}
       <section className="border-b border-rule pb-8">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <span className="kicker">PROG·PC·25 · Project Coordinator Launchpad</span>
-          <span className="kicker">Cohort · Self-paced</span>
-        </div>
-        <h1 className="display-title mt-3 text-[2rem] sm:text-[2.6rem]">
-          Welcome back, {greeting}.
-        </h1>
-        {nextLesson ? (
-          <p className="mt-2 text-base text-muted-foreground">
-            Up next:{" "}
-            <a
-              href={`/lessons/${nextLesson.slug}`}
-              className="font-medium text-ink underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-[5px]"
-            >
-              Module {String(nextLesson.number).padStart(2, "0")} — {nextLesson.title}
-            </a>
-            {recommendation?.reason ? (
-              <span className="ml-2 text-sm text-muted-foreground">· {recommendation.reason}</span>
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <span className="kicker">PROG·PC·25 · Project Coordinator Launchpad</span>
+              <span className="kicker">Cohort · Self-paced</span>
+            </div>
+            <h1 className="display-title mt-3 text-[2rem] sm:text-[2.6rem]">
+              Welcome back, {greeting}.
+            </h1>
+            {nextLesson ? (
+              <p className="mt-2 text-base text-muted-foreground">
+                Up next:{" "}
+                <a
+                  href={`/lessons/${nextLesson.slug}`}
+                  className="font-medium text-ink underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-[5px]"
+                >
+                  Module {String(nextLesson.number).padStart(2, "0")} — {nextLesson.title}
+                </a>
+                {recommendation?.reason ? (
+                  <span className="ml-2 text-sm text-muted-foreground">
+                    · {recommendation.reason}
+                  </span>
+                ) : null}
+              </p>
             ) : null}
-          </p>
-        ) : null}
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <ProgressRing
+              pct={completionPct}
+              size={104}
+              label={`${completionPct}% of programme complete`}
+            />
+            <span className="kicker">Programme</span>
+          </div>
+        </div>
       </section>
 
       {/* Stats banner — university transcript meets office dashboard */}
