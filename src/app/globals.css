@@ -4,46 +4,46 @@
 
 @layer base {
   :root {
-    /* Career Programme palette — university × office.
-       Navy ink. Crisp white. Single confident amber accent.
+    /* Campus palette — warm, classroom feel for a professional training app.
+       Deep navy for structural surfaces. Deep teal as the one confident accent.
        Status colors only where they earn their place. */
-    --background: 0 0% 100%; /* crisp white */
-    --paper: 210 16% 99%; /* faintest cool tint for tiles */
-    --foreground: 215 30% 12%; /* navy ink */
-    --ink: 215 30% 12%;
-    --rule: 215 14% 88%; /* cool neutral divider */
+    --background: 210 40% 96%; /* slate — page background */
+    --paper: 166 76% 97%; /* pale teal — tinted section backgrounds */
+    --foreground: 222 47% 11%; /* deep navy ink */
+    --ink: 222 47% 11%;
+    --rule: 214 32% 91%; /* cool neutral divider */
 
     --card: 0 0% 100%;
-    --card-foreground: 215 30% 12%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 215 30% 12%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Primary action — deep navy ink (institutional) */
-    --primary: 215 30% 12%;
+    /* Primary action — deep teal (buttons, active states, links) */
+    --primary: 175 84% 32%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 14% 96%;
-    --secondary-foreground: 215 30% 12%;
+    --secondary: 166 76% 97%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 215 14% 96%;
-    --muted-foreground: 215 12% 38%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215 16% 47%;
 
-    /* Accent — confident amber (achievement / focus / current) */
-    --accent: 38 86% 42%;
+    /* Accent — darker teal (hover / gradient depth) */
+    --accent: 175 77% 26%;
     --accent-foreground: 0 0% 100%;
 
     /* Status — used in pips and progress markers, not as decoration */
-    --status-progress: 38 86% 42%;
-    --status-complete: 152 56% 32%;
-    --status-locked: 215 12% 65%;
+    --status-progress: 38 92% 50%;
+    --status-complete: 160 84% 39%;
+    --status-locked: 215 20% 65%;
 
-    --destructive: 0 72% 45%;
+    --destructive: 350 89% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 14% 88%;
-    --input: 215 14% 86%;
-    --ring: 38 86% 42%;
-    --radius: 0.25rem;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 175 84% 32%;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -86,28 +86,34 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   Editorial primitives — small reusable building blocks used across pages.
-   Class API rather than Tailwind utilities to keep markup readable.
+   Warm classroom primitives — small reusable building blocks used across
+   pages. Class API rather than Tailwind utilities to keep markup readable.
    ───────────────────────────────────────────────────────────────────────── */
 
-/* CODE / KICKER — small mono label. Used for module codes, meta, kickers. */
+/* EYEBROW / KICKER — a confident teal label above a heading, not a cold
+   console readout. Used for module codes, section eyebrows, meta. */
 .kicker {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 0.72rem;
-  font-weight: 500;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: hsl(var(--muted-foreground));
+  letter-spacing: 0.11em;
+  color: hsl(var(--accent));
   font-variant-numeric: tabular-nums;
 }
 
-/* DISPLAY HEADING — institutional serif. Used for page titles. */
+/* DISPLAY HEADING — warm, rounded, confident. Used for page titles. */
 .display-title {
-  font-family: var(--font-display), Georgia, serif;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.08;
   color: hsl(var(--ink));
+}
+
+/* Hero on dark teal — display title must stay white */
+.hero-warm .display-title {
+  color: #fff;
 }
 
 /* SECTION RULE */
@@ -116,74 +122,81 @@
   border-top: 1px solid hsl(var(--rule));
 }
 
-/* PROGRAMME TILE — structured tile with hover lift + amber accent on hover */
+/* PROGRAMME TILE — soft-shadow card with a warm teal glow + lift on hover.
+   The one card shape used everywhere: lessons, gates, portfolio, stats. */
 .tile {
   background: hsl(var(--card));
   border: 1px solid hsl(var(--rule));
+  border-radius: 18px;
+  box-shadow:
+    0 1px 2px hsl(var(--ink) / 0.05),
+    0 10px 28px -14px hsl(var(--ink) / 0.18);
   transition:
     border-color 0.18s ease,
     box-shadow 0.18s ease,
     transform 0.18s ease;
 }
 .tile:hover {
-  border-color: hsl(var(--ink));
+  border-color: hsl(var(--primary) / 0.4);
   box-shadow:
-    0 1px 0 hsl(var(--ink) / 0.04),
-    0 8px 24px -12px hsl(var(--ink) / 0.18);
+    0 1px 0 hsl(var(--primary) / 0.06),
+    0 16px 32px -14px hsl(var(--primary) / 0.28);
+  transform: translateY(-1px);
 }
 .tile[data-current="true"] {
-  border-color: hsl(var(--accent));
-  border-left-width: 3px;
+  border-color: hsl(var(--primary));
+  box-shadow:
+    0 0 0 3px hsl(var(--primary) / 0.12),
+    0 16px 32px -14px hsl(var(--primary) / 0.28);
 }
 
-/* MONO LINK — for nav and meta links */
+/* NAV LINK — plain-language nav, not tracked-out mono. */
 .mono-link {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.76rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
   color: hsl(var(--muted-foreground));
   transition: color 0.16s ease;
-  font-variant-numeric: tabular-nums;
 }
 .mono-link:hover {
   color: hsl(var(--ink));
 }
 .mono-link[data-active="true"] {
-  color: hsl(var(--ink));
+  color: hsl(var(--primary));
 }
 
-/* STATUS PIP — semantic colour, not magazine red. */
+/* STATUS PIP — soft pill with a dot, warm background per status. */
 .pip {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  gap: 0.4rem;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.28rem 0.65rem;
   color: hsl(var(--muted-foreground));
-  font-variant-numeric: tabular-nums;
+  background: hsl(var(--muted));
 }
 .pip::before {
   content: "";
   display: inline-block;
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.4rem;
+  height: 0.4rem;
   border-radius: 50%;
   background: hsl(var(--status-locked));
 }
 .pip[data-status="in_progress"] {
-  color: hsl(var(--status-progress));
+  color: hsl(24 70% 32%);
+  background: hsl(var(--status-progress) / 0.14);
 }
 .pip[data-status="in_progress"]::before {
   background: hsl(var(--status-progress));
-  box-shadow: 0 0 0 3px hsl(var(--status-progress) / 0.15);
+  box-shadow: 0 0 0 3px hsl(var(--status-progress) / 0.2);
 }
 .pip[data-status="completed"] {
   color: hsl(var(--status-complete));
+  background: hsl(var(--status-complete) / 0.13);
 }
 .pip[data-status="completed"]::before {
   background: hsl(var(--status-complete));
@@ -191,27 +204,70 @@
 
 /* PROGRESS BAR — thin programme-tracker bar */
 .track {
-  height: 3px;
+  height: 6px;
   background: hsl(var(--rule));
+  border-radius: 999px;
   position: relative;
   overflow: hidden;
 }
 .track > .track-fill {
   position: absolute;
   inset: 0;
-  background: hsl(var(--ink));
+  background: linear-gradient(90deg, hsl(var(--accent)), hsl(var(--primary)));
+  border-radius: 999px;
   transform-origin: left center;
   transition: transform 0.4s ease;
 }
 
 /* DATA NUMERAL — used for big stats / module counts */
 .data-numeral {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display), system-ui, sans-serif;
   font-feature-settings:
     "tnum" 1,
     "lnum" 1;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+/* WARM HERO — gradient banner used for the resume-style hero on the
+   landing page, dashboard, and auth sidebar. A soft radial glow sits in
+   the corner, matching the Campus resume-hero treatment. */
+.hero-warm {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: hsl(0 0% 100%);
+  background: linear-gradient(
+    115deg,
+    hsl(var(--ink)) 0%,
+    hsl(var(--accent) / 0.92) 55%,
+    hsl(var(--primary)) 100%
+  );
+}
+.hero-warm::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -12%;
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, hsl(var(--primary-foreground) / 0.16), transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* CHIP — small pill badge with a tone. See src/components/ui/chip.tsx. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -228,8 +284,8 @@
   --paper: #ffffff;
   --paper-warm: #f5f7fa;
   --rule: #d9dde4;
-  --accent: #b8801a; /* amber */
-  --accent-soft: #d9a751;
+  --accent: #0d9488; /* teal */
+  --accent-soft: #2dd4bf;
 
   background: var(--paper);
   color: var(--ink);
@@ -311,7 +367,7 @@
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(122, 31, 31, 0.4);
+  text-decoration-color: rgba(13, 148, 136, 0.4);
   transition: text-decoration-color 0.2s ease;
 }
 .read-prose a:hover {
