@@ -36,9 +36,9 @@ export default function Home() {
       {/* Hero */}
       <section className="mx-auto max-w-6xl px-6 pb-16 pt-12 lg:pb-24 lg:pt-16">
         <div className="hero-warm grid grid-cols-1 gap-10 rounded-[28px] px-7 py-12 sm:px-10 sm:py-16 lg:grid-cols-12 lg:px-14">
-          <div className="col-span-12 space-y-6 lg:col-span-7">
-            <Chip tone="dark">
-              <Clock3 className="size-3.5" /> A 25-module career programme · Self-paced
+          <div className="min-w-0 space-y-6 lg:col-span-7">
+            <Chip tone="dark" className="max-w-full whitespace-normal">
+              <Clock3 className="size-3.5 shrink-0" /> A 25-module career programme · Self-paced
             </Chip>
             <h1 className="display-title text-[2.5rem] leading-[1.06] text-white sm:text-[3.2rem] lg:text-[3.7rem]">
               From zero to <span className="text-[#99F6E4]">hire-ready</span> project coordinator.
@@ -64,7 +64,7 @@ export default function Home() {
           </div>
 
           {/* Programme summary card, floating on the hero */}
-          <aside className="col-span-12 lg:col-span-5">
+          <aside className="min-w-0 lg:col-span-5">
             <div className="rounded-[22px] bg-white p-6 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.45)] sm:p-7">
               <div className="kicker">Programme summary</div>
               <dl className="mt-4 divide-y divide-rule">

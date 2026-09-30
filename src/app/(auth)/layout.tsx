@@ -4,46 +4,46 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
       {/* Left — institutional card with programme info */}
-      <aside className="hidden flex-col justify-between border-r border-rule bg-paper p-12 lg:flex">
+      <aside className="hero-warm hidden flex-col justify-between p-12 lg:flex">
         <div className="flex items-baseline gap-3">
-          <span className="font-display text-xl font-semibold leading-none text-ink">
+          <span className="font-display text-xl font-semibold leading-none text-white">
             Launchpad
           </span>
-          <span className="h-3 w-px bg-rule" aria-hidden />
-          <span className="kicker">PROG·PC·25</span>
+          <span className="h-3 w-px bg-white/25" aria-hidden />
+          <span className="kicker !text-[#99F6E4]">PROG·PC·25</span>
         </div>
 
         <div className="space-y-8">
           <div>
-            <span className="kicker">Project Coordinator Launchpad</span>
-            <h2 className="display-title mt-2 text-3xl">
+            <span className="kicker !text-[#99F6E4]">Project Coordinator Launchpad</span>
+            <h2 className="display-title mt-2 text-3xl text-white">
               The career programme for the under-taught role.
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-px border border-rule bg-rule">
-            <div className="bg-paper px-5 py-4">
-              <div className="kicker">Modules</div>
-              <div className="data-numeral mt-1 text-[1.6rem] leading-none text-ink">25</div>
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15">
+            <div className="bg-white/[0.06] px-5 py-4">
+              <div className="kicker !text-[#99F6E4]">Modules</div>
+              <div className="data-numeral mt-1 text-[1.6rem] leading-none text-white">25</div>
             </div>
-            <div className="bg-paper px-5 py-4">
-              <div className="kicker">Outcome</div>
-              <div className="mt-1 text-base font-medium text-ink">Hire-ready PC</div>
+            <div className="bg-white/[0.06] px-5 py-4">
+              <div className="kicker !text-[#99F6E4]">Outcome</div>
+              <div className="mt-1 text-base font-medium text-white">Hire-ready PC</div>
             </div>
-            <div className="bg-paper px-5 py-4">
-              <div className="kicker">Format</div>
-              <div className="mt-1 text-base font-medium text-ink">Self-paced</div>
+            <div className="bg-white/[0.06] px-5 py-4">
+              <div className="kicker !text-[#99F6E4]">Format</div>
+              <div className="mt-1 text-base font-medium text-white">Self-paced</div>
             </div>
-            <div className="bg-paper px-5 py-4">
-              <div className="kicker">Workload</div>
-              <div className="mt-1 text-base font-medium text-ink">~50 min / module</div>
+            <div className="bg-white/[0.06] px-5 py-4">
+              <div className="kicker !text-[#99F6E4]">Workload</div>
+              <div className="mt-1 text-base font-medium text-white">~50 min / module</div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-rule pt-5">
-          <span className="kicker">Cohort · Rolling</span>
-          <Link href="/" className="mono-link">
+        <div className="flex items-center justify-between border-t border-white/15 pt-5">
+          <span className="kicker !text-[#99F6E4]">Cohort · Rolling</span>
+          <Link href="/" className="mono-link !text-white/85 hover:!text-white">
             ← Programme overview
           </Link>
         </div>

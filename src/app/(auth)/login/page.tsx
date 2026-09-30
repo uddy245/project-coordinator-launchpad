@@ -27,8 +27,8 @@ export default async function LoginPage({
         </p>
       ) : null}
       <div className="rounded-md border border-rule bg-paper px-4 py-3 text-sm text-muted-foreground">
-        <strong className="text-ink">Returning learner?</strong> We&apos;ve upgraded sign-in. If
-        your account was created before September 2026, please{" "}
+        <strong className="text-ink">Returning learner?</strong>&nbsp;We&apos;ve upgraded sign-in.
+        If your account was created before September 2026, please{" "}
         <Link
           href="/forgot-password"
           className="font-medium text-ink underline decoration-[hsl(var(--accent))] decoration-2 underline-offset-[5px]"
