@@ -149,7 +149,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
             />
             <LockedTile
               kicker="Quiz"
-              title="20 distractor-rationaled questions per module"
+              title="20 multiple-choice questions per module, each wrong answer explained"
               detail="Tests your understanding, not your memory. Wrong answers come with reasoning."
             />
             <LockedTile

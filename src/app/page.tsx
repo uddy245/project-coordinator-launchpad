@@ -27,7 +27,7 @@ export default function Home() {
               Sign in
             </Link>
             <Button asChild size="sm">
-              <Link href="/signup">Apply</Link>
+              <Link href="/signup">Create account</Link>
             </Button>
           </nav>
         </div>
@@ -83,7 +83,7 @@ export default function Home() {
       <section className="border-y border-rule bg-[hsl(var(--secondary))]">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 px-6 py-12 lg:grid-cols-4">
           <Stat numeral="25" label="Modules" hint="One reading + one artifact each" />
-          <Stat numeral="100+" label="Quiz items" hint="Distractor-rationaled MCQs" />
+          <Stat numeral="100+" label="Quiz items" hint="Multiple choice · wrong answers explained" />
           <Stat numeral="4" label="Career gates" hint="Foundations → Capstone" />
           <Stat numeral="1" label="Portfolio" hint="A real one. Reviewable." />
         </div>

@@ -142,7 +142,7 @@ Pre-mortems are underused and disproportionately valuable. Bring them to your ne
 
 Here's your work for this lesson.
 
-First, you're going to download the starter RAID log template from the Workbook tab. It's an Excel file with the five-column structure we've been using: category, description, probability and impact, owner, mitigation, review date. The structure is boring on purpose. Structure is not where the skill lives.
+First, you're going to download the starter RAID log template from the Workbook tab. It's an Excel file with ten columns: ID, type, description, trigger, impact, likelihood, mitigation, owner, follow-up date and status. The structure is boring on purpose. Structure is not where the skill lives.
 
 Second, you're going to read the scenario — it's in the Workbook tab, about 500 words. A specific project, with specific people and constraints. Read it once for context, then once more for risk signals. I'll name a few things to look for in a second.
 
