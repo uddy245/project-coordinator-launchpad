@@ -122,7 +122,7 @@ That changes which battles you fight — fewer, picked carefully, because being 
 
 It also changes how you see the people around you. Your PM today is someone who, in ten years, will recommend you or won't. The stakeholder you're mildly annoyed with is someone who'll one day be in a position to hire you. Every relationship is a long-term asset in formation.
 
-And the long view is kind. It says: this week is not the measure of me. You will have bad weeks. One bad month out of sixty is four percent of your career so far. It's a bad month, not a bad career. Fix what you can, learn what you can, keep going.
+And the long view is kind. It says: this week is not the measure of me. You will have bad weeks. One bad month out of sixty is about one point seven percent of your career so far. It's a bad month, not a bad career. Fix what you can, learn what you can, keep going.
 
 ---
 

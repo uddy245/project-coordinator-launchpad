@@ -24,7 +24,7 @@ The team launched on time, in budget, with the stated scope. The sponsor was ple
 - The compressed UAT had missed device-specific issues — the mobile app's **crash rate was 4× the company threshold**, and customer satisfaction for the first campaign was meaningfully lower than projected.
 - The two non-core brand integrations required a **follow-up project** at $1.2M, funded separately.
 
-**True cost: ~$10.2M, not $8M. True delivery date: ~18 months, not 12.**
+**True cost: ~$9.8M, not $8M. True delivery date: ~18 months, not 12.**
 
 The sponsor had moved roles by then. The case study about successful delivery was still on the company intranet.
 

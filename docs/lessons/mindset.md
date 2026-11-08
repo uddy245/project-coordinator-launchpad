@@ -83,7 +83,7 @@ The long view changes specific things:
 - **Corners not to cut.** Someone reads even the documents you think nobody reads. Cutting corners on those is a habit that leaks into the documents that matter.
 - **Slights to let go.** The curt PM, the rude stakeholder, the colleague who took credit. The long view processes these as *information about the situation* — not personal injuries. Carrying grievances is expensive and the interest rate is high.
 
-The long view is also kind. *This week is not the measure of me.* You will have bad weeks. The long view says: one bad month out of sixty is four percent of your career so far. Fix what you can, learn what you can, and keep going.
+The long view is also kind. *This week is not the measure of me.* You will have bad weeks. The long view says: one bad month out of sixty is about 1.7 percent of your career so far. Fix what you can, learn what you can, and keep going.
 
 ## Shift 06 — The failure mindset
 
