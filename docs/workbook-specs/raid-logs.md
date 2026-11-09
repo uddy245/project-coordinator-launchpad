@@ -12,7 +12,7 @@ Single worksheet, headers only, with inline instructions in row 2 (italic, grey)
 
 | ID | Type | Title | Description | Probability | Impact | Owner | Mitigation / Action | Next Review | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| *e.g. R-001* | *R / A / I / D* | *Short descriptive name* | *1–3 sentences. Specific.* | *H / M / L (risks only)* | *H / M / L* | *Named person or role* | *Concrete action, who, by when* | *Date* | *Open / In progress / Closed* |
+| *e.g. R-001* | *R / A / I / D* | *Short descriptive name* | *1–3 sentences. Specific.* | *H / M / L (risks only)* | *H / M / L* | *Named person (role only as interim, "awaiting named owner")* | *Concrete action, who, by when* | *Date* | *Open / In progress / Closed* |
 
 Cell-level guidance (use Excel data validation + cell comments):
 
@@ -20,7 +20,7 @@ Cell-level guidance (use Excel data validation + cell comments):
 - **Probability column** — dropdown: High / Medium / Low / N/A (N/A for issues, assumptions, dependencies)
 - **Impact column** — dropdown: High / Medium / Low
 - **Status column** — dropdown: Open / In progress / Closed / Escalated
-- **Owner column** — free text with comment: *"A named person or explicit role. Not 'the team.' Not 'TBD.'"*
+- **Owner column** — free text with comment: *"A named person. A role is acceptable only as an interim placeholder marked 'awaiting named owner.' Not 'the team.' Not 'TBD.'"*
 
 Second worksheet: "Living artifact notes" — a free-text log where learners record what changed week over week. This is what produces the `living_artifact_evidence` rubric signal.
 
