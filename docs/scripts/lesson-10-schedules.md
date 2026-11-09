@@ -116,7 +116,7 @@ Now, how you report it. Your status report usually carries a schedule view, and 
 
 A good schedule status answers three things. Are we on track for the next major milestone? What has slipped, and what's the impact? What's at risk of slipping, and when will we know? Three sentences, not three pages. Attach the detailed Gantt for anyone who wants it — but the narrative is what the sponsor actually reads.
 
-And when something has slipped, name it precisely. Here's the exemplar I want in your head. "Integration delivery slipped from May twenty-eighth to June eleventh due to vendor capacity; testing start pushed from June first to June fifteenth; milestone three-week slip absorbed into existing buffer, no end-date impact."
+And when something has slipped, name it precisely. Here's the exemplar I want in your head. "Integration delivery slipped from May twenty-eighth to June eleventh due to vendor capacity; testing start pushed from June first to June fifteenth; each a two-week slip, absorbed into existing buffer, no end-date impact."
 
 Read that again in your mind. It tells the reader what happened, why, what the downstream effect is, and whether the end date is moving — in one sentence. It treats the sponsor as somebody capable of hearing bad news. Because they are. Remember my sponsor on the regulatory project. He wasn't furious about the three-week slip. He was furious that he'd been looking at green for seven weeks. The slip cost him a few weeks. The surprise cost him his trust. Never confuse the two.
 
