@@ -199,7 +199,10 @@ async function buildWorkbook({ title, intro, rows }) {
       "Mitigation",
       "The actual action being taken — not 'monitor'. 'Backfill lead engineer from contractor pool', 'Draft v2 migration plan by Sprint 4', etc.",
     ],
-    ["Owner", "Named person (Jordan) — one accountable individual. A role (Tech Lead) is acceptable only as an interim placeholder, written ‘Tech Lead — interim, awaiting named owner’. Never blank."],
+    [
+      "Owner",
+      "Named person (Jordan) — one accountable individual. A role (Tech Lead) is acceptable only as an interim placeholder, written ‘Tech Lead — interim, awaiting named owner’. Never blank.",
+    ],
     ["Follow-up", "Date you'll check this item again. Every open item has one."],
     [
       "Status",
