@@ -307,8 +307,8 @@ export function VoiceRecorder({
           <div className="kicker">Practise out loud · optional</div>
           <p className="mt-1 text-xs text-muted-foreground">
             {hasSpeechSupport
-              ? "Record up to 60 seconds. Your speech is transcribed live and auto-fills the box below — audio stays in your browser, nothing is uploaded."
-              : "Record up to 60 seconds. Audio stays in your browser — nothing is uploaded. Listen back, then write what you said in the box below."}
+              ? "Record up to 60 seconds. Your speech is transcribed live and auto-fills the box below. The recording stays in this browser for playback. Speech-to-text may use your browser's speech service, which can process audio off-device unless on-device mode is available. The transcript you submit is sent for grading."
+              : "Record up to 60 seconds. The recording stays in this browser for playback. Listen back, then write what you said in the box below. The text you submit is sent for grading."}
           </p>
         </div>
         <div className="flex items-center gap-2">
