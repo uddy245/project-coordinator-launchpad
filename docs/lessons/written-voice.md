@@ -43,7 +43,7 @@ Each has a use. The problem is junior writers use them in clusters. Each additio
 
 > I was just wondering if maybe we should perhaps think about moving the design review to next week? I might be wrong but it seems like a few of the key people might not be available. Just a thought though.
 
-Nine hedges — and the writer had already checked availability. Replace with:
+Nine hedges. Replace with:
 
 > Suggest we move the design review to next week — key reviewers are out this week. OK with you?
 
