@@ -155,7 +155,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
             <LockedTile
               kicker="Portfolio"
               title="A reviewable record of your work"
-              detail="7 graded artifacts unlocks Gate 2 — the portfolio milestone hiring managers can actually see."
+              detail="7 graded artifacts submitted unlocks Gate 2. Your portfolio is something hiring managers can see."
             />
             <LockedTile
               kicker="Progress"

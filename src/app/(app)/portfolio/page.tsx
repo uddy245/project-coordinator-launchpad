@@ -68,8 +68,8 @@ export default async function PortfolioPage() {
       <header>
         <h1 className="text-2xl font-semibold">Portfolio</h1>
         <p className="text-sm text-muted-foreground">
-          Your graded artifacts. Build these up over the program — seven hire-ready entries clears
-          Gate 2.
+          Your graded artifacts. Build these up over the program — 7 graded artifacts submitted
+          clears Gate 2.
         </p>
       </header>
 
