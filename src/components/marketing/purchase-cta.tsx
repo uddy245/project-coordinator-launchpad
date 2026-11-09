@@ -29,8 +29,9 @@ export function PurchaseCTA() {
     <div className="rounded-lg border bg-card p-6 shadow-sm">
       <h2 className="text-xl font-semibold">Unlock the Launchpad program</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        One-time payment of <strong>$749</strong>. Lifetime access to video lessons, AI-graded
-        assignments, and a personalized portfolio.
+        One-time payment of <strong>$749</strong>. Lifetime access to course materials — video
+        lessons, AI-graded assignments, and a personalized portfolio (AI features subject to daily
+        usage limits).
       </p>
       <Button onClick={onClick} disabled={disabled} size="lg" className="mt-4">
         {disabled ? "Redirecting to checkout..." : "Get access — $749"}

@@ -159,7 +159,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
             />
             <LockedTile
               kicker="Progress"
-              title="Career gates from Foundations to hire-ready"
+              title="Career gates from Foundations to the industry capstone"
               detail="Gate 1: Foundations. Gate 2: Portfolio. Gate 3: Mock interviews. Gate 4: Industry capstone."
             />
           </div>

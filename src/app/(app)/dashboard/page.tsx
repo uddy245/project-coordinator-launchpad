@@ -279,7 +279,7 @@ export default async function DashboardPage() {
       <section>
         <div className="mb-3 flex items-baseline justify-between border-b border-rule pb-3">
           <h2 className="kicker">Career milestones</h2>
-          <span className="kicker">Four gates · Hire-ready by Gate 4</span>
+          <span className="kicker">Four gates · Industry capstone is Gate 4</span>
         </div>
         <div className="grid gap-px bg-rule sm:grid-cols-2">
           <GateStatusBadge
