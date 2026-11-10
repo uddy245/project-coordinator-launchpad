@@ -29,11 +29,11 @@ Professional writing is inverted. The lede is first.
 
 **Lede first (10 seconds to read):**
 
-> Helen — vendor has slipped the integration plan from today to next Wednesday. This affects testing, which was planning to start dependent work Tuesday. I haven't spoken to Raj yet — want me to, or will you?
+> Helen — the vendor can't get us the integration plan until Wednesday. That may affect Raj's plan to start testing prep this week; I've let him know.
 
 The terser version is not less polite. It is the result of more work — the writer decided what mattered before they started writing.
 
-A subject line is the *first* lede. *Update*, *Quick question*, *Following up* are not subject lines. They are labels for the fact that an email exists. Try instead: *Vendor delivery slipped — needs decision on testing start.*
+A subject line is the *first* lede. *Update*, *Quick question*, *Following up* are not subject lines. They are labels for the fact that an email exists. Try instead: *Integration plan delayed to Wednesday — may affect testing prep.*
 
 ## Strip the hedges
 
@@ -45,7 +45,7 @@ Each has a use. The problem is junior writers use them in clusters. Each additio
 
 Nine hedges. Replace with:
 
-> Suggest we move the design review to next week — three of the key reviewers are out this week, and the extra time lets us circulate the pre-read properly. OK with you?
+> Suggest we move the design review to next week — key reviewers are out this week. OK with you?
 
 Same information. The writer has taken a position.
 
@@ -81,7 +81,7 @@ A specific rule: when replying, *match or slightly elevate* the register of the 
 
 > *Bad:* John said he thought we should go with Option A. Priya said she wasn't sure. Helen asked if there were other considerations. After some discussion, the team seemed to agree that Option A was the way forward.
 
-> *Good:* **Decision:** proceed with Option A. **Action:** Priya to complete additional analysis on Option A by May 24 and flag any concerns by end of that week. If no concerns raised, Option A is confirmed.
+> *Good:* **Proposed decision:** proceed with Option A — agreement was not stated explicitly, so confirm with attendees. **Concern noted:** Priya was unsure about Option A. **Open question:** Helen asked whether there were other considerations; none recorded.
 
 **Risk descriptions** carry weight when they are specific.
 

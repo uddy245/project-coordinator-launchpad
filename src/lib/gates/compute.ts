@@ -89,7 +89,7 @@ export function computeGateSummary(
     foundation: computeFoundation(foundation),
     portfolio: {
       status: portfolioStatus,
-      detail: `${count} of ${target} graded artifacts submitted.`,
+      detail: `${count} of ${target} lessons with passed work.`,
     },
     interview: computeInterview(interview),
     industry: "coming_soon",

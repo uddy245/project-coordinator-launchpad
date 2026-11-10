@@ -84,6 +84,8 @@ Offer an alternative. "Could we send a short note saying the full analysis arriv
 
 And then — this is the one that protects the whole thing — accept the decision if you're overruled. If the PM considers your concern and still says send it, you send it. You do not keep relitigating. You've done your job.
 
+One exception, and it matters. That rule is for judgement calls — timing, framing, how much risk to carry, a provisional number shared with a caveat. It is not for knowingly sending something you know is false. If the document says on track and you know this morning it failed, that's not a disagreement, it's an inaccuracy. Say so plainly. Offer the smallest accurate fix — one dated line usually does it — and let the PM approve it. And if she still insists on the misleading version, you don't send that version. You tell her you're raising it, and you take it to the next appropriate person, openly. Not around her. Never around her.
+
 The posture, all the way through, is respectful but clear. You're not accusing anyone of anything. You're offering information and a recommendation. Reasonable senior people genuinely appreciate this. The ones who don't are rare — and they reveal themselves in exactly these moments.
 
 ---

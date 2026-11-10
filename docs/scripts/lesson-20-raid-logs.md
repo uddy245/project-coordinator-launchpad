@@ -142,7 +142,7 @@ Pre-mortems are underused and disproportionately valuable. Bring them to your ne
 
 Here's your work for this lesson.
 
-First, you're going to download the starter RAID log template from the Workbook tab. It's an Excel file with the five-column structure we've been using: category, description, probability and impact, owner, mitigation, review date. The structure is boring on purpose. Structure is not where the skill lives.
+First, you're going to download the starter RAID log template from the Workbook tab. It's an Excel file with ten columns: ID, type, description, trigger, impact, likelihood, mitigation, owner, follow-up date and status. The structure is boring on purpose. Structure is not where the skill lives.
 
 Second, you're going to read the scenario — it's in the Workbook tab, about 500 words. A specific project, with specific people and constraints. Read it once for context, then once more for risk signals. I'll name a few things to look for in a second.
 
@@ -156,7 +156,7 @@ And here's what we'll be grading on. Five dimensions.
 
 **Mitigation realism** — mitigations are specific and actionable, not "monitor closely."
 
-**Ownership** — every entry has a named person or explicit role. Not "the team." Not "TBD."
+**Ownership** — every entry has a named person accountable for it — one individual. Not "the team." Not "TBD." A role is acceptable only as an interim placeholder, marked "awaiting named owner."
 
 **Living-artifact evidence** — your log shows evidence that it's been updated over time. If every entry looks like it was written at the same moment with no weekly progression, that's a tell.
 

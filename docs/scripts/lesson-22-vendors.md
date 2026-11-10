@@ -86,7 +86,7 @@ Let me give you six practices that make this work. Three now, three in a moment.
 
 One. Be precise in writing. Ambiguity in client-vendor communication is expensive — vague emails produce scope arguments later. When you send a vendor a request, be specific: what you need, when, in what form. And when they commit, get the commitment in writing, with enough specificity that there's no later reinterpretation. The S-O-W — the statement of work — is your friend here, but only if your day-to-day writing is as precise as it is.
 
-Two. Separate the contract from the relationship. When a dispute arises, frame it as a contract question — "let's look at what the S-O-W says" — not a character question. That one move lets both sides disagree about substance without it becoming personal. It takes the heat out.
+Two. Separate the contract from the relationship. When a dispute arises, frame it as a contract question — "let's look at what the S-O-W says" — not a character question. That one move lets both sides disagree about substance without it becoming personal. It takes the heat out. One caution: before you tell a vendor what the contract does or doesn't cover, read the actual clause and confirm the position with whoever owns the contract on your side — usually the PM, procurement or the commercial lead. Until then, it's your reading, and you say so.
 
 Three. Respect their internal structure. Vendors have their own PMs, account managers, delivery leads, executives. Do not casually bypass your primary contact to talk to someone else on their side. It undermines their internal operating model, and they will not forget it. If you genuinely need to engage above your counterpart, do it through them, or at the very least with their knowledge.
 

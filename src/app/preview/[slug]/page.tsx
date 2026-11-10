@@ -149,17 +149,17 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
             />
             <LockedTile
               kicker="Quiz"
-              title="20 distractor-rationaled questions per module"
+              title="20 multiple-choice questions per module, each wrong answer explained"
               detail="Tests your understanding, not your memory. Wrong answers come with reasoning."
             />
             <LockedTile
               kicker="Portfolio"
               title="A reviewable record of your work"
-              detail="7 graded artifacts unlocks Gate 2 — the portfolio milestone hiring managers can actually see."
+              detail="Passed work from 7 lessons unlocks Gate 2. Your portfolio is something hiring managers can see."
             />
             <LockedTile
               kicker="Progress"
-              title="Career gates from Foundations to hire-ready"
+              title="Career gates from Foundations to the industry capstone"
               detail="Gate 1: Foundations. Gate 2: Portfolio. Gate 3: Mock interviews. Gate 4: Industry capstone."
             />
           </div>

@@ -58,11 +58,11 @@ Most unstudied writers bury the lede. They start with context, then more context
 
 Professional writing is inverted. The lede is first.
 
-Here's a real one. A coordinator writing in school mode opens with "Hi Helen, hope your morning's going well, just wanted to let you know about a couple of things," and then somewhere in the middle the reader learns that the vendor has slipped the integration plan, that it affects testing, and that Raj hasn't been told. Twenty-five seconds to read. The thing Helen actually needs to decide is buried.
+Here's an example. A coordinator writing in school mode opens with "Hi Helen, hope your morning's going well, just wanted to let you know about a couple of things," and then somewhere in the middle the reader learns that the vendor has slipped the integration plan, that it may affect Raj's testing prep, and that Raj has already been told. Twenty-five seconds to read. The point Helen needs is buried.
 
-Now the same email, lede first. "Helen — vendor has slipped the integration plan from today to next Wednesday. This affects testing, which was planning to start dependent work Tuesday. I haven't spoken to Raj yet — want me to, or will you?" Ten seconds. A clear ask. The decision is visible in the second sentence.
+Now the same email, lede first. "Helen — the vendor can't get us the integration plan until Wednesday. That may affect Raj's plan to start testing prep this week; I've let him know." Ten seconds. The news is in the first sentence, the consequence in the second, and what's already been done right after it.
 
-The second version isn't terser because the writer cared less. It's terser because the writer did more work — they decided what mattered *before* they started writing. And your subject line is the first lede of all. "Update," "Quick question," "Following up" — those aren't subject lines. They're labels for the fact that an email exists. Try "Vendor delivery slipped — needs decision on testing start." Let the reader triage from the subject alone.
+The second version isn't terser because the writer cared less. It's terser because the writer did more work — they decided what mattered *before* they started writing. And your subject line is the first lede of all. "Update," "Quick question," "Following up" — those aren't subject lines. They're labels for the fact that an email exists. Try "Integration plan delayed to Wednesday — may affect testing prep." Let the reader triage from the subject alone.
 
 ---
 
@@ -74,9 +74,9 @@ Now to the email that nearly ended my probation — because the first thing wron
 
 A hedge is a word or phrase that distances you from what you're saying. "I think. I believe. Perhaps. Maybe. Just. It seems. I might be wrong but. Just a thought." Each one has a use in isolation. The problem is junior writers use them in clusters, and each additional hedge compounds the weakening.
 
-I once got this from a coordinator I was managing. "I was just wondering if maybe we should perhaps think about moving the design review to next week? I might be wrong but it seems like a few of the key people might not be available, and I was just thinking it could maybe be better to have a bit more time. Just a thought though." Four sentences. Nine hedges. She'd actually done the analysis — checked availability, formed a view — and then buried the whole thing so deep I had to write back and ask what she actually thought.
+I once got this from a coordinator I was managing. "I was just wondering if maybe we should perhaps think about moving the design review to next week? I might be wrong but it seems like a few of the key people might not be available, and I was just thinking it could maybe be better to have a bit more time. Just a thought though." Four sentences. Nine hedges. There was a suggestion in there, but she'd buried it so deep I had to write back and ask what she actually thought.
 
-The unhedged version. "Suggest we move the design review to next week — three of the key reviewers are out this week, and the extra time lets us circulate the pre-read properly. OK with you?" Same information. Same politeness. But the writer has taken a position, and the decision loop is short. Here's the test: for each hedge, ask, is this carrying information, or am I using it to soften the fact that I'm saying something? If it's the second, cut it.
+The unhedged version. "Suggest we move the design review to next week — key reviewers are out this week, and it gives us more time. OK with you?" Same information. Same politeness. But the writer has taken a position, and the decision loop is short. Here's the test: for each hedge, ask, is this carrying information, or am I using it to soften the fact that I'm saying something? If it's the second, cut it.
 
 ---
 
@@ -124,7 +124,7 @@ She did. She emailed him, copied me, took the blame squarely on herself for not 
 
 *[Example slide: bad minutes vs good minutes; bad-news structure]*
 
-A few specific forms, because the voice transcends the form. Minutes are not transcripts. Bad minutes read like "John said he thought we should go with Option A, Priya said she wasn't sure, after some discussion the team seemed to agree." Good minutes read like a record. "Decision: proceed with Option A. Action: Priya to complete additional analysis by May 24 and flag concerns by end of that week; if none raised, Option A is confirmed." Half the space, no ambiguity, and still usable six months from now.
+A few specific forms, because the voice transcends the form. Minutes are not transcripts. Bad minutes read like "John said he thought we should go with Option A, Priya said she wasn't sure, after some discussion the team seemed to agree." Good minutes read like a record, and they don't record more than happened. "Proposed decision: proceed with Option A — agreement wasn't stated explicitly, so confirm with attendees. Concern noted: Priya was unsure. Open question: Helen asked about other considerations; none recorded." Every point is visible, nothing is invented, and it's still usable six months from now.
 
 Risk descriptions carry weight only when they're specific. Not "risk that vendor may be late" — that's nothing, that's a meeting waiting to happen. Instead: name the constraint, what it affects, the impact and likelihood, and the mitigation, in ninety words.
 

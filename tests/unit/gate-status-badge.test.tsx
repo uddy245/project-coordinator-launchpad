@@ -24,7 +24,7 @@ describe("GateStatusBadge", () => {
         <GateStatusBadge
           name="Gate 2 · Portfolio"
           status={status}
-          detail="3 of 7 graded artifacts submitted."
+          detail="3 of 7 lessons with passed work."
         />
       );
       expect(screen.getByRole("heading", { name: "Gate 2 · Portfolio" })).toBeInTheDocument();

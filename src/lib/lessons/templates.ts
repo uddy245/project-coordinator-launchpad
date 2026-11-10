@@ -225,7 +225,7 @@ export const TEMPLATES_BY_SLUG: Record<string, Template[]> = {
       title: "Pharma · Clinical Trial — sample",
       kind: "example",
       description:
-        "A Phase III clinical-trial platform. Quality bar is regulatory and non-negotiable; healthy contingency consumption (12.5% schedule, 17% cost at month 8).",
+        "A Phase III clinical-trial platform. Quality bar is regulatory and non-negotiable; healthy contingency consumption (12.5% of schedule contingency and 42.5% of cost contingency used by month 8).",
     },
     {
       file: "/templates/variables_sample_saas_migration.xlsx",

@@ -8,7 +8,7 @@ const STATUS_LABELS: Record<string, { label: string; tone: string }> = {
   pending: { label: "Grading…", tone: "bg-blue-100 text-blue-900" },
   grading: { label: "Grading…", tone: "bg-blue-100 text-blue-900" },
   graded: { label: "Graded", tone: "bg-green-100 text-green-900" },
-  grading_failed: { label: "Failed", tone: "bg-amber-100 text-amber-900" },
+  grading_failed: { label: "Grading error", tone: "bg-amber-100 text-amber-900" },
   manual_review: { label: "Under review", tone: "bg-muted text-muted-foreground" },
 };
 

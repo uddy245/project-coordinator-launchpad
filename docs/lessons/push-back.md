@@ -34,11 +34,26 @@ The move that works:
 - **State your concern specifically and briefly.** Not "I have some concerns" — rather, "The supporting analysis isn't in yet; the numbers could shift materially when it lands."
 - **Make the consequence concrete.** "If the client uses these figures and the analysis changes them, we'll have to issue a correction."
 - **Offer an alternative.** "Could we send a short note saying the full analysis arrives Monday, and defer the deliverable until then?"
-- **Accept the decision if overruled.** If the PM considers your concern and still says send, you send. You do not keep relitigating. You have done your job.
+- **Accept the decision if overruled — on judgement calls.** If the PM considers your concern and still says send, you send. You do not keep relitigating. You have done your job. There is one exception, covered next.
 
 The posture is respectful but clear. You are not accusing anyone of wrongdoing; you are offering information and a recommendation. **Reasonable senior people appreciate this.**
 
 One script that has served me: *"Before I do this, I want to flag something — [concern]. My recommendation would be [alternative]. But if you've thought about this and still want me to proceed, I'll proceed."* It states the concern, offers an alternative, and explicitly accepts the senior person's authority to overrule. It cannot reasonably be read as insubordination.
+
+## Where the overrule stops
+
+Accepting the overrule applies to **judgement calls**: timing, framing, emphasis, how much risk to carry, whether a provisional figure is good enough to share with a caveat. Reasonable people disagree on these, and the decision is the PM's. The Thursday deliverable was this kind of call — the numbers were provisional, not known to be wrong — which is why the right move there was a stronger push, not a refusal.
+
+It does not apply when following the instruction means **knowingly sending information you know is false or materially misleading.** Keep the two apart. Disagreement is *"I'd do this differently."* Known inaccuracy is *"this says something we know isn't true."* Most push-back is the first kind.
+
+When it is the second kind:
+
+1. **Say so plainly to the PM.** *"The summary says X is on track; this morning's result says it isn't. I can't send it as it stands."*
+2. **Offer the smallest accurate correction.** A one-line dated update, or marking the document "as at [date]" with the new fact added. Usually that is all it takes.
+3. **Let the PM approve it.** It is still her document; she decides how to frame the correction.
+4. **If she still insists on the misleading version, don't send it — and escalate transparently.** Tell her you are raising it, then take it to the next appropriate person: her manager, the PMO, or your organisation's speak-up route. Openly, never around her.
+
+This is not insubordination. You are not substituting your judgement for hers on a judgement call. You are declining to pass on something you know is untrue.
 
 ## Written versus verbal
 

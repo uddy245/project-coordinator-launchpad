@@ -27,7 +27,7 @@ export default function Home() {
               Sign in
             </Link>
             <Button asChild size="sm">
-              <Link href="/signup">Apply</Link>
+              <Link href="/signup">Create account</Link>
             </Button>
           </nav>
         </div>
@@ -41,7 +41,8 @@ export default function Home() {
               <Clock3 className="size-3.5 shrink-0" /> A 25-module career programme · Self-paced
             </Chip>
             <h1 className="display-title text-[2.5rem] leading-[1.06] text-white sm:text-[3.2rem] lg:text-[3.7rem]">
-              From zero to <span className="text-[#99F6E4]">hire-ready</span> project coordinator.
+              Build a <span className="text-[#99F6E4]">portfolio of graded artifacts</span> as a
+              project coordinator.
             </h1>
             <p className="max-w-xl text-lg leading-relaxed text-white/85">
               Twenty-five modules built from a working PM&apos;s handbook. Real artifacts, AI-graded
@@ -72,7 +73,7 @@ export default function Home() {
                 <DefRow term="Format" value="Self-paced" />
                 <DefRow term="Cohort" value="Rolling" />
                 <DefRow term="Workload" value="~50 min / module" />
-                <DefRow term="Outcome" value="Hire-ready PC" />
+                <DefRow term="Outcome" value="Portfolio of graded artifacts" />
               </dl>
             </div>
           </aside>
@@ -83,7 +84,11 @@ export default function Home() {
       <section className="border-y border-rule bg-[hsl(var(--secondary))]">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 px-6 py-12 lg:grid-cols-4">
           <Stat numeral="25" label="Modules" hint="One reading + one artifact each" />
-          <Stat numeral="100+" label="Quiz items" hint="Distractor-rationaled MCQs" />
+          <Stat
+            numeral="100+"
+            label="Quiz items"
+            hint="Multiple choice · wrong answers explained"
+          />
           <Stat numeral="4" label="Career gates" hint="Foundations → Capstone" />
           <Stat numeral="1" label="Portfolio" hint="A real one. Reviewable." />
         </div>
@@ -116,7 +121,7 @@ export default function Home() {
           />
           <Feature
             icon={<CheckCircle2 className="size-5" />}
-            title="Four gates to hire-ready"
+            title="Four career gates"
             detail="Foundations, portfolio, mock interviews, and an industry capstone — each gate proves a different kind of readiness, not just lesson completion."
           />
           <Feature

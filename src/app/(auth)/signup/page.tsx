@@ -17,7 +17,7 @@ export default async function SignupPage({
   return (
     <div className="space-y-7">
       <div className="space-y-2">
-        <span className="kicker">Apply · Enrol</span>
+        <span className="kicker">Sign up</span>
         <h1 className="display-title text-2xl sm:text-3xl">Create your account.</h1>
         <p className="text-sm text-muted-foreground">Begin Module 01 in minutes.</p>
       </div>

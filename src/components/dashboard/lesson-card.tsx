@@ -3,7 +3,7 @@ import Link from "next/link";
 type Status = "not_started" | "in_progress" | "completed";
 
 const STATUS_LABEL: Record<Status, string> = {
-  not_started: "Locked-in",
+  not_started: "Not started",
   in_progress: "In progress",
   completed: "Completed",
 };

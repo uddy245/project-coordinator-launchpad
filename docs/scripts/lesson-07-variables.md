@@ -44,7 +44,7 @@ We launched on time, in budget, with the stated scope. The sponsor was pleased. 
 
 In the six months after launch, the bill arrived. The authentication shortcut produced a security incident — not catastrophic, but enough to require an unscheduled remediation that cost about six hundred thousand dollars. The compressed testing had missed device-specific issues, so the mobile app's crash rate launched at four times the company threshold, and customer satisfaction for the first campaign came in meaningfully below projection. And the two non-core brand integrations required a follow-up project, funded separately, at about one-point-two million.
 
-Add it all up. The true cost of that loyalty platform was about ten-point-two million dollars, not eight. And the true delivery date — if delivery means stably working as originally specified — was closer to eighteen months than twelve.
+Add it all up. The true cost of that loyalty platform was about nine-point-eight million dollars, not eight. And the true delivery date — if delivery means stably working as originally specified — was closer to eighteen months than twelve.
 
 The sponsor had moved to another role by the time anyone tallied it. The case study about successful delivery was still on the company intranet.
 
@@ -140,7 +140,7 @@ Here's your work for this lesson. In the workbook, you'll take your current proj
 
 *[Back on camera, slower.]*
 
-The reason I started with that loyalty platform is that it's the whole lesson in miniature. The sponsor fixed three corners and declared the triangle solved. But you can't fix all of them — so one variable flexed silently, and it was quality, and the bill arrived eighteen months and two million dollars later, addressed to someone who'd already moved on. You are not the decider on these trade-offs. The PM and the sponsor are. But you are, very often, the person who makes the trade-off visible before it gets absorbed in the dark. When something has to give, ask out loud: which variable is giving, and why is that the right choice? That question, asked early and quietly, is some of the most valuable work this role contains.
+The reason I started with that loyalty platform is that it's the whole lesson in miniature. The sponsor fixed three corners and declared the triangle solved. But you can't fix all of them — so one variable flexed silently, and it was quality, and the bill arrived eighteen months and about one-point-eight million dollars later, addressed to someone who'd already moved on. You are not the decider on these trade-offs. The PM and the sponsor are. But you are, very often, the person who makes the trade-off visible before it gets absorbed in the dark. When something has to give, ask out loud: which variable is giving, and why is that the right choice? That question, asked early and quietly, is some of the most valuable work this role contains.
 
 See you in the workbook.
 
