@@ -101,8 +101,8 @@ export async function WorkbookPanel({ lessonSlug }: { lessonSlug: string }) {
             ))}
           </ul>
           <p className="text-xs text-muted-foreground">
-            Each is scored 1–5. You pass at {criteria.pass} or above overall; {criteria.hireReady}+
-            is hire-ready.
+            Each is scored 1–5. To pass, every dimension must score at or above {criteria.pass}; an
+            overall score of {criteria.hireReady}+ is hire-ready.
           </p>
         </section>
       ) : null}

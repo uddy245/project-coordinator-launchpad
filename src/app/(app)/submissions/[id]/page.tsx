@@ -91,7 +91,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
           <h2 className="font-semibold">We couldn&apos;t grade this submission.</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Something went wrong on our side during grading — this isn&apos;t a result on your work.
-            The admin has been notified. You can retry by uploading again.
+            You can retry by uploading again.
           </p>
           {lesson && (
             <Button asChild variant="outline" className="mt-4">

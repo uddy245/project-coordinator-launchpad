@@ -156,7 +156,7 @@ And here's what we'll be grading on. Five dimensions.
 
 **Mitigation realism** — mitigations are specific and actionable, not "monitor closely."
 
-**Ownership** — every entry has a named person or explicit role. Not "the team." Not "TBD."
+**Ownership** — every entry has a named person accountable for it — one individual. Not "the team." Not "TBD." A role is acceptable only as an interim placeholder, marked "awaiting named owner."
 
 **Living-artifact evidence** — your log shows evidence that it's been updated over time. If every entry looks like it was written at the same moment with no weekly progression, that's a tell.
 

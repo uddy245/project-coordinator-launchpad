@@ -12,7 +12,7 @@ export default async function CheckoutSuccessPage() {
     <div className="mx-auto max-w-md space-y-4 py-12 text-center">
       <h1 className="text-3xl font-bold">Thanks for joining.</h1>
       <p className="text-muted-foreground">
-        Your payment is confirmed. We&apos;re activating your account now.
+        We&apos;re confirming your payment and activating your account now.
       </p>
       <ActivationPoller />
       <Button asChild variant="outline">

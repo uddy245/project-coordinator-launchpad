@@ -28,7 +28,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </div>
             <div className="bg-white/[0.06] px-5 py-4">
               <div className="kicker !text-[#99F6E4]">Outcome</div>
-              <div className="mt-1 text-base font-medium text-white">Hire-ready PC</div>
+              <div className="mt-1 text-base font-medium text-white">
+                Portfolio of graded artifacts
+              </div>
             </div>
             <div className="bg-white/[0.06] px-5 py-4">
               <div className="kicker !text-[#99F6E4]">Format</div>

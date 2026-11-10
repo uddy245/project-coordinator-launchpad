@@ -23,7 +23,7 @@ export function renderWelcome(vars: WelcomeVars): EmailRender {
     { type: "rule" },
     { type: "h", text: "What unlocks as you go" },
     { type: "fact", label: "Gate 1", value: "Foundations — M01–M04 complete" },
-    { type: "fact", label: "Gate 2", value: "Portfolio — 7 graded artifacts submitted" },
+    { type: "fact", label: "Gate 2", value: "Portfolio — passed work from 7 lessons" },
     { type: "fact", label: "Gate 3", value: "Mock interviews" },
     { type: "fact", label: "Gate 4", value: "Industry capstone — hire-ready" },
   ];

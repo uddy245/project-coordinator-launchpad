@@ -41,7 +41,7 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "Project Coordinator Launchpad",
-  description: "AI-powered training from zero to hire-ready Project Coordinator",
+  description: "AI-powered Project Coordinator training with a portfolio of graded artifacts",
 };
 
 // Without this, mobile browsers assume a ~980px desktop layout and zoom out,

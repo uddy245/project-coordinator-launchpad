@@ -151,7 +151,7 @@ Both are red flags — the first is passive, the second is confrontational witho
 Covers five elements, with a one-sentence reason for each:
 1. **Specific description** — not generic ("resource risk") but actual ("named SME disengaging due to competing role"). The reason: vague descriptions don't produce action.
 2. **Probability and impact** — for risks specifically. Honest, not politically calibrated. The reason: miscalibrated probabilities lead to misallocated attention.
-3. **Named owner** — a person or explicit role, not "the team." The reason: unowned risks don't get worked.
+3. **Named owner** — a named person, not "the team." A role is acceptable only as an interim placeholder marked "awaiting named owner." The reason: unowned risks don't get worked.
 4. **Specific mitigation** — concrete action, not "monitor closely." The reason: vague mitigations signal that no action will actually happen.
 5. **Review date** — when the entry will be revisited. The reason: without a review cadence, entries become decoration.
 

@@ -93,7 +93,7 @@ Three sentences, not three pages. The detailed Gantt can be attached for those w
 
 When a slip has occurred, **name it precisely**. The chapter's exemplar:
 
-> *"Integration delivery slipped from May 28 to June 11 due to vendor capacity; testing start pushed from June 1 to June 15; milestone three-week slip absorbed into existing buffer, no end-date impact."*
+> *"Integration delivery slipped from May 28 to June 11 due to vendor capacity; testing start pushed from June 1 to June 15; each a two-week slip, absorbed into existing buffer, no end-date impact."*
 
 This tells the reader what happened, why, what the downstream effect is, and whether the end date is moving. **It treats the sponsor as capable of hearing bad news, which they are.** The sponsor on the regulatory project at the top of this chapter was not furious at the three-week slip. He was furious that he had been looking at green for seven weeks. The slip cost him weeks; the surprise cost him trust.
 
