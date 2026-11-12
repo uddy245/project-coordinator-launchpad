@@ -8,6 +8,7 @@ import {
   PlayCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LegalLinks } from "@/components/legal/legal-links";
 import { Chip } from "@/components/ui/chip";
 
 export default function Home() {
@@ -156,6 +157,7 @@ export default function Home() {
       <footer className="border-t border-rule">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-6">
           <span className="text-sm font-semibold text-muted-foreground">Launchpad</span>
+          <LegalLinks />
           <span className="text-sm text-muted-foreground">A working PM&apos;s guide · 2026</span>
         </div>
       </footer>
