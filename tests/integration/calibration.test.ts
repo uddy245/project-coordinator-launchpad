@@ -117,8 +117,8 @@ const COMPETENCIES: Array<{
   },
   {
     competency: "pushback_judgment",
-    rubricPath: "docs/rubrics/pushback-judgment-v1.json",
-    promptPath: "docs/prompts/grade-pushback-v1.md",
+    rubricPath: "docs/rubrics/pushback-judgment-v2.json",
+    promptPath: "docs/prompts/grade-pushback-v2.md",
   },
   {
     competency: "chase_judgment",
@@ -236,6 +236,14 @@ describeIf("calibration corpus [hits Anthropic API]", () => {
             if (!result.ok) return;
 
             const { score } = result.data;
+
+            // One line per fixture so a scoped run leaves a record of the
+            // actual scores and token use, pass or fail.
+            console.log(
+              `[calibration] ${competency}/${fx.slug} tokens in=${result.data.inputTokens} out=${result.data.outputTokens} scores=${score.dimension_scores
+                .map((d) => `${d.dimension}:${d.score}`)
+                .join(",")}`
+            );
 
             for (const dim of score.dimension_scores) {
               const expected = fx.expected.expected_dimension_scores[dim.dimension];

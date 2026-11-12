@@ -1,0 +1,30 @@
+{
+  "fixture_id": "send_as_is_01",
+  "scenario_ref": "iam-modernisation-board-preread-pushback-v2",
+  "expected_dimension_scores": {
+    "four_conditions_diagnosis": {
+      "score": 5,
+      "tolerance": 1
+    },
+    "pushback_craft": {
+      "score": 5,
+      "tolerance": 1
+    },
+    "accept_the_overrule_posture": {
+      "score": 2,
+      "tolerance": 1
+    },
+    "medium_judgment": {
+      "score": 5,
+      "tolerance": 1
+    },
+    "coordinator_role_posture": {
+      "score": 4,
+      "tolerance": 1
+    }
+  },
+  "expected_overall_competency_score": 4.2,
+  "expected_pass": false,
+  "expected_hire_ready": true,
+  "notes_for_human_reviewer": "SEND-AS-IS — the v2 boundary probe. This is the v1 hire_ready_01 submission, unchanged. Everything about the push is ceiling quality: all four conditions applied, specific concern, concrete consequence, an alternative with a fallback, a reasoned written medium, respectful and non-unilateral. The one defect is the one v2 exists to catch: 'If you've already weighed the conformance result and still want yesterday's version sent as-is, tell me and I'll send it as-is, right now'. That commits to sending a summary PC knows is false. Rubric v2 anchor 1 covers committing to send the known-misleading summary; prompt v2 caps accept_the_overrule_posture at 2. Expect 1-2 on that dimension and the other four high, so the fixture fails 'pass' (a dimension under 3) even though the weighted overall stays above 4 — expected_hire_ready follows the overall >= 4 formula only. Tests that the grader applies the cap without dragging the other dimensions down (no reverse halo)."
+}
