@@ -29,7 +29,7 @@ Second worksheet: "Living artifact notes" — a free-text log where learners rec
 ## Template 2 — Novice-level worked example (score: ~1.5 average)
 **File:** `public/templates/raid_example_novice.xlsx`
 
-Based on a *different* scenario (not Meridian) so learners study the form rather than copy the content. Scenario: a small retail loyalty-program rebuild.
+Based on a *different* scenario (not the healthcare integration pilot the learner is given) so learners study the form rather than copy the content. Scenario: a small retail loyalty-program rebuild.
 
 | ID | Type | Title | Description | Prob | Impact | Owner | Mitigation | Review | Status |
 |---|---|---|---|---|---|---|---|---|---|
@@ -89,7 +89,7 @@ Same scenario, done at hire-ready quality. 13 entries, plus a populated "Living 
 
 **Annotations:**
 
-> "This is what hire-ready looks like. Every risk has all five elements, specific dates, named individuals. Mitigations are concrete and numbered where there are multiple steps. Assumptions are traceable to a source (Meena, 2025-02-14). The living-artifact second sheet shows the log has been *maintained*, not drafted once. An AI grader or a human reviewer reads this as 4.5 on most dimensions. This is the level a real client pays for."
+> "This is what hire-ready looks like. Every risk has a trigger, impact, likelihood, owner and mitigation, with specific dates and named individuals. Mitigations are concrete and numbered where there are multiple steps. Assumptions are traceable to a source (Meena, 2025-02-14). The living-artifact second sheet shows the log has been *maintained*, not drafted once. An AI grader or a human reviewer reads this as 4.5 on most dimensions. This is the level a real client pays for."
 
 ---
 
@@ -97,7 +97,7 @@ Same scenario, done at hire-ready quality. 13 entries, plus a populated "Living 
 
 Above the four templates:
 
-> "Download the starter template. Read the scenario in the tab. Build your own RAID log. The three worked examples are for reference — study them to calibrate what novice, intermediate, and hire-ready look like. Don't copy them; your scenario is different (Meridian Insurance, not a retail loyalty program). When you're ready, switch to the Quiz tab, pass with 8/10 or better, and then come back and upload your artifact for AI grading."
+> "Download the starter template. Read the scenario in the tab. Build your own RAID log. The three worked examples are for reference — study them to calibrate what novice, intermediate, and hire-ready look like. Don't copy them; your scenario is different (a healthcare systems integration pilot, not a retail loyalty program). When you're ready, switch to the Quiz tab, pass with 8/10 or better, and then come back and upload your artifact for AI grading."
 
 Below:
 
