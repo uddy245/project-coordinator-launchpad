@@ -1,6 +1,6 @@
 # Release checklist — PR #105 and PR #106
 
-Written 12 November 2026 against #105 at `38bac39` and #106 at `855f4a8`.
+Written 12 November 2026 against #105 at `38bac39` and #106 at `855f4a8` (the approved content; later commits on #106 add only this checklist).
 
 | PR                                                                        | What it changes                                                                              | Learner-visible on merge?                                                                     |
 | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
@@ -15,7 +15,7 @@ Merging to `main` deploys to production automatically (Vercel). Migrations are *
 - [ ] QA review of #106
 - [ ] Security review of #106
 - [ ] Review of #105
-- [ ] #106 head is still `855f4a8`, or the owner has re-approved the new head
+- [ ] The approved files are unchanged since `855f4a8`: `git diff 855f4a8 origin/content/lessons-17-20-review-edits -- docs db tests/fixtures` prints nothing. If it prints anything, the owner must re-approve.
 - [ ] CI is green on both PRs (Typecheck / Lint / Test / Build, DB integration)
 - [ ] Both PRs marked "Ready for review" (they are drafts)
 
