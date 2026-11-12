@@ -119,8 +119,8 @@ describe.skipIf(!DB_AVAILABLE)("Neon smoke: sign up → create → read → isol
       email: alice.email,
       fullName: "Alice Smoke",
       role: "learner",
-      // New accounts start unpaid (db/migrations/20261112_01).
-      hasAccess: false,
+      // Neon/prod default: profiles.has_access defaults to TRUE.
+      hasAccess: true,
       signupSource: "smoke-test",
     });
   });
@@ -177,7 +177,8 @@ describe.skipIf(!DB_AVAILABLE)("Neon smoke: sign up → create → read → isol
     expect((await signUp(carol)).ok).toBe(true);
     const carolUser = await getAppUser();
     appIds.push(carolUser!.id);
-    // A new account is unpaid by default (db/migrations/20261112_01).
+    // New accounts get access by default in prod; model an unpaid learner.
+    await db.update(profiles).set({ hasAccess: false }).where(eq(profiles.id, carolUser!.id));
 
     const res = await createSubmission({
       lessonSlug: "raid-logs",
