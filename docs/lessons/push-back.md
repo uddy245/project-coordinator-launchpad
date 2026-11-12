@@ -1,10 +1,18 @@
 # When to Push Back: Saying No Up
 
+**By the end of this lesson you can:**
+
+1. Decide whether a concern deserves a push, using the four conditions.
+2. Word a push that states the concern, the consequence and an alternative.
+3. Tell a judgement call (you accept the overrule) from a known inaccuracy (you do not send it).
+4. Choose between speaking and writing, and say why.
+5. Stay respectful and keep the decision with the PM.
+
 ## The instruction I should have questioned
 
 A PM I admired once told me, with urgency, to send a deliverable to a client by end of day on a Thursday. I knew — because I had been tracking it — that it was not ready. A supporting analysis from another team had not arrived; the numbers in the draft were provisional. I said, tentatively, "Are you sure? The analysis isn't in yet." She said yes; the client wanted it, and we would send an update if needed. I sent it at 4:45 p.m.
 
-The client used the numbers in a board presentation the next morning. They were meaningfully wrong. The corrected analysis, when it arrived on Friday, produced a different conclusion. The client was publicly embarrassed. Our firm had to issue a formal correction. The PM was in genuine trouble for a week.
+The client used the numbers in a board presentation the next morning. They were wrong enough to matter. The corrected analysis, when it arrived on Friday, produced a different conclusion. The client was publicly embarrassed. Our firm had to issue a formal correction. The PM was in genuine trouble for a week.
 
 I was, in the strictest sense, blameless. I had flagged the concern. I had been overruled. I had followed instruction. **I was also part of the failure.** I had flagged at the lowest possible intensity — *are you sure?* — and accepted the overrule without pressing. A stronger push — "I'd rather not send this; the numbers could be materially wrong when the analysis lands" — would have been awkward in the moment and would have saved everyone a great deal of trouble.
 
@@ -57,7 +65,7 @@ This is not insubordination. You are not substituting your judgement for hers on
 
 ## Written versus verbal
 
-Pushback is often better verbal — softer, more flexible, less paper trail for senior embarrassment. A written push becomes a record, which changes its social weight.
+A spoken push is often better. It is softer and more flexible, and it leaves no written record that could embarrass the senior person later. A written push becomes a record, which changes its social weight.
 
 **The rule: for everyday pushes, talk. For consequential pushes where you want a record — because the stakes are high and you may need to refer back to your flag — write,** respectfully. The Thursday deliverable was a case where I'd have wanted the concern in writing: a short, dated Slack — "Want to flag — the supporting analysis isn't back; these numbers could shift. Still ok to send?" — would have put the PM's reply on record and protected both of us.
 
@@ -67,9 +75,9 @@ A specific variant. Stakeholders sometimes ask coordinators to do things outside
 
 - "Happy to help — can I check with the PM first to make sure this fits?"
 - "I can put together a first draft; the PM will want to review before it goes out."
-- "That sounds useful — is it in the current scope, or would we need a CR?"
+- "That sounds useful — is it in the current scope, or would we need a change request (CR)?"
 
-These are not refusals. They are professional reframings that route the request through the right process, protect you from unauthorized work, and slow things down slightly — useful when the request shouldn't have been made.
+These are not refusals. They are professional reframings that route the request through the right process, protect you from unauthorised work, and slow things down slightly — useful when the request shouldn't have been made.
 
 ## Pushing back on yourself
 
@@ -78,7 +86,7 @@ The hardest pushback is sometimes internal. You are about to do something becaus
 ## Tomorrow, specifically
 
 1. **Recall the last instruction you accepted that, honestly, you'd have pushed back on.** Ask what stopped you.
-2. **If the stakes were material, treat the next one like it as a chance to do it differently.**
+2. **If the stakes were material, decide now what you will say the next time something similar comes up.**
 3. **At your next PM one-on-one, bring one small push** — not high-stakes, just practising the move: "I'd do X differently, here's why — what do you think?" The low-stakes reps make the high-stakes version feel natural.
 
 Next: when to chase, and when to let go.

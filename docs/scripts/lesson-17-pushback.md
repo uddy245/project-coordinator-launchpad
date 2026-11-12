@@ -2,8 +2,8 @@
 ## Video script (14 minutes)
 
 **Target runtime:** 13:30–14:30
-**Source chapter:** Handbook Ch 18 (no separate reading file for this lesson)
-**Lesson slug:** pushback
+**Source chapter:** Handbook Ch 18. Reading: `docs/lessons/push-back.md`
+**Lesson slug:** push-back (pipeline folder: `lesson-17-pushback`)
 **Narrator style:** first-person senior PM, warm but direct, no PM jargon unless it is being explicitly taught. Same voice as Lesson 1.
 
 ---
@@ -12,11 +12,11 @@
 
 *[Story slide. Direct address.]*
 
-I want to start with a Thursday I still think about, because the whole lesson is hiding inside it, and because some version of it is coming for you.
+I want to start with a Thursday I still think about, because the whole lesson is in it, and because something like it will happen to you.
 
 A PM I admired once told me, with real urgency, to send a particular deliverable to a client by end of day. I knew — because I'd been tracking it — that the deliverable was not ready. A supporting analysis from another team hadn't arrived. The numbers in the draft were provisional. So I said, tentatively, "Are you sure? The analysis isn't in yet." She said yes, she was sure; the client wanted it, and we'd send an update if we had to. I sent it at 4:45 in the afternoon.
 
-The client used those numbers in a board presentation the next morning. The numbers were meaningfully wrong. The corrected analysis, when it finally landed on Friday, produced a different conclusion altogether. The client was publicly embarrassed. Our firm had to issue a formal correction. The PM was in genuine trouble for a week.
+The client used those numbers in a board presentation the next morning. The numbers were wrong enough to matter. The corrected analysis, when it finally landed on Friday, produced a different conclusion altogether. The client was publicly embarrassed. Our firm had to issue a formal correction. The PM was in real trouble for a week.
 
 Now, in the strictest sense, I was blameless. I'd flagged the concern. I'd been overruled. I'd followed instruction. And I was also, completely, part of the failure.
 
@@ -36,7 +36,7 @@ The default for most junior coordinators is to accept what senior people say. An
 
 Hierarchy. The senior person outranks you, so pushing back feels presumptuous. Information asymmetry — they may know things you don't; maybe there's a reason they're confident and you're missing context. Relational cost — pushback, done badly, damages relationships, and that fear is real. Speed — accepting is just faster; in a busy week, taking the instruction and moving on is the path of least resistance. And self-doubt — that little nagging *what if I'm wrong, and I'm just being difficult?*
 
-Here's the thing. Each one of these has some merit. None of them justifies silence when you have a real concern about something that actually matters. The failure mode — the one I lived on that Thursday — is letting each of these reasons compound, week after week, until your default quietly becomes "don't push back, ever." That is a far worse failure than the occasional push that turns out to be wrong.
+Each one of these has some merit. None of them justifies silence when you have a real concern about something that actually matters. The failure mode — the one I lived on that Thursday — is letting each of these reasons compound, week after week, until your default quietly becomes "don't push back, ever." That is a far worse failure than the occasional push that turns out to be wrong.
 
 ---
 
@@ -48,7 +48,7 @@ Now, the distinction that matters most, and the one people get wrong.
 
 Pushing back is not the same thing as disagreeing. You will disagree often — many times a week. You do not need to push back every time you disagree. If you did, you'd be exhausting, and worse, you'd train people to tune you out, so that the one time it really counts, nobody's listening.
 
-So the skill isn't pushing back more. The skill is knowing which disagreements are worth spending capital on. Most aren't. A few are. The whole craft is telling them apart.
+So the skill isn't pushing back more. The skill is knowing which disagreements are worth spending capital on. Most aren't. A few are. The skill is telling them apart.
 
 ---
 
@@ -56,17 +56,17 @@ So the skill isn't pushing back more. The skill is knowing which disagreements a
 
 *[List slide: Stakes · Information · Reversibility · Pressure]*
 
-Pushback is warranted when four conditions are present. Let me give you all four, because the test is genuinely useful.
+Pushback is warranted when four conditions are present. Here are all four.
 
-One. The stakes are material. Not every instruction warrants a challenge. A small formatting preference from your PM, even if you think it's wrong — let it go. It's not worth a push. A decision to send something that could embarrass the client? That is.
+One. The stakes are material — big enough to matter to the client, the budget or the deadline. Not every instruction warrants a challenge. A small formatting preference from your PM, even if you think it's wrong — let it go. It's not worth a push. A decision to send something that could embarrass the client? That is.
 
-Two. You have relevant information the senior person may not. You've seen the underlying data. You've tracked the timeline. You know the specific detail they haven't looked at. Your view here isn't just a preference — it's informed. That distinction is everything. "I'd do it differently" is a preference. "The analysis isn't back yet" is information.
+Two. You have relevant information the senior person may not. You've seen the underlying data. You've tracked the timeline. You know the specific detail they haven't looked at. Your view here isn't just a preference — it's informed. That difference matters. "I'd do it differently" is a preference. "The analysis isn't back yet" is information.
 
 Three. The decision is reversible only at higher cost if it's wrong. Some decisions can be revisited cheaply. Others can't be unwound at all. The harder a thing is to take back, the more a push is warranted before you do it.
 
 Four. The senior person is deciding under time pressure or on incomplete information. Very often the reason a PM or a sponsor is about to make a wrong call is simply that they're rushed, or they haven't seen everything you've seen. Your push, in that moment, isn't obstruction — it's handing them the piece they were missing.
 
-When all four are present, you should push. When only one or two are, you probably shouldn't. Run that test honestly, in the moment, and most of the agonizing disappears.
+When all four are present, you should push. When only one or two are, you probably shouldn't. Run that test honestly, in the moment, and most of the worry goes away.
 
 ---
 
@@ -74,19 +74,19 @@ When all four are present, you should push. When only one or two are, you probab
 
 *[List slide: Concern · Consequence · Alternative · Accept]*
 
-Alright — you've decided this one's worth it. How do you actually do it, in a way that lands as professional and not as insubordinate? There's a move, and it has four parts.
+Alright — you've decided this one's worth it. How do you actually do it, so that it sounds professional, and not like refusing an instruction? The formal word for that is insubordination. There's a move, and it has four parts.
 
 State your concern specifically and briefly. Not "I have some concerns" — that's vague and it sounds nervous. Instead: "The supporting analysis isn't in yet; the numbers in the draft could shift materially when it lands."
 
-Make the consequence concrete. "If the client uses these figures and the analysis changes them significantly, we'll have to issue a correction." You're not catastrophizing — you're naming the specific, plausible outcome.
+Make the consequence concrete. "If the client uses these figures and the analysis changes them significantly, we'll have to issue a correction." You're not exaggerating. You're naming one specific result that could really happen.
 
 Offer an alternative. "Could we send a short note saying the full analysis arrives Monday, and defer the full deliverable until then?" This is the part most people skip, and it's the part that turns you from an obstacle into a partner. You're not just raising a problem; you're bringing a path.
 
-And then — this is the one that protects the whole thing — accept the decision if you're overruled. If the PM considers your concern and still says send it, you send it. You do not keep relitigating. You've done your job.
+And then — this is the one that protects the whole thing — accept the decision if you're overruled. If the PM considers your concern and still says send it, you send it. You do not keep relitigating — reopening an argument that has been decided. You've done your job.
 
-One exception, and it matters. That rule is for judgement calls — timing, framing, how much risk to carry, a provisional number shared with a caveat. It is not for knowingly sending something you know is false. If the document says on track and you know this morning it failed, that's not a disagreement, it's an inaccuracy. Say so plainly. Offer the smallest accurate fix — one dated line usually does it — and let the PM approve it. And if she still insists on the misleading version, you don't send that version. You tell her you're raising it, and you take it to the next appropriate person, openly. Not around her. Never around her.
+One exception, and it matters. Accepting the overrule is for judgement calls: timing, framing, how much risk to carry, a provisional number sent with a warning that it may change. It does not cover sending something you know is false. Say a status report reads "on track", and you know the test failed this morning. That is not a disagreement. The report is wrong. Tell your PM plainly. Offer the smallest fix that makes it accurate — one dated line is usually enough — and let her approve it. If she still wants the false version sent, don't send it. Tell her you are going to raise it, then take it to the next appropriate person: her manager, the PMO, or your organisation's speak-up route. Do it openly. Never behind her back.
 
-The posture, all the way through, is respectful but clear. You're not accusing anyone of anything. You're offering information and a recommendation. Reasonable senior people genuinely appreciate this. The ones who don't are rare — and they reveal themselves in exactly these moments.
+The posture, all the way through, is respectful but clear. You're not accusing anyone of anything. You're offering information and a recommendation. Reasonable senior people appreciate this. The ones who don't are rare — and they reveal themselves in exactly these moments.
 
 ---
 
@@ -94,11 +94,11 @@ The posture, all the way through, is respectful but clear. You're not accusing a
 
 *[Example slide: a weak push versus the strong script]*
 
-Let me give you one specific script that has served me for years. Memorize it, because in the moment, you won't want to improvise.
+Let me give you one specific script that has served me for years. Memorise it, because in the moment, you won't want to improvise.
 
 "Before I do this, I want to flag something — here's my concern. My recommendation would be this alternative. But if you've thought about it and still want me to proceed, I'll proceed."
 
-That's complete. It states the concern. It offers an alternative. And it explicitly accepts the senior person's authority to overrule you. There is no honest way to read that as insubordination. Compare it to what I actually said on that Thursday — "Are you sure?" — and you can feel the difference. One is a flinch. The other is a professional doing their job.
+That's complete. It states the concern. It offers an alternative. And it explicitly accepts the senior person's authority to overrule you. There is no honest way to read that as insubordination. Compare it to what I actually said on that Thursday — "Are you sure?" — and you can feel the difference. One is a nervous question. The other is a professional doing their job.
 
 ---
 
@@ -108,9 +108,9 @@ That's complete. It states the concern. It offers an alternative. And it explici
 
 Now a subtle one that took me years to learn: should you push back out loud, or in writing?
 
-Most of the time, verbal is better. A spoken push is softer, more flexible, and it leaves less of a paper trail that could embarrass the senior person later. A written push — an email, a Slack — becomes a record, and a record changes the social weight of the whole thing.
+Most of the time, verbal is better. A spoken push is softer, more flexible, and it leaves less of a paper trail that could embarrass the senior person later. A written push — an email, or a message in Slack, Teams or whatever your team uses — becomes a record, and a record changes the social weight of the whole thing.
 
-So here's the rule I've developed. For everyday pushes, talk. For consequential pushes — where the stakes are high and I genuinely might need to refer back to the fact that I raised it — write. The written version should still be respectful. It just makes sure that, if things go sideways, the record shows you flagged it appropriately.
+So here's the rule I've developed. For everyday pushes, talk. For consequential pushes — where the stakes are high and I might need to show later that I raised it — write. The written version should still be respectful. It just makes sure that, if things go wrong, the record shows you flagged it appropriately.
 
 That Thursday deliverable was a case where I'd have wanted it in writing. A short Slack — "Want to flag: the supporting analysis isn't back; these numbers could shift. Still okay to send?" Dated. Timestamped. Her reply on the record. If things went wrong, that trail would have protected both of us.
 
@@ -128,7 +128,7 @@ There's a specific variant worth naming, because it'll come up constantly. Stake
 
 "That sounds useful — is it in the current scope, or would we need a change request?"
 
-None of those are refusals. They're professional reframings that route the request through the right process. They protect you from quietly taking on unauthorized work. And they slow things down just slightly — which, when the request shouldn't have been made in the first place, is exactly what you want.
+None of those are refusals. They're professional reframings that route the request through the right process. They protect you from quietly taking on unauthorised work. And they slow things down just slightly — which, when the request shouldn't have been made in the first place, is exactly what you want.
 
 ---
 
@@ -140,7 +140,7 @@ And the hardest pushback of all, sometimes, is internal.
 
 You're about to do something because it's easier, or because you don't want the conflict, or because you're just tired. And a small voice says, *this isn't right.* The discipline — the whole discipline — is to listen to it.
 
-That Thursday was a case of not pushing back on myself. I knew the move was wrong. I let it go anyway. Over the years I've come to trust that voice more and more, because it is almost always right. Ignoring it has a cumulative cost — not just in the specific moments, but in the slow erosion of your own professional judgment. And here's what I've learned: the professionals who can't push back internally are the same ones who can't push back externally. It's one muscle.
+That Thursday was a case of not pushing back on myself. I knew the move was wrong. I let it go anyway. Over the years I've come to trust that voice more and more, because it is almost always right. Ignoring it has a cumulative cost — not just in the specific moments, but in the slow erosion of your own professional judgement. And here's what I've learned: the professionals who can't push back internally are the same ones who can't push back externally. It is the same skill.
 
 ---
 
@@ -148,13 +148,15 @@ That Thursday was a case of not pushing back on myself. I knew the move was wron
 
 *[Slide: workbook brief + close]*
 
-So here's your work for this lesson. Think back to the last instruction you accepted from your PM that, if you're being honest, you'd have pushed back on. Write down what stopped you — which of those five forces was it. Then, for your next one-on-one, bring one small push. Not on anything high-stakes. Just practicing the move: "I'd do X a little differently, and here's why — what do you think?"
+So here's your work for this lesson. In the Workbook tab there is a scenario. Your PM, between meetings, tells you to send a summary that you know is out of date. You write your reply to her, 400 to 700 words. We grade five things: whether you apply the four conditions, how you word the push, whether you know where her overrule applies and where it stops, whether you choose writing or speaking and why, and whether you stay respectful and keep the decision hers.
+
+Then two habits for your own job. Think back to the last instruction you accepted from your PM that, if you're being honest, you'd have pushed back on. Write down what stopped you — which of those five forces was it. Then, for your next one-on-one, bring one small push. Not on anything high-stakes. Just practising the move: "I'd do X a little differently, and here's why — what do you think?"
 
 *[Back on camera, slower.]*
 
 The reason I started with that Thursday is that it's the whole lesson in miniature. I had the information. The stakes were material. The decision was hard to reverse. And the person was deciding in a hurry. All four conditions, present at once — and I answered them with "Are you sure?" The push I should have made would have cost me ten awkward seconds. The silence cost a client a board meeting and my PM a very bad week.
 
-Practice the move on the small stuff now, so the muscle is there when the Thursday arrives. Because it will.
+Practise the move on the small stuff now, so the muscle is there when the Thursday arrives. Because it will.
 
 See you in the workbook.
 
