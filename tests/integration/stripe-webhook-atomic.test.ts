@@ -118,6 +118,26 @@ describe.skipIf(!DB_AVAILABLE)("stripe webhook: purchase and access are atomic",
     expect(await purchaseCount(userId)).toBe(before);
   });
 
+  it("delayed payment: nothing is recorded while unpaid, access is granted when it clears", async () => {
+    const sessionId = `cs_test_${randomUUID().replaceAll("-", "")}`;
+    await db.update(profiles).set({ hasAccess: false }).where(eq(profiles.id, userId));
+    const before = await purchaseCount(userId);
+
+    // checkout.session.completed for a bank debit: not paid yet.
+    const pending = await handleCheckoutSessionCompleted(
+      session(sessionId, { payment_status: "unpaid" })
+    );
+    expect(pending).toMatchObject({ granted: false });
+    expect(await hasAccess(userId)).toBe(false);
+    expect(await purchaseCount(userId)).toBe(before);
+
+    // checkout.session.async_payment_succeeded for the same session, days later.
+    const cleared = await handleCheckoutSessionCompleted(session(sessionId));
+    expect(cleared).toEqual({ granted: true });
+    expect(await hasAccess(userId)).toBe(true);
+    expect(await purchaseCount(userId)).toBe(before + 1);
+  });
+
   it("grants access only to the user named in the session", async () => {
     const sessionId = `cs_test_${randomUUID().replaceAll("-", "")}`;
 

@@ -34,7 +34,13 @@ export async function POST(request: NextRequest) {
 
   try {
     switch (event.type) {
-      case "checkout.session.completed": {
+      // Cards pay at once: `completed` arrives with payment_status "paid".
+      // Delayed methods (bank debits) arrive as `completed` + "unpaid", which
+      // the handler skips, and then `async_payment_succeeded` days later when
+      // the money clears. Both go through the same idempotent handler.
+      // `async_payment_failed` needs nothing: access was never granted.
+      case "checkout.session.completed":
+      case "checkout.session.async_payment_succeeded": {
         const session = event.data.object as Stripe.Checkout.Session;
         const result = await handleCheckoutSessionCompleted(session);
         return NextResponse.json({ received: true, ...result });
