@@ -24,9 +24,11 @@ function buildSession(overrides: Partial<Stripe.Checkout.Session> = {}): Stripe.
 /**
  * purchases insert…onConflictDoNothing…returning → `inserted` (an empty
  * array means the conflict fired, i.e. duplicate delivery);
- * profiles update → `update`.
+ * profiles update…returning → `update` (an empty array means no profile row
+ * matched). Rollback itself is covered against a real database in
+ * tests/integration/stripe-webhook-atomic.test.ts.
  */
-function withDb(inserted: unknown = [{ id: "p1" }], update: unknown = []) {
+function withDb(inserted: unknown = [{ id: "p1" }], update: unknown = [{ id: "u1" }]) {
   fakeDb.reset((q) => {
     if (q.op === "insert" && q.table === "purchases") return inserted;
     if (q.op === "update" && q.table === "profiles") return update;
@@ -90,6 +92,22 @@ describe("handleCheckoutSessionCompleted", () => {
   it("throws when the profile update fails", async () => {
     withDb([{ id: "p1" }], new Error("connection lost"));
     await expect(handleCheckoutSessionCompleted(buildSession())).rejects.toThrow(/connection lost/);
+  });
+
+  it("throws when there is no profile row to grant access on", async () => {
+    withDb([{ id: "p1" }], []);
+    await expect(handleCheckoutSessionCompleted(buildSession())).rejects.toThrow(
+      /no profile row for user u1/
+    );
+  });
+
+  it("records the purchase and grants access inside one transaction", async () => {
+    const transaction = vi.spyOn(fakeDb.db, "transaction");
+
+    await handleCheckoutSessionCompleted(buildSession());
+
+    expect(transaction).toHaveBeenCalledTimes(1);
+    transaction.mockRestore();
   });
 
   it("falls back to client_reference_id when metadata.user_id is missing", async () => {
