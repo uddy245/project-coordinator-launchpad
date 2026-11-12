@@ -7,8 +7,18 @@ name: Calibration corpus
 #
 # Triggers:
 #   - workflow_dispatch: manual runs (any branch)
+#
+# Scoped runs: set the "filter" input to a competency name (for example
+# pushback_judgment) to run only that competency's fixtures — a handful of
+# calls instead of the whole corpus. Leave it empty for the full run.
 on:
   workflow_dispatch:
+    inputs:
+      filter:
+        description: "Only run tests whose name contains this (e.g. pushback_judgment). Empty = full corpus."
+        required: false
+        default: ""
+        type: string
 
 jobs:
   calibration:
@@ -32,8 +42,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run calibration
-        run: pnpm vitest run tests/integration/calibration.test.ts --reporter verbose
+        run: |
+          if [ -n "$CALIBRATION_FILTER" ]; then
+            echo "Scoped calibration run: $CALIBRATION_FILTER"
+            pnpm vitest run tests/integration/calibration.test.ts --reporter verbose -t "$CALIBRATION_FILTER"
+          else
+            echo "Full calibration run"
+            pnpm vitest run tests/integration/calibration.test.ts --reporter verbose
+          fi
         env:
+          CALIBRATION_FILTER: ${{ inputs.filter }}
           RUN_CALIBRATION: "1"
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_MODEL: claude-sonnet-4-5
