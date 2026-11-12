@@ -19,18 +19,37 @@
 --
 -- Not covered here: the "New scenario" button can still generate a fresh
 -- brief once the pool is exhausted. That is app behaviour, not data.
--- Idempotent.
+--
+-- Guard: the delete and the insert share one precondition — the lesson has
+-- a non-blank scenario_text. Where it does not (a fresh or test database),
+-- there is no grader scenario to unify on, so the existing briefs are left
+-- exactly as they are and a NOTICE says so. Without the guard a NULL
+-- scenario aborted on workbook_assignments.brief NOT NULL, and a blank one
+-- replaced every brief with an empty default.
+-- Idempotent: safe to re-run in either state.
 -- ==========================================================================
 
 begin;
 
+do $$
+begin
+  if exists (
+    select 1 from public.lessons l
+    where l.slug = 'raid-logs' and coalesce(l.scenario_text, '') !~ '\S'
+  ) then
+    raise notice 'raid-logs has no scenario_text: workbook briefs left unchanged';
+  end if;
+end $$;
+
 delete from public.workbook_assignments wa
 using public.lessons l
-where l.slug = 'raid-logs' and wa.lesson_id = l.id;
+where l.slug = 'raid-logs' and wa.lesson_id = l.id
+  and l.scenario_text ~ '\S';
 
 insert into public.workbook_assignments (lesson_id, title, brief, is_default, is_ai_generated, sort)
-select l.id, 'RAID log — healthcare systems integration pilot', btrim(l.scenario_text, E' \n'), true, false, 1
+select l.id, 'RAID log — healthcare systems integration pilot', btrim(l.scenario_text, E' \t\r\n'), true, false, 1
 from public.lessons l
-where l.slug = 'raid-logs';
+where l.slug = 'raid-logs'
+  and l.scenario_text ~ '\S';
 
 commit;
