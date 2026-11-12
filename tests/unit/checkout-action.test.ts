@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { getAppUserMock, createSessionMock } = vi.hoisted(() => ({
+const { getAppUserMock, createSessionMock, pendingMock } = vi.hoisted(() => ({
   getAppUserMock: vi.fn(),
   createSessionMock: vi.fn(),
+  pendingMock: vi.fn(),
 }));
 const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db")).createFakeDb());
 
@@ -12,6 +13,8 @@ vi.mock("@/lib/stripe/client", () => ({
   stripe: { checkout: { sessions: { create: createSessionMock } } },
   STRIPE_API_VERSION: "2025-02-24.acacia",
 }));
+
+vi.mock("@/lib/stripe/pending", () => ({ hasPendingPayment: pendingMock }));
 
 import { createCheckoutSession } from "@/actions/checkout";
 
@@ -29,6 +32,7 @@ function withProfile(profile: { has_access: boolean } | null | Error) {
 beforeEach(() => {
   getAppUserMock.mockReset();
   createSessionMock.mockReset();
+  pendingMock.mockReset().mockResolvedValue(false);
   withProfile({ has_access: false });
 });
 
@@ -46,6 +50,27 @@ describe("createCheckoutSession", () => {
     const result = await createCheckoutSession();
     expect(result).toMatchObject({ ok: false, code: "ALREADY_PURCHASED" });
     expect(createSessionMock).not.toHaveBeenCalled();
+  });
+
+  it("returns PAYMENT_PENDING, and starts no checkout, while a delayed payment is clearing", async () => {
+    getAppUserMock.mockResolvedValue(USER);
+    pendingMock.mockResolvedValue(true);
+
+    const result = await createCheckoutSession();
+
+    expect(result).toMatchObject({ ok: false, code: "PAYMENT_PENDING" });
+    expect(result.ok === false && result.error).toMatch(/still being processed/);
+    expect(pendingMock).toHaveBeenCalledWith({ id: "u1", email: "u@x.com" });
+    expect(createSessionMock).not.toHaveBeenCalled();
+  });
+
+  it("does not ask Stripe about pending payments for a learner who already has access", async () => {
+    getAppUserMock.mockResolvedValue(USER);
+    withProfile({ has_access: true });
+
+    await createCheckoutSession();
+
+    expect(pendingMock).not.toHaveBeenCalled();
   });
 
   it("creates a Stripe session with the pinned price and user metadata", async () => {

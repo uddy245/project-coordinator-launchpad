@@ -6,9 +6,13 @@ import { db } from "@/db";
 import { profiles } from "@/db/schema";
 import { getAppUser } from "@/lib/auth/session";
 import { stripe } from "@/lib/stripe/client";
+import { hasPendingPayment } from "@/lib/stripe/pending";
 import type { ActionResult } from "@/lib/types";
 
 type CheckoutData = { url: string };
+
+const PAYMENT_PENDING_MESSAGE =
+  "Your payment is still being processed by your bank. Your account unlocks automatically when it clears, so you don't need to pay again.";
 
 export async function createCheckoutSession(): Promise<ActionResult<CheckoutData>> {
   const user = await getAppUser();
@@ -33,6 +37,12 @@ export async function createCheckoutSession(): Promise<ActionResult<CheckoutData
   }
   if (alreadyHasAccess) {
     return { ok: false, error: "You already have access.", code: "ALREADY_PURCHASED" };
+  }
+
+  // A delayed payment (bank debit) that has not cleared yet: the learner has
+  // no access so far, but a second checkout would charge them twice.
+  if (await hasPendingPayment({ id: user.id, email: user.email })) {
+    return { ok: false, error: PAYMENT_PENDING_MESSAGE, code: "PAYMENT_PENDING" };
   }
 
   const successUrl = `${env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
