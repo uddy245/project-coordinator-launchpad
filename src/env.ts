@@ -67,6 +67,11 @@ export const env = createEnv({
     // Allow either plain email or "Display Name <addr@domain>" format.
     RESEND_FROM_EMAIL: z.string().min(3).default("Launchpad <onboarding@resend.dev>"),
 
+    // Footer links to /terms and /privacy. Off until the owner has approved
+    // the text: the pages exist (and are marked DRAFT) but nothing links to
+    // them. Set to "true" in Vercel to show the links.
+    SHOW_LEGAL_LINKS: z.enum(["true", "false"]).default("false"),
+
     // Internal: shared secret the server action uses to trigger the
     // grading worker route without being impersonable by third parties.
     GRADE_WORKER_SECRET: z.string().min(32),
@@ -112,6 +117,7 @@ export const env = createEnv({
     BUNNY_STREAM_API_KEY: E("BUNNY_STREAM_API_KEY"),
     RESEND_API_KEY: E("RESEND_API_KEY"),
     RESEND_FROM_EMAIL: E("RESEND_FROM_EMAIL"),
+    SHOW_LEGAL_LINKS: E("SHOW_LEGAL_LINKS"),
     GRADE_WORKER_SECRET: E("GRADE_WORKER_SECRET"),
     SENTRY_DSN: E("SENTRY_DSN"),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: E("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"),

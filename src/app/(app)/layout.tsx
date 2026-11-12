@@ -3,7 +3,7 @@ import { PrimaryNav } from "@/components/nav/primary-nav";
 import { requireUser } from "@/lib/auth/require-user";
 import { isAdmin as checkIsAdmin } from "@/lib/auth/session";
 import { TutorShell } from "@/components/tutor/tutor-shell";
-import { LegalLinks } from "@/components/legal/legal-links";
+import { FooterLegalLinks } from "@/components/legal/legal-links";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
@@ -31,7 +31,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <footer className="border-t border-rule bg-paper">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <span className="kicker">Launchpad · 2026</span>
-          <LegalLinks />
+          <FooterLegalLinks />
           <span className="kicker">PROG·PC·25 · A working PM&apos;s guide</span>
         </div>
       </footer>

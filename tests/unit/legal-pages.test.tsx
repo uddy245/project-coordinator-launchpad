@@ -1,11 +1,21 @@
-import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+
+const testEnv = vi.hoisted(() => ({ SHOW_LEGAL_LINKS: "false" as string | undefined }));
+vi.mock("@/env", () => ({ env: testEnv }));
+
 import TermsPage, { metadata as termsMetadata } from "@/app/(marketing)/terms/page";
 import PrivacyPage, { metadata as privacyMetadata } from "@/app/(marketing)/privacy/page";
-import { LegalLinks } from "@/components/legal/legal-links";
+import { FooterLegalLinks, LegalLinks } from "@/components/legal/legal-links";
 import { SUPPORT_EMAIL_PLACEHOLDER } from "@/lib/legal/support";
 import { TERMS_DRAFT } from "@/lib/legal/terms";
 import { PRIVACY_DRAFT } from "@/lib/legal/privacy";
+
+beforeEach(() => {
+  testEnv.SHOW_LEGAL_LINKS = "false";
+});
 
 const PAGES = [
   { name: "Terms of Service", path: "/terms", Page: TermsPage, metadata: termsMetadata },
@@ -75,4 +85,42 @@ describe("LegalLinks", () => {
     expect(html).toMatch(/href="\/terms">Terms<\/a>/);
     expect(html).toContain('href="/privacy">Privacy</a>');
   });
+});
+
+describe("FooterLegalLinks (site footers)", () => {
+  it("renders nothing by default, so no footer links to the draft pages", () => {
+    expect(testEnv.SHOW_LEGAL_LINKS).toBe("false");
+    expect(renderToStaticMarkup(<FooterLegalLinks />)).toBe("");
+  });
+
+  it("renders nothing when the setting is missing", () => {
+    testEnv.SHOW_LEGAL_LINKS = undefined;
+    expect(renderToStaticMarkup(<FooterLegalLinks />)).toBe("");
+  });
+
+  it.each(["TRUE", "1", "yes", "on"])(
+    "stays off for %s: only the exact value true turns it on",
+    (value) => {
+      testEnv.SHOW_LEGAL_LINKS = value;
+      expect(renderToStaticMarkup(<FooterLegalLinks />)).toBe("");
+    }
+  );
+
+  it("shows both links once the owner turns it on", () => {
+    testEnv.SHOW_LEGAL_LINKS = "true";
+    const html = renderToStaticMarkup(<FooterLegalLinks />);
+    expect(html).toContain('href="/terms"');
+    expect(html).toContain('href="/privacy"');
+  });
+});
+
+describe("site footers use the gated links", () => {
+  it.each(["src/app/page.tsx", "src/app/(app)/layout.tsx", "src/app/preview/[slug]/page.tsx"])(
+    "%s renders FooterLegalLinks, not the ungated LegalLinks",
+    (file) => {
+      const source = readFileSync(resolve(__dirname, "../..", file), "utf8");
+      expect(source).toContain("<FooterLegalLinks />");
+      expect(source).not.toContain("<LegalLinks");
+    }
+  );
 });
