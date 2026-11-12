@@ -12,6 +12,8 @@ const UpdateProfileSchema = z.object({
   fullName: z.string().trim().max(100, "Name is too long").optional(),
 });
 
+const WeeklyDigestSchema = z.object({ optIn: z.boolean() });
+
 export type UpdateProfileInput = z.input<typeof UpdateProfileSchema>;
 
 export async function updateProfile(input: UpdateProfileInput): Promise<ActionResult> {
@@ -42,6 +44,33 @@ export async function updateProfile(input: UpdateProfileInput): Promise<ActionRe
       error: e?.cause?.message ?? e?.message ?? "Database error",
       code: "DB_ERROR",
     };
+  }
+
+  revalidatePath("/profile");
+  return { ok: true, data: undefined };
+}
+
+/** Switch the signed-in learner's weekly progress email on or off. */
+export async function setWeeklyDigestOptIn(input: { optIn: boolean }): Promise<ActionResult> {
+  const parsed = WeeklyDigestSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: "Invalid input", code: "INVALID_INPUT" };
+  }
+
+  const user = await getAppUser();
+  if (!user) {
+    return { ok: false, error: "Not signed in.", code: "UNAUTHENTICATED" };
+  }
+
+  try {
+    // Own row only, and only this one setting.
+    await db
+      .update(profiles)
+      .set({ weeklyDigestOptIn: parsed.data.optIn })
+      .where(eq(profiles.id, user.id));
+  } catch (err) {
+    console.error("[setWeeklyDigestOptIn] update failed", err);
+    return { ok: false, error: "Could not save your email setting.", code: "DB_ERROR" };
   }
 
   revalidatePath("/profile");

@@ -46,6 +46,11 @@ export type LayoutInput = {
   blocks: LayoutBlock[];
   /** Optional sign-off line (e.g. "— The Launchpad team"). */
   signoff?: string;
+  /**
+   * For recurring emails only (the weekly digest): adds an unsubscribe link
+   * to the footer of both the HTML and the text version.
+   */
+  unsubscribeUrl?: string;
 };
 
 /**
@@ -62,6 +67,12 @@ function renderHtml(input: LayoutInput): string {
     ? `<p style="margin:32px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.6;color:${PALETTE.inkMute};">${escapeHtml(
         input.signoff
       )}</p>`
+    : "";
+
+  const unsubscribe = input.unsubscribeUrl
+    ? `<p style="margin:6px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:13px;color:${PALETTE.inkMute};line-height:1.5;">You get this email once a week. <a href="${escapeHtml(
+        input.unsubscribeUrl
+      )}" style="color:${PALETTE.inkMute};text-decoration:underline;">Unsubscribe</a></p>`
     : "";
 
   return `<!doctype html>
@@ -96,6 +107,7 @@ function renderHtml(input: LayoutInput): string {
               <p style="margin:6px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:13px;color:${PALETTE.inkMute};line-height:1.5;">
                 <a href="${APP_URL}/dashboard" style="color:${PALETTE.amber};text-decoration:underline;">Open the dashboard</a>
               </p>
+              ${unsubscribe}
             </td>
           </tr>
         </table>
@@ -180,6 +192,10 @@ function renderText(input: LayoutInput): string {
   lines.push("---");
   lines.push("Launchpad · Project Coordinator Series");
   lines.push(`${APP_URL}/dashboard`);
+  if (input.unsubscribeUrl) {
+    lines.push("");
+    lines.push(`Unsubscribe from this weekly email: ${input.unsubscribeUrl}`);
+  }
   return lines.join("\n");
 }
 

@@ -38,7 +38,7 @@ For any privacy question or request, write to **${SUPPORT_EMAIL_PLACEHOLDER}**.
 - to run your account and give you access to what you paid for;
 - to grade your work and show you feedback;
 - to answer your questions in the tutor chat;
-- to send you service emails (confirming your account, your receipt, password resets) and a weekly progress email; **[OWNER TO CONFIRM: the app has no way to switch the weekly email off yet. An unsubscribe link or a profile setting is needed before launch, and this line should then say how.]**
+- to send you service emails (confirming your account, your receipt, password resets) and a weekly progress email, which you can switch off at any time with the unsubscribe link in the email or on your profile page;
 - to find and fix problems, and to prevent abuse;
 - to understand how the programme is used so we can improve it.
 
@@ -81,7 +81,7 @@ We may also share information if the law requires it.
 
 ## 8. Your choices and rights
 
-- You can change your name on your profile page.
+- You can change your name, and switch the weekly progress email on or off, on your profile page.
 - You can ask us for a copy of your data, to correct it, or to delete your account and data, by writing to **${SUPPORT_EMAIL_PLACEHOLDER}**.
 
 **[OWNER TO CONFIRM WITH A LAWYER: the rights that apply where your customers live, and the time limit for answering a request.]**

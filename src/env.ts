@@ -72,6 +72,11 @@ export const env = createEnv({
     // them. Set to "true" in Vercel to show the links.
     SHOW_LEGAL_LINKS: z.enum(["true", "false"]).default("false"),
 
+    // Signs the unsubscribe links in the weekly email. Optional: when unset,
+    // a key is derived from GRADE_WORKER_SECRET. Changing either invalidates
+    // unsubscribe links in emails already sent.
+    EMAIL_UNSUBSCRIBE_SECRET: z.string().min(32).optional(),
+
     // Internal: shared secret the server action uses to trigger the
     // grading worker route without being impersonable by third parties.
     GRADE_WORKER_SECRET: z.string().min(32),
@@ -118,6 +123,7 @@ export const env = createEnv({
     RESEND_API_KEY: E("RESEND_API_KEY"),
     RESEND_FROM_EMAIL: E("RESEND_FROM_EMAIL"),
     SHOW_LEGAL_LINKS: E("SHOW_LEGAL_LINKS"),
+    EMAIL_UNSUBSCRIBE_SECRET: E("EMAIL_UNSUBSCRIBE_SECRET"),
     GRADE_WORKER_SECRET: E("GRADE_WORKER_SECRET"),
     SENTRY_DSN: E("SENTRY_DSN"),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: E("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"),

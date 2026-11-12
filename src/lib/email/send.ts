@@ -46,6 +46,8 @@ export async function sendEmail(opts: {
   silent?: boolean;
   /** Append to the message tag for easy filtering in Resend dashboard. */
   tag?: string;
+  /** Extra message headers, e.g. List-Unsubscribe for a recurring email. */
+  headers?: Record<string, string>;
 }): Promise<SendResult> {
   const c = client();
   if (!c) {
@@ -67,6 +69,7 @@ export async function sendEmail(opts: {
       html: opts.render.html,
       text: opts.render.text,
       tags: opts.tag ? [{ name: "category", value: opts.tag }] : undefined,
+      headers: opts.headers,
     });
 
     if (result.error) {
