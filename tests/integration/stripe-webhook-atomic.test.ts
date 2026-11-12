@@ -11,7 +11,7 @@
  */
 import { randomUUID } from "node:crypto";
 import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import type Stripe from "stripe";
 import { db } from "@/db";
 import { profiles, purchases, usersInAuth } from "@/db/schema";
@@ -67,6 +67,11 @@ describe.skipIf(!DB_AVAILABLE)("stripe webhook: purchase and access are atomic",
       { id: userId, email },
       { id: otherUserId, email: `test-webhook-${otherUserId}@launchpad.test` },
     ]);
+    // Both start unpaid, whatever profiles.has_access defaults to.
+    await db
+      .update(profiles)
+      .set({ hasAccess: false })
+      .where(inArray(profiles.id, [userId, otherUserId]));
   });
 
   afterAll(async () => {
@@ -75,8 +80,9 @@ describe.skipIf(!DB_AVAILABLE)("stripe webhook: purchase and access are atomic",
     await db.delete(usersInAuth).where(eq(usersInAuth.id, otherUserId));
   });
 
-  it("starts with a profile that has no access", async () => {
+  it("starts with two profiles that have no access", async () => {
     expect(await hasAccess(userId)).toBe(false);
+    expect(await hasAccess(otherUserId)).toBe(false);
   });
 
   it("rolls the purchase back when access cannot be granted, so the retry succeeds", async () => {
@@ -90,7 +96,7 @@ describe.skipIf(!DB_AVAILABLE)("stripe webhook: purchase and access are atomic",
     expect(await purchaseCount(userId)).toBe(0);
 
     // The cause is fixed; Stripe retries the same event.
-    await db.insert(profiles).values({ id: userId, email });
+    await db.insert(profiles).values({ id: userId, email, hasAccess: false });
     const retry = await handleCheckoutSessionCompleted(session(sessionId));
 
     expect(retry).toEqual({ granted: true });
