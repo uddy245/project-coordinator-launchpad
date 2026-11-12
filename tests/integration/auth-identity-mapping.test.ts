@@ -98,8 +98,8 @@ describe.skipIf(!DB_AVAILABLE)("auth identity mapping", async () => {
       email,
       fullName: "New Learner",
       role: "learner",
-      // Neon/prod default: profiles.has_access defaults to TRUE.
-      hasAccess: true,
+      // New accounts start unpaid (db/migrations/20261112_01).
+      hasAccess: false,
       signupSource: "preview-coordinator-role",
     });
 
