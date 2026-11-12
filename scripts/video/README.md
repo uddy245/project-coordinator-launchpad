@@ -56,9 +56,12 @@ The native `<video>` path (`src/components/lessons/video-player.tsx`) gives 10s
 progress telemetry and the 90%-watched gate for free. Upload + set `video_url`:
 
 ```bash
-# Dry run (default): prints the current vs. target video_url, uploads nothing.
+# Offline dry run: prints what would be published. No DB, storage or credentials.
+node scripts/seed-production-video.mjs lesson-20-raid-logs --dry-run
+# Preview (default): reads the lessons row, prints current vs. target video_url, changes nothing.
 node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs
-# Apply: uploads the MP4 to the lesson-videos bucket and sets video_url + is_published.
+# Apply: uploads the MP4 to lesson-videos/<slug>/<slug>.mp4 and sets video_url.
+# is_published changes only if you also pass --publish.
 node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs --apply
 ```
 
