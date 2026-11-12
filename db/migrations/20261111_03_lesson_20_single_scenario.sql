@@ -1,0 +1,36 @@
+-- ==========================================================================
+-- Migration: 20261111_03_lesson_20_single_scenario.sql
+-- Target: Neon pc-launchpad. Review, run on a branch first, then production.
+--
+-- Lesson 20 (raid-logs): learners and the grader use ONE scenario.
+--
+-- Before: the grader received lessons.scenario_text (healthcare systems
+-- integration pilot; the 35 risk_identification calibration fixtures are
+-- written against it), while the Workbook tab showed learners a different
+-- default brief ("Halcyon" cloud migration, seeded by
+-- supabase/migrations/20260502_seed_default_workbook_briefs.sql). A learner's
+-- log was graded against a project they had not written about.
+--
+-- After: every workbook brief for raid-logs is removed — the Halcyon default
+-- and any AI-generated alternatives — and the one default brief is the
+-- lesson's own scenario_text. lessons.scenario_text is not changed.
+-- workbook_assignment_seen rows for the removed briefs go with them
+-- (ON DELETE CASCADE), so every learner falls back to the default.
+--
+-- Not covered here: the "New scenario" button can still generate a fresh
+-- brief once the pool is exhausted. That is app behaviour, not data.
+-- Idempotent.
+-- ==========================================================================
+
+begin;
+
+delete from public.workbook_assignments wa
+using public.lessons l
+where l.slug = 'raid-logs' and wa.lesson_id = l.id;
+
+insert into public.workbook_assignments (lesson_id, title, brief, is_default, is_ai_generated, sort)
+select l.id, 'RAID log — healthcare systems integration pilot', btrim(l.scenario_text, E' \n'), true, false, 1
+from public.lessons l
+where l.slug = 'raid-logs';
+
+commit;
