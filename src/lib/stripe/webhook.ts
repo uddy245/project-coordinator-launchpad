@@ -1,5 +1,6 @@
 import type Stripe from "stripe";
 import { eq } from "drizzle-orm";
+import { after } from "next/server";
 import { db } from "@/db";
 import { profiles, purchases } from "@/db/schema";
 import { sendEmail } from "@/lib/email/send";
@@ -100,10 +101,15 @@ export async function handleCheckoutSessionCompleted(
     return { granted: false, reason: "duplicate session (idempotent)" };
   }
 
-  // Confirmation email (silent / fire-and-forget). We resolve the recipient
-  // off the customer profile; if anything is missing we just skip — Stripe
-  // already sends its own receipt and the user has access regardless.
-  void (async () => {
+  // Confirmation email, sent after the response with after(): a bare
+  // un-awaited promise can be cut off when the serverless function freezes
+  // once the response is sent, while after() keeps the function alive until
+  // the callback settles. Silent: we resolve the recipient off the customer
+  // profile and skip if anything is missing — Stripe already sends its own
+  // receipt and the user has access regardless.
+  // Both callers (the webhook route and the success page) run in a request
+  // scope, which after() requires.
+  after(async () => {
     try {
       const [profile] = await db
         .select({ full_name: profiles.fullName })
@@ -151,7 +157,7 @@ export async function handleCheckoutSessionCompleted(
     } catch (err) {
       console.error("[email] purchase-confirmed send failed:", err);
     }
-  })();
+  });
 
   return { granted: true };
 }

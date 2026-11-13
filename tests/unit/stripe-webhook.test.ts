@@ -6,8 +6,11 @@ const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db"))
 vi.mock("@/db", () => ({ db: fakeDb.db }));
 vi.mock("@/lib/email/send", () => ({ sendEmail: vi.fn(async () => undefined) }));
 const verify = vi.hoisted(() => vi.fn());
+const afterMock = vi.hoisted(() => vi.fn());
+vi.mock("next/server", () => ({ after: afterMock }));
 vi.mock("@/lib/stripe/verify-purchase", () => ({ verifyCoursePurchase: verify }));
 
+import { sendEmail } from "@/lib/email/send";
 import { handleCheckoutSessionCompleted } from "@/lib/stripe/webhook";
 
 function buildSession(overrides: Partial<Stripe.Checkout.Session> = {}): Stripe.Checkout.Session {
@@ -41,6 +44,8 @@ function withDb(inserted: unknown = [{ id: "p1" }], update: unknown = [{ id: "u1
 beforeEach(() => {
   withDb();
   verify.mockReset().mockResolvedValue({ ok: true });
+  afterMock.mockReset();
+  vi.mocked(sendEmail).mockClear();
 });
 
 describe("handleCheckoutSessionCompleted", () => {
@@ -112,6 +117,37 @@ describe("handleCheckoutSessionCompleted", () => {
     verify.mockRejectedValue(new Error("Stripe is down"));
     await expect(handleCheckoutSessionCompleted(buildSession())).rejects.toThrow(/Stripe is down/);
     expect(fakeDb.calls).toHaveLength(0);
+  });
+
+  it("sends the confirmation email with after(), not as a floating promise", async () => {
+    const result = await handleCheckoutSessionCompleted(
+      buildSession({
+        customer_details: { email: "u@x.com" } as Stripe.Checkout.Session.CustomerDetails,
+        payment_intent: null,
+      })
+    );
+
+    expect(result).toEqual({ granted: true });
+    expect(afterMock).toHaveBeenCalledTimes(1);
+    expect(sendEmail).not.toHaveBeenCalled();
+
+    const callback = afterMock.mock.calls[0][0] as () => Promise<void>;
+    await callback();
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: { email: "u@x.com", name: null }, tag: "purchase-confirmed" })
+    );
+  });
+
+  it("schedules no email for a duplicate delivery or a rejected session", async () => {
+    withDb([]);
+    await handleCheckoutSessionCompleted(buildSession());
+
+    withDb();
+    verify.mockResolvedValue({ ok: false, reason: "mode=subscription" });
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    await handleCheckoutSessionCompleted(buildSession());
+
+    expect(afterMock).not.toHaveBeenCalled();
   });
 
   it("throws on insert errors so Stripe retries", async () => {

@@ -21,6 +21,8 @@ vi.mock("@/lib/stripe/client", () => ({
   stripe: { paymentIntents: { retrieve: vi.fn(async () => ({ latest_charge: null })) } },
 }));
 
+// after() needs a Next request scope; the email itself is unit-tested.
+vi.mock("next/server", () => ({ after: vi.fn() }));
 // The price/amount check is unit-tested in stripe-verify-purchase.test.ts.
 vi.mock("@/lib/stripe/verify-purchase", () => ({
   verifyCoursePurchase: vi.fn(async () => ({ ok: true })),
