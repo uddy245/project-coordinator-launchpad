@@ -8,18 +8,25 @@
  * is_published is left untouched unless --publish is passed. Safe to re-run:
  * the storage put overwrites, row is a fixed target.
  *
- * Env: DIRECT_URL or DATABASE_URL (Neon), AWS_ENDPOINT_URL_S3; on --apply also
- * AWS_ENDPOINT_URL_S3 / AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY (Neon storage).
+ * Three modes:
  *
- *   # Dry run (default): connect, print current -> target, change NOTHING.
+ *   # Offline dry run: print what would be published. No database, no storage,
+ *   # no credentials, no --env-file needed. Wins over --apply if both are passed.
+ *   node scripts/seed-production-video.mjs lesson-20-raid-logs --dry-run
+ *   # Preview (default): read the lessons row, print current -> target, change NOTHING.
  *   node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs
  *   # Apply (repoint video_url only; leave is_published as-is):
  *   node --env-file=.env.local scripts/seed-production-video.mjs lesson-01-coordinator-role --apply
  *   # Apply and also publish the lesson:
  *   node --env-file=.env.local scripts/seed-production-video.mjs lesson-20-raid-logs --apply --publish
  *
- * Slug mapping: the pipeline folder is `lesson-20-raid-logs`; the lessons row
- * slug is `raid-logs`. Pass the pipeline slug; LESSON_SLUG maps it to the row.
+ * Env (preview/apply): DIRECT_URL or DATABASE_URL (Neon), AWS_ENDPOINT_URL_S3; on
+ * --apply also AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY (Neon storage).
+ *
+ * Slug mapping: pass the pipeline folder name (`lesson-20-raid-logs`). The row
+ * slug and the storage key both use the lesson slug (`raid-logs`), derived by
+ * scripts/lib/lesson-slug.mjs — the same slug as docs/lessons/<slug>.md. Note
+ * lesson 17: folder `lesson-17-pushback`, slug `push-back`.
  */
 import { readFileSync, existsSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -32,34 +39,60 @@ import {
   putObject,
   requireEnv,
 } from "./lib/neon-storage.mjs";
+import { lessonVideoKey, parsePipelineSlug } from "./lib/lesson-slug.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(__dirname, "..");
 
 const BUCKET = "lesson-videos";
-// Pipeline folder slug -> lessons table slug.
-const LESSON_SLUG = {
-  "lesson-20-raid-logs": "raid-logs",
-  "lesson-01-coordinator-role": "coordinator-role",
-};
 
 const args = process.argv.slice(2);
-const apply = args.includes("--apply");
+// --dry-run is fully offline and wins over --apply, so adding it to any
+// command line makes that command safe.
+const dryRun = args.includes("--dry-run");
+const apply = args.includes("--apply") && !dryRun;
 // is_published is left untouched unless --publish is passed, so re-seeding a
 // video never silently flips a lesson's published state in either direction.
 const publish = args.includes("--publish");
-const pipelineSlug = args.find((a) => !a.startsWith("-")) ?? "lesson-20-raid-logs";
-const rowSlug = LESSON_SLUG[pipelineSlug] ?? pipelineSlug;
 
-const HINT = "Run with: node --env-file=.env.local scripts/seed-production-video.mjs";
-if (!process.env.DIRECT_URL && !process.env.DATABASE_URL) {
-  console.error("Missing DIRECT_URL / DATABASE_URL.");
-  console.error(HINT);
+const unknown = args.filter(
+  (a) => a.startsWith("-") && !["--apply", "--publish", "--dry-run"].includes(a)
+);
+if (unknown.length) {
+  // A mistyped flag (e.g. --dryrun) must never fall through to a live mode.
+  console.error(`Unknown option: ${unknown.join(", ")}. Use --dry-run, --apply, --publish.`);
   process.exit(1);
 }
-requireEnv(["AWS_ENDPOINT_URL_S3"], HINT);
-if (apply) {
-  requireEnv(["AWS_ENDPOINT_URL_S3", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"], HINT);
+
+let lessonRef;
+try {
+  lessonRef = parsePipelineSlug(args.find((a) => !a.startsWith("-")) ?? "lesson-20-raid-logs");
+} catch (error) {
+  console.error(error.message);
+  process.exit(1);
+}
+const { pipelineSlug, slug: rowSlug } = lessonRef;
+
+// The lesson slug must match a reading in docs/lessons/ — that file name is
+// the same slug the lessons row and the /lessons/<slug> route use.
+if (!existsSync(resolve(REPO, "docs/lessons", `${rowSlug}.md`))) {
+  console.error(
+    `No docs/lessons/${rowSlug}.md for ${pipelineSlug}. If the folder name and the lesson slug differ, add it to SLUG_OVERRIDE in scripts/lib/lesson-slug.mjs.`
+  );
+  process.exit(1);
+}
+
+const HINT = "Run with: node --env-file=.env.local scripts/seed-production-video.mjs";
+if (!dryRun) {
+  if (!process.env.DIRECT_URL && !process.env.DATABASE_URL) {
+    console.error("Missing DIRECT_URL / DATABASE_URL.");
+    console.error(HINT);
+    process.exit(1);
+  }
+  requireEnv(["AWS_ENDPOINT_URL_S3"], HINT);
+  if (apply) {
+    requireEnv(["AWS_ENDPOINT_URL_S3", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"], HINT);
+  }
 }
 
 // Resolve artifacts: prefer the in-repo pipeline output, fall back to the
@@ -74,14 +107,44 @@ function locate(name) {
 
 const mp4Path = locate(`${pipelineSlug}.mp4`);
 const srtPath = locate("captions.srt");
-const mp4Key = `${pipelineSlug}/${pipelineSlug}.mp4`;
-const publicUrl = appUrl(BUCKET, mp4Key);
+const vttPath = locate("captions.vtt");
+// Storage key uses the lesson slug, not the pipeline folder name.
+const mp4Key = lessonVideoKey(rowSlug, "mp4");
+// Offline dry run must not need the storage endpoint; show it symbolically.
+const publicUrl = dryRun
+  ? `\${AWS_ENDPOINT_URL_S3}/${objectKey(BUCKET, mp4Key)}`
+  : appUrl(BUCKET, mp4Key);
 
 function human(bytes) {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
+function printDryRun() {
+  console.log(`\n  DRY RUN (offline) — ${pipelineSlug}`);
+  console.log("  No database or storage connection is made. Nothing is uploaded or changed.\n");
+  console.log(`  Lesson slug:   ${rowSlug}  (docs/lessons/${rowSlug}.md)`);
+  console.log(
+    `  MP4:           ${mp4Path ? `${mp4Path}  (${human(statSync(mp4Path).size)})` : "(NOT FOUND — --apply would abort)"}`
+  );
+  console.log(`  -> storage:     ${objectKey(BUCKET, mp4Key)}`);
+  console.log(`  video_url:     -> ${publicUrl}`);
+  console.log(`                 (lessons row where slug = "${rowSlug}")`);
+  console.log(
+    `  is_published:  ${publish ? "would be set to true  (--publish)" : "unchanged  (no --publish)"}`
+  );
+  console.log(`  captions.srt:  ${srtPath ?? "(not found)"}  (repo-only — never uploaded)`);
+  console.log(
+    `  captions.vtt:  ${vttPath ?? "(not found)"}  (not uploaded by this script; upload-captions.mjs puts it at ${objectKey(BUCKET, lessonVideoKey(rowSlug, "vtt"))})`
+  );
+  console.log("\n  DRY RUN — nothing uploaded, nothing changed.\n");
+}
+
 async function main() {
+  if (dryRun) {
+    printDryRun();
+    return;
+  }
+
   if (!mp4Path) {
     console.error(`No MP4 found for ${pipelineSlug} (looked in repo + video-production).`);
     process.exit(1);
@@ -120,7 +183,7 @@ async function main() {
   }
 
   if (!apply) {
-    console.log("\n  DRY RUN — nothing changed. Re-run with --apply to publish.\n");
+    console.log("\n  PREVIEW — nothing changed. Re-run with --apply to publish.\n");
     return;
   }
 
