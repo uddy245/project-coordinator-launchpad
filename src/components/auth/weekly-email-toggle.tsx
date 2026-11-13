@@ -10,6 +10,10 @@ export function WeeklyEmailToggle({ initialOptIn }: { initialOptIn: boolean }) {
   const [isPending, startTransition] = useTransition();
 
   function onChange(next: boolean) {
+    // Ignore clicks while the previous change is saving. The checkbox is not
+    // `disabled`, because disabling the focused control drops keyboard and
+    // screen-reader focus to the page body; aria-disabled keeps it in place.
+    if (isPending) return;
     setOptIn(next);
     startTransition(async () => {
       const result = await setWeeklyDigestOptIn({ optIn: next });
@@ -28,9 +32,10 @@ export function WeeklyEmailToggle({ initialOptIn }: { initialOptIn: boolean }) {
       <label className="flex items-start gap-3 text-sm">
         <input
           type="checkbox"
-          className="mt-1 h-4 w-4"
+          className="mt-1 h-4 w-4 aria-disabled:opacity-50"
           checked={optIn}
-          disabled={isPending}
+          aria-disabled={isPending}
+          aria-busy={isPending}
           onChange={(e) => onChange(e.target.checked)}
         />
         <span>

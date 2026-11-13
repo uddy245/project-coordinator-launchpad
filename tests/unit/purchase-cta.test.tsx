@@ -32,6 +32,40 @@ describe("PurchaseCTA", () => {
     expect(toastErrorMock).not.toHaveBeenCalled();
   });
 
+  it("announces the notice through a live region that exists before it appears", async () => {
+    checkoutMock.mockResolvedValue({ ok: false, error: PENDING, code: "PAYMENT_PENDING" });
+    render(<PurchaseCTA />);
+
+    const region = screen.getByRole("status");
+    expect(region).toHaveAttribute("aria-live", "polite");
+    expect(region).toBeEmptyDOMElement();
+
+    await userEvent.click(screen.getByRole("button", { name: /get access/i }));
+
+    await waitFor(() => expect(region).toHaveTextContent(PENDING));
+    expect(screen.getByRole("status")).toBe(region);
+  });
+
+  it("moves focus from the removed button to the notice", async () => {
+    checkoutMock.mockResolvedValue({ ok: false, error: PENDING, code: "PAYMENT_PENDING" });
+    render(<PurchaseCTA />);
+
+    await userEvent.click(screen.getByRole("button", { name: /get access/i }));
+
+    await waitFor(() => expect(screen.getByText(PENDING)).toHaveFocus());
+  });
+
+  it("keeps the button for a failed payment check, so the learner can try again later", async () => {
+    const message = "We're still checking your payment. Please try again in a few minutes.";
+    checkoutMock.mockResolvedValue({ ok: false, error: message, code: "PAYMENT_CHECK_FAILED" });
+    render(<PurchaseCTA />);
+
+    await userEvent.click(screen.getByRole("button", { name: /get access/i }));
+
+    await waitFor(() => expect(toastErrorMock).toHaveBeenCalledWith(message));
+    expect(screen.getByRole("button", { name: /get access/i })).toBeEnabled();
+  });
+
   it("keeps the button and shows a toast for any other error", async () => {
     checkoutMock.mockResolvedValue({ ok: false, error: "Stripe is down", code: "STRIPE_ERROR" });
     render(<PurchaseCTA />);
@@ -40,6 +74,6 @@ describe("PurchaseCTA", () => {
 
     await waitFor(() => expect(toastErrorMock).toHaveBeenCalledWith("Stripe is down"));
     expect(screen.getByRole("button", { name: /get access/i })).toBeEnabled();
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
   });
 });
