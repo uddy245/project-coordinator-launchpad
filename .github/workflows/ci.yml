@@ -111,3 +111,64 @@ jobs:
           tests/integration/delete-user-cascade.test.ts
           tests/integration/stripe-webhook-atomic.test.ts
           tests/integration/email-unsubscribe.test.ts
+
+  e2e:
+    # Signed-out paths only. dashboard-gate-authed.spec.ts skips without
+    # E2E_TEST_PASSWORD, which CI deliberately does not have: that spec creates
+    # users through Neon Auth. Everything else runs against `pnpm dev` with
+    # placeholder secrets and the local replica, so nothing external or paid
+    # is called.
+    name: E2E (Playwright, signed-out paths)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/launchpad_test
+      NEON_AUTH_BASE_URL: https://placeholder.neonauth.example.com/neondb/auth
+      NEON_AUTH_COOKIE_SECRET: placeholder-neon-auth-cookie-secret-32-chars
+      AWS_ENDPOINT_URL_S3: https://br-placeholder.storage.c-1.us-east-1.aws.neon.tech
+      AWS_ACCESS_KEY_ID: placeholder
+      AWS_SECRET_ACCESS_KEY: placeholder
+      ANTHROPIC_API_KEY: sk-ant-placeholder
+      STRIPE_SECRET_KEY: sk_test_placeholder
+      STRIPE_PRICE_ID: price_placeholder
+      GRADE_WORKER_SECRET: placeholder-grade-worker-secret-32-chars
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build local replica of the Neon schema
+        run: tests/db/build-replica.sh launchpad_test
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Playwright
+        run: pnpm test:e2e
