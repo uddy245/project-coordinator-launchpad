@@ -19,15 +19,45 @@
 -- prompts.body is the v2 system prompt + the full user template, WITH the
 -- {{rubric_json}} / {{scenario_text}} / {{submission_text}} placeholders.
 --
--- Idempotent. Roll back by flipping is_current back to version 1 on both
--- tables and restoring item 3 of the scenario.
+-- Idempotent. Raises (and applies nothing) if the live push-back scenario is
+-- neither the v1 seed text nor this migration's v2 text. Roll back by flipping
+-- is_current back to version 1 on both tables and restoring item 3 of the
+-- scenario.
 -- ==========================================================================
 
 begin;
 
 -- 1. Scenario (item 3 only) and summary -----------------------------------
-update public.lessons
-set scenario_text = $scenario$
+-- Overwrites the scenario only when it is still the text this migration was
+-- written against (the v1 seed in
+-- supabase/migrations/20260620_seed_pushback_judgment_rubric_prompt.sql) or
+-- this migration's own output (a re-apply). An empty scenario is filled.
+-- Any other text means the live lesson was edited since: raise, which aborts
+-- the whole transaction, rather than silently replace that edit.
+do $step1$
+declare
+  v1_text constant text := $v1$
+You are PC on the eleven-month IAM modernisation programme (healthcare provider, CISO sponsor, Q4 go-live). It is 4:30 p.m. The board meets tomorrow morning; the CISO's office is closing the board pre-read at 6 p.m. tonight.
+
+Yesterday your PM, R. Adekanmi, drafted the 'Q4 Go-Live Readiness Summary' — a one-pager stating Federation is 'on track for conditional go-live, pending final conformance'. Accurate as of yesterday.
+
+Two things landed this morning that R. may not have seen (she has been in steering prep all day): (1) the Federation broker token-exchange conformance results came in — FAIL, the exact gate 'conditional go-live' was pending on; Vantage's fix ETA is 'early next week', unconfirmed. (2) Federation is the single largest go-live risk, and tomorrow's pre-read is what the board will use to confirm or hold the Q4 date.
+
+At 4:30 R. Slacks you, between meetings: 'PC — send the readiness summary to the CISO's chief of staff now, they're closing the board pack at 6. Thanks.' The summary she means is yesterday's draft — the one that says Federation is on track. If it goes in unchanged, the board confirms Q4 believing the last gate is essentially clear, when this morning it failed — a decision that is embarrassing and costly to unwind (formal correction, credibility damage).
+
+You could just send it (blameless in the narrowest sense), bury a one-line 'fyi conformance failed', or over-rotate — refuse, or rewrite the summary RED and send your own version to the chief of staff. R. is rushing and may not know this morning's result. The pack closes in ~90 minutes.
+
+Your reply to R. — 400-700 words — should:
+
+1. Decide whether this warrants pushing back using the four conditions (material stakes / you have info R. may not / costly to reverse if wrong / R. deciding under time pressure or incomplete information). Distinguish pushing back from merely disagreeing.
+2. Draft the push-back message to R.: concern stated specifically and briefly, consequence made concrete, a specific alternative offered.
+3. Make clear you accept R.'s authority to overrule — if, knowing this, she still says send, you send, without relitigating.
+4. Choose your medium (written vs verbal) and justify it given the board-level stakes and the 90-minute clock.
+5. Keep the tone respectful, not accusing; route any scope/role question through R.; do not substitute your judgment for hers.
+
+Do not send anything to the CISO's chief of staff yourself, and do not rewrite-and-send your own version. The decision and the deliverable are R.'s — equip her to make the call in the next 90 minutes.
+  $v1$;
+  v2_text constant text := $v2$
 You are PC on the eleven-month IAM modernisation programme (healthcare provider, CISO sponsor, Q4 go-live). It is 4:30 p.m. The board meets tomorrow morning; the CISO's office is closing the board pre-read at 6 p.m. tonight.
 
 Yesterday your PM, R. Adekanmi, drafted the 'Q4 Go-Live Readiness Summary' — a one-pager stating Federation is 'on track for conditional go-live, pending final conformance'. Accurate as of yesterday.
@@ -47,10 +77,28 @@ Your reply to R. — 400-700 words — should:
 5. Keep the tone respectful, not accusing; route any scope/role question through R.; do not substitute your judgment for hers.
 
 Do not send anything to the CISO's chief of staff yourself, and do not rewrite-and-send your own version. The decision and the deliverable are R.'s — equip her to make the call in the next 90 minutes.
-$scenario$,
-    summary = 'How to decide whether to push back using the four conditions (material stakes, informational advantage, costly-to-reverse, senior deciding under pressure), push back well (specific concern, concrete consequence, alternative), pick the right medium, and know where the PM''s overrule applies and where it stops — without tipping into either silent compliance or insubordination.',
-    updated_at = now()
-where slug = 'push-back';
+$v2$;
+  live_text text;
+begin
+  select scenario_text into live_text from public.lessons where slug = 'push-back';
+  if not found then
+    return;
+  end if;
+
+  if coalesce(btrim(live_text), '') <> ''
+     and live_text is distinct from v1_text
+     and live_text is distinct from v2_text then
+    raise exception 'push-back scenario_text is not the expected v1 text; refusing to overwrite it'
+      using hint = 'Diff the live lessons.scenario_text against the v1 seed and update this migration before re-running.';
+  end if;
+
+  update public.lessons
+  set scenario_text = v2_text,
+      summary = 'How to decide whether to push back using the four conditions (material stakes, informational advantage, costly-to-reverse, senior deciding under pressure), push back well (specific concern, concrete consequence, alternative), pick the right medium, and know where the PM''s overrule applies and where it stops — without tipping into either silent compliance or insubordination.',
+      updated_at = now()
+  where slug = 'push-back';
+end
+$step1$;
 
 -- 2. Rubric v2 --------------------------------------------------------------
 update public.rubrics set is_current = false

@@ -15,6 +15,8 @@
  *  3. Learners' default workbook brief is the grader's scenario.
  *  4. A second apply changes nothing, and the migration is safe when the
  *     lesson, its scenario, or the v1 rows are missing.
+ *  5. If the live scenario is neither the v1 seed text nor the v2 text, the
+ *     migration raises and nothing is applied.
  *
  * Runs only when TEST_DATABASE_URL points at a local replica. Every test
  * runs in a transaction that is rolled back (tests/db/migration-sandbox.ts).
@@ -245,6 +247,48 @@ describe.skipIf(!DB_AVAILABLE)("migration: push-back judgment v2", () => {
         [1, false],
         [2, true],
       ]);
+    });
+  });
+
+  describe("when the live scenario was edited after the v1 seed", () => {
+    const EDITED = "An admin rewrote this scenario by hand.";
+
+    beforeEach(async () => {
+      await client.query(v1Seed);
+      await addBrief("Old default brief", true, false);
+      await client.query(`update public.lessons set scenario_text = $1 where slug = 'push-back'`, [
+        EDITED,
+      ]);
+    });
+
+    it("raises and applies nothing — scenario, rubric, prompt and brief are untouched", async () => {
+      const before = await snapshot();
+
+      await client.query("savepoint before_migration");
+      await expect(client.query(migration)).rejects.toThrow(
+        /push-back scenario_text is not the expected v1 text/
+      );
+      await client.query("rollback to savepoint before_migration");
+
+      const after = await snapshot();
+      expect(after).toEqual(before);
+      expect(after.lesson.scenario_text).toBe(EDITED);
+      expect(after.rubrics.map((r) => [r.version, r.is_current])).toEqual([[1, true]]);
+      expect(after.prompts.map((p) => [p.version, p.is_current])).toEqual([[1, true]]);
+    });
+
+    it("also refuses a v1 text with only task item 3 hand-edited", async () => {
+      await client.query(v1Seed); // restores the exact v1 scenario (on conflict do update)
+      await client.query(
+        `update public.lessons
+            set scenario_text = replace(scenario_text, $1, 'if she still says send, you send')
+          where slug = 'push-back'`,
+        [OLD_ITEM_3]
+      );
+
+      await client.query("savepoint before_migration");
+      await expect(client.query(migration)).rejects.toThrow(/refusing to overwrite/);
+      await client.query("rollback to savepoint before_migration");
     });
   });
 

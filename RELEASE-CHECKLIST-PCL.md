@@ -103,7 +103,7 @@ psql "$DIRECT_URL" -v ON_ERROR_STOP=1 -f db/migrations/20261111_02_quiz_lesson_1
 psql "$DIRECT_URL" -v ON_ERROR_STOP=1 -f db/migrations/20261111_03_lesson_20_single_scenario.sql
 ```
 
-- [ ] 01 applied — no error
+- [ ] 01 applied — no error. `ERROR: push-back scenario_text is not the expected v1 text` means the live lesson 17 scenario was edited after the v1 seed: the transaction rolled back and nothing was applied. Stop and diff the live text against the seed before going further.
 - [ ] 02 applied — no error, and **no** `NOTICE: push-back quiz: n of 3 items edited`
 - [ ] 03 applied — no error, and **no** `NOTICE: raid-logs has no scenario_text`
 
