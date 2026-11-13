@@ -119,7 +119,7 @@ jobs:
     # placeholder secrets and the local replica, so nothing external or paid
     # is called.
     name: E2E (Playwright, signed-out paths)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # Playwright cannot install browsers on ubuntu-latest (26.04) yet
     timeout-minutes: 20
 
     services:
