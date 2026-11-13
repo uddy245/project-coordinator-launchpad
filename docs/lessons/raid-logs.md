@@ -1,5 +1,13 @@
 # The RAID Log and the Art of Seeing Trouble Early
 
+**By the end of this lesson you can:**
+
+1. Write a risk entry with a trigger, impact, likelihood, owner and mitigation.
+2. Tell a risk from an issue, an assumption and a dependency, and move a risk to an issue when it happens.
+3. Write a mitigation that is a specific action, not "monitor".
+4. Give every entry one named owner and a follow-up date.
+5. Keep the log current, so that it shows what changed from week to week.
+
 ## A risk you watched but never raised
 
 Picture this. On a capital-markets operations project, the only client-side subject-matter expert who genuinely understood the legacy calculation engine began visibly disengaging in early March. She had moved into a new role within her organisation and, while officially still on the project, was increasingly unavailable. Meetings went unattended. Questions went unanswered for days. No replacement had been identified.
@@ -8,7 +16,7 @@ You noticed. You wrote it down — but in a private working file, not on the RAI
 
 In early May the SME effectively withdrew. The project spent six weeks identifying, briefing, and onboarding a less senior replacement. The schedule slipped five weeks. In the post-mortem, the sponsor asked how the project had not seen this coming.
 
-The lesson is precise. **A risk that is observed but not recorded is not being managed — it is being concealed, even when the concealment is unintentional.** Private monitoring creates the illusion of oversight while preventing the project from taking any real action. Placing a risk on the RAID log is not an accusation of any individual. It is the act of making uncertainty visible so that the project — as a team — can decide how to respond.
+The lesson is precise. **A risk you have seen but not recorded is not being managed. It is being hidden, even if you don't mean to hide it.** Private monitoring creates the illusion of oversight while preventing the project from taking any real action. Placing a risk on the RAID log is not an accusation of any individual. It is the act of making uncertainty visible so that the project — as a team — can decide how to respond.
 
 ## What RAID stands for
 
@@ -25,21 +33,22 @@ The defining word for a risk is *might*. The moment a risk materialises, it stop
 
 ## What a well-written risk entry contains
 
-Five elements. Miss any of them and the entry becomes decoration.
+Six elements. Miss any of them and the entry is only decoration.
 
 1. **Clear statement** — not a label. *Resource risk* is not a risk; it is a category. Describe what could happen and why.
-2. **Probability and impact** — Low / Medium / High, honestly assessed. Political calibration here is counterproductive.
-3. **Named owner** — a single individual accountable for monitoring and mitigation. Not "the team."
-4. **Mitigation plan** — concrete actions to reduce likelihood or severity. Not intentions — actions.
-5. **Review date** — without one, the entry sits stale and becomes compliance decoration within three months.
+2. **Trigger** — the sign you can observe that shows the risk is starting to come true. It tells the team when to act.
+3. **Likelihood and impact** — Low / Medium / High, honestly rated. Do not adjust the rating to keep people comfortable.
+4. **Named owner** — a single individual accountable for monitoring and mitigation. Not "the team."
+5. **Mitigation plan** — concrete actions to reduce likelihood or severity. Not intentions — actions.
+6. **Review date** (the template's *Follow-up* column) — without one, nobody looks at the entry again. After three months it is only decoration.
 
-A good description, in roughly ninety words, looks like:
+A good entry, in about seventy words, looks like:
 
-> *Vendor capacity constraints may delay the integration plan beyond the May 28 deadline, affecting the testing workstream's ability to start dependent work on June 1. Currently rated Medium impact / Medium likelihood. Mitigation: weekly check-ins with vendor lead; fallback plan to deprioritise non-critical testing scope if delay exceeds one week. Owner: Programme Director. Review fortnightly.*
+> *The vendor is short of staff and may deliver the integration plan after the 28 May deadline, which would stop the testing team starting dependent work on 1 June. Trigger: the vendor misses the 14 May draft. Impact: Medium. Likelihood: Medium. Mitigation: weekly check-ins with the vendor lead; if the delay passes one week, drop non-critical testing scope. Owner: Amara Okeke (Programme Director). Next review: 21 May.*
 
 ## Why people don't log what they see
 
-The pattern of observing a risk and not recording it is common enough to require direct examination. The reasons are predictable:
+Seeing a risk and not recording it is common. The reasons are predictable:
 
 - Political sensitivity — reluctance to name a senior stakeholder
 - Fear that raising a risk will be read as assigning blame
@@ -48,7 +57,7 @@ The pattern of observing a risk and not recording it is common enough to require
 - Competing demands — the intention to log it "next week"
 - A desire to wait for more evidence before raising it formally
 
-None of these is a professionally defensible reason. The RAID log is a professional instrument, not a personal judgment. Adding an entry is how the project signals that something deserves collective attention.
+None of these is a good reason. The RAID log is a professional tool, not a personal judgement. Adding an entry is how the project signals that something deserves collective attention.
 
 ## Five disciplines for the coordinator
 
@@ -76,7 +85,9 @@ A practice worth adopting at phase boundaries and before major milestones. A pre
 
 > *It is now September. We have missed our milestone. What happened?*
 
-This framing is more productive than abstract risk brainstorming because people reason more effectively about specific failure scenarios than about hypothetical possibilities. A pre-mortem of thirty minutes can produce a richer and more honest risk register than a formal workshop of two hours. Every output goes directly into the RAID log with the usual discipline of specificity, named ownership, and review dates.
+The technique comes from the psychologist Gary Klein ("Performing a Project Premortem", Harvard Business Review, September 2007).
+
+This framing is more productive than abstract risk brainstorming because people reason more effectively about specific failure scenarios than about hypothetical possibilities. A thirty-minute pre-mortem often finds risks that a longer formal workshop misses. Every output goes directly into the RAID log with the usual discipline of specificity, named ownership, and review dates.
 
 ## Tomorrow
 

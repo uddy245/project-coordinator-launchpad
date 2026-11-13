@@ -12,7 +12,7 @@ The concern is that if the board sees "on track" and signs off on Q4, and then i
 
 What I'd suggest instead: let me update the Federation line to reflect that the conformance gate failed and remediation is in progress, and you can send that corrected version. I can have it ready for you to look at in a few minutes if you want.
 
-If you've already factored the conformance result in and you still want yesterday's version to go, just say so and I'll send it — you've got the full board context and it's your call. I just didn't want it going out without flagging this.
+If you've already factored the conformance result in, how it's worded and when it goes are your call — you've got the full board context, and I'll go with what you decide on those. I'm not comfortable with it going out exactly as it is, though, so I'd want to talk that through with you first. I just didn't want it going out without flagging this.
 
 I'm sending this as a Slack so you can reply quickly. Let me know which way you want to go and I'll move on it before the 6 p.m. close.
 

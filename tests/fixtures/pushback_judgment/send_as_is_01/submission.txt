@@ -1,0 +1,21 @@
+To: R. Adekanmi
+From: PC
+Subject: Re: send the readiness summary — one flag before I do (90 min to pack close)
+
+R — before I send this, I want to flag something, because I think you may not have seen it and the stakes are high enough that I'd rather raise it than not.
+
+Why I'm pausing on this one rather than just sending. I try not to push back on everyday calls, but four things line up here: the stakes are material (this goes into the board pre-read and the board uses it to confirm or hold the Q4 date); I'm holding information you may not have had time to see today; a board decision made on it is costly to walk back; and you're making this call between meetings on a deadline. When all of those are true at once, I think it's worth thirty seconds of your time before it goes out. This isn't me disagreeing with the summary — it's one new fact that changes it.
+
+The flag: the Federation broker token-exchange conformance results came in this morning, and they failed. That's the exact gate "conditional go-live, pending final conformance" was waiting on. Yesterday's summary — the one you asked me to send — still reads "on track for conditional go-live." Vantage's fix ETA is "early next week," unconfirmed.
+
+The concrete consequence: if the board pre-read says Federation is on track and the board confirms Q4 on that basis, then when the failed gate surfaces, we're into a formal correction to the board and a credibility hit on the programme's reporting — the worst possible place to discover a divergence.
+
+My recommendation, and an alternative that fits the 6 p.m. close: send an updated one-pager with a single corrected line on Federation — "conformance gate failed [date]; remediation in progress, Vantage ETA early next week; go-live readiness for Federation now AMBER pending re-test." Same document, one honest line. If that's too much to turn around in ninety minutes, the lighter option is a two-line note to the chief of staff that the Federation readiness line is being updated and the corrected summary follows by [time]. I can draft either for your review in ten minutes — your name, your call on which.
+
+To be clear about the boundary: this is your decision and your deliverable, not mine. If you've already weighed the conformance result and still want yesterday's version sent as-is, tell me and I'll send it as-is, right now, without relitigating. I'm not going to send my own version, and I'm not going to go around you to the chief of staff — I just didn't want it to go to the board without you knowing the gate failed this morning.
+
+On why I'm putting this in writing rather than grabbing you in the hall: normally I'd just say this to you, but given it's board-level and we're against the clock, I want the flag and your decision on the record — partly to protect both of us if it goes sideways, partly so whichever way you decide is clearly a decision and not a miss. A quick Slack back with "send as-is" or "send the corrected line" is all I need.
+
+I'll hold for your word — but given the 6 p.m. close, if I don't hear back in ~15 minutes I'll call you rather than let it drift, because not-deciding is the one option that actually hurts us here.
+
+PC

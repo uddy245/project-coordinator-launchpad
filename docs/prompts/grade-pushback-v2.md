@@ -1,7 +1,7 @@
 # grade-pushback v2
 
 Version: 2
-Status: draft — NOT current. Do not seed or flip is_current until the owner approves and calibration is re-run against revised fixtures.
+Status: current (owner-approved 2026-11-11; seeded by db/migrations/20261111_01_pushback_judgment_v2.sql). Supersedes v1.
 Model: claude-sonnet-4-5
 Temperature: 0
 
@@ -71,14 +71,14 @@ tool_choice: { type: "tool", name: "record_rubric_scores" }
 
 ## Changelog
 
-- v2 (draft, inactive): applies the approved teaching boundary — accept the PM's judgement on legitimate judgement calls, never knowingly send misleading information; teach the smallest accurate correction and transparent escalation if the PM insists. accept_the_overrule_posture anchors rewritten (rubric pushback-judgment-v2); the "I'll send it as-is" commitment now caps that dimension at 2; transparent escalation no longer penalised. REQUIRES before activation: (1) scenario item 3 revised — see "Scenario changes required" below; (2) calibration fixtures re-labelled (hire_ready_01 currently commits to sending as-is, so its expected accept_the_overrule_posture would drop); (3) calibration re-run; (4) owner approval to seed and flip is_current.
+- v2: applies the approved teaching boundary — accept the PM's judgement on legitimate judgement calls, never knowingly send misleading information; teach the smallest accurate correction and transparent escalation if the PM insists. accept_the_overrule_posture anchors rewritten (rubric pushback-judgment-v2); the "I'll send it as-is" commitment now caps that dimension at 2; transparent escalation no longer penalised. Activated 2026-11-11 with: scenario item 3 revised (below); fixtures revised (hire_ready_01 and intermediate_01 rewritten to the v2 posture, the old hire-ready text kept as send_as_is_01 to test the new cap); one scoped calibration run.
 
 - v1 (initial): 5-dim pushback_judgment rubric (four_conditions_diagnosis, pushback_craft, accept_the_overrule_posture, medium_judgment, coordinator_role_posture). Thirteen push-back-specific caps covering both failure directions — under-pushing (cave, lowest-intensity flag, buried FYI, blameless-compliance defence) and over-pushing (insubordination, refusing the overrule, rewrite-and-send overstep) — plus the no-four-conditions, disagreement-not-pushback, no-alternative, accusatory-tone, generic-platitude, and hallucinated-facts caps, and a medium_judgment-at-3 cap when a written channel is justified by speed alone rather than the record-and-social-weight reasoning (added during calibration: grader was scoring intermediate_01's speed-justified Slack a 5 against the calibrated 3).
 
-## Scenario changes required (not applied — the live scenario is in the DB)
+## Scenario change shipped with v2
 
-Item 3 currently reads: "Make clear you accept R.'s authority to overrule — if, knowing this, she still says send, you send, without relitigating."
+Item 3 read: "Make clear you accept R.'s authority to overrule — if, knowing this, she still says send, you send, without relitigating."
 
-Proposed: "3. Make clear which parts of this are R.'s call (how and when the correction is framed) and what you will do if, knowing this, she still wants the unchanged summary sent."
+It now reads: "Make clear where R.'s authority applies. How the correction is worded and timed is her call, and you accept it without relitigating. The summary as drafted now says something you know is untrue — say what you will do if she still wants it sent unchanged."
 
-The rest of the scenario, including "Do not send anything to the CISO's chief of staff yourself, and do not rewrite-and-send your own version", stays unchanged.
+The rest of the scenario, including "Do not send anything to the CISO's chief of staff yourself, and do not rewrite-and-send your own version", is unchanged.

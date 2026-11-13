@@ -3,7 +3,8 @@
 
 **Target runtime:** 13:30–14:30
 **Source chapter:** Handbook Ch 14
-**Ticket ref:** LES-004 (video player integration), Bunny Stream upload
+**Ticket ref:** LES-004 (video player integration)
+**Lesson slug:** raid-logs (pipeline folder: `lesson-20-raid-logs`)
 **Narrator style:** first-person senior PM, warm but direct, no PM jargon unless it is being explicitly taught
 
 ---
@@ -14,11 +15,11 @@
 
 I want to start this lesson with a mistake I made, because the mistake is the whole lesson.
 
-Some years ago I was on a capital-markets operations project, coordinator-level role, and I noticed something about one of the client-side SMEs. She was the only person on their team who genuinely understood a specific legacy calculation engine. And she was disengaging. She'd moved to a new role within her organization, and while officially she was still on our project, she was increasingly unavailable. Meetings she was supposed to join went unattended. Questions we sent her went unanswered for days.
+Some years ago I was on a capital-markets operations project, coordinator-level role, and I noticed something about one of the client-side SMEs. She was the only person on their team who genuinely understood a specific legacy calculation engine. And she was disengaging. She'd moved to a new role within her organisation, and while officially she was still on our project, she was increasingly unavailable. Meetings she was supposed to join went unattended. Questions we sent her went unanswered for days.
 
-I noticed this in early March. I noted it in my own working file. I did not put it on the project's RAID log, because the RAID log was reviewed in the weekly status meeting, and I did not want to be the junior coordinator who raised an issue about a named senior person on the client side.
+I noticed this in early March. I noted it in my own working file. I did not put it on the project's RAID log, because the RAID log was reviewed in the weekly status meeting, and I did not want to be the junior coordinator who raised a concern about a named senior person on the client side.
 
-In May, she effectively withdrew. No formal conversation. She just stopped responding. The calculation engine work ground to a halt. We spent six weeks identifying and briefing a less senior replacement. The project slipped five weeks. My PM asked, in the post-mortem, how we hadn't seen this coming.
+In May, she effectively withdrew. No formal conversation. She just stopped responding. The calculation engine work ground to a halt. We spent six weeks identifying and briefing a less senior replacement. The project slipped five weeks. In the post-mortem, the sponsor asked how we hadn't seen this coming.
 
 I had seen it coming. For two months. I had watched a risk grow in my notebook and chosen not to put it in the place the project could actually act on it.
 
@@ -32,15 +33,15 @@ This lesson is about the RAID log — what it is, how to fill it in honestly, an
 
 RAID stands for four things: Risks, Assumptions, Issues, Dependencies. Four categories of thing that might move your project, tracked in one log.
 
-A **risk** is something that *might* happen but hasn't yet. It has a probability. It has an impact. You watch it. You try to reduce one or the other. If it materializes, it's no longer a risk — it's an issue.
+A **risk** is something that *might* happen but hasn't yet. It has a probability. It has an impact. You watch it. You try to reduce one or the other. If it materialises, it's no longer a risk — it's an issue.
 
-An **issue** is something that *has* happened and is affecting the project now. Issues require action, not monitoring. This distinction matters more than it sounds. When people log issues as risks, the project fails to act on things that have already happened. When people log risks as issues, the project panics over things that may never occur.
+An **issue** is something that *has* happened and is affecting the project now. If something is certain — a resignation already handed in, leave already booked — treat it as an issue even before you feel the effect. Risk means *might*. Issues require action, not monitoring. This distinction matters more than it sounds. When people log issues as risks, the project fails to act on things that have already happened. When people log risks as issues, the project panics over things that may never occur.
 
-An **assumption** is something the project is taking as true without having verified. Every plan rests on assumptions. Naming them makes them examinable. An assumption that turns out to be false is a risk that materialized without being on the risk list — which is exactly what hurts projects.
+An **assumption** is something the project is taking as true without having verified. Every plan rests on assumptions. Naming them makes them examinable. An assumption that turns out to be false is a risk that materialised without being on the risk list — which is exactly what hurts projects.
 
 A **dependency** is something the project needs from outside its direct control. The vendor's deliverable. The stakeholder's decision. The compliance approval. Dependencies usually generate risks, but they're worth tracking separately because they require active coordination rather than just monitoring.
 
-Some organizations use only risks and issues. Some lump assumptions into risks. None of that matters as much as what I'm about to tell you, which is how to actually write a good RAID entry.
+Some organisations use only risks and issues. Some lump assumptions into risks. None of that matters as much as what I'm about to tell you, which is how to actually write a good RAID entry.
 
 ---
 
@@ -56,19 +57,21 @@ This sentence is useless. It's true on every project ever run. It gives the read
 
 Here's what a real risk entry looks like.
 
-> "Client-side SME Jennifer Chen may become unavailable due to competing demands in her new role at the client. Impact: the calculation engine workstream loses its only domain expert. Probability: medium and rising (two meetings missed in the last three weeks). Owner: our technical lead, Rahul, to identify a backup SME by April 12. Mitigation: secure contingent access commitment from her manager before the current sprint ends. Next review: next Tuesday."
+> "Client-side SME Jane Doe may become unavailable because of competing demands in her new role. Trigger: she misses another meeting, or takes more than two days to answer a question. Impact: high — the calculation engine workstream loses its only expert. Likelihood: medium and rising; she has missed two meetings in three weeks. Mitigation: get a written commitment from her manager for her time by 5 April, and identify a backup SME by 12 April. Owner: Rahul, our technical lead. Follow-up: 2 April."
 
-Five things in that entry, and every one of them matters.
+Six things in that entry, and every one of them matters.
 
 **One:** a specific statement of what might go wrong. Not "resource risk" — the actual risk, named.
 
-**Two:** an honest probability and impact. Not calibrated for politics. Not softened so the status goes green. The real number.
+**Two:** a trigger. The sign you can see that tells you the risk is starting to come true. Here it is the missed meetings. A trigger tells the team when to stop watching and start acting.
 
-**Three:** a single named owner. Not "the team." Not "we." A person. Rahul. If there's no name, there's no owner, and if there's no owner, the risk just sits there.
+**Three:** an honest likelihood and impact — low, medium or high. Not adjusted for politics. Not softened so the status goes green. The honest rating.
 
-**Four:** a specific mitigation plan. What the project is actually doing — or will do — to reduce probability or impact. Not "monitor closely." Not "keep an eye on." A concrete move, with a date.
+**Four:** a single named owner. Not "the team." Not "we." A person. Rahul. If there's no name, there's no owner, and if there's no owner, the risk just sits there.
 
-**Five:** a review date. When will we look at this again? If it sits untouched for three months, it's not a risk log entry anymore. It's decoration.
+**Five:** a specific mitigation plan. What the project is actually doing — or will do — to reduce probability or impact. Not "monitor closely." Not "keep an eye on." A concrete move, with a date.
+
+**Six:** a review date. The template calls this the follow-up date. When will we look at this again? If it sits untouched for three months, it's not a risk log entry anymore. It's decoration.
 
 A good risk entry is a tool you could hand to a PM who joined the project yesterday, and they could act on it. A bad risk entry is a sentence you wrote so the log wouldn't be empty.
 
@@ -78,11 +81,11 @@ A good risk entry is a tool you could hand to a PM who joined the project yester
 
 *[On camera again, direct]*
 
-Now we get to the hard part. Which is not the format. Which is not the template. Which is not any mechanical thing I can teach you in a video.
+Now the hard part. It is not the format, and it is not the template.
 
-The hard part is the part where I said nothing about Jennifer Chen for two months.
+The hard part is the part where I said nothing about Jane Doe for two months.
 
-Let me name the reasons people don't add things to the RAID log. They're predictable and they're every one of them wrong.
+Let me name the reasons people don't add things to the RAID log. They are predictable, and every one of them is wrong.
 
 You don't want to be the one who raises a politically sensitive issue. I get it. The SME is senior. Her manager is senior. Raising it feels like accusing someone.
 
@@ -92,31 +95,31 @@ You hope the problem will resolve itself. Maybe she'll come back. Maybe the cros
 
 You're busy. You'll get to it next week. The tracker will still be there.
 
-You want more evidence first. You're not sure yet. You don't want to cry wolf.
+You want more evidence first. You're not sure yet. You don't want to raise a false alarm.
 
 Every one of these is a reason. None of them is a good reason.
 
-The right posture — which my PM taught me the hard way, after the Jennifer Chen thing blew up — is that the RAID log is a **professional tool**, not a personal judgment. Adding something to it is how a project says "this deserves attention." It is not an accusation of anyone. It does not say you caused the risk. It does not say you think someone is incompetent. It says you noticed something that might affect the project, and you are doing the thing coordinators are paid to do, which is making it visible.
+The right posture — which my PM taught me the hard way, after the project slipped — is that the RAID log is a **professional tool**, not a personal judgement. Adding something to it is how a project says "this deserves attention." It is not an accusation of anyone. It does not say you caused the risk. It does not say you think someone is incompetent. It says you noticed something that might affect the project, and you are doing the thing coordinators are paid to do, which is making it visible.
 
-Silent watching isn't neutral. Silent watching is worse than nothing, because your private awareness is a substitute for the project actually doing something. When you're watching alone, no one else is. When it's on the log, the team, the PM, the sponsor can all see it and make choices.
+Silent watching isn't neutral. Silent watching is worse than nothing. You feel the risk is being handled, and nobody is handling it. When you're watching alone, no one else is. When it's on the log, the team, the PM, the sponsor can all see it and make choices.
 
-Put it on the log. If you're not sure, put it on the log. If it turns out to be nothing, you close it with a note. That's a thirty-second paperwork cost. The alternative, which I learned, is five weeks of slip and a post-mortem you remember a decade later.
+Put it on the log. If you're not sure, put it on the log. If it turns out to be nothing, you close it with a note. That's a thirty-second paperwork cost. The alternative, which I learned, is five weeks of slip and a post-mortem you still remember years later.
 
 ---
 
 ### RISKS VS ISSUES — THE SEPARATION THAT MATTERS (8:15–10:00)
 
-*[Slide: same incident shown as risk entry, then as issue entry after materialization]*
+*[Slide: same incident shown as risk entry, then as issue entry after materialisation]*
 
 One more discipline before we get to the workbook.
 
-Risks and issues often describe the same underlying situation at different times. Jennifer might disengage. That's a risk. Jennifer has disengaged. That's an issue.
+Risks and issues often describe the same underlying situation at different times. Jane might disengage. That's a risk. Jane has disengaged. That's an issue.
 
-When the risk materializes, you don't just leave the risk entry sitting there. You close the risk, explicitly, with a note that it became an issue, and you open a new issue entry with what's happening now and what the project is doing about it. This takes maybe sixty seconds. It is not optional.
+When the risk materialises, you don't just leave the risk entry sitting there. You close the risk, explicitly, with a note that it became an issue, and you open a new issue entry with what's happening now and what the project is doing about it. This takes maybe sixty seconds. It is not optional.
 
-Projects that don't do this end up with RAID logs full of "risks" that are really issues the team is pretending haven't happened yet. The log gets read as theater rather than as a working tool. Everyone stops believing it. And the one time the risk entry was actually a live risk, nobody notices, because they've trained themselves to skim past them.
+Projects that don't do this end up with RAID logs full of "risks" that are really issues the team is pretending haven't happened yet. People start to treat the log as a show, not a working tool. Everyone stops believing it. And the one time the risk entry was actually a live risk, nobody notices, because they've trained themselves to skim past them.
 
-Keep risks as risks. Convert them to issues when they materialize. Close what's genuinely closed. Be specific about dates and transitions.
+Keep risks as risks. Convert them to issues when they materialise. Close what's genuinely closed. Be specific about dates and transitions.
 
 ---
 
@@ -128,11 +131,11 @@ One practice worth adopting, because it changes how your RAID log looks, is the 
 
 A pre-mortem is a thirty-minute exercise at the start of a project phase where the team imagines the phase has just failed. You say, "It is September. The milestone is missed. What happened?" Then you work backwards.
 
-The questions this format draws out are different from the questions a traditional risk workshop draws out. People are much better at imagining concrete failure modes in scenarios than at brainstorming abstract risks. You'll get answers like "the vendor's key architect went on paternity leave mid-sprint and we hadn't backstopped" instead of "vendor resource risk." The first is a useful RAID entry. The second is wallpaper.
+The questions this format draws out are different from the questions a traditional risk workshop draws out. People are much better at imagining concrete failure modes in scenarios than at brainstorming abstract risks. You'll get answers like "the vendor's key architect went on paternity leave mid-sprint and we hadn't arranged cover" instead of "vendor resource risk." The first is a useful RAID entry. The second tells nobody anything.
 
-You don't have to formalize it. You can propose it casually. "Let's take thirty minutes and imagine what could go wrong between now and the milestone." The output goes into the RAID log with the usual five-element discipline.
+You don't have to formalise it. You can propose it casually. "Let's take thirty minutes and imagine what could go wrong between now and the milestone." The output goes into the RAID log with the usual discipline.
 
-Pre-mortems are underused and disproportionately valuable. Bring them to your next phase start.
+Pre-mortems are not used enough, and they repay the thirty minutes. Bring them to your next phase start.
 
 ---
 
@@ -144,29 +147,29 @@ Here's your work for this lesson.
 
 First, you're going to download the starter RAID log template from the Workbook tab. It's an Excel file with ten columns: ID, type, description, trigger, impact, likelihood, mitigation, owner, follow-up date and status. The structure is boring on purpose. Structure is not where the skill lives.
 
-Second, you're going to read the scenario — it's in the Workbook tab, about 500 words. A specific project, with specific people and constraints. Read it once for context, then once more for risk signals. I'll name a few things to look for in a second.
+Second, you're going to read the scenario in the Workbook tab. Read it once for context, then once more for risk signals.
 
-Third, you're going to build the RAID log for that scenario. Aim for between eight and fifteen entries across R, A, I, and D. Not fifty entries — that's a sign you haven't prioritized. Not three — that's a sign you haven't thought hard enough.
+Third, you're going to build the RAID log for that scenario. Aim for between eight and fifteen entries across R, A, I, and D. Not fifty entries — that's a sign you haven't prioritised. Not three — that's a sign you haven't thought hard enough.
 
 And here's what we'll be grading on. Five dimensions.
 
-**Completeness** — every risk has all five elements I described. Owner, mitigation, impact, probability, review date.
+**Completeness** — every risk has a trigger, an impact, a likelihood, an owner and a mitigation.
 
-**Differentiation** — risks are risks, issues are issues, assumptions are assumptions, dependencies are dependencies. No miscategorization.
+**Differentiation** — risks are risks, issues are issues, assumptions are assumptions, dependencies are dependencies. No miscategorisation.
 
 **Mitigation realism** — mitigations are specific and actionable, not "monitor closely."
 
-**Ownership** — every entry has a named person accountable for it — one individual. Not "the team." Not "TBD." A role is acceptable only as an interim placeholder, marked "awaiting named owner."
+**Ownership** — every entry has one named person accountable for it, and a follow-up date. Not "the team." Not "TBD." A role is acceptable only as an interim placeholder, marked "awaiting named owner."
 
-**Living-artifact evidence** — your log shows evidence that it's been updated over time. If every entry looks like it was written at the same moment with no weekly progression, that's a tell.
+**Living-artifact evidence** — your log shows it has been updated over time. Use the status column and the follow-up dates to show movement: a risk that became an issue, an item you closed with a note saying how, a date you moved and why. If every entry looks as if it was written in the same minute, we can see that.
 
 The quiz is ten items. Eight or better to pass. The artifact is the real deliverable — the RAID log itself, graded against those five dimensions.
 
-When you upload it, you'll get scores on each dimension within about two minutes, with a direct quote from your submission justifying each score and one specific suggestion for improvement. If you want a human to also review your submission, there's a button for that — use it whenever you want a second opinion.
+When you upload it, you'll get scores on each dimension, usually within a minute or two, with a direct quote from your submission justifying each score and one specific suggestion for improvement. If you want a human to also review your submission, there's a button for that — use it whenever you want a second opinion.
 
 *[Back on camera, slower]*
 
-One last thing. I want you to notice something about the Jennifer Chen story I told you at the top. The lesson isn't "always log everything." The lesson is that **silent watching is worse than nothing**. When you can see a risk and the project can't, your awareness is misleading the project. Putting it in the log is the move that costs you almost nothing and saves the project sometimes a great deal.
+One last thing. I want you to notice something about the Jane Doe story I told you at the top. The lesson isn't "always log everything." The lesson is that **silent watching is worse than nothing**. When you can see a risk and the project can't, your awareness is misleading the project. Putting it in the log is the move that costs you almost nothing and saves the project sometimes a great deal.
 
 When in doubt, put it on the log.
 
@@ -186,4 +189,4 @@ Get your hands on the template. See you in the workbook.
 
 **Progress tracking:** Per LES-004 ACs, 90% watched = `lesson_progress.video_watched=true`. 10-second intervals. Resume-from-last-position required.
 
-**Asset handoff:** Script + slide deck source + recorded video → Bunny Stream. Bunny URL goes into `lessons.video_url` via production seed script (not the MVP local seed).
+**Asset handoff:** narrated-slides MP4 → Neon `lesson-videos` bucket at `raid-logs/raid-logs.mp4`, set in `lessons.video_url` by `scripts/seed-production-video.mjs` (run `--dry-run` first).

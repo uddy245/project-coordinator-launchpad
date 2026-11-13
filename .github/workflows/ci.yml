@@ -109,3 +109,6 @@ jobs:
           tests/integration/portfolio-gate-trigger.test.ts
           tests/integration/preview-access.test.ts
           tests/integration/delete-user-cascade.test.ts
+          tests/integration/pushback-judgment-v2-migration.test.ts
+          tests/integration/quiz-lesson-17-overrule-boundary-migration.test.ts
+          tests/integration/lesson-20-single-scenario-migration.test.ts
