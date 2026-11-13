@@ -14,6 +14,9 @@ type CheckoutData = { url: string };
 const PAYMENT_PENDING_MESSAGE =
   "Your payment is still being processed by your bank. Your account unlocks automatically when it clears, so you don't need to pay again.";
 
+const PAYMENT_CHECK_FAILED_MESSAGE =
+  "We're still checking your payment. Please try again in a few minutes.";
+
 export async function createCheckoutSession(): Promise<ActionResult<CheckoutData>> {
   const user = await getAppUser();
 
@@ -40,9 +43,15 @@ export async function createCheckoutSession(): Promise<ActionResult<CheckoutData
   }
 
   // A delayed payment (bank debit) that has not cleared yet: the learner has
-  // no access so far, but a second checkout would charge them twice.
-  if (await hasPendingPayment({ id: user.id, email: user.email })) {
+  // no access so far, but a second checkout would charge them twice. If
+  // Stripe cannot tell us, fail closed for the same reason (logged in
+  // hasPendingPayment).
+  const pending = await hasPendingPayment({ id: user.id, email: user.email });
+  if (pending === "yes") {
     return { ok: false, error: PAYMENT_PENDING_MESSAGE, code: "PAYMENT_PENDING" };
+  }
+  if (pending === "unknown") {
+    return { ok: false, error: PAYMENT_CHECK_FAILED_MESSAGE, code: "PAYMENT_CHECK_FAILED" };
   }
 
   const successUrl = `${env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`;

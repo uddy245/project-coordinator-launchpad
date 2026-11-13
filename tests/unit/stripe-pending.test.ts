@@ -34,9 +34,9 @@ beforeEach(() => {
 });
 
 describe("hasPendingPayment", () => {
-  it("is true while a delayed payment is processing", async () => {
+  it("is yes while a delayed payment is processing", async () => {
     withSessions(session());
-    expect(await hasPendingPayment(USER)).toBe(true);
+    expect(await hasPendingPayment(USER)).toBe("yes");
   });
 
   it("asks Stripe for this learner's completed sessions, with the payment expanded", async () => {
@@ -50,35 +50,35 @@ describe("hasPendingPayment", () => {
     });
   });
 
-  it("is false when the learner has no sessions", async () => {
-    expect(await hasPendingPayment(USER)).toBe(false);
+  it("is no when the learner has no sessions", async () => {
+    expect(await hasPendingPayment(USER)).toBe("no");
   });
 
-  it("is false when the delayed payment failed, so the learner can try again", async () => {
+  it("is no when the delayed payment failed, so the learner can try again", async () => {
     withSessions(session({ payment_intent: { status: "requires_payment_method" } }));
-    expect(await hasPendingPayment(USER)).toBe(false);
+    expect(await hasPendingPayment(USER)).toBe("no");
   });
 
-  it("is false for a session that is already paid", async () => {
+  it("is no for a session that is already paid", async () => {
     withSessions(session({ payment_status: "paid", payment_intent: { status: "succeeded" } }));
-    expect(await hasPendingPayment(USER)).toBe(false);
+    expect(await hasPendingPayment(USER)).toBe("no");
   });
 
   it("ignores a pending session that belongs to another account with the same email", async () => {
     withSessions(
       session({ metadata: { user_id: "someone-else" }, client_reference_id: "someone-else" })
     );
-    expect(await hasPendingPayment(USER)).toBe(false);
+    expect(await hasPendingPayment(USER)).toBe("no");
   });
 
   it("matches on client_reference_id when metadata has no user_id", async () => {
     withSessions(session({ metadata: {} }));
-    expect(await hasPendingPayment(USER)).toBe(true);
+    expect(await hasPendingPayment(USER)).toBe("yes");
   });
 
-  it("is false when the payment was not expanded or is missing", async () => {
+  it("is no when the payment was not expanded or is missing", async () => {
     withSessions(session({ payment_intent: "pi_123" }), session({ payment_intent: null }));
-    expect(await hasPendingPayment(USER)).toBe(false);
+    expect(await hasPendingPayment(USER)).toBe("no");
   });
 
   it("finds the pending session among older failed and paid ones", async () => {
@@ -87,11 +87,17 @@ describe("hasPendingPayment", () => {
       session(),
       session({ payment_status: "paid", payment_intent: { status: "succeeded" } })
     );
-    expect(await hasPendingPayment(USER)).toBe(true);
+    expect(await hasPendingPayment(USER)).toBe("yes");
   });
 
-  it("is false, without throwing, when Stripe fails: a lookup error must not block a sale", async () => {
-    list.mockRejectedValue(new Error("Stripe is down"));
-    expect(await hasPendingPayment(USER)).toBe(false);
+  it("answers unknown, and logs, without throwing, when Stripe fails", async () => {
+    const error = new Error("Stripe is down");
+    list.mockRejectedValue(error);
+
+    expect(await hasPendingPayment(USER)).toBe("unknown");
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining("[hasPendingPayment]"),
+      error
+    );
   });
 });

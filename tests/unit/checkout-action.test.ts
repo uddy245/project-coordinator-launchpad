@@ -32,7 +32,7 @@ function withProfile(profile: { has_access: boolean } | null | Error) {
 beforeEach(() => {
   getAppUserMock.mockReset();
   createSessionMock.mockReset();
-  pendingMock.mockReset().mockResolvedValue(false);
+  pendingMock.mockReset().mockResolvedValue("no");
   withProfile({ has_access: false });
 });
 
@@ -54,13 +54,27 @@ describe("createCheckoutSession", () => {
 
   it("returns PAYMENT_PENDING, and starts no checkout, while a delayed payment is clearing", async () => {
     getAppUserMock.mockResolvedValue(USER);
-    pendingMock.mockResolvedValue(true);
+    pendingMock.mockResolvedValue("yes");
 
     const result = await createCheckoutSession();
 
     expect(result).toMatchObject({ ok: false, code: "PAYMENT_PENDING" });
     expect(result.ok === false && result.error).toMatch(/still being processed/);
     expect(pendingMock).toHaveBeenCalledWith({ id: "u1", email: "u@x.com" });
+    expect(createSessionMock).not.toHaveBeenCalled();
+  });
+
+  it("fails closed with PAYMENT_CHECK_FAILED, and starts no checkout, when Stripe cannot be asked", async () => {
+    getAppUserMock.mockResolvedValue(USER);
+    pendingMock.mockResolvedValue("unknown");
+
+    const result = await createCheckoutSession();
+
+    expect(result).toEqual({
+      ok: false,
+      error: "We're still checking your payment. Please try again in a few minutes.",
+      code: "PAYMENT_CHECK_FAILED",
+    });
     expect(createSessionMock).not.toHaveBeenCalled();
   });
 

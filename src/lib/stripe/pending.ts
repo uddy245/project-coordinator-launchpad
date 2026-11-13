@@ -25,9 +25,18 @@ function ownerOf(session: Stripe.Checkout.Session): string | null {
  *
  * Sessions are looked up by the email we prefilled at checkout and then
  * matched on our own user id, so another account using the same address is
- * never counted. A failed lookup returns false: it must not stop a sale.
+ * never counted.
+ *
+ * A failed lookup answers "unknown" and is logged. Callers must treat that as
+ * "do not start a checkout": failing open would let a learner whose bank
+ * debit is still clearing pay a second time.
  */
-export async function hasPendingPayment(user: { id: string; email: string }): Promise<boolean> {
+export type PendingPayment = "yes" | "no" | "unknown";
+
+export async function hasPendingPayment(user: {
+  id: string;
+  email: string;
+}): Promise<PendingPayment> {
   try {
     const sessions = await stripe.checkout.sessions.list({
       customer_details: { email: user.email },
@@ -36,15 +45,16 @@ export async function hasPendingPayment(user: { id: string; email: string }): Pr
       expand: ["data.payment_intent"],
     });
 
-    return sessions.data.some(
+    const pending = sessions.data.some(
       (session) =>
         ownerOf(session) === user.id &&
         session.payment_status === "unpaid" &&
         typeof session.payment_intent === "object" &&
         session.payment_intent?.status === "processing"
     );
+    return pending ? "yes" : "no";
   } catch (err) {
-    console.error("[hasPendingPayment] Stripe lookup failed", err);
-    return false;
+    console.error("[hasPendingPayment] Stripe lookup failed; blocking checkout", err);
+    return "unknown";
   }
 }
