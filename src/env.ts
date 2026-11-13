@@ -55,7 +55,13 @@ export const env = createEnv({
 
     // Stripe
     STRIPE_SECRET_KEY: z.string().min(1),
-    STRIPE_WEBHOOK_SECRET: z.string().optional(),
+    // Required on the production deployment: without it the webhook route
+    // answers 500 to every event, so delayed (bank debit) payments never
+    // unlock and the success page is the only path to access. Optional in
+    // local dev, CI and Vercel previews. "Production" is Vercel's
+    // VERCEL_ENV, not NODE_ENV, which is "production" in previews too.
+    STRIPE_WEBHOOK_SECRET:
+      E("VERCEL_ENV") === "production" ? z.string().min(1) : z.string().optional(),
     STRIPE_PRICE_ID: z.string().min(1),
 
     // Bunny Stream
