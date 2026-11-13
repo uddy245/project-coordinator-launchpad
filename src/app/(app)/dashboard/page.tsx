@@ -11,6 +11,8 @@ import {
 } from "@/db/schema";
 import { isAdmin } from "@/lib/auth/session";
 import { PurchaseCTA } from "@/components/marketing/purchase-cta";
+import { FreePreviewCard } from "@/components/dashboard/free-preview-card";
+import { getFreePreviewLesson } from "@/lib/lessons/preview";
 import { LessonCard } from "@/components/dashboard/lesson-card";
 import { GateStatusBadge } from "@/components/dashboard/gate-status-badge";
 import { StreakBadge } from "@/components/dashboard/streak-badge";
@@ -47,6 +49,7 @@ export default async function DashboardPage() {
           <p className="text-muted-foreground">One purchase unlocks the whole program.</p>
         </div>
         <PurchaseCTA />
+        <FreePreviewCard lesson={await getFreePreviewLesson()} />
       </div>
     );
   }

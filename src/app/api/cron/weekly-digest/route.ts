@@ -19,6 +19,7 @@ import { rejectUnlessCron } from "@/lib/cron/auth";
 import { learningActivity, lessonProgress, lessons, profiles } from "@/db/schema";
 import { sendEmail } from "@/lib/email/send";
 import { renderWeeklyDigest } from "@/lib/email/templates/weekly-digest";
+import { unsubscribeLinks } from "@/lib/email/unsubscribe";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -155,6 +156,10 @@ export async function GET(req: Request) {
       // Suggested next: first published lesson the user hasn't completed.
       const next = publishedLessons.find((l) => !completedSet.has(l.id));
 
+      // Every weekly email can be switched off without signing in: a link in
+      // the body, and List-Unsubscribe headers for the mail client's button.
+      const unsubscribe = unsubscribeLinks(u.id);
+
       const render = renderWeeklyDigest({
         firstName: u.full_name ? u.full_name.split(/\s+/)[0] : null,
         activeDays,
@@ -167,6 +172,7 @@ export async function GET(req: Request) {
         nextLessonSlug: next?.slug ?? null,
         nextLessonTitle: next?.title ?? null,
         nextLessonNumber: next?.number ?? null,
+        unsubscribeUrl: unsubscribe.pageUrl,
       });
 
       const result = await sendEmail({
@@ -174,6 +180,7 @@ export async function GET(req: Request) {
         render,
         silent: true,
         tag: "weekly-digest",
+        headers: unsubscribe.headers,
       });
 
       if (result.ok) {

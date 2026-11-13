@@ -109,3 +109,5 @@ jobs:
           tests/integration/portfolio-gate-trigger.test.ts
           tests/integration/preview-access.test.ts
           tests/integration/delete-user-cascade.test.ts
+          tests/integration/stripe-webhook-atomic.test.ts
+          tests/integration/email-unsubscribe.test.ts

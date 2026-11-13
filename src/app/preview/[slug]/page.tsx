@@ -7,6 +7,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { lessons } from "@/db/schema";
 import { Button } from "@/components/ui/button";
+import { FooterLegalLinks } from "@/components/legal/legal-links";
 import { VideoPlayer } from "@/components/lessons/video-player";
 
 export const dynamic = "force-dynamic";
@@ -178,6 +179,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
       <footer>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-6">
           <span className="kicker">Launchpad · 2026</span>
+          <FooterLegalLinks />
           <span className="kicker">PROG·PC·25 · A working PM&apos;s guide</span>
         </div>
       </footer>

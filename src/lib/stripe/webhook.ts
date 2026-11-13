@@ -1,24 +1,39 @@
 import type Stripe from "stripe";
 import { eq } from "drizzle-orm";
+import { after } from "next/server";
 import { db } from "@/db";
 import { profiles, purchases } from "@/db/schema";
 import { sendEmail } from "@/lib/email/send";
 import { renderPurchaseConfirmed } from "@/lib/email/templates/purchase-confirmed";
+import { verifyCoursePurchase } from "@/lib/stripe/verify-purchase";
+
+export type HandleResult =
+  | { granted: true }
+  /** `rejected`: paid, but not a purchase of the course (see verifyCoursePurchase). */
+  | { granted: false; reason: string; rejected?: true };
 
 /**
- * Handle checkout.session.completed. Idempotent on stripe_session_id —
- * duplicate delivery returns early and does not re-grant access.
+ * Handle a paid Checkout Session. Idempotent on stripe_session_id.
  *
  * Contract:
- *   - On first successful delivery: insert a purchases row, flip
- *     profiles.has_access to true for the user encoded in metadata.
+ *   - On first successful delivery: insert a purchases row and flip
+ *     profiles.has_access to true for the user encoded in metadata, in ONE
+ *     transaction. A recorded purchase therefore always means access was
+ *     granted with it.
+ *   - If the grant fails (database error, or no profile row to update), the
+ *     purchase insert is rolled back and this throws, so Stripe's retry
+ *     starts from scratch. Recording the purchase first and granting
+ *     afterwards let a retry see "duplicate" and never grant.
  *   - On duplicate delivery: the insert hits ON CONFLICT (stripe_session_id)
- *     DO NOTHING, returns no row, and we no-op.
+ *     DO NOTHING, returns no row, and we no-op. It does not re-grant, so
+ *     access removed later (a refund) stays removed.
  *   - On a session with no user_id in metadata: log and ignore.
+ *   - On a paid session that is not the course at the course price (wrong
+ *     mode, price or amount): log, grant nothing, return `rejected`.
  */
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session
-): Promise<{ granted: boolean; reason?: string }> {
+): Promise<HandleResult> {
   const userId = session.metadata?.user_id ?? session.client_reference_id;
   if (!userId) {
     return { granted: false, reason: "no user_id in metadata" };
@@ -28,45 +43,73 @@ export async function handleCheckoutSessionCompleted(
     return { granted: false, reason: `payment_status=${session.payment_status}` };
   }
 
-  let insertedRows: { id: string }[];
-  try {
-    insertedRows = await db
-      .insert(purchases)
-      .values({
-        userId,
-        stripeSessionId: session.id,
-        stripePaymentIntentId:
-          typeof session.payment_intent === "string"
-            ? session.payment_intent
-            : (session.payment_intent?.id ?? null),
-        amountCents: session.amount_total ?? 0,
-        currency: session.currency ?? "usd",
-        status: "paid",
-      })
-      // purchases.stripe_session_id is UNIQUE — duplicate delivery no-ops.
-      .onConflictDoNothing({ target: purchases.stripeSessionId })
-      .returning({ id: purchases.id });
-  } catch (err) {
-    throw new Error(
-      `Failed to insert purchase: ${err instanceof Error ? err.message : String(err)}`
+  const check = await verifyCoursePurchase(session);
+  if (!check.ok) {
+    console.error(
+      `[stripe] session ${session.id} for user ${userId} is not a course purchase (${check.reason}); access not granted`
     );
+    return { granted: false, reason: check.reason, rejected: true };
   }
 
-  if (insertedRows.length === 0) {
+  const isNewPurchase = await db.transaction(async (tx) => {
+    let insertedRows: { id: string }[];
+    try {
+      insertedRows = await tx
+        .insert(purchases)
+        .values({
+          userId,
+          stripeSessionId: session.id,
+          stripePaymentIntentId:
+            typeof session.payment_intent === "string"
+              ? session.payment_intent
+              : (session.payment_intent?.id ?? null),
+          amountCents: session.amount_total ?? 0,
+          currency: session.currency ?? "usd",
+          status: "paid",
+        })
+        // purchases.stripe_session_id is UNIQUE — duplicate delivery no-ops.
+        .onConflictDoNothing({ target: purchases.stripeSessionId })
+        .returning({ id: purchases.id });
+    } catch (err) {
+      throw new Error(
+        `Failed to insert purchase: ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
+
+    if (insertedRows.length === 0) return false;
+
+    // Setting has_access fires the DB trigger that creates gate_status.
+    let grantedRows: { id: string }[];
+    try {
+      grantedRows = await tx
+        .update(profiles)
+        .set({ hasAccess: true })
+        .where(eq(profiles.id, userId))
+        .returning({ id: profiles.id });
+    } catch (err) {
+      throw new Error(
+        `Failed to grant access: ${err instanceof Error ? err.message : String(err)}`
+      );
+    }
+    if (grantedRows.length === 0) {
+      throw new Error(`Failed to grant access: no profile row for user ${userId}`);
+    }
+    return true;
+  });
+
+  if (!isNewPurchase) {
     return { granted: false, reason: "duplicate session (idempotent)" };
   }
 
-  // Setting has_access fires the DB trigger that creates gate_status.
-  try {
-    await db.update(profiles).set({ hasAccess: true }).where(eq(profiles.id, userId));
-  } catch (err) {
-    throw new Error(`Failed to grant access: ${err instanceof Error ? err.message : String(err)}`);
-  }
-
-  // Confirmation email (silent / fire-and-forget). We resolve the recipient
-  // off the customer profile; if anything is missing we just skip — Stripe
-  // already sends its own receipt and the user has access regardless.
-  void (async () => {
+  // Confirmation email, sent after the response with after(): a bare
+  // un-awaited promise can be cut off when the serverless function freezes
+  // once the response is sent, while after() keeps the function alive until
+  // the callback settles. Silent: we resolve the recipient off the customer
+  // profile and skip if anything is missing — Stripe already sends its own
+  // receipt and the user has access regardless.
+  // Both callers (the webhook route and the success page) run in a request
+  // scope, which after() requires.
+  after(async () => {
     try {
       const [profile] = await db
         .select({ full_name: profiles.fullName })
@@ -114,7 +157,7 @@ export async function handleCheckoutSessionCompleted(
     } catch (err) {
       console.error("[email] purchase-confirmed send failed:", err);
     }
-  })();
+  });
 
   return { granted: true };
 }

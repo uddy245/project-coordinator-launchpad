@@ -7,7 +7,7 @@ vi.mock("@/db", () => ({ db: fakeDb.db }));
 vi.mock("@/lib/auth/session", () => ({ getAppUser: getAppUserMock }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 
-import { updateProfile } from "@/actions/profile";
+import { setWeeklyDigestOptIn, updateProfile } from "@/actions/profile";
 
 const USER = { id: "u1", email: "u1@example.com", name: null, neonAuthUserId: "n1" };
 
@@ -58,5 +58,47 @@ describe("updateProfile", () => {
     fakeDb.reset(() => new Error("permission denied"));
     const result = await updateProfile({ fullName: "Jane" });
     expect(result).toMatchObject({ ok: false, code: "DB_ERROR", error: "permission denied" });
+  });
+});
+
+describe("setWeeklyDigestOptIn", () => {
+  it("returns UNAUTHENTICATED when there is no user", async () => {
+    getAppUserMock.mockResolvedValue(null);
+    const result = await setWeeklyDigestOptIn({ optIn: false });
+    expect(result).toMatchObject({ ok: false, code: "UNAUTHENTICATED" });
+    expect(fakeDb.calls).toHaveLength(0);
+  });
+
+  it.each([true, false])("saves optIn=%s on the profile, and nothing else", async (optIn) => {
+    getAppUserMock.mockResolvedValue(USER);
+
+    const result = await setWeeklyDigestOptIn({ optIn });
+
+    expect(result).toEqual({ ok: true, data: undefined });
+    const updates = fakeDb.callsFor("update", "profiles");
+    expect(updates).toHaveLength(1);
+    expect(updates[0].set).toEqual({ weeklyDigestOptIn: optIn });
+    expect(updates[0].chain).toContain("where");
+  });
+
+  it("rejects input that is not a boolean", async () => {
+    getAppUserMock.mockResolvedValue(USER);
+    const result = await setWeeklyDigestOptIn({ optIn: "no" as unknown as boolean });
+    expect(result).toMatchObject({ ok: false, code: "INVALID_INPUT" });
+    expect(fakeDb.calls).toHaveLength(0);
+  });
+
+  it("returns DB_ERROR, without leaking the database message, when the update fails", async () => {
+    getAppUserMock.mockResolvedValue(USER);
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    fakeDb.setHandler(() => new Error("relation profiles does not exist"));
+
+    const result = await setWeeklyDigestOptIn({ optIn: false });
+
+    expect(result).toEqual({
+      ok: false,
+      error: "Could not save your email setting.",
+      code: "DB_ERROR",
+    });
   });
 });

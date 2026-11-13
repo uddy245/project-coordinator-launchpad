@@ -13,6 +13,8 @@ export type WeeklyDigestVars = {
   nextLessonSlug: string | null;
   nextLessonTitle: string | null;
   nextLessonNumber: number | null;
+  /** Signed link that switches this learner's weekly email off. */
+  unsubscribeUrl: string;
 };
 
 export function renderWeeklyDigest(vars: WeeklyDigestVars): EmailRender {
@@ -77,6 +79,7 @@ export function renderWeeklyDigest(vars: WeeklyDigestVars): EmailRender {
     title: greeting,
     blocks,
     signoff: "— The Launchpad team",
+    unsubscribeUrl: vars.unsubscribeUrl,
   });
 
   return {
