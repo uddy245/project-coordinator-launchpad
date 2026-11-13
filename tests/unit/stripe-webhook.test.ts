@@ -5,6 +5,8 @@ const fakeDb = await vi.hoisted(async () => (await import("../helpers/fake-db"))
 
 vi.mock("@/db", () => ({ db: fakeDb.db }));
 vi.mock("@/lib/email/send", () => ({ sendEmail: vi.fn(async () => undefined) }));
+const verify = vi.hoisted(() => vi.fn());
+vi.mock("@/lib/stripe/verify-purchase", () => ({ verifyCoursePurchase: verify }));
 
 import { handleCheckoutSessionCompleted } from "@/lib/stripe/webhook";
 
@@ -38,6 +40,7 @@ function withDb(inserted: unknown = [{ id: "p1" }], update: unknown = [{ id: "u1
 
 beforeEach(() => {
   withDb();
+  verify.mockReset().mockResolvedValue({ ok: true });
 });
 
 describe("handleCheckoutSessionCompleted", () => {
@@ -80,6 +83,34 @@ describe("handleCheckoutSessionCompleted", () => {
   it("skips sessions with non-paid status", async () => {
     const result = await handleCheckoutSessionCompleted(buildSession({ payment_status: "unpaid" }));
     expect(result).toMatchObject({ granted: false });
+    expect(fakeDb.calls).toHaveLength(0);
+  });
+
+  it("checks the session is the course at the course price before granting", async () => {
+    await handleCheckoutSessionCompleted(buildSession());
+    expect(verify).toHaveBeenCalledWith(buildSession());
+  });
+
+  it("grants nothing, logs, and reports rejected for a paid session that is not the course", async () => {
+    verify.mockResolvedValue({ ok: false, reason: "price=price_other" });
+    const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const result = await handleCheckoutSessionCompleted(buildSession());
+
+    expect(result).toEqual({ granted: false, reason: "price=price_other", rejected: true });
+    expect(fakeDb.calls).toHaveLength(0);
+    expect(error).toHaveBeenCalledWith(expect.stringContaining("price=price_other"));
+    error.mockRestore();
+  });
+
+  it("does not ask Stripe about line items for an unpaid session", async () => {
+    await handleCheckoutSessionCompleted(buildSession({ payment_status: "unpaid" }));
+    expect(verify).not.toHaveBeenCalled();
+  });
+
+  it("throws, granting nothing, when the purchase check cannot reach Stripe", async () => {
+    verify.mockRejectedValue(new Error("Stripe is down"));
+    await expect(handleCheckoutSessionCompleted(buildSession())).rejects.toThrow(/Stripe is down/);
     expect(fakeDb.calls).toHaveLength(0);
   });
 

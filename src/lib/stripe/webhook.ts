@@ -4,6 +4,12 @@ import { db } from "@/db";
 import { profiles, purchases } from "@/db/schema";
 import { sendEmail } from "@/lib/email/send";
 import { renderPurchaseConfirmed } from "@/lib/email/templates/purchase-confirmed";
+import { verifyCoursePurchase } from "@/lib/stripe/verify-purchase";
+
+export type HandleResult =
+  | { granted: true }
+  /** `rejected`: paid, but not a purchase of the course (see verifyCoursePurchase). */
+  | { granted: false; reason: string; rejected?: true };
 
 /**
  * Handle a paid Checkout Session. Idempotent on stripe_session_id.
@@ -21,10 +27,12 @@ import { renderPurchaseConfirmed } from "@/lib/email/templates/purchase-confirme
  *     DO NOTHING, returns no row, and we no-op. It does not re-grant, so
  *     access removed later (a refund) stays removed.
  *   - On a session with no user_id in metadata: log and ignore.
+ *   - On a paid session that is not the course at the course price (wrong
+ *     mode, price or amount): log, grant nothing, return `rejected`.
  */
 export async function handleCheckoutSessionCompleted(
   session: Stripe.Checkout.Session
-): Promise<{ granted: boolean; reason?: string }> {
+): Promise<HandleResult> {
   const userId = session.metadata?.user_id ?? session.client_reference_id;
   if (!userId) {
     return { granted: false, reason: "no user_id in metadata" };
@@ -32,6 +40,14 @@ export async function handleCheckoutSessionCompleted(
 
   if (session.payment_status !== "paid") {
     return { granted: false, reason: `payment_status=${session.payment_status}` };
+  }
+
+  const check = await verifyCoursePurchase(session);
+  if (!check.ok) {
+    console.error(
+      `[stripe] session ${session.id} for user ${userId} is not a course purchase (${check.reason}); access not granted`
+    );
+    return { granted: false, reason: check.reason, rejected: true };
   }
 
   const isNewPurchase = await db.transaction(async (tx) => {

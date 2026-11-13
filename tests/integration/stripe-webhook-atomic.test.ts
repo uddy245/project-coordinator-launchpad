@@ -21,6 +21,11 @@ vi.mock("@/lib/stripe/client", () => ({
   stripe: { paymentIntents: { retrieve: vi.fn(async () => ({ latest_charge: null })) } },
 }));
 
+// The price/amount check is unit-tested in stripe-verify-purchase.test.ts.
+vi.mock("@/lib/stripe/verify-purchase", () => ({
+  verifyCoursePurchase: vi.fn(async () => ({ ok: true })),
+}));
+
 import { handleCheckoutSessionCompleted } from "@/lib/stripe/webhook";
 
 const DB_AVAILABLE = !!process.env.TEST_DATABASE_URL;

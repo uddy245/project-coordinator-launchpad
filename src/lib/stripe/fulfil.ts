@@ -11,6 +11,8 @@ export type FulfilResult =
   | "not_paid"
   /** No usable session id, or the session belongs to someone else. */
   | "not_applicable"
+  /** Paid, but not the course at the course price; nothing was granted. */
+  | "rejected"
   /** Stripe or the database failed; the webhook remains the fallback. */
   | "error";
 
@@ -24,7 +26,8 @@ const SESSION_ID = /^cs_[A-Za-z0-9_]{10,200}$/;
  * failing while the customer is already looking at the success page. This
  * asks Stripe for the session named in the return URL and, if it is paid and
  * belongs to the signed-in user, runs the same idempotent handler the webhook
- * uses. Whichever arrives second is a no-op.
+ * uses — including its check that the session is the course at the course
+ * price. Whichever arrives second is a no-op.
  *
  * The session id comes from the URL, so it is untrusted: a session is only
  * honoured when Stripe says it was created for `userId`. Never throws.
@@ -42,8 +45,9 @@ export async function fulfilCheckoutSession(
     if (owner !== userId) return "not_applicable";
     if (session.payment_status !== "paid") return "not_paid";
 
-    const { granted } = await handleCheckoutSessionCompleted(session);
-    return granted ? "granted" : "already_recorded";
+    const result = await handleCheckoutSessionCompleted(session);
+    if (result.granted) return "granted";
+    return result.rejected ? "rejected" : "already_recorded";
   } catch (err) {
     console.error("[fulfilCheckoutSession] failed", err);
     return "error";

@@ -39,6 +39,11 @@ describe("fulfilCheckoutSession", () => {
     expect(await fulfilCheckoutSession(SESSION_ID, "u1")).toBe("already_recorded");
   });
 
+  it("reports rejected when the paid session is not the course at the course price", async () => {
+    handle.mockResolvedValue({ granted: false, reason: "price=price_other", rejected: true });
+    expect(await fulfilCheckoutSession(SESSION_ID, "u1")).toBe("rejected");
+  });
+
   it("does not grant on a session that belongs to another user", async () => {
     expect(await fulfilCheckoutSession(SESSION_ID, "someone-else")).toBe("not_applicable");
     expect(handle).not.toHaveBeenCalled();

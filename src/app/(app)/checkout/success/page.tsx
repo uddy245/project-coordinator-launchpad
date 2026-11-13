@@ -27,6 +27,11 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           Your payment is still being processed by your bank. Your account unlocks automatically as
           soon as it clears, and you don&apos;t need to pay again.
         </p>
+      ) : result === "rejected" ? (
+        <p className="text-muted-foreground">
+          We couldn&apos;t match this payment to the Launchpad program, so your account has not been
+          unlocked. Please try again later.
+        </p>
       ) : (
         <>
           <p className="text-muted-foreground">
