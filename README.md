@@ -100,3 +100,7 @@ Env vars are managed in the Vercel dashboard (or via `vercel env add`). Never co
 | [`docs/prompts/`](docs/prompts/) | Versioned AI grading prompts |
 | [`src/db/schema.ts`](src/db/schema.ts) | Drizzle schema, pulled from the Neon DB (`pnpm db:pull`) |
 | [`supabase/migrations/`](supabase/migrations/) | Historical SQL migrations from the Supabase era (history + test replica input) |
+
+## CI
+
+CI is manual-only; run checks locally before merge. The GitHub Actions workflows only run when started by hand (workflow_dispatch) from the Actions tab.

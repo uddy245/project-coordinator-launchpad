@@ -1,14 +1,10 @@
 name: Claude Code
 
+# CI is manual-only (GitHub Actions minutes are limited): run checks locally before merge.
+# Start a run by hand from the Actions tab when one is really needed.
 on:
-  issue_comment:
-    types: [created]
-  pull_request_review_comment:
-    types: [created]
-  issues:
-    types: [opened, assigned]
-  pull_request_review:
-    types: [submitted]
+  workflow_dispatch:
+
 
 jobs:
   claude:
