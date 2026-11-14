@@ -1,10 +1,10 @@
 name: CI
 
+# CI is manual-only (GitHub Actions minutes are limited): run checks locally before merge.
+# Start a run by hand from the Actions tab when one is really needed.
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
+
 
 jobs:
   ci:
